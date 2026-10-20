@@ -1,0 +1,1563 @@
+<!-- =====================================================================
+     KB SOLAR BATTERY RUNTIME CALCULATOR - COMPLETE ALL-IN-ONE BUNDLE
+     Website: https://kbquick.blogspot.com/
+     Platform: Google Blogger Compatible (Pure HTML, Scoped CSS, Vanilla JS)
+     ===================================================================== -->
+
+<style>
+/* =====================================================================
+   SCOPED STYLES (.kb-solar-calculator) - Blogger Theme Safe
+   ===================================================================== */
+.kb-solar-calculator {
+  --kb-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  --kb-primary: #0f766e;
+  --kb-primary-hover: #115e59;
+  --kb-primary-light: #f0fdfa;
+  --kb-bg-surface: #ffffff;
+  --kb-bg-page: #f8fafc;
+  --kb-bg-subtle: #f1f5f9;
+  --kb-text-main: #0f172a;
+  --kb-text-muted: #475569;
+  --kb-border: #e2e8f0;
+  --kb-border-hover: #cbd5e1;
+  --kb-accent-navy: #0a2540;
+  --kb-danger: #b91c1c;
+  --kb-danger-bg: #fef2f2;
+  --kb-warning: #b45309;
+  --kb-warning-bg: #fffbeb;
+  --kb-radius: 8px;
+  --kb-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  font-family: var(--kb-font);
+  color: var(--kb-text-main);
+  background-color: var(--kb-bg-page);
+  line-height: 1.5;
+  box-sizing: border-box;
+  padding: 1.25rem;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.kb-solar-calculator *,
+.kb-solar-calculator *::before,
+.kb-solar-calculator *::after {
+  box-sizing: inherit;
+}
+
+.kb-solar-calculator .kb-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Header */
+.kb-solar-calculator .kb-header {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+.kb-solar-calculator .kb-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background-color: var(--kb-primary-light);
+  color: var(--kb-primary);
+  border: 1px solid #ccfbf1;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.kb-solar-calculator .kb-main-title {
+  color: var(--kb-accent-navy);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+.kb-solar-calculator .kb-subtitle {
+  color: var(--kb-text-muted);
+  font-size: 1rem;
+  max-width: 780px;
+  margin: 0;
+}
+
+/* Layout Grid */
+.kb-solar-calculator .kb-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+@media (min-width: 992px) {
+  .kb-solar-calculator .kb-layout-grid {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+}
+
+/* Cards */
+.kb-solar-calculator .kb-card {
+  background: var(--kb-bg-surface);
+  border: 1px solid var(--kb-border);
+  border-radius: var(--kb-radius);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--kb-shadow-sm);
+}
+.kb-solar-calculator .kb-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--kb-accent-navy);
+  margin: 0 0 1rem 0;
+}
+.kb-solar-calculator .kb-card-header-flex {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.kb-solar-calculator .kb-section-desc {
+  font-size: 0.875rem;
+  color: var(--kb-text-muted);
+  margin: 0 0 1rem 0;
+}
+.kb-solar-calculator .kb-icon {
+  width: 20px;
+  height: 20px;
+  stroke: var(--kb-primary);
+  flex-shrink: 0;
+}
+.kb-solar-calculator .kb-icon-sm {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
+
+/* Form Controls */
+.kb-solar-calculator .kb-field-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 540px) {
+  .kb-solar-calculator .kb-field-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.kb-solar-calculator .kb-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.kb-solar-calculator label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--kb-accent-navy);
+}
+.kb-solar-calculator .kb-optional {
+  font-weight: 400;
+  color: var(--kb-text-muted);
+}
+.kb-solar-calculator .kb-input {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9375rem;
+  color: var(--kb-text-main);
+  background-color: var(--kb-bg-surface);
+  border: 1px solid var(--kb-border);
+  border-radius: 6px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.kb-solar-calculator .kb-input:focus {
+  outline: none;
+  border-color: var(--kb-primary);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+}
+.kb-solar-calculator .kb-field-hint {
+  font-size: 0.75rem;
+  color: var(--kb-text-muted);
+}
+.kb-solar-calculator .kb-error {
+  display: none;
+  font-size: 0.75rem;
+  color: var(--kb-danger);
+  font-weight: 600;
+}
+.kb-solar-calculator .has-error .kb-input {
+  border-color: var(--kb-danger);
+}
+.kb-solar-calculator .has-error .kb-error {
+  display: block;
+}
+
+/* Collapsible */
+.kb-solar-calculator details summary {
+  cursor: pointer;
+  list-style: none;
+}
+.kb-solar-calculator details summary::-webkit-details-marker {
+  display: none;
+}
+.kb-solar-calculator .kb-summary-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+}
+.kb-solar-calculator .kb-tag-pill {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  background: var(--kb-bg-subtle);
+  border-radius: 4px;
+  color: var(--kb-text-muted);
+  font-weight: 500;
+}
+.kb-solar-calculator .kb-collapsible-body {
+  padding-top: 1rem;
+}
+
+/* Appliance Rows */
+.kb-solar-calculator .kb-appliances-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.kb-solar-calculator .kb-appliance-item {
+  background: var(--kb-bg-subtle);
+  border: 1px solid var(--kb-border);
+  border-radius: 6px;
+  padding: 0.85rem;
+  position: relative;
+}
+.kb-solar-calculator .kb-app-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+}
+@media (min-width: 680px) {
+  .kb-solar-calculator .kb-app-grid {
+    grid-template-columns: 2fr 1.3fr 1fr 1fr 1.2fr auto;
+    align-items: end;
+  }
+}
+.kb-solar-calculator .kb-app-actions {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+/* Buttons */
+.kb-solar-calculator .kb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.55rem 1rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.kb-solar-calculator .kb-btn-primary {
+  background: var(--kb-primary);
+  color: #ffffff;
+}
+.kb-solar-calculator .kb-btn-primary:hover {
+  background: var(--kb-primary-hover);
+}
+.kb-solar-calculator .kb-btn-secondary {
+  background: #ffffff;
+  color: var(--kb-primary);
+  border-color: var(--kb-primary);
+}
+.kb-solar-calculator .kb-btn-secondary:hover {
+  background: var(--kb-primary-light);
+}
+.kb-solar-calculator .kb-btn-ghost {
+  background: transparent;
+  color: var(--kb-accent-navy);
+  text-decoration: underline;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.8125rem;
+}
+.kb-solar-calculator .kb-btn-outline {
+  background: #ffffff;
+  color: var(--kb-text-muted);
+  border-color: var(--kb-border);
+}
+.kb-solar-calculator .kb-btn-outline:hover {
+  border-color: var(--kb-border-hover);
+  color: var(--kb-text-main);
+}
+.kb-solar-calculator .kb-btn-icon-only {
+  padding: 0.45rem;
+  background: #ffffff;
+  border: 1px solid var(--kb-border);
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.kb-solar-calculator .kb-btn-icon-only:hover {
+  background: var(--kb-bg-page);
+  border-color: var(--kb-border-hover);
+}
+.kb-solar-calculator .kb-btn-danger:hover {
+  border-color: var(--kb-danger);
+  color: var(--kb-danger);
+}
+.kb-solar-calculator .kb-actions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* Results Card */
+.kb-solar-calculator .kb-results-card {
+  border-top: 4px solid var(--kb-primary);
+  background: #ffffff;
+  position: sticky;
+  top: 1.5rem;
+}
+.kb-solar-calculator .kb-results-header {
+  margin-bottom: 1rem;
+}
+.kb-solar-calculator .kb-results-tag {
+  text-transform: uppercase;
+  font-size: 0.6875rem;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--kb-primary);
+}
+.kb-solar-calculator .kb-results-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0.2rem 0 0 0;
+  color: var(--kb-accent-navy);
+}
+
+.kb-solar-calculator .kb-hero-result {
+  background: var(--kb-primary-light);
+  border: 1px solid #ccfbf1;
+  border-radius: var(--kb-radius);
+  padding: 1.25rem;
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+.kb-solar-calculator .kb-runtime-display {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+  color: var(--kb-primary-hover);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.kb-solar-calculator .kb-runtime-human {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--kb-text-muted);
+  margin-top: 0.35rem;
+}
+
+/* Warnings */
+.kb-solar-calculator .kb-warnings-stack {
+  margin-bottom: 1.25rem;
+}
+.kb-solar-calculator .kb-alert-box {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+.kb-solar-calculator .kb-alert-warning {
+  background-color: var(--kb-warning-bg);
+  border: 1px solid #fde68a;
+  color: var(--kb-warning);
+}
+
+/* Metrics */
+.kb-solar-calculator .kb-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.kb-solar-calculator .kb-metric-tile {
+  background: var(--kb-bg-subtle);
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--kb-border);
+}
+.kb-solar-calculator .kb-metric-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--kb-text-muted);
+}
+.kb-solar-calculator .kb-metric-value {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--kb-accent-navy);
+  margin: 0.2rem 0;
+}
+.kb-solar-calculator .kb-metric-sub {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--kb-text-muted);
+}
+
+/* Visual Bar */
+.kb-solar-calculator .kb-vis-section {
+  margin-bottom: 1.25rem;
+}
+.kb-solar-calculator .kb-vis-label-flex {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--kb-text-muted);
+  margin-bottom: 0.35rem;
+}
+.kb-solar-calculator .kb-progress-bar {
+  display: flex;
+  height: 22px;
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: var(--kb-bg-subtle);
+  border: 1px solid var(--kb-border);
+}
+.kb-solar-calculator .kb-progress-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #ffffff;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: width 0.3s ease;
+}
+.kb-solar-calculator .kb-prog-usable { background-color: var(--kb-primary); }
+.kb-solar-calculator .kb-prog-reserve { background-color: #f59e0b; }
+.kb-solar-calculator .kb-prog-unusable { background-color: #94a3b8; }
+
+/* Solar Box */
+.kb-solar-calculator .kb-solar-insight {
+  border-left: 3px solid #f59e0b;
+  background-color: #fffbeb;
+  padding: 0.75rem;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 1.25rem;
+}
+.kb-solar-calculator .kb-insight-heading {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  color: #92400e;
+}
+.kb-solar-calculator .kb-insight-text {
+  font-size: 0.8125rem;
+  color: #78350f;
+  margin: 0;
+}
+
+/* Toolbar */
+.kb-solar-calculator .kb-utility-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-top: 1px solid var(--kb-border);
+  padding-top: 1rem;
+}
+.kb-solar-calculator .kb-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--kb-border);
+  background: var(--kb-bg-subtle);
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--kb-text-main);
+}
+.kb-solar-calculator .kb-tool-btn:hover {
+  background: var(--kb-border);
+}
+
+/* Content & FAQs */
+.kb-solar-calculator .kb-content-body {
+  margin-top: 3rem;
+  border-top: 2px solid var(--kb-border);
+  padding-top: 2rem;
+}
+.kb-solar-calculator .kb-info-block {
+  margin-bottom: 2.5rem;
+}
+.kb-solar-calculator .kb-info-block h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--kb-accent-navy);
+  margin-bottom: 1rem;
+}
+.kb-solar-calculator .kb-info-block p,
+.kb-solar-calculator .kb-info-block li {
+  font-size: 0.95rem;
+  color: var(--kb-text-muted);
+  line-height: 1.6;
+}
+.kb-solar-calculator .kb-guide-list,
+.kb-solar-calculator .kb-bullet-list {
+  padding-left: 1.25rem;
+  margin: 0;
+}
+.kb-solar-calculator .kb-guide-list li,
+.kb-solar-calculator .kb-bullet-list li {
+  margin-bottom: 0.5rem;
+}
+
+.kb-solar-calculator .kb-formula-box {
+  background: #ffffff;
+  border: 1px solid var(--kb-border);
+  border-left: 4px solid var(--kb-primary);
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+.kb-solar-calculator .kb-formula-box code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875rem;
+  color: var(--kb-accent-navy);
+  font-weight: 600;
+}
+
+.kb-solar-calculator .kb-usecases-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+@media (min-width: 768px) {
+  .kb-solar-calculator .kb-usecases-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.kb-solar-calculator .kb-usecase-card {
+  background: var(--kb-bg-surface);
+  border: 1px solid var(--kb-border);
+  border-radius: var(--kb-radius);
+  padding: 1rem;
+}
+.kb-solar-calculator .kb-usecase-card h3 {
+  font-size: 1.05rem;
+  margin: 0 0 0.5rem 0;
+  color: var(--kb-accent-navy);
+}
+
+.kb-solar-calculator .kb-worked-example {
+  background: var(--kb-bg-surface);
+  border: 1px solid var(--kb-border);
+  border-radius: var(--kb-radius);
+  padding: 1.25rem;
+}
+.kb-solar-calculator .kb-worked-example ul,
+.kb-solar-calculator .kb-worked-example ol {
+  padding-left: 1.25rem;
+}
+
+.kb-solar-calculator .kb-faq-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.kb-solar-calculator .kb-faq-item {
+  background: var(--kb-bg-surface);
+  border: 1px solid var(--kb-border);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+}
+.kb-solar-calculator .kb-faq-item h3 {
+  font-size: 1.05rem;
+  color: var(--kb-accent-navy);
+  margin: 0 0 0.5rem 0;
+}
+.kb-solar-calculator .kb-faq-item p {
+  margin: 0;
+}
+
+.kb-solar-calculator .kb-disclaimer-box {
+  background: var(--kb-bg-subtle);
+  border: 1px solid var(--kb-border);
+  border-radius: var(--kb-radius);
+  padding: 1rem;
+  margin-top: 2rem;
+}
+.kb-solar-calculator .kb-disclaimer-box h3 {
+  margin: 0 0 0.35rem 0;
+  font-size: 0.95rem;
+  color: var(--kb-accent-navy);
+}
+.kb-solar-calculator .kb-disclaimer-box p {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--kb-text-muted);
+}
+
+@media print {
+  .kb-actions-bar, .kb-utility-toolbar, .kb-btn-group-sm, .kb-app-actions, .kb-content-body {
+    display: none !important;
+  }
+}
+</style>
+
+<!-- =====================================================================
+     SEMANTIC HTML INTERFACE
+     ===================================================================== -->
+<div class="kb-solar-calculator" id="kbSolarCalcRoot">
+  <div class="kb-sr-only" aria-live="polite" id="kbCalcLiveFeedback"></div>
+
+  <!-- Header -->
+  <header class="kb-header">
+    <div class="kb-badge">System Sizing Tool</div>
+    <h1 class="kb-main-title">Solar Battery Runtime Calculator</h1>
+    <p class="kb-subtitle">Calculate real-world battery backup runtime for AC and DC appliances, accounting for depth of discharge, inverter inefficiencies, and optional solar input.</p>
+  </header>
+
+  <!-- Main Grid -->
+  <main class="kb-layout-grid">
+    
+    <!-- Left Column: Inputs -->
+    <div class="kb-inputs-col">
+      
+      <!-- 1. Battery Bank -->
+      <section class="kb-card">
+        <h2 class="kb-card-title">
+          <svg class="kb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="12" rx="2"></rect><line x1="20" y1="11" x2="20" y2="15"></line><line x1="7" y1="11" x2="7" y2="15"></line><line x1="11" y1="11" x2="11" y2="15"></line></svg>
+          1. Battery Bank Configuration
+        </h2>
+
+        <div class="kb-field-grid">
+          <div class="kb-form-group">
+            <label for="kbBatVoltage">Nominal Voltage (V)</label>
+            <select id="kbBatVoltage" class="kb-input">
+              <option value="12" selected>12V</option>
+              <option value="24">24V</option>
+              <option value="48">48V</option>
+              <option value="custom">Custom Voltage</option>
+            </select>
+          </div>
+
+          <div class="kb-form-group" id="kbCustomVoltageGroup" style="display: none;">
+            <label for="kbCustomVoltage">Custom Voltage (V)</label>
+            <input type="number" id="kbCustomVoltage" class="kb-input" min="1" max="1000" step="0.1" placeholder="e.g. 36">
+            <span class="kb-error" id="kbErrVoltage">Must be greater than 0</span>
+          </div>
+
+          <div class="kb-form-group">
+            <label for="kbBatCapacity">Rated Capacity (Ah)</label>
+            <input type="number" id="kbBatCapacity" class="kb-input" min="1" max="100000" step="1" value="100">
+            <span class="kb-error" id="kbErrCapacity">Enter a capacity &gt; 0</span>
+          </div>
+
+          <div class="kb-form-group">
+            <label for="kbBatChemistry">Battery Chemistry (Preset)</label>
+            <select id="kbBatChemistry" class="kb-input">
+              <option value="lifepo4" selected>LiFePO4 (Lithium Iron Phosphate - ~85% DoD)</option>
+              <option value="liion">Other Lithium-Ion (~80% DoD)</option>
+              <option value="agm">AGM Sealed Lead Acid (~50% DoD)</option>
+              <option value="flooded">Flooded Lead Acid (~50% DoD)</option>
+              <option value="gel">Gel Lead Acid (~50% DoD)</option>
+              <option value="custom">Custom Specifications</option>
+            </select>
+          </div>
+
+          <div class="kb-form-group">
+            <label for="kbBatDod">Depth of Discharge - DoD (%)</label>
+            <input type="number" id="kbBatDod" class="kb-input" min="1" max="100" step="1" value="85">
+            <span class="kb-field-hint">Usable limit specified by manufacturer.</span>
+            <span class="kb-error" id="kbErrDod">Must be between 1% and 100%</span>
+          </div>
+
+          <div class="kb-form-group">
+            <label for="kbBatHealth">Condition / Temp Adjustment (%)</label>
+            <input type="number" id="kbBatHealth" class="kb-input" min="10" max="120" step="1" value="100">
+            <span class="kb-field-hint">e.g. 80% for winter cold or older cells.</span>
+            <span class="kb-error" id="kbErrHealth">Must be 10% to 120%</span>
+          </div>
+
+          <div class="kb-form-group">
+            <label for="kbBatReserve">Safety Reserve Margin (%)</label>
+            <input type="number" id="kbBatReserve" class="kb-input" min="0" max="50" step="1" value="10">
+            <span class="kb-field-hint">Emergency backup buffer kept untouched.</span>
+            <span class="kb-error" id="kbErrReserve">Must be between 0% and 50%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Inverter & Efficiency -->
+      <section class="kb-card">
+        <h2 class="kb-card-title">
+          <svg class="kb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          2. Power Conversion & Inverter Efficiency
+        </h2>
+
+        <div class="kb-field-grid">
+          <div class="kb-form-group">
+            <label for="kbInverterEff">Inverter Efficiency for AC Loads (%)</label>
+            <input type="number" id="kbInverterEff" class="kb-input" min="50" max="99" step="1" value="90">
+            <span class="kb-field-hint">Applies exclusively to AC appliances (85-95%).</span>
+            <span class="kb-error" id="kbErrInvEff">Must be between 50% and 99%</span>
+          </div>
+
+          <div class="kb-form-group">
+            <label for="kbDcDcEff">DC-DC Converter Efficiency (%)</label>
+            <input type="number" id="kbDcDcEff" class="kb-input" min="50" max="100" step="1" value="100">
+            <span class="kb-field-hint">Set to 100% if wired direct to battery terminals.</span>
+            <span class="kb-error" id="kbErrDcEff">Must be between 50% and 100%</span>
+          </div>
+
+          <div class="kb-form-group">
+            <label for="kbInverterRating">Inverter Continuous Rating (W) <span class="kb-optional">(Optional)</span></label>
+            <input type="number" id="kbInverterRating" class="kb-input" min="0" max="50000" step="50" placeholder="e.g. 1000">
+          </div>
+
+          <div class="kb-form-group">
+            <label for="kbInverterSurgeRating">Inverter Surge Rating (W) <span class="kb-optional">(Optional)</span></label>
+            <input type="number" id="kbInverterSurgeRating" class="kb-input" min="0" max="100000" step="50" placeholder="e.g. 2000">
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Connected Appliances -->
+      <section class="kb-card">
+        <div class="kb-card-header-flex">
+          <h2 class="kb-card-title">
+            <svg class="kb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+            3. Connected Electrical Loads
+          </h2>
+          <div class="kb-btn-group-sm">
+            <button type="button" class="kb-btn kb-btn-secondary" id="kbBtnAddAppliance">+ Add Appliance</button>
+            <button type="button" class="kb-btn kb-btn-ghost" id="kbBtnLoadPreset">Load Realistic RV / Off-Grid Demo</button>
+          </div>
+        </div>
+
+        <p class="kb-section-desc">Specify appliance wattages, AC or DC power supply, and duty cycle (percentage of time actively drawing power).</p>
+
+        <div id="kbAppliancesContainer" class="kb-appliances-list"></div>
+      </section>
+
+      <!-- 4. Optional Solar Input -->
+      <section class="kb-card">
+        <details id="kbSolarDetails">
+          <summary class="kb-card-title kb-summary-title">
+            <span>
+              <svg class="kb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+              4. Optional Solar Recharging Input
+            </span>
+            <span class="kb-tag-pill">Click to expand</span>
+          </summary>
+          <div class="kb-collapsible-body">
+            <div class="kb-field-grid">
+              <div class="kb-form-group">
+                <label for="kbSolarArrayWatts">Solar Array Peak (Watts)</label>
+                <input type="number" id="kbSolarArrayWatts" class="kb-input" min="0" max="50000" step="10" value="0">
+              </div>
+              <div class="kb-form-group">
+                <label for="kbSunHours">Peak Sun Hours (Hours/Day)</label>
+                <input type="number" id="kbSunHours" class="kb-input" min="0" max="14" step="0.5" value="4.5">
+              </div>
+              <div class="kb-form-group">
+                <label for="kbSolarControllerEff">Charge Controller Eff. (%)</label>
+                <input type="number" id="kbSolarControllerEff" class="kb-input" min="60" max="99" step="1" value="95">
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <!-- Global Actions -->
+      <div class="kb-actions-bar">
+        <button type="button" class="kb-btn kb-btn-primary" id="kbBtnCalculate">Calculate Runtime</button>
+        <button type="button" class="kb-btn kb-btn-outline" id="kbBtnReset">Reset to Defaults</button>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Results Dashboard -->
+    <div class="kb-results-col">
+      <div class="kb-card kb-results-card">
+        <div class="kb-results-header">
+          <span class="kb-results-tag">Computed Estimate</span>
+          <h2 class="kb-results-title">Estimated Battery Runtime</h2>
+        </div>
+
+        <div class="kb-hero-result">
+          <div class="kb-runtime-display" id="kbRuntimePrimary">--</div>
+          <div class="kb-runtime-human" id="kbRuntimeHuman">Enter system details to calculate runtime</div>
+        </div>
+
+        <div id="kbWarningList" class="kb-warnings-stack" style="display: none;"></div>
+
+        <div class="kb-metrics-grid">
+          <div class="kb-metric-tile">
+            <span class="kb-metric-label">Nominal Energy</span>
+            <span class="kb-metric-value" id="kbResNominalWh">0 Wh</span>
+            <span class="kb-metric-sub">Rated capacity</span>
+          </div>
+          <div class="kb-metric-tile">
+            <span class="kb-metric-label">Usable Battery Energy</span>
+            <span class="kb-metric-value" id="kbResUsableWh">0 Wh</span>
+            <span class="kb-metric-sub">After DoD & Reserve</span>
+          </div>
+          <div class="kb-metric-tile">
+            <span class="kb-metric-label">Appliance Load</span>
+            <span class="kb-metric-value" id="kbResApplianceWatts">0 W</span>
+            <span class="kb-metric-sub">Active terminal draw</span>
+          </div>
+          <div class="kb-metric-tile">
+            <span class="kb-metric-label">Battery-Side Demand</span>
+            <span class="kb-metric-value" id="kbResBatteryDemandWatts">0 W</span>
+            <span class="kb-metric-sub">Includes conversion loss</span>
+          </div>
+          <div class="kb-metric-tile">
+            <span class="kb-metric-label">Load Breakdown</span>
+            <span class="kb-metric-value" id="kbResLoadSplit">AC: 0W | DC: 0W</span>
+            <span class="kb-metric-sub">Appliance power split</span>
+          </div>
+          <div class="kb-metric-tile">
+            <span class="kb-metric-label">Daily Energy Consumption</span>
+            <span class="kb-metric-value" id="kbResDailyEnergy">0 Wh/day</span>
+            <span class="kb-metric-sub">Across 24-hour cycle</span>
+          </div>
+        </div>
+
+        <!-- Visual Bar -->
+        <div class="kb-vis-section">
+          <div class="kb-vis-label-flex">
+            <span>Battery Energy Allocation</span>
+            <span>Usable vs Reserve</span>
+          </div>
+          <div class="kb-progress-bar">
+            <div class="kb-progress-segment kb-prog-usable" id="kbBarUsable" style="width: 75%;">Usable</div>
+            <div class="kb-progress-segment kb-prog-reserve" id="kbBarReserve" style="width: 10%;">Res.</div>
+            <div class="kb-progress-segment kb-prog-unusable" id="kbBarUnusable" style="width: 15%;">DoD Cap</div>
+          </div>
+        </div>
+
+        <!-- Solar Insight -->
+        <div id="kbSolarSummaryBox" class="kb-solar-insight" style="display: none;">
+          <h3 class="kb-insight-heading">Solar Generation Equilibrium</h3>
+          <p id="kbSolarSummaryText" class="kb-insight-text"></p>
+        </div>
+
+        <!-- Utility Toolbar -->
+        <div class="kb-utility-toolbar">
+          <button type="button" class="kb-tool-btn" id="kbBtnCopySummary">
+            <svg class="kb-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <span>Copy Summary</span>
+          </button>
+          <button type="button" class="kb-tool-btn" id="kbBtnExportCsv">
+            <svg class="kb-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Export CSV</span>
+          </button>
+          <button type="button" class="kb-tool-btn" id="kbBtnPrint">
+            <svg class="kb-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            <span>Print Report</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Editorial & SEO Deep Guide -->
+  <article class="kb-content-body">
+    
+    <section class="kb-info-block">
+      <h2>How to Use This Solar Battery Runtime Calculator</h2>
+      <ol class="kb-guide-list">
+        <li><strong>Set Up Your Battery Bank:</strong> Choose your system voltage (12V, 24V, 48V, or custom) and enter capacity in Amp-hours (Ah). Select chemistry to set a realistic Depth of Discharge (DoD).</li>
+        <li><strong>Enter Inverter Efficiency:</strong> If you are powering standard household AC electronics, set your inverter efficiency (typically 85% to 92%). Direct DC electronics bypass this loss entirely.</li>
+        <li><strong>Add Electrical Appliances:</strong> Select preset devices (like laptops, fans, or refrigerators) or add custom items. Specify active running wattage and duty cycles.</li>
+        <li><strong>Optional Solar Recharge:</strong> Input your solar panel array size and expected sunlight hours to see whether your solar panels can offset daily discharge.</li>
+        <li><strong>Review Sizing Insights:</strong> View total runtime in hours/minutes, battery-side watt demand, and export or copy your final calculation.</li>
+      </ol>
+    </section>
+
+    <section class="kb-info-block">
+      <h2>How the Calculation Works (Mathematical Formulas)</h2>
+      <p>This calculator avoids the common mistake of dividing nominal watt-hours by appliance wattage without accounting for separate conversion paths. It calculates usable energy and battery demand in distinct thermodynamic stages:</p>
+
+      <div class="kb-formula-box">
+        <p><strong>Stage 1: Usable Battery Energy</strong></p>
+        <code>Usable Wh = [Voltage (V) &times; Capacity (Ah)] &times; (DoD % / 100) &times; (Health % / 100) &times; (1 - Reserve % / 100)</code>
+      </div>
+
+      <div class="kb-formula-box">
+        <p><strong>Stage 2: Power Demand at the Battery Terminals</strong></p>
+        <code>AC Battery Demand (W) = &sum; [Appliance Watts &times; Qty &times; (Duty % / 100)] / Inverter Efficiency</code><br><br>
+        <code>DC Battery Demand (W) = &sum; [Appliance Watts &times; Qty &times; (Duty % / 100)] / DC-DC Efficiency</code><br><br>
+        <code>Total Battery Demand (W) = AC Battery Demand (W) + DC Battery Demand (W)</code>
+      </div>
+
+      <div class="kb-formula-box">
+        <p><strong>Stage 3: True Backup Runtime</strong></p>
+        <code>Estimated Runtime (Hours) = Usable Energy (Wh) / Total Battery Demand (W)</code>
+      </div>
+    </section>
+
+    <section class="kb-info-block">
+      <h2>Common Off-Grid & Backup Battery Use Cases</h2>
+      <div class="kb-usecases-grid">
+        <div class="kb-usecase-card">
+          <h3>Camper Vans & RVs</h3>
+          <p>Commonly powered by a 12V 100Ah LiFePO4 battery running a 45W 12V fridge (35% duty cycle), LED lighting, and phone charging for multiple days off-grid.</p>
+        </div>
+        <div class="kb-usecase-card">
+          <h3>Work-From-Home Resiliency</h3>
+          <p>Keeps a Wi-Fi router (15W–25W) and a laptop (45W–65W) operational for 12 to 24+ hours during prolonged municipal power outages.</p>
+        </div>
+        <div class="kb-usecase-card">
+          <h3>Medical CPAP Emergency Backup</h3>
+          <p>A standard CPAP running on 12V DC draws only 25W–35W without humidification, delivering over 25 hours of backup from a single 100Ah lithium battery.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="kb-info-block">
+      <h2>Worked Calculation Example</h2>
+      <div class="kb-worked-example">
+        <p><strong>Example System:</strong> 12V, 100Ah LiFePO4 battery at 90% DoD, 10% reserve, and 90% inverter efficiency powering a 60W laptop (AC) and a 20W LED strip (DC).</p>
+        <ol>
+          <li><code>Nominal Energy = 12V &times; 100Ah = 1200 Wh</code></li>
+          <li><code>Usable Wh = 1200 Wh &times; 0.90 &times; (1 - 0.10) = 972 Wh</code></li>
+          <li><code>AC Battery Demand = 60W / 0.90 = 66.67 W</code></li>
+          <li><code>DC Battery Demand = 20W / 1.00 = 20.00 W</code></li>
+          <li><code>Total Battery Demand = 66.67 W + 20.00 W = 86.67 W</code></li>
+          <li><code>Estimated Runtime = 972 Wh / 86.67 W = 11.21 Hours (~11 hours, 13 minutes)</code></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Structured FAQ Section -->
+    <section class="kb-info-block kb-faq-section">
+      <h2>Frequently Asked Questions</h2>
+      
+      <div class="kb-faq-item">
+        <h3>1. How long will a 100Ah battery run an appliance?</h3>
+        <p>Runtime depends on voltage and appliance draw. On a 12V system, a 100Ah battery holds 1,200 watt-hours nominal. With a LiFePO4 battery at 85% depth of discharge through a 90% efficient inverter, a continuous 100W load runs for approximately 9.1 hours.</p>
+      </div>
+
+      <div class="kb-faq-item">
+        <h3>2. How do I calculate battery runtime from Ah and volts?</h3>
+        <p>Multiply volts by amp-hours (V &times; Ah = Wh) to get nominal Watt-hours. Multiply by usable Depth of Discharge (e.g. 0.85 for lithium), then divide by your device's running wattage adjusted for inverter loss.</p>
+      </div>
+
+      <div class="kb-faq-item">
+        <h3>3. How do I convert battery Wh to hours?</h3>
+        <p>Divide the total usable Watt-hours by your load wattage. For example, 600 usable Wh divided by a 75W load gives 8 hours of runtime.</p>
+      </div>
+
+      <div class="kb-faq-item">
+        <h3>4. Does an inverter reduce battery backup time?</h3>
+        <p>Yes. Power inverters lose roughly 8% to 15% of energy as heat during DC-to-AC conversion and also consume 5W to 25W of continuous idle standby power.</p>
+      </div>
+
+      <div class="kb-faq-item">
+        <h3>5. What depth of discharge should I use for LiFePO4 batteries?</h3>
+        <p>Most manufacturers recommend 80% to 90% Depth of Discharge (DoD) to maximize cell lifespan across 3,000 to 5,000 cycles.</p>
+      </div>
+
+      <div class="kb-faq-item">
+        <h3>6. Can I run multiple appliances at the same time?</h3>
+        <p>Yes. This calculator adds the average wattages of all running appliances, provided their combined peak draw does not exceed your inverter or battery BMS limits.</p>
+      </div>
+
+      <div class="kb-faq-item">
+        <h3>7. Can a solar panel extend battery runtime?</h3>
+        <p>Yes. Daytime solar replenishment directly offsets ongoing power consumption, maintaining battery levels and significantly extending backup duration.</p>
+      </div>
+
+      <div class="kb-faq-item">
+        <h3>8. Why is real-world runtime different from the calculator estimate?</h3>
+        <p>Real-world conditions vary due to temperature drops, cell aging, wire resistance, inverter standby consumption, and variable compressor cycling.</p>
+      </div>
+
+      <div class="kb-faq-item">
+        <h3>9. How do I estimate the runtime of a CPAP machine or mini-fridge?</h3>
+        <p>Apply a duty cycle factor. A 100W mini-fridge running 35% of the time draws an average of 35W. CPAP machines draw much less power if heated humidification is switched off.</p>
+      </div>
+
+      <div class="kb-faq-item">
+        <h3>10. What happens if the appliance's starting surge is too high?</h3>
+        <p>If an appliance motor's starting spike exceeds your inverter's surge threshold or trips your battery's BMS overcurrent protection, the system will instantly shut down.</p>
+      </div>
+    </section>
+
+    <!-- Limitations Notice -->
+    <footer class="kb-disclaimer-box">
+      <h3>Engineering Disclaimers & Operational Limits</h3>
+      <p>This software tool provides predictive runtime models based on user inputs and electrical formulas. Actual runtime is subject to ambient temperature, cell degradation, and inverter idle draw. Never size critical medical life-support circuits without an engineering safety margin of at least 30% to 50%.</p>
+    </footer>
+
+  </article>
+</div>
+
+<!-- =====================================================================
+     FAQ SCHEMA MARKUP (Search Engine Rich Snippets)
+     ===================================================================== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How long will a 100Ah battery run an appliance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On a 12V system with LiFePO4 cells at 85% DoD and a 90% efficient inverter, a continuous 100W AC load will operate for roughly 9.1 hours."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate battery runtime from Ah and volts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply nominal voltage by Amp-hours to calculate total Watt-hours (Wh = V x Ah). Multiply by Depth of Discharge, then divide by load adjusted for inverter efficiency."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert battery Wh to hours?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Divide usable Watt-hours by your active load in Watts. For example, 600 usable Wh divided by a 75W load yields 8 hours of runtime."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does an inverter reduce battery backup time?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, inverters typically lose 8% to 15% of energy to heat during DC-to-AC conversion and draw quiescent idle power."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What depth of discharge should I use for LiFePO4 batteries?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Recommended Depth of Discharge for Lithium Iron Phosphate (LiFePO4) is typically 80% to 90% to maintain high cycle life."
+      }
+    }
+  ]
+}
+</script>
+
+<!-- =====================================================================
+     VANILLA JAVASCRIPT CALCULATION ENGINE
+     ===================================================================== -->
+<script>
+(function () {
+  "use strict";
+
+  const APPLIANCE_PRESETS = [
+    { label: "Custom Load", watts: 50, type: "AC", duty: 100, surge: 0 },
+    { label: "LED Light Bulbs (4x)", watts: 36, type: "AC", duty: 100, surge: 36 },
+    { label: "Laptop Computer", watts: 65, type: "AC", duty: 100, surge: 90 },
+    { label: "Wi-Fi Router + ONT", watts: 20, type: "DC", duty: 100, surge: 20 },
+    { label: "Starlink Standard Kit", watts: 60, type: "AC", duty: 100, surge: 85 },
+    { label: "CPAP Machine (No Heater)", watts: 30, type: "DC", duty: 100, surge: 30 },
+    { label: "12V RV Compressor Fridge", watts: 45, type: "DC", duty: 35, surge: 80 },
+    { label: "Household Refrigerator (AC)", watts: 150, type: "AC", duty: 35, surge: 800 },
+    { label: "Smart TV 50-inch", watts: 80, type: "AC", duty: 100, surge: 100 },
+    { label: "Standing Air Fan", watts: 40, type: "AC", duty: 100, surge: 60 },
+    { label: "Sump Pump (1/3 HP)", watts: 800, type: "AC", duty: 15, surge: 2200 },
+    { label: "Smartphone Charger", watts: 20, type: "DC", duty: 100, surge: 20 }
+  ];
+
+  const root = document.getElementById("kbSolarCalcRoot");
+  if (!root) return;
+
+  const batVoltageSelect = root.querySelector("#kbBatVoltage");
+  const customVoltageGroup = root.querySelector("#kbCustomVoltageGroup");
+  const customVoltageInput = root.querySelector("#kbCustomVoltage");
+  const batCapacityInput = root.querySelector("#kbBatCapacity");
+  const batChemistrySelect = root.querySelector("#kbBatChemistry");
+  const batDodInput = root.querySelector("#kbBatDod");
+  const batHealthInput = root.querySelector("#kbBatHealth");
+  const batReserveInput = root.querySelector("#kbBatReserve");
+
+  const inverterEffInput = root.querySelector("#kbInverterEff");
+  const dcDcEffInput = root.querySelector("#kbDcDcEff");
+  const inverterRatingInput = root.querySelector("#kbInverterRating");
+  const inverterSurgeRatingInput = root.querySelector("#kbInverterSurgeRating");
+
+  const solarArrayInput = root.querySelector("#kbSolarArrayWatts");
+  const sunHoursInput = root.querySelector("#kbSunHours");
+  const solarEffInput = root.querySelector("#kbSolarControllerEff");
+
+  const appliancesContainer = root.querySelector("#kbAppliancesContainer");
+  const btnAddAppliance = root.querySelector("#kbBtnAddAppliance");
+  const btnLoadPreset = root.querySelector("#kbBtnLoadPreset");
+  const btnCalculate = root.querySelector("#kbBtnCalculate");
+  const btnReset = root.querySelector("#kbBtnReset");
+
+  const runtimePrimary = root.querySelector("#kbRuntimePrimary");
+  const runtimeHuman = root.querySelector("#kbRuntimeHuman");
+  const resNominalWh = root.querySelector("#kbResNominalWh");
+  const resUsableWh = root.querySelector("#kbResUsableWh");
+  const resApplianceWatts = root.querySelector("#kbResApplianceWatts");
+  const resBatteryDemandWatts = root.querySelector("#kbResBatteryDemandWatts");
+  const resLoadSplit = root.querySelector("#kbResLoadSplit");
+  const resDailyEnergy = root.querySelector("#kbResDailyEnergy");
+  const warningList = root.querySelector("#kbWarningList");
+  const liveFeedback = root.querySelector("#kbCalcLiveFeedback");
+
+  const barUsable = root.querySelector("#kbBarUsable");
+  const barReserve = root.querySelector("#kbBarReserve");
+  const barUnusable = root.querySelector("#kbBarUnusable");
+  const solarSummaryBox = root.querySelector("#kbSolarSummaryBox");
+  const solarSummaryText = root.querySelector("#kbSolarSummaryText");
+
+  const btnCopy = root.querySelector("#kbBtnCopySummary");
+  const btnExport = root.querySelector("#kbBtnExportCsv");
+  const btnPrint = root.querySelector("#kbBtnPrint");
+
+  let applianceRowCounter = 0;
+
+  const CHEMISTRY_DOD_PRESETS = {
+    lifepo4: 85,
+    liion: 80,
+    agm: 50,
+    flooded: 50,
+    gel: 50,
+    custom: 80
+  };
+
+  function createApplianceRow(data = {}) {
+    applianceRowCounter++;
+    const rowId = "kbAppRow_" + applianceRowCounter;
+    const name = data.name || "Custom Load";
+    const watts = data.watts !== undefined ? data.watts : 60;
+    const qty = data.qty !== undefined ? data.qty : 1;
+    const type = data.type || "AC";
+    const duty = data.duty !== undefined ? data.duty : 100;
+    const surge = data.surge !== undefined ? data.surge : 0;
+
+    const row = document.createElement("div");
+    row.className = "kb-appliance-item";
+    row.id = rowId;
+
+    row.innerHTML = `
+      <div class="kb-app-grid">
+        <div class="kb-form-group">
+          <label for="${rowId}_preset">Appliance Preset</label>
+          <select id="${rowId}_preset" class="kb-input kb-app-preset">
+            ${APPLIANCE_PRESETS.map(p => `<option value="${p.label}" ${p.label === name ? "selected" : ""}>${p.label}</option>`).join("")}
+          </select>
+        </div>
+        <div class="kb-form-group">
+          <label for="${rowId}_watts">Power (Watts)</label>
+          <input type="number" id="${rowId}_watts" class="kb-input kb-app-watts" min="0" max="100000" step="1" value="${watts}">
+        </div>
+        <div class="kb-form-group">
+          <label for="${rowId}_qty">Qty</label>
+          <input type="number" id="${rowId}_qty" class="kb-input kb-app-qty" min="1" max="99" step="1" value="${qty}">
+        </div>
+        <div class="kb-form-group">
+          <label for="${rowId}_type">Supply</label>
+          <select id="${rowId}_type" class="kb-input kb-app-type">
+            <option value="AC" ${type === "AC" ? "selected" : ""}>AC (Inverter)</option>
+            <option value="DC" ${type === "DC" ? "selected" : ""}>DC (Direct)</option>
+          </select>
+        </div>
+        <div class="kb-form-group">
+          <label for="${rowId}_duty">Duty Cycle %</label>
+          <input type="number" id="${rowId}_duty" class="kb-input kb-app-duty" min="1" max="100" step="1" value="${duty}">
+        </div>
+        <div class="kb-app-actions">
+          <button type="button" class="kb-btn-icon-only kb-btn-duplicate" title="Duplicate row">
+            <svg class="kb-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </button>
+          <button type="button" class="kb-btn-icon-only kb-btn-danger kb-btn-remove" title="Remove row">
+            <svg class="kb-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+      <input type="hidden" class="kb-app-surge" value="${surge}">
+    `;
+
+    const presetSelect = row.querySelector(".kb-app-preset");
+    presetSelect.addEventListener("change", function () {
+      const match = APPLIANCE_PRESETS.find(p => p.label === this.value);
+      if (match) {
+        row.querySelector(".kb-app-watts").value = match.watts;
+        row.querySelector(".kb-app-type").value = match.type;
+        row.querySelector(".kb-app-duty").value = match.duty;
+        row.querySelector(".kb-app-surge").value = match.surge;
+        calculateRuntime();
+      }
+    });
+
+    row.querySelector(".kb-btn-duplicate").addEventListener("click", function () {
+      const cloneData = {
+        name: row.querySelector(".kb-app-preset").value,
+        watts: parseFloat(row.querySelector(".kb-app-watts").value) || 0,
+        qty: parseInt(row.querySelector(".kb-app-qty").value, 10) || 1,
+        type: row.querySelector(".kb-app-type").value,
+        duty: parseFloat(row.querySelector(".kb-app-duty").value) || 100,
+        surge: parseFloat(row.querySelector(".kb-app-surge").value) || 0
+      };
+      const newRow = createApplianceRow(cloneData);
+      appliancesContainer.insertBefore(newRow, row.nextSibling);
+      calculateRuntime();
+    });
+
+    row.querySelector(".kb-btn-remove").addEventListener("click", function () {
+      if (appliancesContainer.querySelectorAll(".kb-appliance-item").length <= 1) {
+        alert("At least one appliance row is required.");
+        return;
+      }
+      row.remove();
+      calculateRuntime();
+    });
+
+    row.querySelectorAll("input, select").forEach(el => {
+      el.addEventListener("input", calculateRuntime);
+    });
+
+    return row;
+  }
+
+  function validateNumber(inputEl, errElId, min, max) {
+    const val = parseFloat(inputEl.value);
+    const parent = inputEl.closest(".kb-form-group");
+
+    if (isNaN(val) || val < min || val > max) {
+      if (parent) parent.classList.add("has-error");
+      return null;
+    } else {
+      if (parent) parent.classList.remove("has-error");
+      return val;
+    }
+  }
+
+  function calculateRuntime() {
+    const warnings = [];
+
+    let voltage = 12;
+    if (batVoltageSelect.value === "custom") {
+      customVoltageGroup.style.display = "flex";
+      const customV = validateNumber(customVoltageInput, "kbErrVoltage", 1, 1000);
+      if (customV === null) return;
+      voltage = customV;
+    } else {
+      customVoltageGroup.style.display = "none";
+      voltage = parseFloat(batVoltageSelect.value);
+    }
+
+    const capacityAh = validateNumber(batCapacityInput, "kbErrCapacity", 1, 100000);
+    const dodPct = validateNumber(batDodInput, "kbErrDod", 1, 100);
+    const healthPct = validateNumber(batHealthInput, "kbErrHealth", 10, 120);
+    const reservePct = validateNumber(batReserveInput, "kbErrReserve", 0, 50);
+
+    const inverterEffPct = validateNumber(inverterEffInput, "kbErrInvEff", 50, 99);
+    const dcDcEffPct = validateNumber(dcDcEffInput, "kbErrDcEff", 50, 100);
+
+    if (capacityAh === null || dodPct === null || healthPct === null || reservePct === null || inverterEffPct === null || dcDcEffPct === null) {
+      runtimePrimary.textContent = "--";
+      runtimeHuman.textContent = "Please correct input errors";
+      return;
+    }
+
+    const effInverter = inverterEffPct / 100;
+    const effDc = dcDcEffPct / 100;
+
+    const nominalWh = voltage * capacityAh;
+    const usableFraction = (dodPct / 100) * (healthPct / 100) * (1 - (reservePct / 100));
+    const usableWh = nominalWh * usableFraction;
+
+    const rows = appliancesContainer.querySelectorAll(".kb-appliance-item");
+    let totalAcTerminalWatts = 0;
+    let totalDcTerminalWatts = 0;
+    let totalAcSurgeWatts = 0;
+    let totalDailyDutyWh = 0;
+    let totalBatteryDemandWatts = 0;
+    let validApplianceCount = 0;
+
+    rows.forEach(row => {
+      const watts = parseFloat(row.querySelector(".kb-app-watts").value) || 0;
+      const qty = parseInt(row.querySelector(".kb-app-qty").value, 10) || 0;
+      const type = row.querySelector(".kb-app-type").value;
+      const duty = parseFloat(row.querySelector(".kb-app-duty").value) || 0;
+      const surge = parseFloat(row.querySelector(".kb-app-surge").value) || watts;
+
+      if (watts > 0 && qty > 0 && duty > 0) {
+        validApplianceCount++;
+        const avgWatts = watts * qty * (duty / 100);
+        const totalSurge = surge * qty;
+        totalDailyDutyWh += avgWatts * 24;
+
+        if (type === "AC") {
+          totalAcTerminalWatts += avgWatts;
+          totalAcSurgeWatts += totalSurge;
+          totalBatteryDemandWatts += avgWatts / effInverter;
+        } else {
+          totalDcTerminalWatts += avgWatts;
+          totalBatteryDemandWatts += avgWatts / effDc;
+        }
+      }
+    });
+
+    const totalTerminalWatts = totalAcTerminalWatts + totalDcTerminalWatts;
+
+    const inverterContRating = parseFloat(inverterRatingInput.value) || 0;
+    const inverterSurgeRating = parseFloat(inverterSurgeRatingInput.value) || 0;
+
+    if (inverterContRating > 0 && totalAcTerminalWatts > inverterContRating) {
+      warnings.push(`Continuous AC load (${Math.round(totalAcTerminalWatts)}W) exceeds inverter continuous rating (${inverterContRating}W).`);
+    }
+
+    if (inverterSurgeRating > 0 && totalAcSurgeWatts > inverterSurgeRating) {
+      warnings.push(`Peak starting surge (${Math.round(totalAcSurgeWatts)}W) exceeds inverter surge limit (${inverterSurgeRating}W).`);
+    }
+
+    const dischargeCurrent = totalBatteryDemandWatts / voltage;
+    const cRate = dischargeCurrent / capacityAh;
+    if (cRate > 0.5 && (batChemistrySelect.value === "agm" || batChemistrySelect.value === "flooded" || batChemistrySelect.value === "gel")) {
+      warnings.push(`High discharge current (${dischargeCurrent.toFixed(1)}A / ${cRate.toFixed(2)}C). Lead-acid capacity drops quickly under heavy discharge.`);
+    }
+
+    if (validApplianceCount === 0 || totalTerminalWatts === 0 || totalBatteryDemandWatts === 0) {
+      runtimePrimary.textContent = "0h 0m";
+      runtimeHuman.textContent = "No active appliance power draw entered";
+      resNominalWh.textContent = `${Math.round(nominalWh).toLocaleString()} Wh`;
+      resUsableWh.textContent = `${Math.round(usableWh).toLocaleString()} Wh`;
+      resApplianceWatts.textContent = "0 W";
+      resBatteryDemandWatts.textContent = "0 W";
+      resLoadSplit.textContent = "AC: 0W | DC: 0W";
+      resDailyEnergy.textContent = "0 Wh/day";
+      solarSummaryBox.style.display = "none";
+      renderWarnings(warnings);
+      return;
+    }
+
+    const runtimeHoursDecimal = usableWh / totalBatteryDemandWatts;
+    const totalMinutes = Math.round(runtimeHoursDecimal * 60);
+    const hrs = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+    const formattedRuntime = hrs > 0 ? `${hrs}h ${mins}m` : `${mins} minutes`;
+
+    runtimePrimary.textContent = formattedRuntime;
+    runtimeHuman.textContent = `About ${hrs} hour${hrs === 1 ? "" : "s"} and ${mins} minute${mins === 1 ? "" : "s"} continuous backup`;
+
+    resNominalWh.textContent = `${Math.round(nominalWh).toLocaleString()} Wh`;
+    resUsableWh.textContent = `${Math.round(usableWh).toLocaleString()} Wh`;
+    resApplianceWatts.textContent = `${Math.round(totalTerminalWatts).toLocaleString()} W`;
+    resBatteryDemandWatts.textContent = `${Math.round(totalBatteryDemandWatts).toLocaleString()} W`;
+    resLoadSplit.textContent = `AC: ${Math.round(totalAcTerminalWatts)}W | DC: ${Math.round(totalDcTerminalWatts)}W`;
+    resDailyEnergy.textContent = `${Math.round(totalDailyDutyWh).toLocaleString()} Wh/day`;
+
+    const usableBarPct = Math.min(100, Math.max(0, usableFraction * 100));
+    const reserveBarPct = Math.min(100, Math.max(0, (reservePct / 100) * (dodPct / 100) * 100));
+    const unusableBarPct = Math.max(0, 100 - (usableBarPct + reserveBarPct));
+
+    barUsable.style.width = `${usableBarPct.toFixed(1)}%`;
+    barUsable.textContent = `Usable (${usableBarPct.toFixed(0)}%)`;
+    barReserve.style.width = `${reserveBarPct.toFixed(1)}%`;
+    barReserve.textContent = reserveBarPct > 8 ? `Res. (${reserveBarPct.toFixed(0)}%)` : "";
+    barUnusable.style.width = `${unusableBarPct.toFixed(1)}%`;
+    barUnusable.textContent = unusableBarPct > 10 ? `Cap (${unusableBarPct.toFixed(0)}%)` : "";
+
+    const solarWatts = parseFloat(solarArrayInput.value) || 0;
+    const sunHours = parseFloat(sunHoursInput.value) || 0;
+    const solarEff = (parseFloat(solarEffInput.value) || 95) / 100;
+
+    if (solarWatts > 0 && sunHours > 0) {
+      solarSummaryBox.style.display = "block";
+      const dailySolarWh = solarWatts * sunHours * solarEff;
+      const netDailyWh = dailySolarWh - totalDailyDutyWh;
+
+      if (netDailyWh >= 0) {
+        solarSummaryText.innerHTML = `<strong>Net Positive:</strong> Solar produces approx. <strong>${Math.round(dailySolarWh).toLocaleString()} Wh/day</strong>, exceeding daily appliance demand of <strong>${Math.round(totalDailyDutyWh).toLocaleString()} Wh/day</strong>.`;
+      } else {
+        const netDeficit = Math.abs(netDailyWh);
+        solarSummaryText.innerHTML = `<strong>Net Deficit:</strong> Solar produces approx. <strong>${Math.round(dailySolarWh).toLocaleString()} Wh/day</strong>, leaving a deficit of <strong>-${Math.round(netDeficit).toLocaleString()} Wh/day</strong> compared to continuous 24-hr load.`;
+      }
+    } else {
+      solarSummaryBox.style.display = "none";
+    }
+
+    renderWarnings(warnings);
+    liveFeedback.textContent = `Calculation updated: estimated runtime is ${formattedRuntime}.`;
+  }
+
+  function renderWarnings(warnings) {
+    if (warnings.length === 0) {
+      warningList.style.display = "none";
+      warningList.innerHTML = "";
+    } else {
+      warningList.style.display = "block";
+      warningList.innerHTML = warnings.map(w => `<div class="kb-alert-box kb-alert-warning">${w}</div>`).join("");
+    }
+  }
+
+  function loadDemoScenario() {
+    appliancesContainer.innerHTML = "";
+    appliancesContainer.appendChild(createApplianceRow({ name: "12V RV Compressor Fridge", watts: 45, qty: 1, type: "DC", duty: 35, surge: 75 }));
+    appliancesContainer.appendChild(createApplianceRow({ name: "Starlink Standard Kit", watts: 60, qty: 1, type: "AC", duty: 100, surge: 85 }));
+    appliancesContainer.appendChild(createApplianceRow({ name: "Laptop Computer", watts: 65, qty: 1, type: "AC", duty: 100, surge: 90 }));
+    appliancesContainer.appendChild(createApplianceRow({ name: "LED Light Bulbs (4x)", watts: 36, qty: 1, type: "AC", duty: 50, surge: 36 }));
+
+    batVoltageSelect.value = "12";
+    customVoltageGroup.style.display = "none";
+    batCapacityInput.value = "100";
+    batChemistrySelect.value = "lifepo4";
+    batDodInput.value = "85";
+    batHealthInput.value = "100";
+    batReserveInput.value = "10";
+    inverterEffInput.value = "90";
+    dcDcEffInput.value = "100";
+    inverterRatingInput.value = "1000";
+    inverterSurgeRatingInput.value = "2000";
+    solarArrayInput.value = "200";
+    sunHoursInput.value = "4.5";
+
+    calculateRuntime();
+  }
+
+  function resetDefaults() {
+    appliancesContainer.innerHTML = "";
+    appliancesContainer.appendChild(createApplianceRow({ name: "Custom Load", watts: 100, qty: 1, type: "AC", duty: 100, surge: 100 }));
+
+    batVoltageSelect.value = "12";
+    customVoltageGroup.style.display = "none";
+    customVoltageInput.value = "";
+    batCapacityInput.value = "100";
+    batChemistrySelect.value = "lifepo4";
+    batDodInput.value = "85";
+    batHealthInput.value = "100";
+    batReserveInput.value = "10";
+    inverterEffInput.value = "90";
+    dcDcEffInput.value = "100";
+    inverterRatingInput.value = "";
+    inverterSurgeRatingInput.value = "";
+    solarArrayInput.value = "0";
+    sunHoursInput.value = "4.5";
+
+    calculateRuntime();
+  }
+
+  btnCopy.addEventListener("click", function () {
+    const text = `Solar Battery Runtime Summary:
+- Runtime: ${runtimePrimary.textContent} (${runtimeHuman.textContent})
+- Nominal Battery Wh: ${resNominalWh.textContent}
+- Usable Battery Wh: ${resUsableWh.textContent}
+- Total Appliance Load: ${resApplianceWatts.textContent}
+- Battery-Side Demand: ${resBatteryDemandWatts.textContent}
+- Breakdown: ${resLoadSplit.textContent}`;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Summary copied to clipboard!");
+      }).catch(() => {
+        prompt("Copy calculation summary:", text);
+      });
+    } else {
+      prompt("Copy calculation summary:", text);
+    }
+  });
+
+  btnExport.addEventListener("click", function () {
+    const rows = appliancesContainer.querySelectorAll(".kb-appliance-item");
+    let csv = "Appliance,Watts,Quantity,Supply,DutyCyclePercent\r\n";
+
+    rows.forEach(r => {
+      const name = (r.querySelector(".kb-app-preset").value || "").replace(/"/g, '""');
+      const watts = r.querySelector(".kb-app-watts").value;
+      const qty = r.querySelector(".kb-app-qty").value;
+      const type = r.querySelector(".kb-app-type").value;
+      const duty = r.querySelector(".kb-app-duty").value;
+      csv += `"${name}",${watts},${qty},${type},${duty}\r\n`;
+    });
+
+    csv += `\r\nMetric,Value\r\n`;
+    csv += `Estimated Runtime,"${runtimePrimary.textContent}"\r\n`;
+    csv += `Nominal Energy,"${resNominalWh.textContent}"\r\n`;
+    csv += `Usable Energy,"${resUsableWh.textContent}"\r\n`;
+    csv += `Total Appliance Load,"${resApplianceWatts.textContent}"\r\n`;
+    csv += `Battery Demand,"${resBatteryDemandWatts.textContent}"\r\n`;
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "battery_runtime_sizing.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  });
+
+  btnPrint.addEventListener("click", function () {
+    window.print();
+  });
+
+  btnAddAppliance.addEventListener("click", () => {
+    appliancesContainer.appendChild(createApplianceRow());
+    calculateRuntime();
+  });
+
+  btnLoadPreset.addEventListener("click", loadDemoScenario);
+  btnReset.addEventListener("click", resetDefaults);
+  btnCalculate.addEventListener("click", calculateRuntime);
+
+  batVoltageSelect.addEventListener("change", () => {
+    if (batVoltageSelect.value === "custom") {
+      customVoltageGroup.style.display = "flex";
+    } else {
+      customVoltageGroup.style.display = "none";
+    }
+    calculateRuntime();
+  });
+
+  batChemistrySelect.addEventListener("change", function () {
+    if (CHEMISTRY_DOD_PRESETS[this.value] !== undefined) {
+      batDodInput.value = CHEMISTRY_DOD_PRESETS[this.value];
+    }
+    calculateRuntime();
+  });
+
+  [
+    batCapacityInput, customVoltageInput, batDodInput, batHealthInput,
+    batReserveInput, inverterEffInput, dcDcEffInput, inverterRatingInput,
+    inverterSurgeRatingInput, solarArrayInput, sunHoursInput, solarEffInput
+  ].forEach(input => {
+    input.addEventListener("input", calculateRuntime);
+  });
+
+  resetDefaults();
+})();
+</script>
