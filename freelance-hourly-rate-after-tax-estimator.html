@@ -1,0 +1,1552 @@
+<!-- ==========================================================================
+     FREELANCE HOURLY RATE AFTER TAX ESTIMATOR — GOOGLE BLOGGER EDITION
+     Root Scope: #fhar-estimator | Prefix: fhar-
+     Dependencies: NONE (Pure HTML5, Scoped CSS3, Vanilla ES6+ JavaScript)
+     ========================================================================== -->
+
+<div id="fhar-estimator">
+  <style>
+    /* CSS RESET & THEME SCOPING */
+    #fhar-estimator {
+      --fhar-primary: #0284c7;
+      --fhar-primary-hover: #0369a1;
+      --fhar-accent: #0f766e;
+      --fhar-accent-light: #ccfbf1;
+      --fhar-dark: #0f172a;
+      --fhar-slate: #334155;
+      --fhar-muted: #64748b;
+      --fhar-border: #e2e8f0;
+      --fhar-card-bg: #ffffff;
+      --fhar-bg-subtle: #f8fafc;
+      --fhar-danger: #dc2626;
+      --fhar-danger-bg: #fef2f2;
+      --fhar-warning: #d97706;
+      --fhar-warning-bg: #fffbeb;
+      --fhar-success: #16a34a;
+      --fhar-radius: 8px;
+      --fhar-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--fhar-dark);
+      line-height: 1.5;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    #fhar-estimator * {
+      box-sizing: border-box;
+    }
+
+    /* Headings */
+    #fhar-estimator h1.fhar-main-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--fhar-dark);
+      margin: 0 0 10px 0;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+
+    #fhar-estimator h2.fhar-section-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--fhar-slate);
+      margin: 28px 0 12px 0;
+      border-bottom: 2px solid var(--fhar-border);
+      padding-bottom: 6px;
+    }
+
+    #fhar-estimator h3.fhar-sub-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--fhar-slate);
+      margin: 16px 0 8px 0;
+    }
+
+    #fhar-estimator p {
+      margin: 0 0 12px 0;
+      color: var(--fhar-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Cards */
+    .fhar-card {
+      background: var(--fhar-card-bg);
+      border: 1px solid var(--fhar-border);
+      border-radius: var(--fhar-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--fhar-shadow);
+    }
+
+    .fhar-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--fhar-border);
+    }
+
+    /* Mode Selector Tabs */
+    .fhar-mode-nav {
+      display: flex;
+      background: var(--fhar-bg-subtle);
+      border: 1px solid var(--fhar-border);
+      border-radius: var(--fhar-radius);
+      padding: 4px;
+      gap: 4px;
+      margin-bottom: 20px;
+    }
+
+    .fhar-mode-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--fhar-muted);
+      font-weight: 600;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .fhar-mode-btn.fhar-mode-active {
+      background: var(--fhar-card-bg);
+      color: var(--fhar-primary);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Grid Layouts */
+    .fhar-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .fhar-grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .fhar-grid-3 { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+    .fhar-grid-4 { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+
+    /* Forms & Controls */
+    .fhar-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .fhar-field label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--fhar-slate);
+    }
+
+    .fhar-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .fhar-input-prefix, .fhar-input-suffix {
+      position: absolute;
+      font-size: 0.85rem;
+      color: var(--fhar-muted);
+      pointer-events: none;
+      padding: 0 10px;
+    }
+    .fhar-input-prefix { left: 0; }
+    .fhar-input-suffix { right: 0; }
+
+    .fhar-control {
+      width: 100%;
+      height: 40px;
+      padding: 8px 12px;
+      border: 1px solid var(--fhar-border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      color: var(--fhar-dark);
+      background-color: #ffffff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .fhar-control.fhar-has-prefix { padding-left: 32px; }
+    .fhar-control.fhar-has-suffix { padding-right: 32px; }
+
+    .fhar-control:focus {
+      outline: none;
+      border-color: var(--fhar-primary);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+
+    .fhar-control.fhar-is-invalid {
+      border-color: var(--fhar-danger);
+      background-color: var(--fhar-danger-bg);
+    }
+
+    .fhar-field-error {
+      font-size: 0.75rem;
+      color: var(--fhar-danger);
+      min-height: 15px;
+    }
+
+    .fhar-helper-text {
+      font-size: 0.78rem;
+      color: var(--fhar-muted);
+      margin-top: 2px;
+    }
+
+    /* Buttons */
+    .fhar-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      line-height: 1.2;
+    }
+    .fhar-btn-primary { background: var(--fhar-primary); color: #ffffff; }
+    .fhar-btn-primary:hover { background: var(--fhar-primary-hover); }
+    .fhar-btn-secondary { background: #ffffff; border-color: var(--fhar-border); color: var(--fhar-slate); }
+    .fhar-btn-secondary:hover { background: #f1f5f9; border-color: #cbd5e1; }
+    .fhar-btn-danger { background: #ffffff; border-color: #fca5a5; color: var(--fhar-danger); }
+    .fhar-btn-danger:hover { background: var(--fhar-danger-bg); }
+    .fhar-btn-sm { padding: 4px 8px; font-size: 0.78rem; }
+    .fhar-btn-lg { padding: 12px 24px; font-size: 1rem; width: 100%; }
+
+    .fhar-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    /* Alerts */
+    .fhar-alert {
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .fhar-alert-danger { background: var(--fhar-danger-bg); border: 1px solid #fecaca; color: #991b1b; }
+    .fhar-alert-info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+    .fhar-alert-icon { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; }
+
+    /* Results Dashboard */
+    .fhar-results-box {
+      margin-top: 24px;
+      border: 2px solid var(--fhar-border);
+      border-radius: var(--fhar-radius);
+      padding: 20px;
+      background: #ffffff;
+      box-shadow: var(--fhar-shadow);
+    }
+
+    .fhar-highlight-banner {
+      background: var(--fhar-bg-subtle);
+      border: 1px solid var(--fhar-border);
+      border-radius: var(--fhar-radius);
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .fhar-highlight-title {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--fhar-muted);
+      font-weight: 700;
+    }
+    .fhar-highlight-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--fhar-primary);
+      margin: 4px 0;
+    }
+    .fhar-highlight-sub {
+      font-size: 0.85rem;
+      color: var(--fhar-muted);
+    }
+
+    .fhar-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .fhar-stat-card {
+      background: var(--fhar-bg-subtle);
+      border: 1px solid var(--fhar-border);
+      border-radius: 6px;
+      padding: 12px;
+    }
+    .fhar-stat-label { font-size: 0.78rem; color: var(--fhar-muted); text-transform: uppercase; font-weight: 600; }
+    .fhar-stat-num { font-size: 1.25rem; font-weight: 700; color: var(--fhar-slate); margin-top: 2px; }
+
+    /* Visual Proportion Bar */
+    .fhar-bar-wrap { margin: 16px 0; }
+    .fhar-bar-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .fhar-stacked-bar {
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      overflow: hidden;
+      background: #e2e8f0;
+    }
+    .fhar-bar-seg {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      transition: width 0.3s ease;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding: 0 4px;
+    }
+    .fhar-bar-takehome { background-color: #0284c7; }
+    .fhar-bar-tax { background-color: #d97706; }
+    .fhar-bar-expense { background-color: #64748b; }
+
+    .fhar-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.82rem;
+      margin-top: 8px;
+    }
+    .fhar-legend-item { display: flex; align-items: center; gap: 6px; }
+    .fhar-legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+    /* Itemized Expenses Table */
+    .fhar-itemized-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 10px;
+    }
+    .fhar-itemized-table th, .fhar-itemized-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--fhar-border);
+      text-align: left;
+    }
+    .fhar-itemized-table th { background: var(--fhar-bg-subtle); color: var(--fhar-slate); }
+    .fhar-itemized-table td:last-child { text-align: right; }
+
+    /* Scenario Comparison Table */
+    .fhar-table-wrap {
+      overflow-x: auto;
+      margin-top: 12px;
+      border: 1px solid var(--fhar-border);
+      border-radius: 6px;
+    }
+    .fhar-data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: right;
+    }
+    .fhar-data-table th, .fhar-data-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--fhar-border);
+    }
+    .fhar-data-table th {
+      background: var(--fhar-bg-subtle);
+      color: var(--fhar-slate);
+      font-weight: 700;
+    }
+    .fhar-data-table th:first-child, .fhar-data-table td:first-child { text-align: left; }
+    .fhar-data-table tr:hover { background-color: #f8fafc; }
+
+    /* Accordion FAQ */
+    .fhar-faq-item {
+      border: 1px solid var(--fhar-border);
+      border-radius: 6px;
+      margin-bottom: 8px;
+      background: #ffffff;
+    }
+    .fhar-faq-question {
+      width: 100%;
+      padding: 12px 16px;
+      background: none;
+      border: none;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--fhar-slate);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .fhar-faq-answer {
+      padding: 0 16px 14px 16px;
+      font-size: 0.9rem;
+      color: var(--fhar-muted);
+      display: none;
+    }
+    .fhar-faq-item.fhar-faq-open .fhar-faq-answer { display: block; }
+    .fhar-faq-icon {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+    .fhar-faq-item.fhar-faq-open .fhar-faq-icon { transform: rotate(180deg); }
+
+    .fhar-sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Print Formatting */
+    @media print {
+      body { background: #ffffff !important; }
+      #fhar-estimator { max-width: 100% !important; padding: 0 !important; }
+      .fhar-mode-nav, .fhar-toolbar, .fhar-btn, .fhar-faq-section { display: none !important; }
+      .fhar-card, .fhar-results-box { box-shadow: none !important; border: 1px solid #94a3b8 !important; }
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 640px) {
+      #fhar-estimator h1.fhar-main-title { font-size: 1.45rem; }
+      .fhar-highlight-value { font-size: 1.8rem; }
+      .fhar-stat-grid { grid-template-columns: 1fr; }
+      .fhar-toolbar .fhar-btn { width: 100%; }
+      .fhar-mode-nav { flex-direction: column; }
+    }
+  </style>
+
+  <!-- ACCESSIBLE LIVE REGION -->
+  <div id="fhar-aria-live" class="fhar-sr-only" aria-live="polite"></div>
+
+  <!-- ARTICLE HEADER (ONE H1) -->
+  <header>
+    <h1 class="fhar-main-title">Freelance Hourly Rate After Tax Estimator</h1>
+    <p>
+      Accurately calculate your billable hourly rate or estimate your net take-home earnings with this professional <strong>freelance hourly rate calculator</strong>. Factor in business expenses, unpaid non-billable time, and tax reserves to ensure your freelance business is profitable and sustainable.
+    </p>
+  </header>
+
+  <!-- MODE SELECTOR TABS -->
+  <div class="fhar-mode-nav" role="tablist" aria-label="Calculation Modes">
+    <button type="button" id="fhar-tab-finder" class="fhar-mode-btn fhar-mode-active" role="tab" aria-selected="true" aria-controls="fhar-mode-finder-panel">
+      Mode A: Rate Finder (Target Net Income)
+    </button>
+    <button type="button" id="fhar-tab-estimator" class="fhar-mode-btn" role="tab" aria-selected="false" aria-controls="fhar-mode-estimator-panel">
+      Mode B: Take-Home Estimator (From Hourly Rate)
+    </button>
+  </div>
+
+  <!-- GLOBAL SETTINGS CARD (Currency & Income/Rate) -->
+  <section class="fhar-card" aria-labelledby="fhar-settings-title">
+    <div class="fhar-card-header">
+      <h2 id="fhar-settings-title" class="fhar-sub-title" style="margin:0;">1. Currency & Financial Target</h2>
+      <span style="font-size:0.75rem; color:var(--fhar-muted); font-weight:600;">STEP 1</span>
+    </div>
+
+    <div class="fhar-grid fhar-grid-3">
+      <div class="fhar-field">
+        <label for="fhar-currency">Display Currency</label>
+        <select id="fhar-currency" class="fhar-control" aria-label="Select Currency">
+          <option value="$" data-code="USD" selected>USD — US Dollar ($)</option>
+          <option value="₹" data-code="INR">INR — Indian Rupee (₹)</option>
+          <option value="£" data-code="GBP">GBP — British Pound (£)</option>
+          <option value="€" data-code="EUR">EUR — Euro (€)</option>
+          <option value="C$" data-code="CAD">CAD — Canadian Dollar (C$)</option>
+          <option value="A$" data-code="AUD">AUD — Australian Dollar (A$)</option>
+        </select>
+        <span class="fhar-field-error"></span>
+      </div>
+
+      <!-- Mode A Dynamic Field: Desired Take-Home -->
+      <div class="fhar-field" id="fhar-field-target-net">
+        <label for="fhar-target-net">Desired Annual Take-Home Income</label>
+        <div class="fhar-input-wrap">
+          <span class="fhar-input-prefix fhar-curr-sym">$</span>
+          <input type="number" id="fhar-target-net" class="fhar-control fhar-has-prefix" value="60000" min="0" step="any" placeholder="60000" required>
+        </div>
+        <span class="fhar-field-error" id="fhar-error-target-net"></span>
+        <span class="fhar-helper-text">Personal net income target after all taxes & expenses.</span>
+      </div>
+
+      <!-- Mode B Dynamic Field: Hourly Rate (Hidden initially) -->
+      <div class="fhar-field" id="fhar-field-hourly-rate" style="display:none;">
+        <label for="fhar-current-rate">Current Hourly Billing Rate</label>
+        <div class="fhar-input-wrap">
+          <span class="fhar-input-prefix fhar-curr-sym">$</span>
+          <input type="number" id="fhar-current-rate" class="fhar-control fhar-has-prefix" value="65" min="0" step="any" placeholder="65.00">
+        </div>
+        <span class="fhar-field-error" id="fhar-error-current-rate"></span>
+        <span class="fhar-helper-text">Your gross hourly client billing rate.</span>
+      </div>
+
+      <div class="fhar-field">
+        <label for="fhar-tax-rate">Estimated Effective Tax Rate</label>
+        <div class="fhar-input-wrap">
+          <input type="number" id="fhar-tax-rate" class="fhar-control fhar-has-suffix" value="25" min="0" max="80" step="0.1" placeholder="25">
+          <span class="fhar-input-suffix">%</span>
+        </div>
+        <span class="fhar-field-error" id="fhar-error-tax-rate"></span>
+        <span class="fhar-helper-text">Estimated blend of income & self-employment taxes.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2: WORK SCHEDULE & BILLABLE HOURS -->
+  <section class="fhar-card" aria-labelledby="fhar-schedule-title">
+    <div class="fhar-card-header">
+      <h2 id="fhar-schedule-title" class="fhar-sub-title" style="margin:0;">2. Working Schedule & Billable Utilization</h2>
+      <span style="font-size:0.75rem; color:var(--fhar-muted); font-weight:600;">STEP 2</span>
+    </div>
+
+    <div class="fhar-grid fhar-grid-3">
+      <div class="fhar-field">
+        <label for="fhar-weeks-year">Working Weeks Per Year</label>
+        <input type="number" id="fhar-weeks-year" class="fhar-control" value="48" min="1" max="52" step="1">
+        <span class="fhar-field-error" id="fhar-error-weeks"></span>
+        <span class="fhar-helper-text">52 weeks minus holidays and vacation (e.g. 48).</span>
+      </div>
+
+      <div class="fhar-field">
+        <label for="fhar-hours-week">Total Working Hours / Week</label>
+        <input type="number" id="fhar-hours-week" class="fhar-control" value="40" min="1" max="100" step="0.5">
+        <span class="fhar-field-error" id="fhar-error-hours"></span>
+        <span class="fhar-helper-text">Total weekly hours dedicated to your business.</span>
+      </div>
+
+      <div class="fhar-field">
+        <label for="fhar-utilization">Billable Utilization (%)</label>
+        <div class="fhar-input-wrap">
+          <input type="number" id="fhar-utilization" class="fhar-control fhar-has-suffix" value="60" min="1" max="100" step="1">
+          <span class="fhar-input-suffix">%</span>
+        </div>
+        <span class="fhar-field-error" id="fhar-error-utilization"></span>
+        <span class="fhar-helper-text">Percentage of hours invoiced (typically 50%–70%).</span>
+      </div>
+    </div>
+
+    <!-- Live Schedule Metrics Summary -->
+    <div style="background:var(--fhar-bg-subtle); padding:10px 14px; border-radius:6px; margin-top:14px; font-size:0.85rem; color:var(--fhar-slate); display:flex; flex-wrap:wrap; gap:20px; border:1px solid var(--fhar-border);">
+      <div>Total Annual Hours: <strong id="fhar-live-total-hours">1,920</strong></div>
+      <div>Annual Billable Hours: <strong id="fhar-live-billable-hours" style="color:var(--fhar-primary);">1,152</strong></div>
+      <div>Unpaid / Overhead Hours: <strong id="fhar-live-unpaid-hours" style="color:var(--fhar-muted);">768</strong></div>
+    </div>
+  </section>
+
+  <!-- STEP 3: BUSINESS EXPENSES -->
+  <section class="fhar-card" aria-labelledby="fhar-expenses-title">
+    <div class="fhar-card-header">
+      <h2 id="fhar-expenses-title" class="fhar-sub-title" style="margin:0;">3. Annual Business Expenses</h2>
+      <div style="display:flex; gap:6px;">
+        <button type="button" id="fhar-btn-toggle-itemized" class="fhar-btn fhar-btn-secondary fhar-btn-sm">
+          Switch to Itemized List
+        </button>
+      </div>
+    </div>
+
+    <!-- Option A: Lump Sum Input -->
+    <div id="fhar-lump-expense-box">
+      <div class="fhar-field" style="max-width:320px;">
+        <label for="fhar-total-expense-input">Total Annual Business Expenses</label>
+        <div class="fhar-input-wrap">
+          <span class="fhar-input-prefix fhar-curr-sym">$</span>
+          <input type="number" id="fhar-total-expense-input" class="fhar-control fhar-has-prefix" value="6000" min="0" step="any" placeholder="6000">
+        </div>
+        <span class="fhar-field-error" id="fhar-error-expenses"></span>
+        <span class="fhar-helper-text">Software, internet, laptop, marketing, insurance, accounting.</span>
+      </div>
+    </div>
+
+    <!-- Option B: Itemized Table (Hidden by default) -->
+    <div id="fhar-itemized-expense-box" style="display:none;">
+      <p style="font-size:0.85rem;">Specify expense categories to calculate your annual deductible total:</p>
+      <table class="fhar-itemized-table" aria-label="Itemized Expenses">
+        <thead>
+          <tr>
+            <th>Expense Category</th>
+            <th style="width:160px;">Annual Amount</th>
+            <th style="width:80px; text-align:right;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="fhar-itemized-tbody"></tbody>
+      </table>
+      <div class="fhar-toolbar" style="justify-content:space-between; align-items:center;">
+        <button type="button" id="fhar-btn-add-expense" class="fhar-btn fhar-btn-secondary fhar-btn-sm">+ Add Category</button>
+        <span style="font-size:0.88rem; font-weight:700;">Itemized Total: <span id="fhar-itemized-sum-text">$6,000.00</span></span>
+      </div>
+    </div>
+
+    <!-- Rounding Preference (Rate Finder Mode Only) -->
+    <div id="fhar-rounding-row" style="margin-top:16px; padding-top:12px; border-top:1px dashed var(--fhar-border); display:flex; align-items:center; gap:10px; font-size:0.85rem;">
+      <label for="fhar-rounding-select" style="font-weight:600; color:var(--fhar-slate);">Recommended Rate Rounding:</label>
+      <select id="fhar-rounding-select" class="fhar-control" style="width:auto; height:34px; padding:4px 8px;">
+        <option value="none">Exact calculated rate (no rounding)</option>
+        <option value="0.5">Round up to nearest 0.50</option>
+        <option value="1.0" selected>Round up to nearest 1.00</option>
+        <option value="5.0">Round up to nearest 5.00</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- CALCULATE ACTION BAR -->
+  <div style="margin-bottom:20px;">
+    <button type="button" id="fhar-btn-calculate" class="fhar-btn fhar-btn-primary fhar-btn-lg">
+      Calculate Freelance Financial Plan
+    </button>
+  </div>
+
+  <div id="fhar-global-alert" style="display:none;" role="alert"></div>
+
+  <!-- SECTION 4: RESULTS DASHBOARD (Generated upon calculation) -->
+  <section id="fhar-results-section" class="fhar-results-box" style="display:none;" aria-labelledby="fhar-results-heading">
+    <div class="fhar-card-header">
+      <h2 id="fhar-results-heading" class="fhar-section-title" style="margin:0; border:none; padding:0;">
+        Freelance Rate & Tax Breakdown
+      </h2>
+      <div class="fhar-toolbar" style="margin:0;">
+        <button type="button" id="fhar-btn-copy" class="fhar-btn fhar-btn-secondary fhar-btn-sm" title="Copy text summary to clipboard">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          Copy Summary
+        </button>
+        <button type="button" id="fhar-btn-csv" class="fhar-btn fhar-btn-secondary fhar-btn-sm" title="Export CSV spreadsheet">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export CSV
+        </button>
+        <button type="button" id="fhar-btn-print" class="fhar-btn fhar-btn-secondary fhar-btn-sm" title="Print statement">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          Print
+        </button>
+      </div>
+    </div>
+
+    <!-- PRIMARY HEADLINE HERO BANNER -->
+    <div class="fhar-highlight-banner">
+      <div class="fhar-highlight-title" id="fhar-hero-title">Recommended Hourly Billing Rate</div>
+      <div class="fhar-highlight-value" id="fhar-hero-val">$75.00</div>
+      <div class="fhar-highlight-sub" id="fhar-hero-sub">Based on 1,152 billable hours/year to reach $60,000.00 net income</div>
+    </div>
+
+    <!-- METRIC METRIC CARDS -->
+    <div class="fhar-stat-grid">
+      <div class="fhar-stat-card">
+        <div class="fhar-stat-label">Annual Gross Billings</div>
+        <div class="fhar-stat-num" id="fhar-res-gross">—</div>
+      </div>
+      <div class="fhar-stat-card">
+        <div class="fhar-stat-label">Annual Business Expenses</div>
+        <div class="fhar-stat-num" id="fhar-res-expenses">—</div>
+      </div>
+      <div class="fhar-stat-card">
+        <div class="fhar-stat-label">Taxable Profit (Modeled)</div>
+        <div class="fhar-stat-num" id="fhar-res-profit">—</div>
+      </div>
+      <div class="fhar-stat-card">
+        <div class="fhar-stat-label">Estimated Tax Reserve</div>
+        <div class="fhar-stat-num" id="fhar-res-tax">—</div>
+      </div>
+      <div class="fhar-stat-card">
+        <div class="fhar-stat-label">Annual Take-Home Income</div>
+        <div class="fhar-stat-num" id="fhar-res-net" style="color:var(--fhar-primary);">—</div>
+      </div>
+      <div class="fhar-stat-card">
+        <div class="fhar-stat-label">Monthly Take-Home Income</div>
+        <div class="fhar-stat-num" id="fhar-res-monthly-net">—</div>
+      </div>
+      <div class="fhar-stat-card">
+        <div class="fhar-stat-label">Net Take-Home / Billable Hour</div>
+        <div class="fhar-stat-num" id="fhar-res-net-hour">—</div>
+      </div>
+      <div class="fhar-stat-card">
+        <div class="fhar-stat-label">Unbilled Working Hours</div>
+        <div class="fhar-stat-num" id="fhar-res-unbilled">—</div>
+      </div>
+    </div>
+
+    <!-- REVENUE ALLOCATION STACKED BAR -->
+    <div class="fhar-bar-wrap">
+      <div class="fhar-bar-label-row">
+        <span>Gross Revenue Allocation Breakdown</span>
+        <span id="fhar-bar-gross-label">100% Gross</span>
+      </div>
+      <div class="fhar-stacked-bar" role="img" aria-label="Visual breakdown of gross revenue into take home, taxes, and expenses">
+        <div id="fhar-bar-net" class="fhar-bar-seg fhar-bar-takehome" style="width:65%;">Take-Home</div>
+        <div id="fhar-bar-tax" class="fhar-bar-seg fhar-bar-tax" style="width:25%;">Taxes</div>
+        <div id="fhar-bar-exp" class="fhar-bar-seg fhar-bar-expense" style="width:10%;">Expenses</div>
+      </div>
+      <div class="fhar-legend">
+        <div class="fhar-legend-item">
+          <div class="fhar-legend-dot" style="background:#0284c7;"></div>
+          <span>Net Take-Home: <strong id="fhar-legend-net-val">65%</strong></span>
+        </div>
+        <div class="fhar-legend-item">
+          <div class="fhar-legend-dot" style="background:#d97706;"></div>
+          <span>Estimated Taxes: <strong id="fhar-legend-tax-val">25%</strong></span>
+        </div>
+        <div class="fhar-legend-item">
+          <div class="fhar-legend-dot" style="background:#64748b;"></div>
+          <span>Business Expenses: <strong id="fhar-legend-exp-val">10%</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT-IF SCENARIO COMPARISON -->
+    <div style="margin-top:28px;">
+      <div class="fhar-card-header">
+        <h3 class="fhar-sub-title" style="margin:0;">What-If Scenario Planning</h3>
+        <span style="font-size:0.8rem; color:var(--fhar-muted);">Compare variations of your rate</span>
+      </div>
+      <p style="font-size:0.85rem;">See how adjustments to billable utilization, expenses, or taxes impact your hourly rate and net income:</p>
+      
+      <div class="fhar-table-wrap">
+        <table class="fhar-data-table" aria-label="Scenario Comparison Table">
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th>Billable Utilization</th>
+              <th>Hourly Rate</th>
+              <th>Gross Revenue</th>
+              <th>Annual Taxes</th>
+              <th>Net Annual Take-Home</th>
+            </tr>
+          </thead>
+          <tbody id="fhar-scenarios-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SEO CONTENT & EDITORIAL ARCHITECTURE
+       ========================================================================== -->
+  <article>
+    <h2 class="fhar-section-title">Calculate Your Freelance Hourly Rate</h2>
+    <p>
+      Determining what to charge as a self-employed professional is one of the most critical business decisions you will make. When transitioning from salaried employment to freelancing, charging your former hourly wage usually results in a severe pay cut. As a sole proprietor or independent contractor, you must independently cover your own business operating expenses, health benefits, retirement contributions, and self-employment taxes—all while spending significant time on non-billable administrative tasks.
+    </p>
+    <p>
+      This <strong>freelancer take home pay calculator</strong> works backwards from your personal financial lifestyle requirements or forwards from your client quotes to ensure your <strong>freelance rate after taxes</strong> leaves you fully compensated.
+    </p>
+
+    <h2 class="fhar-section-title">How to Use This Calculator</h2>
+    <ol style="margin-left:20px; font-size:0.92rem; color:var(--fhar-slate);">
+      <li><strong>Select your calculation mode:</strong> Choose <em>Rate Finder (Mode A)</em> if you have a target annual take-home salary in mind. Choose <em>Take-Home Estimator (Mode B)</em> if you want to see how much real income a specific hourly rate yields.</li>
+      <li><strong>Define your work schedule:</strong> Input realistic working weeks per year and your estimated <em>billable utilization percentage</em>. Most seasoned freelancers spend 25% to 40% of their total time on unpaid marketing, administrative overhead, invoicing, and client proposals.</li>
+      <li><strong>Account for business expenses:</strong> Enter software licenses, hardware amortizations, phone, internet, and office expenses as either a simple lump sum or an itemized breakdown.</li>
+      <li><strong>Input your estimated effective tax rate:</strong> Enter a realistic percentage reflecting national, state/provincial, and municipal taxes plus self-employment social contributions.</li>
+      <li><strong>Review your personalized dashboard:</strong> Evaluate the required hourly billing rate, gross invoicing milestones, and visual allocation curves.</li>
+    </ol>
+
+    <h2 class="fhar-section-title">Features of the Freelance Rate Calculator</h2>
+    <ul style="margin-left:20px; font-size:0.92rem; color:var(--fhar-slate);">
+      <li><strong>Dual-Mode Closed-Form Logic:</strong> Seamlessly toggle between finding a target rate and auditing an existing rate without losing field state.</li>
+      <li><strong>Realistic Billable Hour Modeling:</strong> Prevents the common pitfall of assuming 2,080 annual billable hours by adjusting for non-billable administrative time.</li>
+      <li><strong>Multi-Currency Precision:</strong> Formats figures in USD ($), INR (₹), GBP (£), EUR (€), CAD (C$), or AUD (A$) using international locale-aware numbering.</li>
+      <li><strong>Itemized Overhead Tracking:</strong> Allows detailed categorization of operating costs or quick lump-sum projections.</li>
+      <li><strong>What-If Scenario Planning:</strong> Compares baseline calculations against alternative utilization and expense assumptions.</li>
+      <li><strong>Zero Server Transmission:</strong> 100% client-side execution ensures your private financial goals never leave your device.</li>
+    </ul>
+
+    <h2 class="fhar-section-title">When to Use This Estimator</h2>
+    <p>
+      This tool provides an essential framework for independent consultants, software engineers, copywriters, graphic designers, and agency freelancers under several practical scenarios:
+    </p>
+    <div class="fhar-grid fhar-grid-2" style="margin-top:12px;">
+      <div style="background:var(--fhar-bg-subtle); padding:16px; border-radius:6px; border-left:4px solid var(--fhar-primary);">
+        <h3 class="fhar-sub-title" style="margin-top:0;">Transitioning from Full-Time Employment</h3>
+        <p style="font-size:0.875rem; margin:0;">
+          Calculate the exact hourly multiplier needed to replace your traditional W-2 or salaried compensation after accounting for paid time off, employer-covered taxes, and benefits.
+        </p>
+      </div>
+      <div style="background:var(--fhar-bg-subtle); padding:16px; border-radius:6px; border-left:4px solid var(--fhar-accent);">
+        <h3 class="fhar-sub-title" style="margin-top:0;">Annual Rate Reviews & Client Proposals</h3>
+        <p style="font-size:0.875rem; margin:0;">
+          Determine how increasing software subscriptions, inflation, or changing tax brackets require you to adjust your standard contracts and client quotes.
+        </p>
+      </div>
+    </div>
+
+    <!-- FREQUENTLY ASKED QUESTIONS -->
+    <h2 class="fhar-section-title">Frequently Asked Questions</h2>
+    <div class="fhar-faq-section" id="fhar-faq-container">
+      <div class="fhar-faq-item">
+        <button type="button" class="fhar-faq-question" aria-expanded="false">
+          <span>What is a freelance hourly rate after tax estimator?</span>
+          <svg class="fhar-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="fhar-faq-answer">
+          It is an analytical financial planning tool that calculates the hourly client billing rate required to meet your personal net income needs after accounting for non-billable overhead, operating business expenses, and estimated income and self-employment taxes.
+        </div>
+      </div>
+
+      <div class="fhar-faq-item">
+        <button type="button" class="fhar-faq-question" aria-expanded="false">
+          <span>How do I calculate my freelance hourly rate?</span>
+          <svg class="fhar-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="fhar-faq-answer">
+          Add your target take-home salary divided by (1 minus your effective tax rate) to your annual business expenses to find required gross billings. Then, divide that gross amount by your actual annual billable hours (weeks worked × weekly hours × utilization percentage).
+        </div>
+      </div>
+
+      <div class="fhar-faq-item">
+        <button type="button" class="fhar-faq-question" aria-expanded="false">
+          <span>How much should I charge per hour as a freelancer?</span>
+          <svg class="fhar-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="fhar-faq-answer">
+          A common rule of thumb is to take the salaried wage you want to earn, divide it by 1,000 (rather than standard 2,080 full-time hours), and add a 20% to 30% margin for health insurance and self-employment taxes. For instance, a $75,000 salaried equivalent typically translates into a freelance rate of $75 to $95 per hour.
+        </div>
+      </div>
+
+      <div class="fhar-faq-item">
+        <button type="button" class="fhar-faq-question" aria-expanded="false">
+          <span>How do taxes affect my freelance hourly rate?</span>
+          <svg class="fhar-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="fhar-faq-answer">
+          Freelancers generally pay both the employer and employee portions of social safety net taxes (such as FICA in the US or self-employed National Insurance in the UK), in addition to ordinary income tax. Taxes are modeled as a percentage of business profits (gross revenue minus allowable expenses).
+        </div>
+      </div>
+
+      <div class="fhar-faq-item">
+        <button type="button" class="fhar-faq-question" aria-expanded="false">
+          <span>What is the difference between gross revenue and take-home income?</span>
+          <svg class="fhar-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="fhar-faq-answer">
+          Gross revenue is the total invoice amount collected from clients. Take-home income is the net personal cash remaining after paying all business operating overhead and remitting all business and personal taxes.
+        </div>
+      </div>
+
+      <div class="fhar-faq-item">
+        <button type="button" class="fhar-faq-question" aria-expanded="false">
+          <span>How do business expenses affect my freelance rate?</span>
+          <svg class="fhar-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="fhar-faq-answer">
+          Business expenses increase the gross billings you must collect to sustain your lifestyle. However, legitimate business expenses reduce your taxable profit, shielding that portion of your revenue from income tax.
+        </div>
+      </div>
+
+      <div class="fhar-faq-item">
+        <button type="button" class="fhar-faq-question" aria-expanded="false">
+          <span>What are billable hours?</span>
+          <svg class="fhar-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="fhar-faq-answer">
+          Billable hours represent time spent directly executing client projects that can be invoiced. Non-billable hours include administrative tasks, accounting, pitching prospective clients, marketing, hardware setup, and professional development.
+        </div>
+      </div>
+
+      <div class="fhar-faq-item">
+        <button type="button" class="fhar-faq-question" aria-expanded="false">
+          <span>How many billable hours should a freelancer work per week?</span>
+          <svg class="fhar-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="fhar-faq-answer">
+          For full-time freelancers working 40 total hours a week, 20 to 28 hours (50% to 70% billable utilization) is the realistic industry average. Sustaining more than 30 billable hours per week over long periods frequently leads to burnout and marketing neglect.
+        </div>
+      </div>
+
+      <div class="fhar-faq-item">
+        <button type="button" class="fhar-faq-question" aria-expanded="false">
+          <span>Can I use this calculator in different currencies?</span>
+          <svg class="fhar-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="fhar-faq-answer">
+          Yes. The tool formats all calculations in USD ($), INR (₹), GBP (£), EUR (€), CAD (C$), or AUD (A$). Selecting a currency changes the display symbol only and does not perform foreign exchange conversion.
+        </div>
+      </div>
+
+      <div class="fhar-faq-item">
+        <button type="button" class="fhar-faq-question" aria-expanded="false">
+          <span>Does this tool calculate my exact income tax?</span>
+          <svg class="fhar-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="fhar-faq-answer">
+          No. The estimator uses a simplified, user-provided effective tax rate applied to net business profit. Actual tax liability depends on your filing status, progressive tax brackets, local jurisdictions, itemized personal deductions, and business entity classifications.
+        </div>
+      </div>
+
+      <div class="fhar-faq-item">
+        <button type="button" class="fhar-faq-question" aria-expanded="false">
+          <span>What happens if my business expenses exceed my revenue?</span>
+          <svg class="fhar-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="fhar-faq-answer">
+          Under this simplified model, your taxable profit is treated as zero (no negative tax is credited) and the calculator reports a business loss.
+        </div>
+      </div>
+
+      <div class="fhar-faq-item">
+        <button type="button" class="fhar-faq-question" aria-expanded="false">
+          <span>Can I use the calculator if I work part-time?</span>
+          <svg class="fhar-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="fhar-faq-answer">
+          Yes. Simply input your actual part-time schedule (such as 15 or 20 total weekly hours) and your target take-home income or current hourly rate.
+        </div>
+      </div>
+
+      <div class="fhar-faq-item">
+        <button type="button" class="fhar-faq-question" aria-expanded="false">
+          <span>Does this calculator save my financial information?</span>
+          <svg class="fhar-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="fhar-faq-answer">
+          Your calculations run in your browser. This tool does not require bank access or an account. All figures remain strictly private on your device.
+        </div>
+      </div>
+    </div>
+
+    <!-- FINANCIAL DISCLAIMER -->
+    <h2 class="fhar-section-title">Financial Disclaimer</h2>
+    <div style="background:#f1f5f9; border-left:4px solid #64748b; padding:12px 16px; border-radius:4px; font-size:0.84rem; color:#475569; margin-bottom:24px;">
+      This calculator provides estimates for general planning and educational purposes. Tax treatment varies by country, region, tax year, business structure, deductions, and individual circumstances. The default model uses a simplified user-entered effective tax rate and is not a calculation of your exact tax liability. Actual results may differ. Consult a qualified tax professional for advice specific to your circumstances.
+    </div>
+  </article>
+
+  <!-- ==========================================================================
+       VANILLA JAVASCRIPT CALCULATION & UI ENGINE
+       ========================================================================== -->
+  <script>
+    (function () {
+      "use strict";
+
+      // Application State
+      let activeMode = "finder"; // 'finder' or 'estimator'
+      let selectedCurrency = "$";
+      let currencyCode = "USD";
+      let isItemized = false;
+
+      // Itemized Expenses Registry
+      let itemizedExpenses = [
+        { id: "exp_1", name: "Software Licenses & Subscriptions", amount: 1800 },
+        { id: "exp_2", name: "Computer, Hardware & Office", amount: 1500 },
+        { id: "exp_3", name: "Internet, Mobile & Phone", amount: 1200 },
+        { id: "exp_4", name: "Accounting & Legal Services", amount: 900 },
+        { id: "exp_5", name: "Marketing, Website & Hosting", amount: 600 }
+      ];
+
+      // Calculation Results Cache
+      let lastResult = null;
+
+      // DOM Cache
+      const tabFinder = document.getElementById("fhar-tab-finder");
+      const tabEstimator = document.getElementById("fhar-tab-estimator");
+      const fieldTargetNet = document.getElementById("fhar-field-target-net");
+      const fieldHourlyRate = document.getElementById("fhar-field-hourly-rate");
+      const roundingRow = document.getElementById("fhar-rounding-row");
+
+      const currencySelect = document.getElementById("fhar-currency");
+      const targetNetInput = document.getElementById("fhar-target-net");
+      const currentRateInput = document.getElementById("fhar-current-rate");
+      const taxRateInput = document.getElementById("fhar-tax-rate");
+      const weeksYearInput = document.getElementById("fhar-weeks-year");
+      const hoursWeekInput = document.getElementById("fhar-hours-week");
+      const utilizationInput = document.getElementById("fhar-utilization");
+      const totalExpenseInput = document.getElementById("fhar-total-expense-input");
+      const roundingSelect = document.getElementById("fhar-rounding-select");
+
+      const liveTotalHours = document.getElementById("fhar-live-total-hours");
+      const liveBillableHours = document.getElementById("fhar-live-billable-hours");
+      const liveUnpaidHours = document.getElementById("fhar-live-unpaid-hours");
+
+      const lumpBox = document.getElementById("fhar-lump-expense-box");
+      const itemizedBox = document.getElementById("fhar-itemized-expense-box");
+      const itemizedTbody = document.getElementById("fhar-itemized-tbody");
+      const itemizedSumText = document.getElementById("fhar-itemized-sum-text");
+      const btnToggleItemized = document.getElementById("fhar-btn-toggle-itemized");
+      const btnAddExpense = document.getElementById("fhar-btn-add-expense");
+
+      const btnCalculate = document.getElementById("fhar-btn-calculate");
+      const globalAlert = document.getElementById("fhar-global-alert");
+      const resultsSection = document.getElementById("fhar-results-section");
+      const ariaLive = document.getElementById("fhar-aria-live");
+
+      const btnCopy = document.getElementById("fhar-btn-copy");
+      const btnCsv = document.getElementById("fhar-btn-csv");
+      const btnPrint = document.getElementById("fhar-btn-print");
+      const scenariosBody = document.getElementById("fhar-scenarios-body");
+
+      // FORMATTERS
+      function formatMoney(amount) {
+        if (isNaN(amount) || amount === null) return selectedCurrency + "0.00";
+        try {
+          return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: currencyCode,
+            currencyDisplay: "narrowSymbol"
+          }).format(amount);
+        } catch (e) {
+          return selectedCurrency + Number(amount).toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          });
+        }
+      }
+
+      function formatNumber(num, decimals) {
+        return Number(num).toLocaleString(undefined, {
+          minimumFractionDigits: decimals || 0,
+          maximumFractionDigits: decimals || 0
+        });
+      }
+
+      function sanitizeText(str) {
+        const d = document.createElement("div");
+        d.textContent = str || "";
+        return d.innerHTML;
+      }
+
+      function announce(msg) {
+        if (ariaLive) ariaLive.textContent = msg;
+      }
+
+      // UI MODE TOGGLING
+      function setMode(mode) {
+        activeMode = mode;
+        if (mode === "finder") {
+          tabFinder.classList.add("fhar-mode-active");
+          tabFinder.setAttribute("aria-selected", "true");
+          tabEstimator.classList.remove("fhar-mode-active");
+          tabEstimator.setAttribute("aria-selected", "false");
+
+          fieldTargetNet.style.display = "flex";
+          fieldHourlyRate.style.display = "none";
+          roundingRow.style.display = "flex";
+        } else {
+          tabEstimator.classList.add("fhar-mode-active");
+          tabEstimator.setAttribute("aria-selected", "true");
+          tabFinder.classList.remove("fhar-mode-active");
+          tabFinder.setAttribute("aria-selected", "false");
+
+          fieldTargetNet.style.display = "none";
+          fieldHourlyRate.style.display = "flex";
+          roundingRow.style.display = "none";
+        }
+        updateLiveScheduleMetrics();
+        resultsSection.style.display = "none";
+      }
+
+      // CURRENCY UPDATE
+      function updateCurrency() {
+        const opt = currencySelect.options[currencySelect.selectedIndex];
+        selectedCurrency = opt.value;
+        currencyCode = opt.getAttribute("data-code") || "USD";
+
+        document.querySelectorAll(".fhar-curr-sym").forEach(function (el) {
+          el.textContent = selectedCurrency;
+        });
+
+        renderItemizedTable();
+        if (lastResult) {
+          renderDashboard(lastResult);
+        }
+      }
+
+      // SCHEDULE LIVE UPDATE
+      function updateLiveScheduleMetrics() {
+        const weeks = parseFloat(weeksYearInput.value) || 0;
+        const hours = parseFloat(hoursWeekInput.value) || 0;
+        const util = parseFloat(utilizationInput.value) || 0;
+
+        const totalHours = weeks * hours;
+        const billableHours = totalHours * (util / 100);
+        const unpaidHours = Math.max(0, totalHours - billableHours);
+
+        liveTotalHours.textContent = formatNumber(totalHours, 0);
+        liveBillableHours.textContent = formatNumber(billableHours, 1);
+        liveUnpaidHours.textContent = formatNumber(unpaidHours, 1);
+      }
+
+      // EXPENSE ITEMIZATION HANDLERS
+      function calculateItemizedTotal() {
+        return itemizedExpenses.reduce(function (sum, item) {
+          return sum + (Number(item.amount) || 0);
+        }, 0);
+      }
+
+      function renderItemizedTable() {
+        itemizedTbody.innerHTML = "";
+        itemizedExpenses.forEach(function (exp, idx) {
+          const tr = document.createElement("tr");
+          tr.innerHTML =
+            '<td><input type="text" class="fhar-control fhar-exp-name" data-idx="' + idx + '" value="' + sanitizeText(exp.name) + '" style="height:32px; font-size:0.85rem;"></td>' +
+            '<td><div class="fhar-input-wrap"><span class="fhar-input-prefix fhar-curr-sym">' + selectedCurrency + '</span><input type="number" class="fhar-control fhar-has-prefix fhar-exp-val" data-idx="' + idx + '" value="' + exp.amount + '" min="0" step="any" style="height:32px; font-size:0.85rem;"></div></td>' +
+            '<td style="text-align:right;"><button type="button" class="fhar-btn fhar-btn-danger fhar-btn-sm fhar-btn-del-exp" data-idx="' + idx + '">&times;</button></td>';
+          itemizedTbody.appendChild(tr);
+        });
+
+        const sum = calculateItemizedTotal();
+        itemizedSumText.textContent = formatMoney(sum);
+        totalExpenseInput.value = sum;
+      }
+
+      function toggleItemizedView() {
+        isItemized = !isItemized;
+        if (isItemized) {
+          lumpBox.style.display = "none";
+          itemizedBox.style.display = "block";
+          btnToggleItemized.textContent = "Switch to Single Lump Sum";
+          renderItemizedTable();
+        } else {
+          lumpBox.style.display = "block";
+          itemizedBox.style.display = "none";
+          btnToggleItemized.textContent = "Switch to Itemized List";
+          totalExpenseInput.value = calculateItemizedTotal();
+        }
+      }
+
+      // VALIDATION
+      function clearErrors() {
+        document.querySelectorAll("#fhar-estimator .fhar-control").forEach(function (c) {
+          c.classList.remove("fhar-is-invalid");
+        });
+        document.querySelectorAll("#fhar-estimator .fhar-field-error").forEach(function (e) {
+          e.textContent = "";
+        });
+        globalAlert.style.display = "none";
+        globalAlert.innerHTML = "";
+      }
+
+      function showError(id, msg) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = msg;
+      }
+
+      function validateInputs() {
+        clearErrors();
+        let valid = true;
+
+        const weeks = parseFloat(weeksYearInput.value);
+        if (isNaN(weeks) || weeks <= 0 || weeks > 52) {
+          weeksYearInput.classList.add("fhar-is-invalid");
+          showError("fhar-error-weeks", "Must be between 1 and 52 weeks.");
+          valid = false;
+        }
+
+        const hours = parseFloat(hoursWeekInput.value);
+        if (isNaN(hours) || hours <= 0 || hours > 100) {
+          hoursWeekInput.classList.add("fhar-is-invalid");
+          showError("fhar-error-hours", "Must be between 1 and 100 hours/week.");
+          valid = false;
+        }
+
+        const util = parseFloat(utilizationInput.value);
+        if (isNaN(util) || util <= 0 || util > 100) {
+          utilizationInput.classList.add("fhar-is-invalid");
+          showError("fhar-error-utilization", "Must be between 1% and 100%.");
+          valid = false;
+        }
+
+        const taxRate = parseFloat(taxRateInput.value);
+        if (isNaN(taxRate) || taxRate < 0 || taxRate >= 100) {
+          taxRateInput.classList.add("fhar-is-invalid");
+          showError("fhar-error-tax-rate", "Enter an effective tax rate between 0% and 99%.");
+          valid = false;
+        }
+
+        let expenses = parseFloat(totalExpenseInput.value);
+        if (isNaN(expenses) || expenses < 0) {
+          totalExpenseInput.classList.add("fhar-is-invalid");
+          showError("fhar-error-expenses", "Expenses cannot be negative.");
+          valid = false;
+        }
+
+        let targetNet = 0;
+        let currentRate = 0;
+
+        if (activeMode === "finder") {
+          targetNet = parseFloat(targetNetInput.value);
+          if (isNaN(targetNet) || targetNet < 0) {
+            targetNetInput.classList.add("fhar-is-invalid");
+            showError("fhar-error-target-net", "Desired income must be 0 or greater.");
+            valid = false;
+          }
+        } else {
+          currentRate = parseFloat(currentRateInput.value);
+          if (isNaN(currentRate) || currentRate < 0) {
+            currentRateInput.classList.add("fhar-is-invalid");
+            showError("fhar-error-current-rate", "Hourly rate must be 0 or greater.");
+            valid = false;
+          }
+        }
+
+        if (!valid) {
+          globalAlert.innerHTML =
+            '<div class="fhar-alert fhar-alert-danger">' +
+              '<svg class="fhar-alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>' +
+              '<div>Please correct the highlighted inputs before calculating.</div>' +
+            '</div>';
+          globalAlert.style.display = "block";
+          announce("Validation error: Please review highlighted inputs.");
+          return null;
+        }
+
+        return {
+          mode: activeMode,
+          weeks: weeks,
+          hoursWeek: hours,
+          utilization: util,
+          taxRateDecimal: taxRate / 100,
+          taxRatePct: taxRate,
+          expenses: expenses,
+          targetNet: targetNet,
+          currentRate: currentRate,
+          rounding: roundingSelect.value
+        };
+      }
+
+      // CORE FINANCIAL CALCULATION ENGINE
+      function computeFinancials(params) {
+        const totalAnnualHours = params.weeks * params.hoursWeek;
+        const annualBillableHours = totalAnnualHours * (params.utilization / 100);
+        const unpaidHours = Math.max(0, totalAnnualHours - annualBillableHours);
+
+        if (annualBillableHours <= 0) {
+          return null;
+        }
+
+        let grossRevenue = 0;
+        let recommendedRate = 0;
+        let exactCalculatedRate = 0;
+        let netTakeHome = 0;
+        let taxableProfit = 0;
+        let estimatedTaxes = 0;
+
+        if (params.mode === "finder") {
+          // Closed-form Rate Finder Formula:
+          // Target Take-Home N = Gross - Expenses - Taxes
+          // Since Tax = Max(0, Gross - Expenses) * t:
+          // Gross = Expenses + (TargetNet / (1 - t))
+          const netTarget = params.targetNet;
+          const grossNeeded = params.expenses + (netTarget / (1 - params.taxRateDecimal));
+          exactCalculatedRate = grossNeeded / annualBillableHours;
+
+          // Optional upward rounding
+          let rRate = exactCalculatedRate;
+          if (params.rounding === "0.5") {
+            rRate = Math.ceil(rRate * 2) / 2;
+          } else if (params.rounding === "1.0") {
+            rRate = Math.ceil(rRate);
+          } else if (params.rounding === "5.0") {
+            rRate = Math.ceil(rRate / 5) * 5;
+          }
+          recommendedRate = rRate;
+
+          // Re-derive exact annual figures with the final recommended rate
+          grossRevenue = recommendedRate * annualBillableHours;
+          taxableProfit = Math.max(0, grossRevenue - params.expenses);
+          estimatedTaxes = taxableProfit * params.taxRateDecimal;
+          netTakeHome = grossRevenue - params.expenses - estimatedTaxes;
+        } else {
+          // Take-Home Estimator Mode
+          recommendedRate = params.currentRate;
+          exactCalculatedRate = params.currentRate;
+          grossRevenue = recommendedRate * annualBillableHours;
+          taxableProfit = Math.max(0, grossRevenue - params.expenses);
+          estimatedTaxes = taxableProfit * params.taxRateDecimal;
+          netTakeHome = grossRevenue - params.expenses - estimatedTaxes;
+        }
+
+        const monthlyNet = netTakeHome / 12;
+        const netPerHour = annualBillableHours > 0 ? (netTakeHome / annualBillableHours) : 0;
+
+        return {
+          mode: params.mode,
+          recommendedRate: recommendedRate,
+          exactCalculatedRate: exactCalculatedRate,
+          grossRevenue: grossRevenue,
+          annualExpenses: params.expenses,
+          taxableProfit: taxableProfit,
+          estimatedTaxes: estimatedTaxes,
+          netTakeHome: netTakeHome,
+          monthlyNet: monthlyNet,
+          netPerHour: netPerHour,
+          annualBillableHours: annualBillableHours,
+          unpaidHours: unpaidHours,
+          taxRatePct: params.taxRatePct,
+          utilization: params.utilization,
+          isLoss: grossRevenue < params.expenses
+        };
+      }
+
+      // DASHBOARD RENDERING
+      function renderDashboard(res) {
+        lastResult = res;
+        resultsSection.style.display = "block";
+
+        if (res.mode === "finder") {
+          document.getElementById("fhar-hero-title").textContent = "Recommended Hourly Billing Rate";
+          document.getElementById("fhar-hero-val").textContent = formatMoney(res.recommendedRate);
+          document.getElementById("fhar-hero-sub").textContent =
+            "Exact rate: " + formatMoney(res.exactCalculatedRate) + "/hr across " + formatNumber(res.annualBillableHours, 0) + " billable hrs/year.";
+        } else {
+          document.getElementById("fhar-hero-title").textContent = "Estimated Annual Take-Home Income";
+          document.getElementById("fhar-hero-val").textContent = formatMoney(res.netTakeHome);
+          document.getElementById("fhar-hero-sub").textContent =
+            "At " + formatMoney(res.recommendedRate) + "/hr with " + formatNumber(res.annualBillableHours, 0) + " billable hrs/year.";
+        }
+
+        document.getElementById("fhar-res-gross").textContent = formatMoney(res.grossRevenue);
+        document.getElementById("fhar-res-expenses").textContent = formatMoney(res.annualExpenses);
+        document.getElementById("fhar-res-profit").textContent = formatMoney(res.taxableProfit);
+        document.getElementById("fhar-res-tax").textContent = formatMoney(res.estimatedTaxes);
+        document.getElementById("fhar-res-net").textContent = formatMoney(res.netTakeHome);
+        document.getElementById("fhar-res-monthly-net").textContent = formatMoney(res.monthlyNet);
+        document.getElementById("fhar-res-net-hour").textContent = formatMoney(res.netPerHour) + "/hr";
+        document.getElementById("fhar-res-unbilled").textContent = formatNumber(res.unpaidHours, 0) + " hrs";
+
+        // Proportional Bar
+        const barNet = document.getElementById("fhar-bar-net");
+        const barTax = document.getElementById("fhar-bar-tax");
+        const barExp = document.getElementById("fhar-bar-exp");
+
+        if (res.grossRevenue > 0 && !res.isLoss) {
+          const netPct = Math.max(0, (res.netTakeHome / res.grossRevenue) * 100);
+          const taxPct = Math.max(0, (res.estimatedTaxes / res.grossRevenue) * 100);
+          const expPct = Math.max(0, (res.annualExpenses / res.grossRevenue) * 100);
+
+          barNet.style.width = netPct + "%";
+          barTax.style.width = taxPct + "%";
+          barExp.style.width = expPct + "%";
+
+          barNet.textContent = netPct >= 10 ? "Take-Home " + netPct.toFixed(0) + "%" : "";
+          barTax.textContent = taxPct >= 10 ? "Taxes " + taxPct.toFixed(0) + "%" : "";
+          barExp.textContent = expPct >= 8 ? "Exp " + expPct.toFixed(0) + "%" : "";
+
+          document.getElementById("fhar-legend-net-val").textContent = netPct.toFixed(1) + "% (" + formatMoney(res.netTakeHome) + ")";
+          document.getElementById("fhar-legend-tax-val").textContent = taxPct.toFixed(1) + "% (" + formatMoney(res.estimatedTaxes) + ")";
+          document.getElementById("fhar-legend-exp-val").textContent = expPct.toFixed(1) + "% (" + formatMoney(res.annualExpenses) + ")";
+        } else {
+          barNet.style.width = "0%";
+          barTax.style.width = "0%";
+          barExp.style.width = "100%";
+          barExp.textContent = "Business Incurring Loss";
+          document.getElementById("fhar-legend-net-val").textContent = "0.0%";
+          document.getElementById("fhar-legend-tax-val").textContent = "0.0%";
+          document.getElementById("fhar-legend-exp-val").textContent = "100.0%";
+        }
+
+        renderScenarios(res);
+        announce("Financial calculations complete. Results displayed.");
+      }
+
+      // WHAT-IF SCENARIOS TABLE
+      function renderScenarios(base) {
+        scenariosBody.innerHTML = "";
+
+        const scenarios = [
+          { name: "Baseline Plan", util: base.utilization, exp: base.annualExpenses, tax: base.taxRatePct },
+          { name: "+10% Billable Utilization", util: Math.min(100, base.utilization + 10), exp: base.annualExpenses, tax: base.taxRatePct },
+          { name: "-10% Billable Utilization", util: Math.max(10, base.utilization - 10), exp: base.annualExpenses, tax: base.taxRatePct },
+          { name: "+25% Higher Expenses", util: base.utilization, exp: base.annualExpenses * 1.25, tax: base.taxRatePct }
+        ];
+
+        scenarios.forEach(function (sc) {
+          const simParams = {
+            mode: base.mode,
+            weeks: parseFloat(weeksYearInput.value) || 48,
+            hoursWeek: parseFloat(hoursWeekInput.value) || 40,
+            utilization: sc.util,
+            taxRateDecimal: sc.tax / 100,
+            taxRatePct: sc.tax,
+            expenses: sc.exp,
+            targetNet: parseFloat(targetNetInput.value) || 0,
+            currentRate: base.recommendedRate,
+            rounding: "none"
+          };
+
+          const sRes = computeFinancials(simParams);
+          if (!sRes) return;
+
+          const tr = document.createElement("tr");
+          tr.innerHTML =
+            '<td><strong>' + sanitizeText(sc.name) + '</strong></td>' +
+            '<td>' + sc.util + '%</td>' +
+            '<td style="font-weight:700; color:var(--fhar-primary);">' + formatMoney(sRes.recommendedRate) + '/hr</td>' +
+            '<td>' + formatMoney(sRes.grossRevenue) + '</td>' +
+            '<td>' + formatMoney(sRes.estimatedTaxes) + '</td>' +
+            '<td style="font-weight:700;">' + formatMoney(sRes.netTakeHome) + '</td>';
+          scenariosBody.appendChild(tr);
+        });
+      }
+
+      // CSV EXPORT (With Formula Injection Protection)
+      function exportCSV() {
+        if (!lastResult) return;
+
+        function sanitizeCell(val) {
+          let str = String(val === null || val === undefined ? "" : val);
+          if (/^[=\+\-@]/.test(str)) {
+            str = "'" + str; // Neutralize Excel/Sheets formula injection
+          }
+          if (/[",\n\r]/.test(str)) {
+            str = '"' + str.replace(/"/g, '""') + '"';
+          }
+          return str;
+        }
+
+        const rows = [
+          ["# Tool: Freelance Hourly Rate After Tax Estimator", "Currency: " + currencyCode],
+          ["Metric", "Value", "Notes"],
+          ["Calculation Mode", lastResult.mode === "finder" ? "Rate Finder" : "Take-Home Estimator", ""],
+          ["Hourly Billing Rate", lastResult.recommendedRate.toFixed(2), currencyCode + " per billable hour"],
+          ["Annual Gross Billings", lastResult.grossRevenue.toFixed(2), "Total invoiced"],
+          ["Annual Business Expenses", lastResult.annualExpenses.toFixed(2), "Deductible overhead"],
+          ["Taxable Business Profit", lastResult.taxableProfit.toFixed(2), "Gross minus expenses"],
+          ["Estimated Tax Reserve", lastResult.estimatedTaxes.toFixed(2), "Effective rate " + lastResult.taxRatePct + "%"],
+          ["Annual Take-Home Income", lastResult.netTakeHome.toFixed(2), "Net after tax & expenses"],
+          ["Monthly Take-Home Income", lastResult.monthlyNet.toFixed(2), "Annualized monthly average"],
+          ["Annual Billable Hours", lastResult.annualBillableHours.toFixed(1), "Invoiced client hours"],
+          ["Unpaid Overhead Hours", lastResult.unpaidHours.toFixed(1), "Admin, marketing & proposals"]
+        ];
+
+        const csvContent = rows.map(r => r.map(sanitizeCell).join(",")).join("\r\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "freelance_hourly_rate_plan.csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      // COPY SUMMARY
+      function copySummary() {
+        if (!lastResult) return;
+
+        const summary =
+          "FREELANCE FINANCIAL ESTIMATE:\n" +
+          "------------------------------------\n" +
+          "Hourly Rate: " + formatMoney(lastResult.recommendedRate) + "/hr\n" +
+          "Gross Annual Billings: " + formatMoney(lastResult.grossRevenue) + "\n" +
+          "Business Expenses: " + formatMoney(lastResult.annualExpenses) + "\n" +
+          "Estimated Tax Reserve: " + formatMoney(lastResult.estimatedTaxes) + " (" + lastResult.taxRatePct + "%)\n" +
+          "Net Annual Take-Home: " + formatMoney(lastResult.netTakeHome) + "\n" +
+          "Net Monthly Take-Home: " + formatMoney(lastResult.monthlyNet) + "/mo\n" +
+          "Annual Billable Hours: " + formatNumber(lastResult.annualBillableHours, 0) + " hrs (" + lastResult.utilization + "% utilization)\n" +
+          "Generated by Freelance Hourly Rate After Tax Estimator";
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(summary).then(function () {
+            alert("Summary copied to clipboard!");
+          }).catch(function () {
+            prompt("Copy summary text:", summary);
+          });
+        } else {
+          prompt("Copy summary text:", summary);
+        }
+      }
+
+      // EVENT HANDLERS
+      tabFinder.addEventListener("click", function () { setMode("finder"); });
+      tabEstimator.addEventListener("click", function () { setMode("estimator"); });
+      currencySelect.addEventListener("change", updateCurrency);
+
+      weeksYearInput.addEventListener("input", updateLiveScheduleMetrics);
+      hoursWeekInput.addEventListener("input", updateLiveScheduleMetrics);
+      utilizationInput.addEventListener("input", updateLiveScheduleMetrics);
+
+      btnToggleItemized.addEventListener("click", toggleItemizedView);
+
+      btnAddExpense.addEventListener("click", function () {
+        itemizedExpenses.push({
+          id: "exp_" + Date.now(),
+          name: "Other Business Expense",
+          amount: 500
+        });
+        renderItemizedTable();
+      });
+
+      itemizedTbody.addEventListener("input", function (e) {
+        const idx = e.target.getAttribute("data-idx");
+        if (idx !== null) {
+          if (e.target.classList.contains("fhar-exp-name")) {
+            itemizedExpenses[idx].name = e.target.value;
+          } else if (e.target.classList.contains("fhar-exp-val")) {
+            itemizedExpenses[idx].amount = parseFloat(e.target.value) || 0;
+            const sum = calculateItemizedTotal();
+            itemizedSumText.textContent = formatMoney(sum);
+            totalExpenseInput.value = sum;
+          }
+        }
+      });
+
+      itemizedTbody.addEventListener("click", function (e) {
+        if (e.target.classList.contains("fhar-btn-del-exp")) {
+          const idx = parseInt(e.target.getAttribute("data-idx"), 10);
+          if (itemizedExpenses.length <= 1) {
+            alert("At least one expense row is required in itemized mode.");
+            return;
+          }
+          itemizedExpenses.splice(idx, 1);
+          renderItemizedTable();
+        }
+      });
+
+      btnCalculate.addEventListener("click", function () {
+        const params = validateInputs();
+        if (!params) return;
+
+        const results = computeFinancials(params);
+        if (results) {
+          renderDashboard(results);
+          resultsSection.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+
+      btnCopy.addEventListener("click", copySummary);
+      btnCsv.addEventListener("click", exportCSV);
+      btnPrint.addEventListener("click", function () { window.print(); });
+
+      // Accordion FAQ listener
+      const faqContainer = document.getElementById("fhar-faq-container");
+      if (faqContainer) {
+        faqContainer.addEventListener("click", function (e) {
+          const btn = e.target.closest(".fhar-faq-question");
+          if (!btn) return;
+          const item = btn.closest(".fhar-faq-item");
+          const isOpen = item.classList.contains("fhar-faq-open");
+          item.classList.toggle("fhar-faq-open", !isOpen);
+          btn.setAttribute("aria-expanded", !isOpen ? "true" : "false");
+        });
+      }
+
+      // Initial Bootstrap
+      updateLiveScheduleMetrics();
+      updateCurrency();
+    })();
+  </script>
+</div>
