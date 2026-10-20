@@ -1,0 +1,1179 @@
+<!-- ==========================================================================
+     DEBT SNOWBALL VS AVALANCHE PAYOFF CALCULATOR (ALL-IN-ONE BLOGGER CODE)
+     Koi external software ya coding ki zaroorat nahi hai.
+     ========================================================================== -->
+
+<div id="dsav-calculator-app">
+  <style>
+    /* STYLES & DESIGN */
+    #dsav-calculator-app {
+      --dsav-primary: #0284c7;
+      --dsav-primary-hover: #0369a1;
+      --dsav-snowball: #2563eb;
+      --dsav-avalanche: #0d9488;
+      --dsav-bg-card: #ffffff;
+      --dsav-bg-subtle: #f8fafc;
+      --dsav-text-main: #0f172a;
+      --dsav-text-muted: #475569;
+      --dsav-border: #e2e8f0;
+      --dsav-danger: #dc2626;
+      --dsav-danger-bg: #fef2f2;
+      --dsav-warning: #d97706;
+      --dsav-warning-bg: #fffbeb;
+      --dsav-success: #16a34a;
+      --dsav-radius: 8px;
+      --dsav-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--dsav-text-main);
+      line-height: 1.5;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    #dsav-calculator-app * {
+      box-sizing: border-box;
+    }
+
+    #dsav-calculator-app h1.dsav-main-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 10px 0;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+
+    #dsav-calculator-app h2.dsav-section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 28px 0 12px 0;
+      border-bottom: 2px solid var(--dsav-border);
+      padding-bottom: 6px;
+    }
+
+    #dsav-calculator-app h3.dsav-sub-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #334155;
+      margin: 14px 0 6px 0;
+    }
+
+    #dsav-calculator-app p {
+      margin: 0 0 12px 0;
+      color: var(--dsav-text-muted);
+      font-size: 0.95rem;
+    }
+
+    .dsav-card {
+      background: var(--dsav-bg-card);
+      border: 1px solid var(--dsav-border);
+      border-radius: var(--dsav-radius);
+      padding: 18px;
+      margin-bottom: 20px;
+      box-shadow: var(--dsav-shadow);
+    }
+
+    .dsav-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--dsav-border);
+    }
+
+    .dsav-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .dsav-badge-snowball { background: #dbeafe; color: var(--dsav-snowball); }
+    .dsav-badge-avalanche { background: #ccfbf1; color: var(--dsav-avalanche); }
+    .dsav-badge-neutral { background: #f1f5f9; color: var(--dsav-text-muted); }
+
+    .dsav-grid { display: grid; gap: 12px; }
+    .dsav-grid-4 { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+    .dsav-grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+
+    .dsav-field-group { display: flex; flex-direction: column; gap: 4px; }
+    .dsav-field-group label { font-size: 0.85rem; font-weight: 600; color: #334155; }
+
+    .dsav-input-wrap { position: relative; display: flex; align-items: center; }
+    .dsav-input-prefix, .dsav-input-suffix {
+      position: absolute;
+      font-size: 0.85rem;
+      color: #64748b;
+      pointer-events: none;
+      padding: 0 10px;
+    }
+    .dsav-input-prefix { left: 0; }
+    .dsav-input-suffix { right: 0; }
+
+    .dsav-control {
+      width: 100%;
+      height: 38px;
+      padding: 6px 10px;
+      border: 1px solid var(--dsav-border);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      color: var(--dsav-text-main);
+      background-color: #ffffff;
+    }
+    .dsav-control.dsav-has-prefix { padding-left: 28px; }
+    .dsav-control.dsav-has-suffix { padding-right: 28px; }
+    .dsav-control:focus {
+      outline: none;
+      border-color: var(--dsav-primary);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+    .dsav-control.dsav-is-invalid {
+      border-color: var(--dsav-danger);
+      background-color: var(--dsav-danger-bg);
+    }
+
+    .dsav-field-error { font-size: 0.75rem; color: var(--dsav-danger); min-height: 14px; margin-top: 2px; }
+
+    .dsav-debt-row {
+      background: var(--dsav-bg-subtle);
+      border: 1px solid var(--dsav-border);
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .dsav-debt-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .dsav-debt-title { font-size: 0.9rem; font-weight: 700; color: #1e293b; }
+
+    .dsav-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      line-height: 1;
+      text-decoration: none;
+    }
+    .dsav-btn-primary { background: var(--dsav-primary); color: #ffffff; }
+    .dsav-btn-primary:hover { background: var(--dsav-primary-hover); }
+    .dsav-btn-secondary { background: #ffffff; border-color: var(--dsav-border); color: #334155; }
+    .dsav-btn-secondary:hover { background: #f1f5f9; }
+    .dsav-btn-danger { background: #ffffff; border-color: #fca5a5; color: var(--dsav-danger); }
+    .dsav-btn-danger:hover { background: var(--dsav-danger-bg); }
+    .dsav-btn-sm { padding: 4px 8px; font-size: 0.78rem; }
+    .dsav-btn-lg { padding: 10px 20px; font-size: 1rem; }
+
+    .dsav-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+    .dsav-alert {
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 14px;
+      font-size: 0.875rem;
+      display: flex;
+      gap: 10px;
+    }
+    .dsav-alert-danger { background: var(--dsav-danger-bg); border: 1px solid #fecaca; color: #991b1b; }
+    .dsav-alert-icon { width: 18px; height: 18px; flex-shrink: 0; }
+
+    .dsav-results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .dsav-strategy-card {
+      border: 2px solid transparent;
+      border-radius: var(--dsav-radius);
+      padding: 16px;
+      background: #ffffff;
+      box-shadow: var(--dsav-shadow);
+    }
+    .dsav-card-snowball { border-color: #bfdbfe; }
+    .dsav-card-avalanche { border-color: #99f6e4; }
+
+    .dsav-metric-list { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .dsav-metric-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+      padding: 4px 0;
+      border-bottom: 1px dashed var(--dsav-border);
+    }
+    .dsav-metric-label { color: var(--dsav-text-muted); }
+    .dsav-metric-value { font-weight: 700; color: #0f172a; }
+
+    .dsav-metric-headline {
+      text-align: center;
+      padding: 12px;
+      background: var(--dsav-bg-subtle);
+      border-radius: 6px;
+      margin: 10px 0;
+    }
+    .dsav-headline-title { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--dsav-text-muted); margin-bottom: 4px; }
+    .dsav-headline-val { font-size: 1.5rem; font-weight: 800; color: #0f172a; }
+
+    .dsav-diff-banner {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 0.92rem;
+      color: #334155;
+    }
+    .dsav-diff-highlight { font-weight: 700; color: var(--dsav-primary-hover); }
+
+    .dsav-bar-container { margin: 14px 0; }
+    .dsav-bar-track {
+      background: #e2e8f0;
+      height: 24px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 4px;
+      display: flex;
+    }
+    .dsav-bar-fill {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 6px;
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      transition: width 0.3s ease;
+    }
+    .dsav-bar-snowball { background-color: var(--dsav-snowball); }
+    .dsav-bar-avalanche { background-color: var(--dsav-avalanche); }
+
+    .dsav-tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--dsav-border); margin-bottom: 12px; }
+    .dsav-tab-btn {
+      padding: 8px 14px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--dsav-text-muted);
+      cursor: pointer;
+    }
+    .dsav-tab-btn.dsav-tab-active { color: var(--dsav-primary); border-bottom-color: var(--dsav-primary); }
+
+    .dsav-table-wrap { overflow-x: auto; margin-top: 10px; border: 1px solid var(--dsav-border); border-radius: 6px; }
+    .dsav-schedule-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; text-align: right; }
+    .dsav-schedule-table th, .dsav-schedule-table td { padding: 8px 10px; border-bottom: 1px solid var(--dsav-border); }
+    .dsav-schedule-table th { background: var(--dsav-bg-subtle); color: #334155; font-weight: 700; }
+    .dsav-schedule-table td:first-child, .dsav-schedule-table th:first-child { text-align: left; }
+    .dsav-schedule-table tr:hover { background-color: #f8fafc; }
+
+    .dsav-pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.8rem; color: var(--dsav-text-muted); }
+
+    .dsav-faq-item { border: 1px solid var(--dsav-border); border-radius: 6px; margin-bottom: 8px; background: #ffffff; }
+    .dsav-faq-question {
+      width: 100%;
+      padding: 12px;
+      background: none;
+      border: none;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: #1e293b;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dsav-faq-answer { padding: 0 12px 12px 12px; font-size: 0.875rem; color: var(--dsav-text-muted); display: none; }
+    .dsav-faq-item.dsav-faq-open .dsav-faq-answer { display: block; }
+    .dsav-faq-icon { width: 16px; height: 16px; transition: transform 0.2s ease; }
+    .dsav-faq-item.dsav-faq-open .dsav-faq-icon { transform: rotate(180deg); }
+
+    .dsav-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+
+    @media print {
+      #dsav-calculator-app { max-width: 100% !important; padding: 0 !important; }
+      .dsav-toolbar, .dsav-btn, .dsav-debt-row-header button, .dsav-tabs, .dsav-pagination, .dsav-faq-section { display: none !important; }
+      .dsav-card { box-shadow: none !important; border: 1px solid #94a3b8 !important; }
+    }
+    @media (max-width: 640px) {
+      #dsav-calculator-app h1.dsav-main-title { font-size: 1.4rem; }
+      .dsav-results-grid { grid-template-columns: 1fr; }
+      .dsav-toolbar { flex-direction: column; }
+      .dsav-toolbar .dsav-btn { width: 100%; }
+    }
+  </style>
+
+  <!-- HEADER -->
+  <header>
+    <h1 class="dsav-main-title">Debt Snowball vs Avalanche Payoff Calculator</h1>
+    <p>
+      Use this interactive <strong>debt payoff calculator with multiple debts</strong> to calculate and <strong>compare debt snowball vs avalanche</strong> strategies. View exact debt-free dates, monthly amortization schedules, and interest savings instantly.
+    </p>
+  </header>
+
+  <div id="dsav-aria-live" class="dsav-sr-only" aria-live="polite"></div>
+
+  <!-- STEP 1: BUDGET SETTINGS -->
+  <section class="dsav-card">
+    <div class="dsav-card-header">
+      <h2 class="dsav-sub-title" style="margin:0;">1. Monthly Debt Budget & Currency</h2>
+      <span class="dsav-badge dsav-badge-neutral">Budget Workspace</span>
+    </div>
+
+    <div class="dsav-grid dsav-grid-4">
+      <div class="dsav-field-group">
+        <label for="dsav-currency">Currency</label>
+        <select id="dsav-currency" class="dsav-control">
+          <option value="$" selected>USD ($)</option>
+          <option value="₹">INR (₹)</option>
+          <option value="£">GBP (£)</option>
+          <option value="€">EUR (€)</option>
+          <option value="C$">CAD (C$)</option>
+          <option value="A$">AUD (A$)</option>
+        </select>
+        <span class="dsav-field-error"></span>
+      </div>
+
+      <div class="dsav-field-group">
+        <label for="dsav-base-budget">Total Monthly Repayment Budget</label>
+        <div class="dsav-input-wrap">
+          <span class="dsav-input-prefix dsav-curr-symbol">$</span>
+          <input type="number" id="dsav-base-budget" class="dsav-control dsav-has-prefix" value="600" min="1" step="any" required>
+        </div>
+        <span id="dsav-base-budget-error" class="dsav-field-error"></span>
+      </div>
+
+      <div class="dsav-field-group">
+        <label for="dsav-extra-budget">Optional Extra Monthly Amount</label>
+        <div class="dsav-input-wrap">
+          <span class="dsav-input-prefix dsav-curr-symbol">$</span>
+          <input type="number" id="dsav-extra-budget" class="dsav-control dsav-has-prefix" value="0" min="0" step="any" placeholder="0">
+        </div>
+        <span id="dsav-extra-budget-error" class="dsav-field-error"></span>
+      </div>
+
+      <div class="dsav-field-group">
+        <label for="dsav-start-date">First Payment Month</label>
+        <input type="month" id="dsav-start-date" class="dsav-control">
+        <span class="dsav-field-error"></span>
+      </div>
+    </div>
+    <p style="font-size:0.8rem; margin-top:8px; margin-bottom:0; color:#64748b;">
+      <em>Rule:</em> Total Monthly Available = Base Budget + Extra Amount. It must cover all minimum payments.
+    </p>
+  </section>
+
+  <!-- STEP 2: DEBT INPUTS -->
+  <section class="dsav-card">
+    <div class="dsav-card-header">
+      <h2 class="dsav-sub-title" style="margin:0;">2. Your Debts (Editable Sample Data)</h2>
+      <div style="display:flex; gap:6px;">
+        <button type="button" id="dsav-btn-reset-demo" class="dsav-btn dsav-btn-secondary dsav-btn-sm">Reset Sample Debts</button>
+        <button type="button" id="dsav-btn-clear-all" class="dsav-btn dsav-btn-danger dsav-btn-sm">Clear All</button>
+      </div>
+    </div>
+
+    <div id="dsav-debts-container"></div>
+
+    <div class="dsav-toolbar" style="justify-content: space-between;">
+      <button type="button" id="dsav-btn-add-debt" class="dsav-btn dsav-btn-secondary">
+        + Add Another Debt
+      </button>
+
+      <button type="button" id="dsav-btn-calculate" class="dsav-btn dsav-btn-primary dsav-btn-lg">
+        Calculate & Compare Strategies
+      </button>
+    </div>
+  </section>
+
+  <!-- ALERTS -->
+  <div id="dsav-global-alerts" role="alert" style="display:none;"></div>
+
+  <!-- STEP 3: RESULTS COMPARISON -->
+  <section id="dsav-results-section" style="display:none;">
+    <h2 class="dsav-section-title">Calculate and Compare Your Debt Payoff Strategies</h2>
+
+    <div id="dsav-comparison-banner" class="dsav-diff-banner"></div>
+
+    <div class="dsav-results-grid">
+      <!-- SNOWBALL -->
+      <article class="dsav-strategy-card dsav-card-snowball">
+        <div class="dsav-card-header">
+          <h3 class="dsav-sub-title" style="margin:0;">Debt Snowball</h3>
+          <span class="dsav-badge dsav-badge-snowball">Smallest Balance First</span>
+        </div>
+        <p style="font-size:0.82rem;">Clears the smallest balances first to build immediate psychological momentum.</p>
+
+        <div class="dsav-metric-headline">
+          <div class="dsav-headline-title">Estimated Debt-Free Date</div>
+          <div class="dsav-headline-val" id="dsav-snow-date">—</div>
+          <span style="font-size:0.8rem; color:#64748b;" id="dsav-snow-months">— months</span>
+        </div>
+
+        <div class="dsav-metric-list">
+          <div class="dsav-metric-row">
+            <span class="dsav-metric-label">Total Principal Repaid</span>
+            <span class="dsav-metric-value" id="dsav-snow-principal">—</span>
+          </div>
+          <div class="dsav-metric-row">
+            <span class="dsav-metric-label">Total Interest Paid</span>
+            <span class="dsav-metric-value" id="dsav-snow-interest">—</span>
+          </div>
+          <div class="dsav-metric-row">
+            <span class="dsav-metric-label">Total Cost (Principal + Interest)</span>
+            <span class="dsav-metric-value" id="dsav-snow-total">—</span>
+          </div>
+          <div class="dsav-metric-row">
+            <span class="dsav-metric-label">Status</span>
+            <span class="dsav-metric-value" id="dsav-snow-status">Complete</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- AVALANCHE -->
+      <article class="dsav-strategy-card dsav-card-avalanche">
+        <div class="dsav-card-header">
+          <h3 class="dsav-sub-title" style="margin:0;">Debt Avalanche</h3>
+          <span class="dsav-badge dsav-badge-avalanche">Highest APR First</span>
+        </div>
+        <p style="font-size:0.82rem;">Attacks the highest interest rate first to minimize lifetime interest expense.</p>
+
+        <div class="dsav-metric-headline">
+          <div class="dsav-headline-title">Estimated Debt-Free Date</div>
+          <div class="dsav-headline-val" id="dsav-ava-date">—</div>
+          <span style="font-size:0.8rem; color:#64748b;" id="dsav-ava-months">— months</span>
+        </div>
+
+        <div class="dsav-metric-list">
+          <div class="dsav-metric-row">
+            <span class="dsav-metric-label">Total Principal Repaid</span>
+            <span class="dsav-metric-value" id="dsav-ava-principal">—</span>
+          </div>
+          <div class="dsav-metric-row">
+            <span class="dsav-metric-label">Total Interest Paid</span>
+            <span class="dsav-metric-value" id="dsav-ava-interest">—</span>
+          </div>
+          <div class="dsav-metric-row">
+            <span class="dsav-metric-label">Total Cost (Principal + Interest)</span>
+            <span class="dsav-metric-value" id="dsav-ava-total">—</span>
+          </div>
+          <div class="dsav-metric-row">
+            <span class="dsav-metric-label">Status</span>
+            <span class="dsav-metric-value" id="dsav-ava-status">Complete</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- VISUAL CHARTS -->
+    <div class="dsav-card">
+      <h3 class="dsav-sub-title" style="margin-top:0;">Visual Cost & Timeline Comparison</h3>
+
+      <div class="dsav-bar-container">
+        <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:600;">
+          <span>Total Interest Paid (Lower is better)</span>
+          <span id="dsav-chart-interest-diff"></span>
+        </div>
+        <div style="margin-top:6px;">
+          <div style="font-size:0.75rem; color:#475569;">Snowball: <span id="dsav-bar-snow-int-val"></span></div>
+          <div class="dsav-bar-track">
+            <div id="dsav-bar-snow-interest" class="dsav-bar-fill dsav-bar-snowball" style="width:0%;"></div>
+          </div>
+        </div>
+        <div style="margin-top:6px;">
+          <div style="font-size:0.75rem; color:#475569;">Avalanche: <span id="dsav-bar-ava-int-val"></span></div>
+          <div class="dsav-bar-track">
+            <div id="dsav-bar-ava-interest" class="dsav-bar-fill dsav-bar-avalanche" style="width:0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dsav-bar-container" style="margin-top:16px;">
+        <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:600;">
+          <span>Months to Become Debt-Free</span>
+          <span id="dsav-chart-time-diff"></span>
+        </div>
+        <div style="margin-top:6px;">
+          <div style="font-size:0.75rem; color:#475569;">Snowball: <span id="dsav-bar-snow-time-val"></span></div>
+          <div class="dsav-bar-track">
+            <div id="dsav-bar-snow-time" class="dsav-bar-fill dsav-bar-snowball" style="width:0%;"></div>
+          </div>
+        </div>
+        <div style="margin-top:6px;">
+          <div style="font-size:0.75rem; color:#475569;">Avalanche: <span id="dsav-bar-ava-time-val"></span></div>
+          <div class="dsav-bar-track">
+            <div id="dsav-bar-ava-time" class="dsav-bar-fill dsav-bar-avalanche" style="width:0%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONTHLY SCHEDULE TABLE -->
+    <div class="dsav-card">
+      <div class="dsav-card-header">
+        <h3 class="dsav-sub-title" style="margin:0;">Monthly Repayment Schedule</h3>
+        <div style="display:flex; gap:8px;">
+          <button type="button" id="dsav-btn-copy-summary" class="dsav-btn dsav-btn-secondary dsav-btn-sm">Copy Summary</button>
+          <button type="button" id="dsav-btn-export-csv" class="dsav-btn dsav-btn-secondary dsav-btn-sm">Export CSV</button>
+          <button type="button" id="dsav-btn-print" class="dsav-btn dsav-btn-secondary dsav-btn-sm">Print</button>
+        </div>
+      </div>
+
+      <div class="dsav-tabs">
+        <button type="button" id="dsav-tab-snow" class="dsav-tab-btn dsav-tab-active">Snowball Schedule</button>
+        <button type="button" id="dsav-tab-ava" class="dsav-tab-btn">Avalanche Schedule</button>
+      </div>
+
+      <div class="dsav-table-wrap">
+        <table class="dsav-schedule-table">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Date</th>
+              <th>Opening Balance</th>
+              <th>Total Payment</th>
+              <th>Interest Accrued</th>
+              <th>Principal Repaid</th>
+              <th>Ending Balance</th>
+              <th>Milestone</th>
+            </tr>
+          </thead>
+          <tbody id="dsav-schedule-body"></tbody>
+        </table>
+      </div>
+
+      <div class="dsav-pagination">
+        <button type="button" id="dsav-btn-page-prev" class="dsav-btn dsav-btn-secondary dsav-btn-sm" disabled>&larr; Previous</button>
+        <span id="dsav-page-indicator">Showing months 1–12</span>
+        <button type="button" id="dsav-btn-page-next" class="dsav-btn dsav-btn-secondary dsav-btn-sm">Next &rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDITORIAL CONTENT (SEO Friendly) -->
+  <article>
+    <h2 class="dsav-section-title">How to Use This Debt Payoff Calculator</h2>
+    <p>
+      Getting out of debt requires a clear, mathematical plan. This <strong>debt repayment calculator with interest</strong> simulates your payoff journey month by month so you can directly <strong>compare debt snowball vs avalanche</strong> strategies using your actual account numbers.
+    </p>
+
+    <h2 class="dsav-section-title">Features of the Calculator</h2>
+    <ul style="margin-left:20px; font-size:0.92rem; color:var(--dsav-text-muted);">
+      <li><strong>Dual Simulation Engine:</strong> Independently processes the <strong>debt snowball calculator</strong> and <strong>debt avalanche calculator</strong> models.</li>
+      <li><strong>Automatic Payment Rollover:</strong> As debts are paid off, freed payments roll forward to the next priority target.</li>
+      <li><strong>100% Private:</strong> Calculations run locally in your web browser. No account required.</li>
+    </ul>
+
+    <h2 class="dsav-section-title">When to Use Snowball vs Avalanche</h2>
+    <div class="dsav-grid dsav-grid-2" style="margin-top:12px;">
+      <div style="background:#f8fafc; padding:14px; border-radius:6px; border-left:4px solid var(--dsav-snowball);">
+        <h3 class="dsav-sub-title" style="margin-top:0;">Debt Snowball</h3>
+        <p style="font-size:0.85rem; margin:0;">Best if you need quick psychological wins to stay motivated and clear smaller accounts first.</p>
+      </div>
+      <div style="background:#f8fafc; padding:14px; border-radius:6px; border-left:4px solid var(--dsav-avalanche);">
+        <h3 class="dsav-sub-title" style="margin-top:0;">Debt Avalanche</h3>
+        <p style="font-size:0.85rem; margin:0;">Best if you want to minimize interest charges mathematically by knocking out the highest APR first.</p>
+      </div>
+    </div>
+
+    <!-- FAQS -->
+    <h2 class="dsav-section-title">Frequently Asked Questions</h2>
+    <div class="dsav-faq-section" id="dsav-faq-container">
+      <div class="dsav-faq-item">
+        <button type="button" class="dsav-faq-question">
+          <span>What is the difference between snowball and avalanche?</span>
+          <svg class="dsav-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="dsav-faq-answer">
+          Debt Snowball pays the smallest balances first regardless of interest rate. Debt Avalanche pays the highest interest rates (APR) first to save the most money.
+        </div>
+      </div>
+
+      <div class="dsav-faq-item">
+        <button type="button" class="dsav-faq-question">
+          <span>Which method saves more interest?</span>
+          <svg class="dsav-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="dsav-faq-answer">
+          The Debt Avalanche method always saves as much as or more interest than the Snowball method.
+        </div>
+      </div>
+
+      <div class="dsav-faq-item">
+        <button type="button" class="dsav-faq-question">
+          <span>Does this tool store my financial data?</span>
+          <svg class="dsav-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="dsav-faq-answer">
+          No. Your calculations run entirely on your browser. No financial data is ever sent to or stored on any server.
+        </div>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <h2 class="dsav-section-title">Financial Disclaimer</h2>
+    <div style="background:#f1f5f9; border-left:4px solid #64748b; padding:12px 16px; border-radius:4px; font-size:0.82rem; color:#475569; margin-bottom:24px;">
+      This calculator provides estimates for educational and planning purposes only. Results depend on the balances, APRs, minimum payments, budget, and calculation assumptions entered by the user. Actual lender calculations may differ because of fees, daily interest accrual, payment timing, variable rates, and other account terms. This tool is not a lender, does not provide personalized financial advice, and does not guarantee a payoff date.
+    </div>
+  </article>
+
+  <!-- JAVASCRIPT ENGINE -->
+  <script>
+    (function () {
+      "use strict";
+
+      var MAX_DEBTS = 20;
+      var selectedCurrency = "$";
+      var activeScheduleStrategy = "snowball";
+      var currentSchedulePage = 1;
+      var ROWS_PER_PAGE = 12;
+
+      var calculationResults = { snowball: null, avalanche: null, totalPrincipal: 0 };
+
+      var sampleDebts = [
+        { id: "debt_1", name: "Credit Card A", balance: 5000, apr: 24.0, minPayment: 150 },
+        { id: "debt_2", name: "Personal Loan", balance: 3000, apr: 12.0, minPayment: 100 },
+        { id: "debt_3", name: "Credit Card B", balance: 1500, apr: 18.0, minPayment: 50 }
+      ];
+
+      var container = document.getElementById("dsav-debts-container");
+      var btnAddDebt = document.getElementById("dsav-btn-add-debt");
+      var btnCalculate = document.getElementById("dsav-btn-calculate");
+      var btnResetDemo = document.getElementById("dsav-btn-reset-demo");
+      var btnClearAll = document.getElementById("dsav-btn-clear-all");
+      var currencySelect = document.getElementById("dsav-currency");
+      var baseBudgetInput = document.getElementById("dsav-base-budget");
+      var extraBudgetInput = document.getElementById("dsav-extra-budget");
+      var startDateInput = document.getElementById("dsav-start-date");
+      var globalAlerts = document.getElementById("dsav-global-alerts");
+      var resultsSection = document.getElementById("dsav-results-section");
+      var ariaLive = document.getElementById("dsav-aria-live");
+      var tabSnow = document.getElementById("dsav-tab-snow");
+      var tabAva = document.getElementById("dsav-tab-ava");
+      var btnPagePrev = document.getElementById("dsav-btn-page-prev");
+      var btnPageNext = document.getElementById("dsav-btn-page-next");
+      var pageIndicator = document.getElementById("dsav-page-indicator");
+      var scheduleBody = document.getElementById("dsav-schedule-body");
+      var btnCopySummary = document.getElementById("dsav-btn-copy-summary");
+      var btnExportCSV = document.getElementById("dsav-btn-export-csv");
+      var btnPrint = document.getElementById("dsav-btn-print");
+
+      var now = new Date();
+      startDateInput.value = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0");
+
+      function formatMoney(amount) {
+        if (isNaN(amount) || amount === null) return selectedCurrency + "0.00";
+        return selectedCurrency + Number(amount).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
+
+      function sanitizeText(str) {
+        var temp = document.createElement("div");
+        temp.textContent = str || "";
+        return temp.innerHTML;
+      }
+
+      function announceLive(msg) {
+        if (ariaLive) ariaLive.textContent = msg;
+      }
+
+      function updateCurrencySymbols() {
+        selectedCurrency = currencySelect.value;
+        var symbols = document.querySelectorAll(".dsav-curr-symbol");
+        symbols.forEach(function (el) { el.textContent = selectedCurrency; });
+        if (calculationResults.snowball) { renderDashboard(); }
+      }
+
+      function createDebtRow(data, index) {
+        var rowId = data ? data.id : "debt_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+        var nameVal = data ? data.name : "Debt " + (index + 1);
+        var balVal = data && data.balance !== undefined ? data.balance : "";
+        var aprVal = data && data.apr !== undefined ? data.apr : "";
+        var minVal = data && data.minPayment !== undefined ? data.minPayment : "";
+
+        var row = document.createElement("div");
+        row.className = "dsav-debt-row";
+        row.id = rowId;
+        row.innerHTML =
+          '<div class="dsav-debt-row-header">' +
+            '<span class="dsav-debt-title">Debt #' + (index + 1) + '</span>' +
+            '<button type="button" class="dsav-btn dsav-btn-danger dsav-btn-sm dsav-remove-debt-btn">&times; Remove</button>' +
+          '</div>' +
+          '<div class="dsav-grid dsav-grid-4">' +
+            '<div class="dsav-field-group">' +
+              '<label>Debt Name</label>' +
+              '<input type="text" class="dsav-control dsav-debt-name" value="' + sanitizeText(nameVal) + '" required>' +
+              '<span class="dsav-field-error"></span>' +
+            '</div>' +
+            '<div class="dsav-field-group">' +
+              '<label>Current Balance</label>' +
+              '<div class="dsav-input-wrap">' +
+                '<span class="dsav-input-prefix dsav-curr-symbol">' + selectedCurrency + '</span>' +
+                '<input type="number" class="dsav-control dsav-has-prefix dsav-debt-bal" value="' + balVal + '" min="0" step="any" required>' +
+              '</div>' +
+              '<span class="dsav-field-error"></span>' +
+            '</div>' +
+            '<div class="dsav-field-group">' +
+              '<label>Interest Rate (APR %)</label>' +
+              '<div class="dsav-input-wrap">' +
+                '<input type="number" class="dsav-control dsav-has-suffix dsav-debt-apr" value="' + aprVal + '" min="0" max="100" step="0.01" required>' +
+                '<span class="dsav-input-suffix">%</span>' +
+              '</div>' +
+              '<span class="dsav-field-error"></span>' +
+            '</div>' +
+            '<div class="dsav-field-group">' +
+              '<label>Minimum Payment</label>' +
+              '<div class="dsav-input-wrap">' +
+                '<span class="dsav-input-prefix dsav-curr-symbol">' + selectedCurrency + '</span>' +
+                '<input type="number" class="dsav-control dsav-has-prefix dsav-debt-min" value="' + minVal + '" min="0" step="any" required>' +
+              '</div>' +
+              '<span class="dsav-field-error"></span>' +
+            '</div>' +
+          '</div>';
+
+        row.querySelector(".dsav-remove-debt-btn").addEventListener("click", function () {
+          if (container.querySelectorAll(".dsav-debt-row").length <= 1) {
+            alert("At least one debt is required.");
+            return;
+          }
+          row.remove();
+          reindexTitles();
+        });
+
+        return row;
+      }
+
+      function reindexTitles() {
+        var rows = container.querySelectorAll(".dsav-debt-row");
+        rows.forEach(function (row, idx) {
+          var title = row.querySelector(".dsav-debt-title");
+          if (title) title.textContent = "Debt #" + (idx + 1);
+        });
+      }
+
+      function loadSampleDebts() {
+        container.innerHTML = "";
+        sampleDebts.forEach(function (item, idx) {
+          container.appendChild(createDebtRow(item, idx));
+        });
+        reindexTitles();
+      }
+
+      function validateAndCollectInputs() {
+        var isValid = true;
+        var errors = [];
+
+        document.querySelectorAll("#dsav-calculator-app .dsav-control").forEach(function (c) {
+          c.classList.remove("dsav-is-invalid");
+        });
+        document.querySelectorAll("#dsav-calculator-app .dsav-field-error").forEach(function (e) {
+          e.textContent = "";
+        });
+
+        var baseBudget = parseFloat(baseBudgetInput.value);
+        if (isNaN(baseBudget) || baseBudget <= 0) {
+          baseBudgetInput.classList.add("dsav-is-invalid");
+          document.getElementById("dsav-base-budget-error").textContent = "Enter a valid positive budget.";
+          isValid = false;
+        }
+
+        var extraBudget = parseFloat(extraBudgetInput.value);
+        if (isNaN(extraBudget) || extraBudget < 0) extraBudget = 0;
+
+        var totalBudget = (baseBudget || 0) + extraBudget;
+        var debts = [];
+        var totalMinRequired = 0;
+
+        var rows = container.querySelectorAll(".dsav-debt-row");
+        if (rows.length === 0) {
+          errors.push("Please add at least one debt.");
+          isValid = false;
+        }
+
+        rows.forEach(function (r) {
+          var nameEl = r.querySelector(".dsav-debt-name");
+          var balEl = r.querySelector(".dsav-debt-bal");
+          var aprEl = r.querySelector(".dsav-debt-apr");
+          var minEl = r.querySelector(".dsav-debt-min");
+
+          var name = nameEl.value.trim();
+          var bal = parseFloat(balEl.value);
+          var apr = parseFloat(aprEl.value);
+          var min = parseFloat(minEl.value);
+
+          if (!name) { nameEl.classList.add("dsav-is-invalid"); isValid = false; }
+          if (isNaN(bal) || bal < 0) { balEl.classList.add("dsav-is-invalid"); isValid = false; }
+          if (isNaN(apr) || apr < 0 || apr > 100) { aprEl.classList.add("dsav-is-invalid"); isValid = false; }
+          if (isNaN(min) || min < 0) { minEl.classList.add("dsav-is-invalid"); isValid = false; }
+
+          if (name && !isNaN(bal) && bal >= 0 && !isNaN(apr) && apr >= 0 && !isNaN(min) && min >= 0) {
+            debts.push({ id: r.id, name: name, balance: bal, apr: apr, minPayment: min });
+            if (bal > 0) totalMinRequired += min;
+          }
+        });
+
+        if (isValid && totalBudget < totalMinRequired) {
+          var diff = totalMinRequired - totalBudget;
+          errors.push("Budget Shortfall: Your total monthly budget (" + formatMoney(totalBudget) + ") is less than required minimum payments (" + formatMoney(totalMinRequired) + ") by " + formatMoney(diff) + ".");
+          isValid = false;
+        }
+
+        if (!isValid) {
+          globalAlerts.innerHTML =
+            '<div class="dsav-alert dsav-alert-danger">' +
+              '<svg class="dsav-alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>' +
+              '<div>' + (errors.length ? errors.join("<br>") : "Please correct fields highlighted in red.") + '</div>' +
+            '</div>';
+          globalAlerts.style.display = "block";
+          return null;
+        }
+
+        globalAlerts.innerHTML = "";
+        globalAlerts.style.display = "none";
+        return { totalBudget: totalBudget, debts: debts, startDate: startDateInput.value };
+      }
+
+      function simulate(initialDebts, budget, strategyType, startYearMonth) {
+        var activeDebts = initialDebts.map(function (d, i) {
+          return { id: d.id, name: d.name, balance: Number(d.balance), apr: Number(d.apr), minPayment: Number(d.minPayment), originalIndex: i };
+        });
+
+        var MAX_MONTHS = 1200;
+        var month = 0;
+        var schedule = [];
+        var totalInterest = 0;
+        var totalPrincipal = 0;
+        var isAmortizing = true;
+
+        var simDate = null;
+        if (startYearMonth) {
+          var p = startYearMonth.split("-");
+          simDate = new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, 1);
+        }
+
+        while (activeDebts.some(function (d) { return d.balance > 0.005; }) && month < MAX_MONTHS) {
+          month++;
+          var dateLabel = "Month " + month;
+          if (simDate) {
+            dateLabel = simDate.toLocaleString("default", { month: "short", year: "numeric" });
+            simDate.setMonth(simDate.getMonth() + 1);
+          }
+
+          var openingBal = 0;
+          var interestSum = 0;
+          var paymentSum = 0;
+          var paidOffNames = [];
+
+          activeDebts.forEach(function (d) {
+            if (d.balance > 0.005) {
+              openingBal += d.balance;
+              var interest = d.balance * ((d.apr / 100) / 12);
+              d.currentInterest = interest;
+              d.balanceAfterInterest = d.balance + interest;
+              interestSum += interest;
+            } else {
+              d.currentInterest = 0;
+              d.balanceAfterInterest = 0;
+            }
+            d.monthPayment = 0;
+          });
+
+          if (interestSum > budget) {
+            isAmortizing = false;
+            break;
+          }
+
+          var remBudget = budget;
+
+          activeDebts.forEach(function (d) {
+            if (d.balanceAfterInterest > 0.005) {
+              var due = Math.min(d.minPayment, d.balanceAfterInterest);
+              var act = Math.min(due, remBudget);
+              d.monthPayment += act;
+              remBudget -= act;
+            }
+          });
+
+          var targets = activeDebts.filter(function (d) { return (d.balanceAfterInterest - d.monthPayment) > 0.005; });
+
+          if (strategyType === "snowball") {
+            targets.sort(function (a, b) {
+              var diff = (a.balanceAfterInterest - a.monthPayment) - (b.balanceAfterInterest - b.monthPayment);
+              if (Math.abs(diff) > 0.001) return diff;
+              return b.apr - a.apr;
+            });
+          } else {
+            targets.sort(function (a, b) {
+              var aprDiff = b.apr - a.apr;
+              if (Math.abs(aprDiff) > 0.001) return aprDiff;
+              return (a.balanceAfterInterest - a.monthPayment) - (b.balanceAfterInterest - b.monthPayment);
+            });
+          }
+
+          for (var i = 0; i < targets.length && remBudget > 0.005; i++) {
+            var t = targets[i];
+            var needed = t.balanceAfterInterest - t.monthPayment;
+            var add = Math.min(needed, remBudget);
+            t.monthPayment += add;
+            remBudget -= add;
+          }
+
+          var endingBal = 0;
+          activeDebts.forEach(function (d) {
+            if (d.balanceAfterInterest > 0.005) {
+              d.balance = Math.max(0, d.balanceAfterInterest - d.monthPayment);
+              if (d.balance < 0.01) {
+                d.balance = 0;
+                paidOffNames.push(d.name);
+              }
+              endingBal += d.balance;
+              paymentSum += d.monthPayment;
+            }
+          });
+
+          var principalPaid = Math.max(0, paymentSum - interestSum);
+          totalInterest += interestSum;
+          totalPrincipal += principalPaid;
+
+          schedule.push({
+            monthNumber: month,
+            dateLabel: dateLabel,
+            openingBalance: openingBal,
+            totalPayment: paymentSum,
+            interestAccrued: interestSum,
+            principalRepaid: principalPaid,
+            endingBalance: endingBal,
+            milestone: paidOffNames.join(", ")
+          });
+        }
+
+        var isComplete = activeDebts.every(function (d) { return d.balance <= 0.01; }) && isAmortizing;
+
+        return {
+          strategy: strategyType,
+          isComplete: isComplete,
+          totalMonths: month,
+          totalInterest: totalInterest,
+          totalPrincipal: totalPrincipal,
+          totalCost: totalPrincipal + totalInterest,
+          finalDebtFreeDate: schedule.length > 0 ? schedule[schedule.length - 1].dateLabel : "N/A",
+          schedule: schedule
+        };
+      }
+
+      function renderDashboard() {
+        var s = calculationResults.snowball;
+        var a = calculationResults.avalanche;
+        if (!s || !a) return;
+
+        resultsSection.style.display = "block";
+
+        document.getElementById("dsav-snow-date").textContent = s.isComplete ? s.finalDebtFreeDate : "Incomplete";
+        document.getElementById("dsav-snow-months").textContent = s.isComplete ? s.totalMonths + " months" : "Budget too low";
+        document.getElementById("dsav-snow-principal").textContent = formatMoney(s.totalPrincipal);
+        document.getElementById("dsav-snow-interest").textContent = formatMoney(s.totalInterest);
+        document.getElementById("dsav-snow-total").textContent = formatMoney(s.totalCost);
+
+        document.getElementById("dsav-ava-date").textContent = a.isComplete ? a.finalDebtFreeDate : "Incomplete";
+        document.getElementById("dsav-ava-months").textContent = a.isComplete ? a.totalMonths + " months" : "Budget too low";
+        document.getElementById("dsav-ava-principal").textContent = formatMoney(a.totalPrincipal);
+        document.getElementById("dsav-ava-interest").textContent = formatMoney(a.totalInterest);
+        document.getElementById("dsav-ava-total").textContent = formatMoney(a.totalCost);
+
+        var banner = document.getElementById("dsav-comparison-banner");
+        if (s.isComplete && a.isComplete) {
+          var diffInt = Math.abs(s.totalInterest - a.totalInterest);
+          var diffTime = Math.abs(s.totalMonths - a.totalMonths);
+
+          var msg = "";
+          if (s.totalInterest > a.totalInterest + 0.01) {
+            msg = 'Debt Avalanche saves <span class="dsav-diff-highlight">' + formatMoney(diffInt) + '</span> in total interest compared to Debt Snowball.';
+          } else if (a.totalInterest > s.totalInterest + 0.01) {
+            msg = 'Debt Snowball saves <span class="dsav-diff-highlight">' + formatMoney(diffInt) + '</span> under this specific scenario.';
+          } else {
+            msg = 'Both methods result in identical total interest costs.';
+          }
+
+          if (diffTime > 0) {
+            var faster = s.totalMonths < a.totalMonths ? "Debt Snowball" : "Debt Avalanche";
+            msg += ' ' + faster + ' finishes <span class="dsav-diff-highlight">' + diffTime + ' month(s) sooner</span>.';
+          } else {
+            msg += ' Both strategies finish in the exact same duration.';
+          }
+          banner.innerHTML = msg;
+        }
+
+        // Charts
+        var maxInt = Math.max(s.totalInterest, a.totalInterest, 1);
+        document.getElementById("dsav-bar-snow-int-val").textContent = formatMoney(s.totalInterest);
+        document.getElementById("dsav-bar-ava-int-val").textContent = formatMoney(a.totalInterest);
+        document.getElementById("dsav-bar-snow-interest").style.width = Math.max((s.totalInterest / maxInt) * 100, 5) + "%";
+        document.getElementById("dsav-bar-ava-interest").style.width = Math.max((a.totalInterest / maxInt) * 100, 5) + "%";
+
+        var maxTime = Math.max(s.totalMonths, a.totalMonths, 1);
+        document.getElementById("dsav-bar-snow-time-val").textContent = s.totalMonths + " mos";
+        document.getElementById("dsav-bar-ava-time-val").textContent = a.totalMonths + " mos";
+        document.getElementById("dsav-bar-snow-time").style.width = Math.max((s.totalMonths / maxTime) * 100, 5) + "%";
+        document.getElementById("dsav-bar-ava-time").style.width = Math.max((a.totalMonths / maxTime) * 100, 5) + "%";
+
+        currentSchedulePage = 1;
+        renderSchedulePage();
+      }
+
+      function renderSchedulePage() {
+        var strat = calculationResults[activeScheduleStrategy];
+        if (!strat || !strat.schedule) return;
+
+        var totalRows = strat.schedule.length;
+        var totalPages = Math.ceil(totalRows / ROWS_PER_PAGE) || 1;
+
+        if (currentSchedulePage > totalPages) currentSchedulePage = totalPages;
+        if (currentSchedulePage < 1) currentSchedulePage = 1;
+
+        var startIdx = (currentSchedulePage - 1) * ROWS_PER_PAGE;
+        var pageRows = strat.schedule.slice(startIdx, Math.min(startIdx + ROWS_PER_PAGE, totalRows));
+
+        scheduleBody.innerHTML = "";
+        pageRows.forEach(function (r) {
+          var tr = document.createElement("tr");
+          tr.innerHTML =
+            '<td>#' + r.monthNumber + '</td>' +
+            '<td>' + sanitizeText(r.dateLabel) + '</td>' +
+            '<td>' + formatMoney(r.openingBalance) + '</td>' +
+            '<td>' + formatMoney(r.totalPayment) + '</td>' +
+            '<td>' + formatMoney(r.interestAccrued) + '</td>' +
+            '<td>' + formatMoney(r.principalRepaid) + '</td>' +
+            '<td><strong>' + formatMoney(r.endingBalance) + '</strong></td>' +
+            '<td style="text-align:left; color:#16a34a; font-weight:600;">' + (r.milestone ? '&#10003; ' + sanitizeText(r.milestone) : '—') + '</td>';
+          scheduleBody.appendChild(tr);
+        });
+
+        pageIndicator.textContent = "Showing months " + (startIdx + 1) + "–" + Math.min(startIdx + ROWS_PER_PAGE, totalRows) + " of " + totalRows;
+        btnPagePrev.disabled = currentSchedulePage <= 1;
+        btnPageNext.disabled = currentSchedulePage >= totalPages;
+      }
+
+      // Handlers
+      btnCalculate.addEventListener("click", function () {
+        var data = validateAndCollectInputs();
+        if (!data) return;
+
+        calculationResults.snowball = simulate(data.debts, data.totalBudget, "snowball", data.startDate);
+        calculationResults.avalanche = simulate(data.debts, data.totalBudget, "avalanche", data.startDate);
+        calculationResults.totalPrincipal = calculationResults.snowball.totalPrincipal;
+
+        renderDashboard();
+        resultsSection.scrollIntoView({ behavior: "smooth" });
+      });
+
+      btnAddDebt.addEventListener("click", function () {
+        var count = container.querySelectorAll(".dsav-debt-row").length;
+        if (count >= MAX_DEBTS) return alert("Maximum " + MAX_DEBTS + " debts allowed.");
+        container.appendChild(createDebtRow(null, count));
+        reindexTitles();
+      });
+
+      btnResetDemo.addEventListener("click", function () {
+        if (confirm("Restore original sample debts?")) loadSampleDebts();
+      });
+
+      btnClearAll.addEventListener("click", function () {
+        if (confirm("Clear all debts?")) {
+          container.innerHTML = "";
+          container.appendChild(createDebtRow(null, 0));
+          reindexTitles();
+        }
+      });
+
+      currencySelect.addEventListener("change", updateCurrencySymbols);
+
+      tabSnow.addEventListener("click", function () {
+        activeScheduleStrategy = "snowball";
+        tabSnow.classList.add("dsav-tab-active");
+        tabAva.classList.remove("dsav-tab-active");
+        currentSchedulePage = 1;
+        renderSchedulePage();
+      });
+
+      tabAva.addEventListener("click", function () {
+        activeScheduleStrategy = "avalanche";
+        tabAva.classList.add("dsav-tab-active");
+        tabSnow.classList.remove("dsav-tab-active");
+        currentSchedulePage = 1;
+        renderSchedulePage();
+      });
+
+      btnPagePrev.addEventListener("click", function () {
+        if (currentSchedulePage > 1) { currentSchedulePage--; renderSchedulePage(); }
+      });
+
+      btnPageNext.addEventListener("click", function () {
+        currentSchedulePage++;
+        renderSchedulePage();
+      });
+
+      btnCopySummary.addEventListener("click", function () {
+        var s = calculationResults.snowball;
+        var a = calculationResults.avalanche;
+        if (!s || !a) return;
+        var text = "Snowball: " + s.finalDebtFreeDate + " | Total Interest: " + formatMoney(s.totalInterest) + "\n" +
+                   "Avalanche: " + a.finalDebtFreeDate + " | Total Interest: " + formatMoney(a.totalInterest);
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(function () { alert("Summary copied!"); });
+        } else {
+          prompt("Copy summary:", text);
+        }
+      });
+
+      btnExportCSV.addEventListener("click", function () {
+        var strat = calculationResults[activeScheduleStrategy];
+        if (!strat || !strat.schedule) return alert("Please calculate first.");
+        var rows = [["Month", "Date", "Opening Balance", "Payment", "Interest", "Principal", "Ending Balance", "Milestone"]];
+        strat.schedule.forEach(function (r) {
+          rows.push([r.monthNumber, r.dateLabel, r.openingBalance.toFixed(2), r.totalPayment.toFixed(2), r.interestAccrued.toFixed(2), r.principalRepaid.toFixed(2), r.endingBalance.toFixed(2), '"' + (r.milestone || '') + '"']);
+        });
+        var blob = new Blob([rows.map(function(e){ return e.join(","); }).join("\r\n")], { type: "text/csv;charset=utf-8;" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = activeScheduleStrategy + "_schedule.csv";
+        a.click();
+      });
+
+      btnPrint.addEventListener("click", function () { window.print(); });
+
+      document.getElementById("dsav-faq-container").addEventListener("click", function (e) {
+        var btn = e.target.closest(".dsav-faq-question");
+        if (!btn) return;
+        var item = btn.closest(".dsav-faq-item");
+        item.classList.toggle("dsav-faq-open");
+      });
+
+      loadSampleDebts();
+      updateCurrencySymbols();
+    })();
+  </script>
+</div>
