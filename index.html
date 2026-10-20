@@ -5,8 +5,8 @@
   <meta name="google-site-verification" content="3Ib5ZFJfj5D4Ji_crnJFA5Gr7c0V5dtdYsg-DRhwbvk" />
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Toolbox – free online tools that run in your browser</title>
-<meta name="description" content="Text, calculator, developer, converter and SEO tools. Everything runs locally in your browser.">
+<title>Toolbox – Free Online Calculators & Browser Tools</title>
+<meta name="description" content="Free online calculators for solar battery runtime, 100Ah lithium battery backup, credit card payoffs, text, developer, converter, and SEO tools. Everything runs locally in your browser.">
 <style>
 :root{--bg:#f6f7f4;--sf:#fff;--ink:#1d2a2a;--mut:#5b6866;--ac:#0b6b5c;--acx:#fff;--ln:#d9ddd6;--er:#a3261f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121715;--sf:#1a211e;--ink:#e6ece8;--mut:#9aa8a3;--ac:#5fd3bd;--acx:#0d1a16;--ln:#2b3531;--er:#ff8a80;color-scheme:dark}}
@@ -122,7 +122,7 @@ const TOOLS=[
 const $=(s,r=document)=>r.querySelector(s),app=$("#app"),el=(t,a={},...k)=>{const e=document.createElement(t);for(const x in a)x in e&&x!=="list"?e[x]=a[x]:e.setAttribute(x,a[x]);k.flat().forEach(c=>e.append(c));return e};
 const card=t=>el("a",{className:"card",href:t.url||("#/tool/"+t.id)},el("strong",{},t.n),el("span",{},t.d));
 function home(cat,q){q=(q||"").toLowerCase();let L=TOOLS.filter(t=>(!cat||t.c===cat)&&(!q||(t.n+" "+t.d+" "+CATS[t.c]).toLowerCase().includes(q)));
-document.title=(cat?CATS[cat]+" tools":"Toolbox")+" – free online tools in your browser";
+document.title=(cat?CATS[cat]+" tools":"Toolbox")+" – Free Online Tools in Your Browser";
 const chips=el("nav",{className:"chips","aria-label":"Categories"},el("a",{className:"chip",href:"#/","aria-current":String(!cat)},"All"),...Object.entries(CATS).map(([k,v])=>el("a",{className:"chip",href:"#/cat/"+k,"aria-current":String(cat===k)},v)));
 app.replaceChildren(...(cat||q?[]:[el("h1",{},"Free tools that never leave your browser."),el("p",{className:"lead"},TOOLS.length+" tools for text, numbers, dates, code and conversions. No sign-up, no uploads.")]),chips,el("h2",{},q?`Results for “${q}”`:cat?CATS[cat]:"All tools"),L.length?el("div",{className:"grid"},L.map(card)):el("p",{className:"hint"},"No tools match. Try a shorter word like “date” or “json”."))}
 function tool(t){
