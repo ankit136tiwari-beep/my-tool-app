@@ -1,0 +1,1626 @@
+<!-- ==========================================================================
+     EMERGENCY FUND MONTHS OF EXPENSES CALCULATOR (ALL-IN-ONE CODE)
+     Root Container: #efmc-calculator-root
+     Design, HTML, Logic & Schema All Included
+     ========================================================================== -->
+
+<div id="efmc-calculator-root">
+  <style>
+    #efmc-calculator-root {
+      --efmc-navy-900: #0f172a;
+      --efmc-navy-800: #1e293b;
+      --efmc-slate-700: #334155;
+      --efmc-slate-600: #475569;
+      --efmc-slate-500: #64748b;
+      --efmc-slate-300: #cbd5e1;
+      --efmc-slate-200: #e2e8f0;
+      --efmc-slate-100: #f1f5f9;
+      --efmc-slate-50: #f8fafc;
+      --efmc-white: #ffffff;
+      --efmc-emerald-600: #059669;
+      --efmc-emerald-500: #10b981;
+      --efmc-emerald-50: #ecfdf5;
+      --efmc-amber-600: #d97706;
+      --efmc-amber-50: #fffbeb;
+      --efmc-rose-600: #e11d48;
+      --efmc-rose-50: #fff1f2;
+      --efmc-blue-600: #2563eb;
+      --efmc-blue-50: #eff6ff;
+      --efmc-radius-sm: 6px;
+      --efmc-radius: 10px;
+      --efmc-radius-lg: 16px;
+      --efmc-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --efmc-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --efmc-shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --efmc-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+      font-family: var(--efmc-font);
+      color: var(--efmc-navy-900);
+      background-color: transparent;
+      line-height: 1.5;
+      box-sizing: border-box;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 12px;
+    }
+
+    #efmc-calculator-root *,
+    #efmc-calculator-root *::before,
+    #efmc-calculator-root *::after {
+      box-sizing: inherit;
+    }
+
+    #efmc-calculator-root h1.efmc-main-title {
+      font-size: clamp(1.65rem, 3.8vw, 2.35rem);
+      font-weight: 800;
+      color: var(--efmc-navy-900);
+      text-align: center;
+      margin: 0 0 8px 0;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+    }
+
+    #efmc-calculator-root p.efmc-lead-text {
+      font-size: 1.05rem;
+      color: var(--efmc-slate-600);
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto 20px auto;
+    }
+
+    #efmc-calculator-root .efmc-privacy-pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--efmc-emerald-50);
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      border-radius: var(--efmc-radius-sm);
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      max-width: 820px;
+      margin: 0 auto 24px auto;
+      text-align: center;
+    }
+
+    #efmc-calculator-root .efmc-app-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (min-width: 980px) {
+      #efmc-calculator-root .efmc-app-grid {
+        grid-template-columns: 1.15fr 0.85fr;
+      }
+    }
+
+    #efmc-calculator-root .efmc-card {
+      background: var(--efmc-white);
+      border: 1px solid var(--efmc-slate-200);
+      border-radius: var(--efmc-radius-lg);
+      padding: 22px;
+      box-shadow: var(--efmc-shadow);
+    }
+
+    #efmc-calculator-root .efmc-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--efmc-slate-100);
+    }
+
+    #efmc-calculator-root .efmc-section-header h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--efmc-navy-900);
+      margin: 0;
+    }
+
+    #efmc-calculator-root .efmc-form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    @media (min-width: 540px) {
+      #efmc-calculator-root .efmc-form-row-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    #efmc-calculator-root .efmc-form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    @media (min-width: 600px) {
+      #efmc-calculator-root .efmc-form-row-3 {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+    }
+
+    #efmc-calculator-root .efmc-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    #efmc-calculator-root label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--efmc-slate-700);
+    }
+
+    #efmc-calculator-root .efmc-hint {
+      font-size: 0.75rem;
+      color: var(--efmc-slate-500);
+    }
+
+    #efmc-calculator-root input[type="number"],
+    #efmc-calculator-root select {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      border: 1px solid var(--efmc-slate-300);
+      border-radius: var(--efmc-radius-sm);
+      color: var(--efmc-navy-900);
+      background-color: var(--efmc-white);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #efmc-calculator-root input[type="number"]:focus,
+    #efmc-calculator-root select:focus {
+      border-color: var(--efmc-blue-600);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    #efmc-calculator-root .efmc-accordion {
+      border: 1px solid var(--efmc-slate-200);
+      border-radius: var(--efmc-radius);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    #efmc-calculator-root .efmc-accordion-toggle {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--efmc-slate-50);
+      border: none;
+      text-align: left;
+      font-size: 0.925rem;
+      font-weight: 700;
+      color: var(--efmc-navy-800);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #efmc-calculator-root .efmc-accordion-content {
+      padding: 16px;
+      background: var(--efmc-white);
+      display: none;
+    }
+
+    #efmc-calculator-root .efmc-accordion.is-open .efmc-accordion-content {
+      display: block;
+    }
+
+    #efmc-calculator-root .efmc-presets-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+      margin-bottom: 10px;
+    }
+
+    #efmc-calculator-root .efmc-preset-btn {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: var(--efmc-radius-sm);
+      border: 1px solid var(--efmc-slate-300);
+      background: var(--efmc-slate-50);
+      color: var(--efmc-slate-700);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    #efmc-calculator-root .efmc-preset-btn:hover {
+      background: var(--efmc-slate-100);
+    }
+
+    #efmc-calculator-root .efmc-preset-btn.active {
+      background: var(--efmc-navy-900);
+      color: var(--efmc-white);
+      border-color: var(--efmc-navy-900);
+    }
+
+    #efmc-calculator-root .efmc-segmented {
+      display: flex;
+      background: var(--efmc-slate-100);
+      border-radius: var(--efmc-radius-sm);
+      padding: 3px;
+      margin-bottom: 14px;
+    }
+
+    #efmc-calculator-root .efmc-segmented-btn {
+      flex: 1;
+      padding: 7px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--efmc-slate-600);
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    #efmc-calculator-root .efmc-segmented-btn.active {
+      background: var(--efmc-white);
+      color: var(--efmc-navy-900);
+      box-shadow: var(--efmc-shadow-sm);
+    }
+
+    #efmc-calculator-root .efmc-btn-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    #efmc-calculator-root button.efmc-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 18px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: var(--efmc-radius-sm);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      min-height: 42px;
+    }
+
+    #efmc-calculator-root .efmc-btn-primary {
+      background: var(--efmc-emerald-600);
+      color: var(--efmc-white);
+    }
+
+    #efmc-calculator-root .efmc-btn-primary:hover {
+      background: #047857;
+    }
+
+    #efmc-calculator-root .efmc-btn-secondary {
+      background: var(--efmc-slate-100);
+      color: var(--efmc-slate-700);
+      border-color: var(--efmc-slate-300);
+    }
+
+    #efmc-calculator-root .efmc-btn-secondary:hover {
+      background: var(--efmc-slate-200);
+    }
+
+    #efmc-calculator-root .efmc-primary-stat-box {
+      background: linear-gradient(135deg, var(--efmc-navy-900) 0%, var(--efmc-navy-800) 100%);
+      color: var(--efmc-white);
+      border-radius: var(--efmc-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--efmc-shadow-md);
+    }
+
+    #efmc-calculator-root .efmc-primary-stat-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94a3b8;
+      font-weight: 700;
+    }
+
+    #efmc-calculator-root .efmc-primary-stat-val {
+      font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+      font-weight: 800;
+      margin: 4px 0;
+      color: #34d399;
+    }
+
+    #efmc-calculator-root .efmc-primary-stat-sub {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    #efmc-calculator-root .efmc-progress-box {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    #efmc-calculator-root .efmc-progress-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    #efmc-calculator-root .efmc-progress-track {
+      width: 100%;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    #efmc-calculator-root .efmc-progress-fill {
+      height: 100%;
+      background: #10b981;
+      width: 0%;
+      transition: width 0.3s ease;
+      border-radius: 6px;
+    }
+
+    #efmc-calculator-root .efmc-results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 480px) {
+      #efmc-calculator-root .efmc-results-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    #efmc-calculator-root .efmc-result-tile {
+      background: var(--efmc-slate-50);
+      border: 1px solid var(--efmc-slate-200);
+      border-radius: var(--efmc-radius);
+      padding: 14px;
+    }
+
+    #efmc-calculator-root .efmc-tile-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--efmc-slate-500);
+    }
+
+    #efmc-calculator-root .efmc-tile-val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--efmc-navy-900);
+      margin: 4px 0 2px 0;
+    }
+
+    #efmc-calculator-root .efmc-tile-sub {
+      font-size: 0.75rem;
+      color: var(--efmc-slate-600);
+    }
+
+    #efmc-calculator-root .efmc-alert {
+      border-radius: var(--efmc-radius);
+      padding: 14px;
+      margin-bottom: 20px;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    #efmc-calculator-root .efmc-alert-success {
+      background: var(--efmc-emerald-50);
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+
+    #efmc-calculator-root .efmc-alert-amber {
+      background: var(--efmc-amber-50);
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    #efmc-calculator-root .efmc-alert-rose {
+      background: var(--efmc-rose-50);
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+
+    #efmc-calculator-root .efmc-comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.825rem;
+      margin-top: 10px;
+    }
+
+    #efmc-calculator-root .efmc-comparison-table th,
+    #efmc-calculator-root .efmc-comparison-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--efmc-slate-200);
+      text-align: right;
+    }
+
+    #efmc-calculator-root .efmc-comparison-table th:first-child,
+    #efmc-calculator-root .efmc-comparison-table td:first-child {
+      text-align: left;
+      font-weight: 600;
+    }
+
+    #efmc-calculator-root .efmc-comparison-table th {
+      background: var(--efmc-slate-100);
+      color: var(--efmc-slate-700);
+    }
+
+    #efmc-calculator-root .efmc-article {
+      margin-top: 48px;
+      border-top: 1px solid var(--efmc-slate-200);
+      padding-top: 32px;
+    }
+
+    #efmc-calculator-root .efmc-article h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--efmc-navy-900);
+      margin: 28px 0 12px 0;
+    }
+
+    #efmc-calculator-root .efmc-article h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--efmc-slate-800);
+      margin: 20px 0 8px 0;
+    }
+
+    #efmc-calculator-root .efmc-article p,
+    #efmc-calculator-root .efmc-article li {
+      font-size: 0.95rem;
+      color: var(--efmc-slate-600);
+      line-height: 1.65;
+    }
+
+    #efmc-calculator-root .efmc-article ul,
+    #efmc-calculator-root .efmc-article ol {
+      padding-left: 22px;
+      margin: 10px 0 18px 0;
+    }
+
+    #efmc-calculator-root details.efmc-faq-box {
+      border-bottom: 1px solid var(--efmc-slate-200);
+      padding: 14px 0;
+      cursor: pointer;
+    }
+
+    #efmc-calculator-root details.efmc-faq-box summary {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--efmc-navy-900);
+      outline: none;
+    }
+
+    #efmc-calculator-root details.efmc-faq-box p {
+      margin-top: 8px;
+      margin-bottom: 0;
+    }
+
+    @media print {
+      body * { visibility: hidden; }
+      #efmc-calculator-root, #efmc-calculator-root * { visibility: visible; }
+      #efmc-calculator-root {
+        position: absolute;
+        left: 0; top: 0; width: 100%; padding: 0; margin: 0;
+      }
+      #efmc-calculator-root .efmc-btn-bar,
+      #efmc-calculator-root .efmc-privacy-pill,
+      #efmc-calculator-root .efmc-article { display: none !important; }
+      #efmc-calculator-root .efmc-accordion-content { display: block !important; }
+    }
+  </style>
+
+  <!-- Single H1 Title -->
+  <h1 class="efmc-main-title">Emergency Fund Months of Expenses Calculator</h1>
+  <p class="efmc-lead-text">
+    Calculate your personalized emergency savings target, evaluate how many months of expenses your current liquid cash covers, determine your funding gap, and plan an estimated monthly savings timeline.
+  </p>
+
+  <div class="efmc-privacy-pill">
+    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+    </svg>
+    <span>100% In-Browser Financial Tool: No account login, bank credentials, or network transmission required.</span>
+  </div>
+
+  <!-- Interactive Calculator Workspace -->
+  <div class="efmc-app-grid" role="region" aria-label="Emergency Fund Calculator Tool">
+    
+    <!-- Left Column: Inputs -->
+    <div class="efmc-card">
+      <div class="efmc-section-header">
+        <h2>1. Profile &amp; Expense Basis</h2>
+        <select id="efmcCurrency" style="width: auto; padding: 4px 8px; font-weight: 600;" aria-label="Select Currency">
+          <option value="INR" selected>INR (₹)</option>
+          <option value="USD">USD ($)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="AED">AED (د.إ)</option>
+          <option value="CAD">CAD (CA$)</option>
+          <option value="AUD">AUD (A$)</option>
+        </select>
+      </div>
+
+      <div class="efmc-form-row-2">
+        <div class="efmc-field">
+          <label for="efmcPrimaryIncome">Monthly Take-Home Income</label>
+          <input type="number" id="efmcPrimaryIncome" min="0" step="500" value="75000" />
+          <span class="efmc-hint">Primary net salary or business draw</span>
+        </div>
+        <div class="efmc-field">
+          <label for="efmcSecondaryIncome">Secondary Household Income</label>
+          <input type="number" id="efmcSecondaryIncome" min="0" step="500" value="0" />
+          <span class="efmc-hint">Spouse, freelance, or rental inflow</span>
+        </div>
+      </div>
+
+      <div class="efmc-form-row-2">
+        <div class="efmc-field">
+          <label for="efmcEmploymentType">Employment / Household Profile</label>
+          <select id="efmcEmploymentType">
+            <option value="salaried_stable">Salaried (Stable Corporate / Govt)</option>
+            <option value="salaried_startup">Salaried (Startup / Contract)</option>
+            <option value="freelancer" selected>Freelancer / Gig Economy</option>
+            <option value="self_employed">Self-Employed / Business Owner</option>
+            <option value="single_earner">Single-Income Family (Dependents)</option>
+            <option value="dual_earner">Dual-Income Household (No Dependents)</option>
+          </select>
+          <span class="efmc-hint" id="efmcEmploymentHint">Suggested baseline: 6–9 months of essential expenses</span>
+        </div>
+        <div class="efmc-field">
+          <label for="efmcIncomeStability">Income Predictability</label>
+          <select id="efmcIncomeStability">
+            <option value="high">Very Stable (Fixed Monthly Date)</option>
+            <option value="moderate" selected>Generally Stable (Minor Variances)</option>
+            <option value="variable">Variable (Commission / Invoices)</option>
+            <option value="unpredictable">Highly Unpredictable / Seasonal</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="efmc-field">
+        <label>Expense Basis for Emergency Goal</label>
+        <div class="efmc-segmented" role="radiogroup" aria-label="Expense calculation basis">
+          <button type="button" class="efmc-segmented-btn active" id="efmcBasisEssential">Essential Expenses Only (Recommended)</button>
+          <button type="button" class="efmc-segmented-btn" id="efmcBasisTotal">Total Monthly Expenses</button>
+        </div>
+      </div>
+
+      <!-- Essential Expenses Section -->
+      <div class="efmc-accordion is-open" id="efmcEssentialAccordion">
+        <button type="button" class="efmc-accordion-toggle" id="efmcToggleEssential">
+          <span>2. Essential Monthly Expenses</span>
+          <span id="efmcEssentialSubtotalBadge" style="font-size: 0.85rem; color: var(--efmc-blue-600);">₹34,000 / mo</span>
+        </button>
+        <div class="efmc-accordion-content">
+          <div class="efmc-form-row-2">
+            <div class="efmc-field">
+              <label for="efmcExpRent">Rent / Home Loan EMI</label>
+              <input type="number" id="efmcExpRent" min="0" value="18000" />
+            </div>
+            <div class="efmc-field">
+              <label for="efmcExpGroceries">Groceries &amp; Household Needs</label>
+              <input type="number" id="efmcExpGroceries" min="0" value="8000" />
+            </div>
+          </div>
+          <div class="efmc-form-row-3">
+            <div class="efmc-field">
+              <label for="efmcExpUtilities">Electricity, Gas &amp; Water</label>
+              <input type="number" id="efmcExpUtilities" min="0" value="2500" />
+            </div>
+            <div class="efmc-field">
+              <label for="efmcExpPhone">Phone &amp; Internet</label>
+              <input type="number" id="efmcExpPhone" min="0" value="1200" />
+            </div>
+            <div class="efmc-field">
+              <label for="efmcExpTransport">Commute &amp; Fuel</label>
+              <input type="number" id="efmcExpTransport" min="0" value="2500" />
+            </div>
+          </div>
+          <div class="efmc-form-row-3">
+            <div class="efmc-field">
+              <label for="efmcExpInsurance">Insurance (Health/Term/Auto)</label>
+              <input type="number" id="efmcExpInsurance" min="0" value="1800" />
+            </div>
+            <div class="efmc-field">
+              <label for="efmcExpHealth">Medicines &amp; Routine Care</label>
+              <input type="number" id="efmcExpHealth" min="0" value="1000" />
+            </div>
+            <div class="efmc-field">
+              <label for="efmcExpDebt">Minimum Debt / Credit Card</label>
+              <input type="number" id="efmcExpDebt" min="0" value="0" />
+            </div>
+          </div>
+          <div class="efmc-form-row-2">
+            <div class="efmc-field">
+              <label for="efmcExpDependent">Dependent &amp; Childcare Costs</label>
+              <input type="number" id="efmcExpDependent" min="0" value="0" />
+            </div>
+            <div class="efmc-field">
+              <label for="efmcExpOtherEssential">Other Unavoidable Costs</label>
+              <input type="number" id="efmcExpOtherEssential" min="0" value="0" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Optional Expenses Section -->
+      <div class="efmc-accordion" id="efmcOptionalAccordion">
+        <button type="button" class="efmc-accordion-toggle" id="efmcToggleOptional">
+          <span>3. Optional / Lifestyle Expenses (Discretionary)</span>
+          <span id="efmcOptionalSubtotalBadge" style="font-size: 0.85rem; color: var(--efmc-slate-500);">₹11,000 / mo</span>
+        </button>
+        <div class="efmc-accordion-content">
+          <div class="efmc-form-row-3">
+            <div class="efmc-field">
+              <label for="efmcOptDining">Dining Out &amp; Delivery</label>
+              <input type="number" id="efmcOptDining" min="0" value="4500" />
+            </div>
+            <div class="efmc-field">
+              <label for="efmcOptEntertainment">Entertainment &amp; OTT</label>
+              <input type="number" id="efmcOptEntertainment" min="0" value="1500" />
+            </div>
+            <div class="efmc-field">
+              <label for="efmcOptShopping">Shopping &amp; Lifestyle</label>
+              <input type="number" id="efmcOptShopping" min="0" value="3000" />
+            </div>
+          </div>
+          <div class="efmc-form-row-2">
+            <div class="efmc-field">
+              <label for="efmcOptTravel">Vacations &amp; Hobbies</label>
+              <input type="number" id="efmcOptTravel" min="0" value="2000" />
+            </div>
+            <div class="efmc-field">
+              <label for="efmcOptOther">Other Discretionary</label>
+              <input type="number" id="efmcOptOther" min="0" value="0" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Savings Setup -->
+      <div class="efmc-section-header" style="margin-top: 18px;">
+        <h2>4. Current Savings &amp; Target Setup</h2>
+      </div>
+
+      <div class="efmc-form-row-3">
+        <div class="efmc-field">
+          <label for="efmcCurrentSavings">Savings Account Balance</label>
+          <input type="number" id="efmcCurrentSavings" min="0" value="85000" />
+        </div>
+        <div class="efmc-field">
+          <label for="efmcCashOnHand">Cash on Hand</label>
+          <input type="number" id="efmcCashOnHand" min="0" value="15000" />
+        </div>
+        <div class="efmc-field">
+          <label for="efmcOtherLiquid">Liquid FD / Instant Fund</label>
+          <input type="number" id="efmcOtherLiquid" min="0" value="20000" />
+        </div>
+      </div>
+
+      <div class="efmc-field">
+        <label for="efmcExcludedSavings">Earmarked Funds to Exclude (Taxes, Goal SIPs, etc.)</label>
+        <input type="number" id="efmcExcludedSavings" min="0" value="20000" />
+        <span class="efmc-hint">Deducted so money needed for other goals is not double-counted</span>
+      </div>
+
+      <div class="efmc-field">
+        <label>Selected Emergency Coverage Target</label>
+        <div class="efmc-presets-group" role="group" aria-label="Coverage duration presets">
+          <button type="button" class="efmc-preset-btn" data-months="1">1 Month</button>
+          <button type="button" class="efmc-preset-btn" data-months="3">3 Months</button>
+          <button type="button" class="efmc-preset-btn active" data-months="6">6 Months</button>
+          <button type="button" class="efmc-preset-btn" data-months="9">9 Months</button>
+          <button type="button" class="efmc-preset-btn" data-months="12">12 Months</button>
+          <button type="button" class="efmc-preset-btn" data-months="custom">Custom</button>
+        </div>
+        <div id="efmcCustomMonthsWrap" style="display: none; margin-top: 6px;">
+          <label for="efmcCustomMonthsInput">Custom Target (1 to 36 Months):</label>
+          <input type="number" id="efmcCustomMonthsInput" min="1" max="36" value="6" style="max-width: 140px;" />
+        </div>
+      </div>
+
+      <div class="efmc-form-row-2">
+        <div class="efmc-field">
+          <label for="efmcMonthlyContribution">Planned Monthly Savings</label>
+          <input type="number" id="efmcMonthlyContribution" min="0" step="500" value="12000" />
+          <span class="efmc-hint">Monthly allocation to bridge your gap</span>
+        </div>
+        <div class="efmc-field">
+          <label for="efmcOneTimeDeposit">Optional One-Time Bonus</label>
+          <input type="number" id="efmcOneTimeDeposit" min="0" step="1000" value="0" />
+          <span class="efmc-hint">Upcoming bonus or tax refund</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="efmc-btn-bar">
+        <button type="button" class="efmc-btn efmc-btn-primary" id="efmcRecalcBtn">Recalculate</button>
+        <button type="button" class="efmc-btn efmc-btn-secondary" id="efmcResetBtn">Reset Defaults</button>
+        <button type="button" class="efmc-btn efmc-btn-secondary" id="efmcCopyBtn">Copy Results</button>
+        <button type="button" class="efmc-btn efmc-btn-secondary" id="efmcPrintBtn">Print / Save PDF</button>
+        <button type="button" class="efmc-btn efmc-btn-secondary" id="efmcSavePrefBtn">Save Locally</button>
+      </div>
+    </div>
+
+    <!-- Right Column: Results Dashboard -->
+    <div class="efmc-card" aria-live="polite">
+      
+      <!-- Primary Goal Banner -->
+      <div class="efmc-primary-stat-box">
+        <div class="efmc-primary-stat-label">Target Emergency Fund (<span id="efmcStatTargetMonths">6</span> Months)</div>
+        <div class="efmc-primary-stat-val" id="efmcStatTargetAmount">₹2,04,000</div>
+        <div class="efmc-primary-stat-sub">
+          Based on <span id="efmcStatExpenseBasisText">essential expenses</span> of <strong id="efmcStatMonthlyExpenseVal">₹34,000</strong>/month
+        </div>
+
+        <div class="efmc-progress-box">
+          <div class="efmc-progress-label-row">
+            <span>Funding Progress: <strong id="efmcStatProgressPct">49.0%</strong></span>
+            <span>Covered: <strong id="efmcStatMonthsCovered">2.9 Mos</strong></span>
+          </div>
+          <div class="efmc-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="49" id="efmcProgressAria">
+            <div class="efmc-progress-fill" id="efmcProgressBarFill" style="width: 49%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actionable Status Message -->
+      <div id="efmcStatusAlert" class="efmc-alert efmc-alert-amber">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="flex-shrink: 0; margin-top: 1px;">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div id="efmcStatusAlertText">
+          Your current eligible emergency savings cover approximately <strong>2.9 months</strong> of essential costs. You need an additional <strong>₹1,04,000</strong> to reach your 6-month safety net.
+        </div>
+      </div>
+
+      <!-- Secondary Metric Tiles -->
+      <div class="efmc-results-grid">
+        <div class="efmc-result-tile">
+          <div class="efmc-tile-label">Eligible Liquid Cash</div>
+          <div class="efmc-tile-val" id="efmcStatEligibleSavings">₹1,00,000</div>
+          <div class="efmc-tile-sub">Readily available reserves</div>
+        </div>
+
+        <div class="efmc-result-tile">
+          <div class="efmc-tile-label">Funding Gap</div>
+          <div class="efmc-tile-val" id="efmcStatFundingGap" style="color: var(--efmc-rose-600);">₹1,04,000</div>
+          <div class="efmc-tile-sub" id="efmcStatGapSubtitle">Additional cash required</div>
+        </div>
+
+        <div class="efmc-result-tile">
+          <div class="efmc-tile-label">Estimated Timeline</div>
+          <div class="efmc-tile-val" id="efmcStatMonthsToGoal">9 Months</div>
+          <div class="efmc-tile-sub">At <span id="efmcStatContribRate">₹12,000</span> / month</div>
+        </div>
+
+        <div class="efmc-result-tile">
+          <div class="efmc-tile-label">Monthly Savings Capacity</div>
+          <div class="efmc-tile-val" id="efmcStatSavingsCapacity">₹30,000</div>
+          <div class="efmc-tile-sub"><span id="efmcStatSavingsRate">40.0%</span> of net household income</div>
+        </div>
+      </div>
+
+      <!-- Benchmark Target Table -->
+      <div style="margin-top: 14px;">
+        <div style="font-size: 0.85rem; font-weight: 700; color: var(--efmc-slate-700); margin-bottom: 6px;">
+          Reference Multi-Month Coverage Benchmarks
+        </div>
+        <table class="efmc-comparison-table">
+          <thead>
+            <tr>
+              <th>Benchmark</th>
+              <th>Target Amount</th>
+              <th>Status / Gap</th>
+              <th>Estimated Time</th>
+            </tr>
+          </thead>
+          <tbody id="efmcBenchmarkTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- What-If Simulation -->
+      <div class="efmc-accordion" id="efmcScenarioAccordion" style="margin-top: 18px;">
+        <button type="button" class="efmc-accordion-toggle" id="efmcToggleScenario">
+          <span>What-If Scenario Simulation</span>
+          <span style="font-size: 0.8rem; color: var(--efmc-blue-600);">Compare Options</span>
+        </button>
+        <div class="efmc-accordion-content">
+          <p style="font-size: 0.825rem; color: var(--efmc-slate-600); margin-top: 0;">
+            See how trimming spending or increasing monthly contributions speeds up your emergency buffer.
+          </p>
+          <div class="efmc-form-row-2">
+            <div class="efmc-field">
+              <label for="efmcSimExpenseCut">Trim Expenses By (%)</label>
+              <input type="number" id="efmcSimExpenseCut" min="0" max="60" value="15" />
+            </div>
+            <div class="efmc-field">
+              <label for="efmcSimExtraSave">Boost Savings By (%)</label>
+              <input type="number" id="efmcSimExtraSave" min="0" max="150" value="25" />
+            </div>
+          </div>
+          <div id="efmcScenarioSummary" style="font-size: 0.825rem; padding: 10px; background: var(--efmc-slate-50); border-radius: var(--efmc-radius-sm); border: 1px solid var(--efmc-slate-200);"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Educational & SEO Article Section -->
+  <article class="efmc-article">
+    <h2>Why You Need an Emergency Fund Months of Expenses Calculator</h2>
+    <p>
+      An <strong>emergency fund</strong> is the foundational pillar of personal financial stability. Whether facing medical emergencies, car or home repairs, or an abrupt income pause, having liquid cash ensures you never rely on high-interest personal loans, credit card debt, or premature liquidations of retirement funds.
+    </p>
+    <p>
+      Using our <strong>emergency fund months of expenses calculator</strong>, you can calculate the exact cushion needed based on your genuine <em>essential living expenses</em> rather than an arbitrary guess.
+    </p>
+
+    <h2>Features of the Emergency Fund Calculator</h2>
+    <ul>
+      <li><strong>Personalized Target Calculation:</strong> Adapts to your household profile, dependents, and income predictability.</li>
+      <li><strong>Dual-Expense Architecture:</strong> Choose between an <em>essential expenses only</em> baseline or <em>total expenses</em> (including lifestyle costs).</li>
+      <li><strong>Multi-Month Benchmarks:</strong> Instantly view required reserves across 1, 3, 6, 9, and 12-month durations simultaneously.</li>
+      <li><strong>India-Friendly &amp; Multi-Currency Support:</strong> Formatted natively with Indian numbering standards (₹ Lakhs and Crores) as well as USD, GBP, EUR, AED, CAD, and AUD.</li>
+      <li><strong>Liquid Savings Assessment:</strong> Filters out committed funds so your runway relies strictly on accessible cash.</li>
+      <li><strong>Timeline Roadmap:</strong> Projects the exact number of months needed to close your funding gap.</li>
+      <li><strong>What-If Scenario Simulator:</strong> Test how trimming spending or boosting savings accelerates your goal.</li>
+      <li><strong>Print, PDF, &amp; Clipboard Export:</strong> Copy summaries or print clean reports without web clutter.</li>
+      <li><strong>100% Client-Side Privacy:</strong> Runs completely in your browser without databases or logins.</li>
+    </ul>
+
+    <h2>Who Can Use This Calculator?</h2>
+    <ul>
+      <li><strong>Salaried Employees:</strong> Determine if a 3-to-6-month cushion provides adequate protection during career transitions.</li>
+      <li><strong>Freelancers &amp; Independent Consultants:</strong> Calculate an expanded 6-to-12-month buffer to bridge uneven client payment cycles.</li>
+      <li><strong>Self-Employed &amp; Business Owners:</strong> Separate household emergency reserves from enterprise working capital.</li>
+      <li><strong>Single-Income Households:</strong> Protect dependents by building an expanded cash reserve against single-earner risk.</li>
+      <li><strong>Dual-Income Families:</strong> Optimize liquidity without holding excessive low-yielding idle cash.</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <details class="efmc-faq-box">
+      <summary>How much emergency fund do I need?</summary>
+      <p>As a rule of thumb, financial planners recommend <strong>3 to 6 months of essential living expenses</strong>. For freelancers or single-earner households with dependents, <strong>6 to 12 months</strong> is recommended.</p>
+    </details>
+
+    <details class="efmc-faq-box">
+      <summary>What is a 3-to-6-month emergency fund?</summary>
+      <p>It is an accessible cash reserve equal to 3 to 6 times your essential monthly living costs (housing, groceries, utilities, debt minimums, healthcare) if your income ceases.</p>
+    </details>
+
+    <details class="efmc-faq-box">
+      <summary>Should I calculate my emergency fund using salary or expenses?</summary>
+      <p>Use <strong>essential expenses</strong>, not gross salary. Salary includes discretionary splurges, taxes, and investment contributions that you would immediately pause during an emergency.</p>
+    </details>
+
+    <details class="efmc-faq-box">
+      <summary>How much emergency savings should a freelancer have?</summary>
+      <p>Freelancers should aim for <strong>6 to 9 months (or 12 months)</strong> of essential costs due to irregular payment cycles, client churn, and lack of employer-paid severance.</p>
+    </details>
+
+    <details class="efmc-faq-box">
+      <summary>Do I include investments in my emergency fund?</summary>
+      <p>No. Long-term investments (stocks, mutual funds, crypto, retirement funds) are volatile. Selling during market downturns forces permanent capital losses. Emergency funds should remain in safe, liquid accounts.</p>
+    </details>
+
+    <div style="margin-top: 36px; padding: 16px; background: var(--efmc-slate-100); border-radius: var(--efmc-radius); font-size: 0.8rem; color: var(--efmc-slate-600);">
+      <p style="margin: 0 0 8px 0;"><strong>Privacy Disclosure:</strong> Your calculations run entirely on your device inside your web browser. This tool does not transmit your personal financial values, bank balances, or expense inputs to any web server.</p>
+      <p style="margin: 0;"><strong>Financial Disclaimer:</strong> This calculator provides mathematical estimates for educational and personal financial planning purposes only. It does not constitute individualized investment, tax, legal, or financial advisory services.</p>
+    </div>
+  </article>
+
+  <!-- Complete JavaScript Engine -->
+  <script>
+    (function () {
+      "use strict";
+
+      const efmc = {
+        dom: {},
+        state: {
+          currency: "INR",
+          expenseBasis: "essential",
+          targetMonths: 6,
+          isCustomMonths: false
+        },
+
+        init() {
+          this.cacheDom();
+          this.bindEvents();
+          this.loadPreferences();
+          this.calculate();
+        },
+
+        cacheDom() {
+          const root = document.getElementById("efmc-calculator-root");
+          this.dom.root = root;
+          this.dom.currency = root.querySelector("#efmcCurrency");
+          this.dom.primaryIncome = root.querySelector("#efmcPrimaryIncome");
+          this.dom.secondaryIncome = root.querySelector("#efmcSecondaryIncome");
+          this.dom.employmentType = root.querySelector("#efmcEmploymentType");
+          this.dom.employmentHint = root.querySelector("#efmcEmploymentHint");
+          this.dom.incomeStability = root.querySelector("#efmcIncomeStability");
+
+          this.dom.basisEssential = root.querySelector("#efmcBasisEssential");
+          this.dom.basisTotal = root.querySelector("#efmcBasisTotal");
+
+          this.dom.essentialAccordion = root.querySelector("#efmcEssentialAccordion");
+          this.dom.toggleEssential = root.querySelector("#efmcToggleEssential");
+          this.dom.optionalAccordion = root.querySelector("#efmcOptionalAccordion");
+          this.dom.toggleOptional = root.querySelector("#efmcToggleOptional");
+          this.dom.essentialSubtotalBadge = root.querySelector("#efmcEssentialSubtotalBadge");
+          this.dom.optionalSubtotalBadge = root.querySelector("#efmcOptionalSubtotalBadge");
+
+          this.dom.expRent = root.querySelector("#efmcExpRent");
+          this.dom.expGroceries = root.querySelector("#efmcExpGroceries");
+          this.dom.expUtilities = root.querySelector("#efmcExpUtilities");
+          this.dom.expPhone = root.querySelector("#efmcExpPhone");
+          this.dom.expTransport = root.querySelector("#efmcExpTransport");
+          this.dom.expInsurance = root.querySelector("#efmcExpInsurance");
+          this.dom.expHealth = root.querySelector("#efmcExpHealth");
+          this.dom.expDebt = root.querySelector("#efmcExpDebt");
+          this.dom.expDependent = root.querySelector("#efmcExpDependent");
+          this.dom.expOtherEssential = root.querySelector("#efmcExpOtherEssential");
+
+          this.dom.optDining = root.querySelector("#efmcOptDining");
+          this.dom.optEntertainment = root.querySelector("#efmcOptEntertainment");
+          this.dom.optShopping = root.querySelector("#efmcOptShopping");
+          this.dom.optTravel = root.querySelector("#efmcOptTravel");
+          this.dom.optOther = root.querySelector("#efmcOptOther");
+
+          this.dom.currentSavings = root.querySelector("#efmcCurrentSavings");
+          this.dom.cashOnHand = root.querySelector("#efmcCashOnHand");
+          this.dom.otherLiquid = root.querySelector("#efmcOtherLiquid");
+          this.dom.excludedSavings = root.querySelector("#efmcExcludedSavings");
+          this.dom.presetBtns = root.querySelectorAll(".efmc-preset-btn");
+          this.dom.customMonthsWrap = root.querySelector("#efmcCustomMonthsWrap");
+          this.dom.customMonthsInput = root.querySelector("#efmcCustomMonthsInput");
+          this.dom.monthlyContribution = root.querySelector("#efmcMonthlyContribution");
+          this.dom.oneTimeDeposit = root.querySelector("#efmcOneTimeDeposit");
+
+          this.dom.scenarioAccordion = root.querySelector("#efmcScenarioAccordion");
+          this.dom.toggleScenario = root.querySelector("#efmcToggleScenario");
+          this.dom.simExpenseCut = root.querySelector("#efmcSimExpenseCut");
+          this.dom.simExtraSave = root.querySelector("#efmcSimExtraSave");
+          this.dom.scenarioSummary = root.querySelector("#efmcScenarioSummary");
+
+          this.dom.recalcBtn = root.querySelector("#efmcRecalcBtn");
+          this.dom.resetBtn = root.querySelector("#efmcResetBtn");
+          this.dom.copyBtn = root.querySelector("#efmcCopyBtn");
+          this.dom.printBtn = root.querySelector("#efmcPrintBtn");
+          this.dom.savePrefBtn = root.querySelector("#efmcSavePrefBtn");
+
+          this.dom.statTargetMonths = root.querySelector("#efmcStatTargetMonths");
+          this.dom.statTargetAmount = root.querySelector("#efmcStatTargetAmount");
+          this.dom.statExpenseBasisText = root.querySelector("#efmcStatExpenseBasisText");
+          this.dom.statMonthlyExpenseVal = root.querySelector("#efmcStatMonthlyExpenseVal");
+          this.dom.statProgressPct = root.querySelector("#efmcStatProgressPct");
+          this.dom.statMonthsCovered = root.querySelector("#efmcStatMonthsCovered");
+          this.dom.progressBarFill = root.querySelector("#efmcProgressBarFill");
+          this.dom.progressAria = root.querySelector("#efmcProgressAria");
+
+          this.dom.statusAlert = root.querySelector("#efmcStatusAlert");
+          this.dom.statusAlertText = root.querySelector("#efmcStatusAlertText");
+
+          this.dom.statEligibleSavings = root.querySelector("#efmcStatEligibleSavings");
+          this.dom.statFundingGap = root.querySelector("#efmcStatFundingGap");
+          this.dom.statGapSubtitle = root.querySelector("#efmcStatGapSubtitle");
+          this.dom.statMonthsToGoal = root.querySelector("#efmcStatMonthsToGoal");
+          this.dom.statContribRate = root.querySelector("#efmcStatContribRate");
+          this.dom.statSavingsCapacity = root.querySelector("#efmcStatSavingsCapacity");
+          this.dom.statSavingsRate = root.querySelector("#efmcStatSavingsRate");
+          this.dom.benchmarkTableBody = root.querySelector("#efmcBenchmarkTableBody");
+        },
+
+        bindEvents() {
+          const self = this;
+          const inputs = this.dom.root.querySelectorAll("input, select");
+
+          inputs.forEach(el => {
+            el.addEventListener("input", () => self.calculate());
+            el.addEventListener("change", () => self.calculate());
+          });
+
+          this.dom.currency.addEventListener("change", e => {
+            self.state.currency = e.target.value;
+            self.calculate();
+          });
+
+          this.dom.basisEssential.addEventListener("click", () => self.setExpenseBasis("essential"));
+          this.dom.basisTotal.addEventListener("click", () => self.setExpenseBasis("total"));
+
+          this.dom.toggleEssential.addEventListener("click", () => {
+            self.dom.essentialAccordion.classList.toggle("is-open");
+          });
+          this.dom.toggleOptional.addEventListener("click", () => {
+            self.dom.optionalAccordion.classList.toggle("is-open");
+          });
+          this.dom.toggleScenario.addEventListener("click", () => {
+            self.dom.scenarioAccordion.classList.toggle("is-open");
+          });
+
+          this.dom.presetBtns.forEach(btn => {
+            btn.addEventListener("click", function () {
+              self.dom.presetBtns.forEach(b => b.classList.remove("active"));
+              this.classList.add("active");
+              const m = this.dataset.months;
+              if (m === "custom") {
+                self.state.isCustomMonths = true;
+                self.dom.customMonthsWrap.style.display = "block";
+                self.state.targetMonths = self.parseNum(self.dom.customMonthsInput.value, 6);
+              } else {
+                self.state.isCustomMonths = false;
+                self.dom.customMonthsWrap.style.display = "none";
+                self.state.targetMonths = parseInt(m, 10);
+              }
+              self.calculate();
+            });
+          });
+
+          this.dom.customMonthsInput.addEventListener("input", function () {
+            let val = parseInt(this.value, 10);
+            if (isNaN(val) || val < 1) val = 1;
+            if (val > 36) val = 36;
+            self.state.targetMonths = val;
+            self.calculate();
+          });
+
+          this.dom.employmentType.addEventListener("change", function () {
+            self.updateEmploymentGuidance(this.value);
+            self.calculate();
+          });
+
+          this.dom.recalcBtn.addEventListener("click", () => self.calculate());
+          this.dom.resetBtn.addEventListener("click", () => self.resetDefaults());
+          this.dom.copyBtn.addEventListener("click", () => self.copyResults());
+          this.dom.printBtn.addEventListener("click", () => window.print());
+          this.dom.savePrefBtn.addEventListener("click", () => self.savePreferences());
+        },
+
+        updateEmploymentGuidance(type) {
+          let text = "Suggested baseline: 3–6 months of essential expenses";
+          if (type === "freelancer") text = "Suggested baseline: 6–9 months (cushion for variable project payments)";
+          else if (type === "self_employed") text = "Suggested baseline: 6–12 months (safeguard against business volatility)";
+          else if (type === "salaried_startup") text = "Suggested baseline: 6 months (safeguard for higher funding/runway risk)";
+          else if (type === "single_earner") text = "Suggested baseline: 6–9 months (sole earner with dependents)";
+          else if (type === "dual_earner") text = "Suggested baseline: 3–6 months (two independent stable earning streams)";
+          this.dom.employmentHint.textContent = text;
+        },
+
+        setExpenseBasis(basis) {
+          this.state.expenseBasis = basis;
+          if (basis === "essential") {
+            this.dom.basisEssential.classList.add("active");
+            this.dom.basisTotal.classList.remove("active");
+          } else {
+            this.dom.basisTotal.classList.add("active");
+            this.dom.basisEssential.classList.remove("active");
+          }
+          this.calculate();
+        },
+
+        parseNum(val, fallback = 0) {
+          const n = parseFloat(val);
+          return isNaN(n) || n < 0 ? fallback : n;
+        },
+
+        formatMoney(amount) {
+          const curr = this.state.currency;
+          let locale = "en-IN";
+          if (curr === "USD") locale = "en-US";
+          else if (curr === "GBP") locale = "en-GB";
+          else if (curr === "EUR") locale = "de-DE";
+          else if (curr === "AED") locale = "en-AE";
+          else if (curr === "CAD") locale = "en-CA";
+          else if (curr === "AUD") locale = "en-AU";
+
+          try {
+            return new Intl.NumberFormat(locale, {
+              style: "currency",
+              currency: curr,
+              maximumFractionDigits: 0
+            }).format(amount);
+          } catch (e) {
+            return curr + " " + Math.round(amount).toLocaleString();
+          }
+        },
+
+        calculate() {
+          const primaryIncome = this.parseNum(this.dom.primaryIncome.value);
+          const secondaryIncome = this.parseNum(this.dom.secondaryIncome.value);
+          const totalIncome = primaryIncome + secondaryIncome;
+
+          const rent = this.parseNum(this.dom.expRent.value);
+          const groceries = this.parseNum(this.dom.expGroceries.value);
+          const utilities = this.parseNum(this.dom.expUtilities.value);
+          const phone = this.parseNum(this.dom.expPhone.value);
+          const transport = this.parseNum(this.dom.expTransport.value);
+          const insurance = this.parseNum(this.dom.expInsurance.value);
+          const health = this.parseNum(this.dom.expHealth.value);
+          const debt = this.parseNum(this.dom.expDebt.value);
+          const dependent = this.parseNum(this.dom.expDependent.value);
+          const otherEssential = this.parseNum(this.dom.expOtherEssential.value);
+
+          const essentialMonthlyExpenses = rent + groceries + utilities + phone + transport + insurance + health + debt + dependent + otherEssential;
+
+          const dining = this.parseNum(this.dom.optDining.value);
+          const entertainment = this.parseNum(this.dom.optEntertainment.value);
+          const shopping = this.parseNum(this.dom.optShopping.value);
+          const travel = this.parseNum(this.dom.optTravel.value);
+          const otherOpt = this.parseNum(this.dom.optOther.value);
+
+          const optionalMonthlyExpenses = dining + entertainment + shopping + travel + otherOpt;
+          const totalMonthlyExpenses = essentialMonthlyExpenses + optionalMonthlyExpenses;
+
+          this.dom.essentialSubtotalBadge.textContent = this.formatMoney(essentialMonthlyExpenses) + " / mo";
+          this.dom.optionalSubtotalBadge.textContent = this.formatMoney(optionalMonthlyExpenses) + " / mo";
+
+          const selectedMonthlyExpenses = this.state.expenseBasis === "essential" ? essentialMonthlyExpenses : totalMonthlyExpenses;
+
+          const curSavings = this.parseNum(this.dom.currentSavings.value);
+          const cash = this.parseNum(this.dom.cashOnHand.value);
+          const otherLiquid = this.parseNum(this.dom.otherLiquid.value);
+          const oneTimeDeposit = this.parseNum(this.dom.oneTimeDeposit.value);
+          const excluded = this.parseNum(this.dom.excludedSavings.value);
+
+          const totalGrossLiquid = curSavings + cash + otherLiquid + oneTimeDeposit;
+          const eligibleSavings = Math.max(0, totalGrossLiquid - excluded);
+
+          const targetMonths = this.state.targetMonths;
+          const targetAmount = selectedMonthlyExpenses * targetMonths;
+
+          const fundingGap = Math.max(0, targetAmount - eligibleSavings);
+          const surplus = Math.max(0, eligibleSavings - targetAmount);
+
+          let monthsCovered = 0;
+          if (selectedMonthlyExpenses > 0) {
+            monthsCovered = eligibleSavings / selectedMonthlyExpenses;
+          }
+
+          let progressPct = 0;
+          if (targetAmount > 0) {
+            progressPct = (eligibleSavings / targetAmount) * 100;
+          } else if (eligibleSavings > 0) {
+            progressPct = 100;
+          }
+          const clampedProgress = Math.min(100, Math.max(0, progressPct));
+
+          const monthlyContribution = this.parseNum(this.dom.monthlyContribution.value);
+          let monthsToGoal = 0;
+          let timelineText = "Goal Reached!";
+
+          if (fundingGap > 0) {
+            if (monthlyContribution > 0) {
+              monthsToGoal = Math.ceil(fundingGap / monthlyContribution);
+              timelineText = monthsToGoal + (monthsToGoal === 1 ? " Month" : " Months");
+            } else {
+              timelineText = "Specify savings";
+            }
+          } else {
+            timelineText = "0 Months";
+          }
+
+          const savingsCapacity = Math.max(0, totalIncome - totalMonthlyExpenses);
+          const potentialSavingsRate = totalIncome > 0 ? (savingsCapacity / totalIncome) * 100 : 0;
+
+          this.dom.statTargetMonths.textContent = targetMonths;
+          this.dom.statTargetAmount.textContent = this.formatMoney(targetAmount);
+          this.dom.statExpenseBasisText.textContent = this.state.expenseBasis === "essential" ? "essential expenses" : "total expenses";
+          this.dom.statMonthlyExpenseVal.textContent = this.formatMoney(selectedMonthlyExpenses);
+
+          this.dom.statProgressPct.textContent = progressPct.toFixed(1) + "%";
+          this.dom.statMonthsCovered.textContent = monthsCovered.toFixed(1) + " Mos";
+          this.dom.progressBarFill.style.width = clampedProgress + "%";
+          this.dom.progressAria.setAttribute("aria-valuenow", Math.round(clampedProgress));
+
+          this.dom.statEligibleSavings.textContent = this.formatMoney(eligibleSavings);
+
+          if (fundingGap > 0) {
+            this.dom.statFundingGap.textContent = this.formatMoney(fundingGap);
+            this.dom.statFundingGap.style.color = "var(--efmc-rose-600)";
+            this.dom.statGapSubtitle.textContent = "Additional cash required";
+          } else {
+            this.dom.statFundingGap.textContent = "+" + this.formatMoney(surplus);
+            this.dom.statFundingGap.style.color = "var(--efmc-emerald-600)";
+            this.dom.statGapSubtitle.textContent = "Surplus reserve beyond target";
+          }
+
+          this.dom.statMonthsToGoal.textContent = timelineText;
+          this.dom.statContribRate.textContent = this.formatMoney(monthlyContribution);
+
+          this.dom.statSavingsCapacity.textContent = this.formatMoney(savingsCapacity);
+          this.dom.statSavingsRate.textContent = potentialSavingsRate.toFixed(1) + "%";
+
+          this.renderStatusMessage(fundingGap, surplus, monthsCovered, targetMonths, selectedMonthlyExpenses, monthlyContribution);
+          this.renderBenchmarkTable(selectedMonthlyExpenses, eligibleSavings, monthlyContribution);
+          this.renderScenarioSimulation(selectedMonthlyExpenses, eligibleSavings, targetMonths, monthlyContribution);
+        },
+
+        renderStatusMessage(gap, surplus, monthsCovered, targetMonths, monthlyExp, monthlyContrib) {
+          const alert = this.dom.statusAlert;
+          const text = this.dom.statusAlertText;
+
+          if (monthlyExp === 0) {
+            alert.className = "efmc-alert efmc-alert-amber";
+            text.innerHTML = "Please enter your monthly living expenses to calculate a meaningful emergency fund target.";
+            return;
+          }
+
+          if (gap === 0) {
+            alert.className = "efmc-alert efmc-alert-success";
+            text.innerHTML = `<strong>Congratulations!</strong> You have fully funded your ${targetMonths}-month safety net. Your liquid reserves cover <strong>${monthsCovered.toFixed(1)} months</strong> of expenses, leaving an extra surplus of <strong>${this.formatMoney(surplus)}</strong>.`;
+          } else if (monthsCovered < 1) {
+            alert.className = "efmc-alert efmc-alert-rose";
+            text.innerHTML = `<strong>High Priority:</strong> Your savings cover <strong>less than 1 month</strong> (${monthsCovered.toFixed(1)} months). You need <strong>${this.formatMoney(gap)}</strong> to reach your ${targetMonths}-month goal. Consider temporarily trimming discretionary costs to accelerate building your baseline safety net.`;
+          } else if (monthsCovered >= 3 && monthsCovered < targetMonths) {
+            alert.className = "efmc-alert efmc-alert-amber";
+            text.innerHTML = `<strong>Solid Foundation:</strong> You already have <strong>${monthsCovered.toFixed(1)} months</strong> of runway. You are on track to bridge your remaining <strong>${this.formatMoney(gap)}</strong> gap.`;
+          } else {
+            alert.className = "efmc-alert efmc-alert-amber";
+            text.innerHTML = `Your current emergency reserves cover approximately <strong>${monthsCovered.toFixed(1)} months</strong> of expenses. You need an additional <strong>${this.formatMoney(gap)}</strong> to achieve your ${targetMonths}-month goal.`;
+          }
+        },
+
+        renderBenchmarkTable(monthlyExp, savings, contrib) {
+          const benchmarks = [3, 6, 9, 12];
+          let html = "";
+
+          benchmarks.forEach(m => {
+            const req = monthlyExp * m;
+            const gap = Math.max(0, req - savings);
+            let time = "-";
+
+            if (gap === 0) {
+              time = "Achieved ✓";
+            } else if (contrib > 0) {
+              const mos = Math.ceil(gap / contrib);
+              time = mos + (mos === 1 ? " Mo" : " Mos");
+            } else {
+              time = "N/A";
+            }
+
+            const statusClass = gap === 0 ? "style='color: var(--efmc-emerald-600); font-weight: 700;'" : "";
+            const statusText = gap === 0 ? "Funded" : "Gap: " + this.formatMoney(gap);
+
+            html += `
+              <tr>
+                <td>${m} Months Coverage</td>
+                <td>${this.formatMoney(req)}</td>
+                <td ${statusClass}>${statusText}</td>
+                <td>${time}</td>
+              </tr>
+            `;
+          });
+
+          this.dom.benchmarkTableBody.innerHTML = html;
+        },
+
+        renderScenarioSimulation(baseExp, curSavings, targetMonths, baseContrib) {
+          const cutPct = this.parseNum(this.dom.simExpenseCut.value, 0);
+          const extraSavePct = this.parseNum(this.dom.simExtraSave.value, 0);
+
+          const simExp = baseExp * (1 - cutPct / 100);
+          const simContrib = baseContrib * (1 + extraSavePct / 100);
+
+          const simTarget = simExp * targetMonths;
+          const simGap = Math.max(0, simTarget - curSavings);
+
+          let baseMonthsToGoal = baseContrib > 0 && (baseExp * targetMonths > curSavings) ? Math.ceil((baseExp * targetMonths - curSavings) / baseContrib) : 0;
+          let simMonthsToGoal = simContrib > 0 && simGap > 0 ? Math.ceil(simGap / simContrib) : 0;
+
+          const savedMonths = Math.max(0, baseMonthsToGoal - simMonthsToGoal);
+
+          this.dom.scenarioSummary.innerHTML = `
+            <strong>Optimized Outcome:</strong><br>
+            • Revised monthly budget: <strong>${this.formatMoney(simExp)}</strong> (trimmed by ${cutPct}%)<br>
+            • Revised monthly savings: <strong>${this.formatMoney(simContrib)}</strong> (boosted by ${extraSavePct}%)<br>
+            • New emergency target: <strong>${this.formatMoney(simTarget)}</strong><br>
+            • Timeline to reach goal: <strong>${simMonthsToGoal} months</strong> ${savedMonths > 0 ? `<span style="color: var(--efmc-emerald-600); font-weight: 700;">(${savedMonths} months faster!)</span>` : ""}
+          `;
+        },
+
+        copyResults() {
+          const summary = [
+            "--- EMERGENCY FUND PLANNER SUMMARY ---",
+            `Currency: ${this.state.currency}`,
+            `Expense Basis: ${this.state.expenseBasis === "essential" ? "Essential Expenses Only" : "Total Living Expenses"}`,
+            `Selected Monthly Expenses: ${this.dom.statMonthlyExpenseVal.textContent}`,
+            `Coverage Horizon: ${this.state.targetMonths} Months`,
+            `Target Emergency Fund: ${this.dom.statTargetAmount.textContent}`,
+            `Eligible Liquid Savings: ${this.dom.statEligibleSavings.textContent}`,
+            `Funding Gap: ${this.dom.statFundingGap.textContent}`,
+            `Current Coverage: ${this.dom.statMonthsCovered.textContent}`,
+            `Planned Monthly Savings: ${this.dom.statContribRate.textContent}`,
+            `Estimated Time to Goal: ${this.dom.statMonthsToGoal.textContent}`,
+            `Monthly Savings Capacity: ${this.dom.statSavingsCapacity.textContent} (${this.dom.statSavingsRate.textContent} of income)`,
+            "---------------------------------------",
+            "Calculated via Emergency Fund Months of Expenses Calculator"
+          ].join("\n");
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(summary).then(() => {
+              this.showTempButtonFeedback(this.dom.copyBtn, "Copied!");
+            }).catch(() => {
+              this.fallbackCopy(summary);
+            });
+          } else {
+            this.fallbackCopy(summary);
+          }
+        },
+
+        fallbackCopy(text) {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.position = "fixed";
+          ta.style.left = "-9999px";
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            document.execCommand("copy");
+            this.showTempButtonFeedback(this.dom.copyBtn, "Copied!");
+          } catch (e) {
+            alert("Summary:\n\n" + text);
+          }
+          document.body.removeChild(ta);
+        },
+
+        showTempButtonFeedback(btn, message) {
+          const origText = btn.textContent;
+          btn.textContent = message;
+          btn.style.borderColor = "var(--efmc-emerald-600)";
+          setTimeout(() => {
+            btn.textContent = origText;
+            btn.style.borderColor = "";
+          }, 2000);
+        },
+
+        savePreferences() {
+          try {
+            const data = {
+              currency: this.state.currency,
+              basis: this.state.expenseBasis,
+              targetMonths: this.state.targetMonths,
+              isCustomMonths: this.state.isCustomMonths,
+              primaryIncome: this.dom.primaryIncome.value,
+              secondaryIncome: this.dom.secondaryIncome.value,
+              employmentType: this.dom.employmentType.value,
+              rent: this.dom.expRent.value,
+              groceries: this.dom.expGroceries.value,
+              utilities: this.dom.expUtilities.value,
+              phone: this.dom.expPhone.value,
+              transport: this.dom.expTransport.value,
+              insurance: this.dom.expInsurance.value,
+              health: this.dom.expHealth.value,
+              debt: this.dom.expDebt.value,
+              curSavings: this.dom.currentSavings.value,
+              cash: this.dom.cashOnHand.value,
+              otherLiquid: this.dom.otherLiquid.value,
+              excluded: this.dom.excludedSavings.value,
+              monthlyContribution: this.dom.monthlyContribution.value
+            };
+            localStorage.setItem("efmc_calculator_prefs", JSON.stringify(data));
+            this.showTempButtonFeedback(this.dom.savePrefBtn, "Saved Locally ✓");
+          } catch (e) {
+            alert("Local storage is disabled or restricted in your browser.");
+          }
+        },
+
+        loadPreferences() {
+          try {
+            const raw = localStorage.getItem("efmc_calculator_prefs");
+            if (!raw) return;
+            const data = JSON.parse(raw);
+
+            if (data.currency) {
+              this.state.currency = data.currency;
+              this.dom.currency.value = data.currency;
+            }
+            if (data.basis) {
+              this.setExpenseBasis(data.basis);
+            }
+            if (data.targetMonths) {
+              this.state.targetMonths = parseInt(data.targetMonths, 10);
+              let foundPreset = false;
+              this.dom.presetBtns.forEach(b => {
+                b.classList.remove("active");
+                if (b.dataset.months === String(data.targetMonths)) {
+                  b.classList.add("active");
+                  foundPreset = true;
+                }
+              });
+              if (!foundPreset) {
+                const customBtn = this.dom.root.querySelector(".efmc-preset-btn[data-months='custom']");
+                if (customBtn) customBtn.classList.add("active");
+                this.dom.customMonthsWrap.style.display = "block";
+                this.dom.customMonthsInput.value = data.targetMonths;
+              }
+            }
+            if (data.primaryIncome) this.dom.primaryIncome.value = data.primaryIncome;
+            if (data.secondaryIncome) this.dom.secondaryIncome.value = data.secondaryIncome;
+            if (data.employmentType) {
+              this.dom.employmentType.value = data.employmentType;
+              this.updateEmploymentGuidance(data.employmentType);
+            }
+            if (data.rent) this.dom.expRent.value = data.rent;
+            if (data.groceries) this.dom.expGroceries.value = data.groceries;
+            if (data.utilities) this.dom.expUtilities.value = data.utilities;
+            if (data.phone) this.dom.expPhone.value = data.phone;
+            if (data.transport) this.dom.expTransport.value = data.transport;
+            if (data.insurance) this.dom.expInsurance.value = data.insurance;
+            if (data.health) this.dom.expHealth.value = data.health;
+            if (data.debt) this.dom.expDebt.value = data.debt;
+            if (data.curSavings) this.dom.currentSavings.value = data.curSavings;
+            if (data.cash) this.dom.cashOnHand.value = data.cash;
+            if (data.otherLiquid) this.dom.otherLiquid.value = data.otherLiquid;
+            if (data.excluded) this.dom.excludedSavings.value = data.excluded;
+            if (data.monthlyContribution) this.dom.monthlyContribution.value = data.monthlyContribution;
+          } catch (e) {}
+        },
+
+        resetDefaults() {
+          if (!confirm("Reset all inputs to their default planning baseline?")) return;
+          try {
+            localStorage.removeItem("efmc_calculator_prefs");
+          } catch (e) {}
+
+          this.state.currency = "INR";
+          this.dom.currency.value = "INR";
+          this.setExpenseBasis("essential");
+
+          this.dom.primaryIncome.value = 75000;
+          this.dom.secondaryIncome.value = 0;
+          this.dom.employmentType.value = "freelancer";
+          this.updateEmploymentGuidance("freelancer");
+          this.dom.incomeStability.value = "moderate";
+
+          this.dom.expRent.value = 18000;
+          this.dom.expGroceries.value = 8000;
+          this.dom.expUtilities.value = 2500;
+          this.dom.expPhone.value = 1200;
+          this.dom.expTransport.value = 2500;
+          this.dom.expInsurance.value = 1800;
+          this.dom.expHealth.value = 1000;
+          this.dom.expDebt.value = 0;
+          this.dom.expDependent.value = 0;
+          this.dom.expOtherEssential.value = 0;
+
+          this.dom.optDining.value = 4500;
+          this.dom.optEntertainment.value = 1500;
+          this.dom.optShopping.value = 3000;
+          this.dom.optTravel.value = 2000;
+          this.dom.optOther.value = 0;
+
+          this.dom.currentSavings.value = 85000;
+          this.dom.cashOnHand.value = 15000;
+          this.dom.otherLiquid.value = 20000;
+          this.dom.excludedSavings.value = 20000;
+
+          this.dom.presetBtns.forEach(b => b.classList.remove("active"));
+          const sixBtn = this.dom.root.querySelector(".efmc-preset-btn[data-months='6']");
+          if (sixBtn) sixBtn.classList.add("active");
+          this.state.targetMonths = 6;
+          this.dom.customMonthsWrap.style.display = "none";
+          this.dom.customMonthsInput.value = 6;
+
+          this.dom.monthlyContribution.value = 12000;
+          this.dom.oneTimeDeposit.value = 0;
+
+          this.dom.simExpenseCut.value = 15;
+          this.dom.simExtraSave.value = 25;
+
+          this.calculate();
+          this.showTempButtonFeedback(this.dom.resetBtn, "Reset ✓");
+        }
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => efmc.init());
+      } else {
+        efmc.init();
+      }
+    })();
+  </script>
+
+  <!-- Complete SEO Schema Markup (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://my-tool-app.pages.dev/emergency-fund-months-of-expenses-calculator.html#webapp",
+        "url": "https://my-tool-app.pages.dev/emergency-fund-months-of-expenses-calculator.html",
+        "name": "Emergency Fund Months of Expenses Calculator",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript. Runs 100% locally in modern web browsers.",
+        "description": "Calculate emergency fund targets, expense coverage, savings gaps, and monthly savings timelines based on essential living costs.",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "INR"
+        },
+        "featureList": [
+          "Essential vs total expense baseline modeling",
+          "3, 6, 9, and 12-month coverage benchmarks",
+          "Indian Rupee (INR) Lakh formatting and international currency support",
+          "Funding gap and timeline calculator",
+          "What-if scenario stress testing",
+          "Zero-backend client-side execution"
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://my-tool-app.pages.dev/emergency-fund-months-of-expenses-calculator.html#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How much emergency fund do I need?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "As a standard rule of thumb, most financial planners recommend maintaining 3 to 6 months of essential living expenses. However, if your income is volatile or you work as a freelancer, 6 to 12 months is recommended."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is a 3-to-6-month emergency fund?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A 3-to-6-month emergency fund is a pool of accessible cash equal to 3 to 6 times your essential monthly expenses, ensuring you can survive without income while searching for work or recovering from an emergency."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Should I calculate my emergency fund using salary or expenses?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "You should calculate your target using essential expenses, not gross salary. Calculating by salary often overstates requirements by including discretionary splurges, tax deductions, and investment contributions that would be paused during an emergency."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How much emergency savings should a freelancer have?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Freelancers and gig professionals should aim for 6 to 9 months (or up to 12 months) of essential living costs due to irregular invoice cycles, client churn, and lack of corporate severance."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do I include investments in my emergency fund?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Long-term investments like stocks, equity mutual funds, crypto, or retirement funds should not be considered emergency funds. Liquidating volatile assets during a market crash locks in severe capital losses."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</div>
