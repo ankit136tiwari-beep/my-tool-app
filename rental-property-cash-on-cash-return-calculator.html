@@ -1,0 +1,1438 @@
+<!-- ==========================================================================
+     RENTAL PROPERTY CASH-ON-CASH RETURN CALCULATOR FOR GOOGLE BLOGGER
+     Root Scoped Container: #rccr-app
+     ========================================================================== -->
+<div id="rccr-app">
+  <style>
+    #rccr-app {
+      --rccr-primary: #1e3a8a;
+      --rccr-primary-hover: #1e40af;
+      --rccr-accent: #0284c7;
+      --rccr-accent-bg: #f0f9ff;
+      --rccr-bg: #f8fafc;
+      --rccr-card-bg: #ffffff;
+      --rccr-text: #0f172a;
+      --rccr-text-muted: #475569;
+      --rccr-border: #cbd5e1;
+      --rccr-border-subtle: #e2e8f0;
+      --rccr-success: #15803d;
+      --rccr-success-bg: #f0fdf4;
+      --rccr-warning: #b45309;
+      --rccr-warning-bg: #fffbeb;
+      --rccr-danger: #b91c1c;
+      --rccr-danger-bg: #fef2f2;
+      --rccr-radius: 8px;
+      --rccr-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+      --rccr-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+      font-family: var(--rccr-font);
+      color: var(--rccr-text);
+      background-color: var(--rccr-bg);
+      line-height: 1.5;
+      box-sizing: border-box;
+      max-width: 1200px;
+      margin: 0 auto 3rem auto;
+      padding: 1.25rem;
+      border-radius: 12px;
+    }
+
+    #rccr-app *, #rccr-app *::before, #rccr-app *::after {
+      box-sizing: inherit;
+    }
+
+    #rccr-app h1.rccr-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--rccr-primary);
+      margin: 0 0 0.5rem 0;
+      line-height: 1.25;
+    }
+
+    #rccr-app p.rccr-lead {
+      font-size: 1.05rem;
+      color: var(--rccr-text-muted);
+      margin: 0 0 1.5rem 0;
+    }
+
+    #rccr-app h2.rccr-h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--rccr-primary);
+      margin: 2rem 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--rccr-border-subtle);
+    }
+
+    #rccr-app h3.rccr-h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--rccr-text);
+      margin: 1.25rem 0 0.5rem 0;
+    }
+
+    /* Layout Containers */
+    #rccr-app .rccr-main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    #rccr-app .rccr-card {
+      background: var(--rccr-card-bg);
+      border: 1px solid var(--rccr-border);
+      border-radius: var(--rccr-radius);
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--rccr-shadow);
+    }
+
+    #rccr-app .rccr-card-header {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--rccr-primary);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--rccr-border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Form Fields */
+    #rccr-app .rccr-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    #rccr-app .rccr-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    #rccr-app .rccr-field {
+      margin-bottom: 0.75rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #rccr-app label.rccr-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--rccr-text);
+      margin-bottom: 0.3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #rccr-app .rccr-input,
+    #rccr-app .rccr-select {
+      width: 100%;
+      padding: 0.55rem 0.65rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--rccr-text);
+      background-color: #ffffff;
+      border: 1px solid var(--rccr-border);
+      border-radius: 4px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #rccr-app .rccr-input:focus,
+    #rccr-app .rccr-select:focus {
+      outline: none;
+      border-color: var(--rccr-accent);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+    }
+
+    #rccr-app .rccr-input.rccr-invalid {
+      border-color: var(--rccr-danger);
+      background-color: var(--rccr-danger-bg);
+    }
+
+    #rccr-app .rccr-err-msg {
+      color: var(--rccr-danger);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      display: none;
+      font-weight: 500;
+    }
+
+    #rccr-app .rccr-err-msg.rccr-visible {
+      display: block;
+    }
+
+    #rccr-app .rccr-help {
+      font-size: 0.75rem;
+      color: var(--rccr-text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Buttons */
+    #rccr-app .rccr-btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    #rccr-app .rccr-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    #rccr-app .rccr-btn-primary {
+      background-color: var(--rccr-primary);
+      color: #ffffff;
+    }
+
+    #rccr-app .rccr-btn-primary:hover {
+      background-color: var(--rccr-primary-hover);
+    }
+
+    #rccr-app .rccr-btn-secondary {
+      background-color: #ffffff;
+      color: var(--rccr-text);
+      border-color: var(--rccr-border);
+    }
+
+    #rccr-app .rccr-btn-secondary:hover {
+      background-color: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    /* Results Dashboard Styling */
+    #rccr-app .rccr-headline-card {
+      background: linear-gradient(135deg, #1e3a8a, #0369a1);
+      color: #ffffff;
+      border-radius: var(--rccr-radius);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      text-align: center;
+      box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.25);
+    }
+
+    #rccr-app .rccr-headline-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.9;
+      font-weight: 600;
+    }
+
+    #rccr-app .rccr-headline-val {
+      font-size: 2.75rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin: 0.35rem 0;
+    }
+
+    #rccr-app .rccr-headline-status {
+      font-size: 0.9rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      display: inline-block;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    #rccr-app .rccr-kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    #rccr-app .rccr-kpi {
+      background: var(--rccr-card-bg);
+      border: 1px solid var(--rccr-border-subtle);
+      border-left: 4px solid var(--rccr-accent);
+      border-radius: 4px;
+      padding: 0.75rem;
+    }
+
+    #rccr-app .rccr-kpi-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--rccr-text-muted);
+      font-weight: 600;
+    }
+
+    #rccr-app .rccr-kpi-number {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--rccr-text);
+      margin-top: 0.2rem;
+    }
+
+    /* Tables & Breakdown */
+    #rccr-app .rccr-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--rccr-border-subtle);
+      border-radius: 4px;
+      margin-top: 0.75rem;
+    }
+
+    #rccr-app table.rccr-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    #rccr-app table.rccr-table th,
+    #rccr-app table.rccr-table td {
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--rccr-border-subtle);
+    }
+
+    #rccr-app table.rccr-table th {
+      background: #f8fafc;
+      font-weight: 600;
+      color: var(--rccr-text-muted);
+    }
+
+    #rccr-app table.rccr-table tr.rccr-total-row {
+      font-weight: 700;
+      background: #f1f5f9;
+    }
+
+    #rccr-app .rccr-badge {
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      font-size: 0.7rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    #rccr-app .rccr-badge-success { background: var(--rccr-success-bg); color: var(--rccr-success); }
+    #rccr-app .rccr-badge-danger { background: var(--rccr-danger-bg); color: var(--rccr-danger); }
+    #rccr-app .rccr-badge-info { background: var(--rccr-accent-bg); color: var(--rccr-accent); }
+
+    /* Collapsible Sections */
+    #rccr-app .rccr-details-summary {
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--rccr-primary);
+      padding: 0.5rem 0;
+      user-select: none;
+    }
+
+    /* Explanatory Content */
+    #rccr-app .rccr-content-card {
+      background: #ffffff;
+      border: 1px solid var(--rccr-border-subtle);
+      border-radius: var(--rccr-radius);
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    #rccr-app .rccr-formula-block {
+      background: #f1f5f9;
+      border-left: 4px solid var(--rccr-primary);
+      padding: 0.85rem 1rem;
+      font-family: ui-monospace, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+
+    #rccr-app .rccr-faq dt {
+      font-weight: 700;
+      color: var(--rccr-primary);
+      margin-top: 1.25rem;
+      font-size: 1rem;
+    }
+
+    #rccr-app .rccr-faq dd {
+      margin-left: 0;
+      margin-top: 0.25rem;
+      color: var(--rccr-text);
+      line-height: 1.6;
+    }
+
+    #rccr-app .rccr-disclaimer {
+      background: #f8fafc;
+      border-left: 4px solid var(--rccr-text-muted);
+      padding: 0.85rem;
+      font-size: 0.8rem;
+      color: var(--rccr-text-muted);
+      margin-top: 2rem;
+      border-radius: 4px;
+    }
+
+    /* Print View */
+    @media print {
+      body * { visibility: hidden; }
+      #rccr-app, #rccr-app * { visibility: visible; }
+      #rccr-app {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+      }
+      #rccr-app .rccr-btn-group,
+      #rccr-app .rccr-content-card,
+      #rccr-app .rccr-faq { display: none !important; }
+      #rccr-app .rccr-main-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Responsive */
+    @media (max-width: 820px) {
+      #rccr-app .rccr-main-grid { grid-template-columns: 1fr; }
+      #rccr-app .rccr-grid-2, #rccr-app .rccr-grid-3 { grid-template-columns: 1fr; }
+      #rccr-app .rccr-kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <!-- 1. Semantic Visible H1 -->
+  <h1 class="rccr-title">Rental Property Cash-on-Cash Return Calculator</h1>
+  <p class="rccr-lead">Calculate your annual cash-on-cash return, conservative reserve-adjusted cash flow, net operating income (NOI), and acquisition equity using standard real estate underwriting formulas.</p>
+
+  <!-- 2. Interactive Calculator Interface -->
+  <div class="rccr-main-grid">
+
+    <!-- LEFT COLUMN: INPUTS -->
+    <div class="rccr-input-col">
+
+      <!-- Section A: Property Information -->
+      <div class="rccr-card">
+        <div class="rccr-card-header">1. Property & Acquisition Price</div>
+        <div class="rccr-grid-2">
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-purchase-price">Purchase Price</label>
+            <input type="number" id="rccr-purchase-price" class="rccr-input" value="200000" min="1" step="1000">
+            <span class="rccr-err-msg" id="rccr-err-purchase-price">Enter purchase price greater than zero.</span>
+          </div>
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-currency">Currency</label>
+            <select id="rccr-currency" class="rccr-select">
+              <option value="USD">USD ($)</option>
+              <option value="INR">INR (₹)</option>
+              <option value="GBP">GBP (£)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="CAD">CAD (C$)</option>
+              <option value="AUD">AUD (A$)</option>
+            </select>
+          </div>
+        </div>
+        <div class="rccr-grid-2">
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-prop-name">Property Name / Label (Optional)</label>
+            <input type="text" id="rccr-prop-name" class="rccr-input" placeholder="e.g. Maple Duplex" maxlength="50">
+          </div>
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-appreciation">Est. Appreciation (%/Yr)</label>
+            <input type="number" id="rccr-appreciation" class="rccr-input" value="3.0" min="0" max="50" step="0.1">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section B: Financing & Debt Service -->
+      <div class="rccr-card">
+        <div class="rccr-card-header">2. Mortgage & Financing</div>
+        <div class="rccr-grid-2">
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-down-pct">Down Payment (%)</label>
+            <input type="number" id="rccr-down-pct" class="rccr-input" value="25" min="0" max="100" step="0.5">
+            <span class="rccr-err-msg" id="rccr-err-down-pct">Down payment must be 0% to 100%.</span>
+          </div>
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-interest-rate">Mortgage Interest Rate (%)</label>
+            <input type="number" id="rccr-interest-rate" class="rccr-input" value="7.0" min="0" max="30" step="0.125">
+            <span class="rccr-err-msg" id="rccr-err-interest-rate">Interest rate cannot be negative.</span>
+          </div>
+        </div>
+        <div class="rccr-grid-2">
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-loan-term">Loan Term (Years)</label>
+            <input type="number" id="rccr-loan-term" class="rccr-input" value="30" min="1" max="50" step="1">
+            <span class="rccr-err-msg" id="rccr-err-loan-term">Term must be at least 1 year.</span>
+          </div>
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-extra-principal">Extra Monthly Principal</label>
+            <input type="number" id="rccr-extra-principal" class="rccr-input" value="0" min="0" step="25">
+          </div>
+        </div>
+        <div class="rccr-field" style="margin-top:0.35rem;">
+          <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; cursor:pointer;">
+            <input type="checkbox" id="rccr-override-loan-toggle">
+            <span>Manually specify loan amount override</span>
+          </label>
+          <input type="number" id="rccr-override-loan-amt" class="rccr-input" style="display:none; margin-top:0.4rem;" placeholder="Enter custom loan amount" min="0">
+        </div>
+      </div>
+
+      <!-- Section C: Rental Income & Vacancy -->
+      <div class="rccr-card">
+        <div class="rccr-card-header">3. Rental Income & Vacancy</div>
+        <div class="rccr-grid-2">
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-monthly-rent">Monthly Scheduled Rent</label>
+            <input type="number" id="rccr-monthly-rent" class="rccr-input" value="2000" min="0" step="50">
+            <span class="rccr-err-msg" id="rccr-err-monthly-rent">Rent cannot be negative.</span>
+          </div>
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-vacancy-pct">Vacancy & Credit Loss (%)</label>
+            <input type="number" id="rccr-vacancy-pct" class="rccr-input" value="5.0" min="0" max="100" step="0.5">
+            <span class="rccr-err-msg" id="rccr-err-vacancy-pct">Must be between 0% and 100%.</span>
+          </div>
+        </div>
+        <div class="rccr-grid-2">
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-other-monthly-income">Other Monthly Income (Laundry/Storage)</label>
+            <input type="number" id="rccr-other-monthly-income" class="rccr-input" value="0" min="0" step="10">
+          </div>
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-other-annual-income">Other Annual Income</label>
+            <input type="number" id="rccr-other-annual-income" class="rccr-input" value="0" min="0" step="100">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section D: Operating Expenses & Capital Reserves -->
+      <div class="rccr-card">
+        <div class="rccr-card-header">4. Operating Expenses & CapEx Reserve</div>
+        <div class="rccr-grid-2">
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-prop-tax">Annual Property Taxes</label>
+            <input type="number" id="rccr-prop-tax" class="rccr-input" value="2400" min="0" step="50">
+          </div>
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-insurance">Annual Insurance</label>
+            <input type="number" id="rccr-insurance" class="rccr-input" value="1200" min="0" step="50">
+          </div>
+        </div>
+        <div class="rccr-grid-2">
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-mgmt-type">Property Management</label>
+            <select id="rccr-mgmt-type" class="rccr-select">
+              <option value="percent">% of Effective Income</option>
+              <option value="fixed">Fixed Annual Amount</option>
+            </select>
+          </div>
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-mgmt-val" id="rccr-mgmt-val-label">Mgmt Fee (% of EGI)</label>
+            <input type="number" id="rccr-mgmt-val" class="rccr-input" value="8" min="0" step="0.5">
+          </div>
+        </div>
+        <div class="rccr-grid-2">
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-maintenance">Annual Repairs & Maintenance</label>
+            <input type="number" id="rccr-maintenance" class="rccr-input" value="1500" min="0" step="50">
+          </div>
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-utilities">Annual Owner-Paid Utilities</label>
+            <input type="number" id="rccr-utilities" class="rccr-input" value="0" min="0" step="25">
+          </div>
+        </div>
+        <div class="rccr-grid-2">
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-hoa">Annual HOA / Association Dues</label>
+            <input type="number" id="rccr-hoa" class="rccr-input" value="0" min="0" step="25">
+          </div>
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-misc-exp">Other Recurring Operating Exp.</label>
+            <input type="number" id="rccr-misc-exp" class="rccr-input" value="300" min="0" step="25">
+          </div>
+        </div>
+        <div class="rccr-field" style="background:#f1f5f9; padding:0.65rem; border-radius:4px; margin-top:0.25rem;">
+          <label class="rccr-label" for="rccr-capex-reserve" style="color:var(--rccr-primary);">
+            <span>Annual Capital Expenditure (CapEx) Reserve</span>
+            <span class="rccr-badge rccr-badge-info">Post-NOI Cash Flow</span>
+          </label>
+          <input type="number" id="rccr-capex-reserve" class="rccr-input" value="1200" min="0" step="50">
+          <span class="rccr-help">Standard real estate convention excludes CapEx reserves from operating NOI, deducting it directly from cash flow.</span>
+        </div>
+      </div>
+
+      <!-- Section E: Acquisition Costs & Total Cash Invested -->
+      <div class="rccr-card">
+        <div class="rccr-card-header">5. Closing Costs & Initial Out-of-Pocket Cash</div>
+        <div class="rccr-grid-3">
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-closing-costs">Closing Costs</label>
+            <input type="number" id="rccr-closing-costs" class="rccr-input" value="4500" min="0" step="50">
+          </div>
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-renovation">Initial Renovations</label>
+            <input type="number" id="rccr-renovation" class="rccr-input" value="3000" min="0" step="100">
+          </div>
+          <div class="rccr-field">
+            <label class="rccr-label" for="rccr-other-upfront">Other Initial Costs</label>
+            <input type="number" id="rccr-other-upfront" class="rccr-input" value="1000" min="0" step="50">
+          </div>
+        </div>
+        <div class="rccr-field">
+          <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; cursor:pointer;">
+            <input type="checkbox" id="rccr-override-invested-toggle">
+            <span>Manually specify total cash invested override</span>
+          </label>
+          <input type="number" id="rccr-override-invested-amt" class="rccr-input" style="display:none; margin-top:0.4rem;" placeholder="Custom total cash invested" min="1">
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="rccr-btn-group">
+        <button type="button" class="rccr-btn rccr-btn-primary" id="rccr-btn-recalc">Calculate Return</button>
+        <button type="button" class="rccr-btn rccr-btn-secondary" id="rccr-btn-demo-cash">Load All-Cash Demo</button>
+        <button type="button" class="rccr-btn rccr-btn-secondary" id="rccr-btn-reset">Reset to Defaults</button>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: RESULTS DASHBOARD -->
+    <div class="rccr-results-col">
+
+      <!-- Headline Return Card -->
+      <div class="rccr-headline-card" id="rccr-headline-box">
+        <div class="rccr-headline-label">Primary Cash-on-Cash Return</div>
+        <div class="rccr-headline-val" id="rccr-val-coc">--%</div>
+        <div class="rccr-headline-status" id="rccr-status-coc">Calculating...</div>
+      </div>
+
+      <!-- Key Financial Totals Grid -->
+      <div class="rccr-kpi-grid">
+        <div class="rccr-kpi">
+          <div class="rccr-kpi-title">Monthly Cash Flow</div>
+          <div class="rccr-kpi-number" id="rccr-val-monthly-cf">--</div>
+          <span class="rccr-help">Reserve-adjusted pre-tax</span>
+        </div>
+        <div class="rccr-kpi">
+          <div class="rccr-kpi-title">Annual Pre-Tax Cash Flow</div>
+          <div class="rccr-kpi-number" id="rccr-val-annual-cf">--</div>
+          <span class="rccr-help">After scheduled debt & reserves</span>
+        </div>
+        <div class="rccr-kpi">
+          <div class="rccr-kpi-title">Net Operating Income (NOI)</div>
+          <div class="rccr-kpi-number" id="rccr-val-noi">--</div>
+          <span class="rccr-help">EGI minus operating expenses</span>
+        </div>
+        <div class="rccr-kpi">
+          <div class="rccr-kpi-title">Total Cash Invested</div>
+          <div class="rccr-kpi-number" id="rccr-val-cash-invested">--</div>
+          <span class="rccr-help">Equity + closing + renovations</span>
+        </div>
+      </div>
+
+      <!-- Secondary Real Estate Underwriting Metrics -->
+      <div class="rccr-card">
+        <div class="rccr-card-header">Underwriting & Feasibility Ratios</div>
+        <table class="rccr-table">
+          <tbody>
+            <tr>
+              <td>Debt Service Coverage Ratio (DSCR)</td>
+              <td style="text-align:right; font-weight:700;" id="rccr-val-dscr">--</td>
+            </tr>
+            <tr>
+              <td>Operating Expense Ratio</td>
+              <td style="text-align:right; font-weight:700;" id="rccr-val-exp-ratio">--</td>
+            </tr>
+            <tr>
+              <td>Cap Rate (Unlevered Property Yield)</td>
+              <td style="text-align:right; font-weight:700;" id="rccr-val-cap-rate">--</td>
+            </tr>
+            <tr>
+              <td>Gross Rental Yield</td>
+              <td style="text-align:right; font-weight:700;" id="rccr-val-gross-yield">--</td>
+            </tr>
+            <tr>
+              <td>Estimated Break-Even Occupancy</td>
+              <td style="text-align:right; font-weight:700;" id="rccr-val-breakeven-occ">--</td>
+            </tr>
+            <tr>
+              <td>Break-Even Monthly Rent</td>
+              <td style="text-align:right; font-weight:700;" id="rccr-val-breakeven-rent">--</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Detailed Pro-Forma Reconciliation Table -->
+      <div class="rccr-card">
+        <div class="rccr-card-header">Annual Pro-Forma Cash Reconciliation</div>
+        <div class="rccr-table-wrap">
+          <table class="rccr-table" id="rccr-reconciliation-table">
+            <thead>
+              <tr>
+                <th scope="col">Line Item</th>
+                <th scope="col" style="text-align:right;">Annual</th>
+                <th scope="col" style="text-align:right;">Monthly</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Gross Potential Rent</td><td style="text-align:right;" id="rccr-rec-gpr">--</td><td style="text-align:right;" id="rccr-rec-gpr-m">--</td></tr>
+              <tr><td>Vacancy & Credit Loss</td><td style="text-align:right; color:var(--rccr-danger);" id="rccr-rec-vac">--</td><td style="text-align:right; color:var(--rccr-danger);" id="rccr-rec-vac-m">--</td></tr>
+              <tr><td>Other Rental Income</td><td style="text-align:right;" id="rccr-rec-other-inc">--</td><td style="text-align:right;" id="rccr-rec-other-inc-m">--</td></tr>
+              <tr class="rccr-total-row"><td>Effective Gross Income (EGI)</td><td style="text-align:right;" id="rccr-rec-egi">--</td><td style="text-align:right;" id="rccr-rec-egi-m">--</td></tr>
+              <tr><td>Total Operating Expenses</td><td style="text-align:right; color:var(--rccr-danger);" id="rccr-rec-opex">--</td><td style="text-align:right; color:var(--rccr-danger);" id="rccr-rec-opex-m">--</td></tr>
+              <tr class="rccr-total-row"><td>Net Operating Income (NOI)</td><td style="text-align:right; color:var(--rccr-primary);" id="rccr-rec-noi">--</td><td style="text-align:right; color:var(--rccr-primary);" id="rccr-rec-noi-m">--</td></tr>
+              <tr><td>Annual Mortgage Debt Service (P&I)</td><td style="text-align:right; color:var(--rccr-danger);" id="rccr-rec-debt">--</td><td style="text-align:right; color:var(--rccr-danger);" id="rccr-rec-debt-m">--</td></tr>
+              <tr><td>Additional Principal Curtailment</td><td style="text-align:right; color:var(--rccr-danger);" id="rccr-rec-add-debt">--</td><td style="text-align:right; color:var(--rccr-danger);" id="rccr-rec-add-debt-m">--</td></tr>
+              <tr><td>Capital Expenditure (CapEx) Reserve</td><td style="text-align:right; color:var(--rccr-danger);" id="rccr-rec-capex">--</td><td style="text-align:right; color:var(--rccr-danger);" id="rccr-rec-capex-m">--</td></tr>
+              <tr class="rccr-total-row" style="background:#e0f2fe; color:var(--rccr-primary);">
+                <td>Net Pre-Tax Cash Flow</td>
+                <td style="text-align:right;" id="rccr-rec-cf-final">--</td>
+                <td style="text-align:right;" id="rccr-rec-cf-final-m">--</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Export & Print Actions -->
+      <div class="rccr-btn-group">
+        <button type="button" class="rccr-btn rccr-btn-secondary" id="rccr-btn-copy">Copy Summary</button>
+        <button type="button" class="rccr-btn rccr-btn-secondary" id="rccr-btn-csv">Download CSV</button>
+        <button type="button" class="rccr-btn rccr-btn-secondary" id="rccr-btn-print">Print Report</button>
+      </div>
+      <div id="rccr-copy-status" style="font-size:0.8rem; color:var(--rccr-success); display:none; margin-top:0.25rem;">Report copied to clipboard!</div>
+
+    </div>
+  </div>
+
+  <!-- 3. Advanced Scenario Matrix & Comparison -->
+  <div class="rccr-card" style="margin-top:1.5rem;">
+    <div class="rccr-card-header">Three-Way Scenario Sensitivity Analysis</div>
+    <p style="font-size:0.85rem; color:var(--rccr-text-muted); margin-bottom:0.75rem;">
+      Evaluate your property under Conservative (-10% rent, +3% vacancy, +10% expenses) and Optimistic (+10% rent, -2% vacancy, -5% expenses) stress tests without modifying your base inputs.
+    </p>
+    <div class="rccr-table-wrap">
+      <table class="rccr-table" id="rccr-scenario-table">
+        <thead>
+          <tr>
+            <th scope="col">Case Scenario</th>
+            <th scope="col" style="text-align:right;">Effective Gross Income</th>
+            <th scope="col" style="text-align:right;">NOI</th>
+            <th scope="col" style="text-align:right;">Annual Cash Flow</th>
+            <th scope="col" style="text-align:right;">Total Cash Invested</th>
+            <th scope="col" style="text-align:right;">Cash-on-Cash Return</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Conservative Case</strong></td>
+            <td style="text-align:right;" id="rccr-scen-cons-egi">--</td>
+            <td style="text-align:right;" id="rccr-scen-cons-noi">--</td>
+            <td style="text-align:right;" id="rccr-scen-cons-cf">--</td>
+            <td style="text-align:right;" id="rccr-scen-cons-inv">--</td>
+            <td style="text-align:right; font-weight:700;" id="rccr-scen-cons-coc">--</td>
+          </tr>
+          <tr style="background:#f1f5f9;">
+            <td><strong>Base Case (Active)</strong></td>
+            <td style="text-align:right;" id="rccr-scen-base-egi">--</td>
+            <td style="text-align:right;" id="rccr-scen-base-noi">--</td>
+            <td style="text-align:right;" id="rccr-scen-base-cf">--</td>
+            <td style="text-align:right;" id="rccr-scen-base-inv">--</td>
+            <td style="text-align:right; font-weight:700; color:var(--rccr-primary);" id="rccr-scen-base-coc">--</td>
+          </tr>
+          <tr>
+            <td><strong>Optimistic Case</strong></td>
+            <td style="text-align:right;" id="rccr-scen-opt-egi">--</td>
+            <td style="text-align:right;" id="rccr-scen-opt-noi">--</td>
+            <td style="text-align:right;" id="rccr-scen-opt-cf">--</td>
+            <td style="text-align:right;" id="rccr-scen-opt-inv">--</td>
+            <td style="text-align:right; font-weight:700;" id="rccr-scen-opt-coc">--</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 4. Explanatory Content & Semantic SEO Sections -->
+  <div class="rccr-content-card">
+    <h2 class="rccr-h2">Understanding Rental Property Cash-on-Cash Return</h2>
+    <p>The <strong>Rental Property Cash-on-Cash Return Calculator</strong> measures the annual pre-tax cash income earned on the total cash equity invested into a real estate asset. Unlike broad accounting metrics such as Return on Equity (ROE) or Cap Rate, Cash-on-Cash Return specifically evaluates the cash-flow performance of your actual out-of-pocket capital.</p>
+
+    <h3 class="rccr-h3">The Standard Cash-on-Cash Return Formula</h3>
+    <div class="rccr-formula-block">
+      Cash-on-Cash Return (%) = (Annual Pre-Tax Cash Flow / Total Initial Cash Invested) &times; 100<br><br>
+      Where:<br>
+      &bull; Annual Cash Flow = Net Operating Income (NOI) - Annual Debt Service - CapEx Reserve<br>
+      &bull; Net Operating Income (NOI) = Effective Gross Income - Operating Expenses<br>
+      &bull; Total Initial Cash Invested = Down Payment + Closing Costs + Upfront Repairs + Reserves
+    </div>
+
+    <h3 class="rccr-h3">Capital Expenditures (CapEx) vs. Operating Expenses</h3>
+    <p>Standard commercial real estate accounting does not classify periodic capital reserves (such as replacing roofs, furnaces, or HVAC units) as recurring operating expenses when computing <strong>Net Operating Income (NOI)</strong>. However, omitting CapEx from your cash-flow projection creates an artificially inflated return. This <strong>rental property cash flow calculator</strong> reports pure NOI first, and then deducts your annual CapEx reserve to establish a reliable, conservative pre-tax cash distribution.</p>
+
+    <h2 class="rccr-h2">Key Features of This Calculator</h2>
+    <ul style="padding-left:1.25rem; line-height:1.7;">
+      <li><strong>Accurate Loan Amortization:</strong> Calculates monthly mortgage principal and interest payments using standard actuarial formulas with zero-interest bypass.</li>
+      <li><strong>Flexible Property Management:</strong> Supports either a percentage of Effective Gross Income (EGI) or a fixed annual contract amount.</li>
+      <li><strong>Down Payment & Override Support:</strong> Easily toggle between calculated purchase-percentage down payments or custom cash-invested totals.</li>
+      <li><strong>Underwriting Safety Ratios:</strong> Automatically computes Debt Service Coverage Ratio (DSCR), Break-Even Occupancy, and Break-Even Monthly Rent.</li>
+      <li><strong>Three-Way Sensitivity Stress Testing:</strong> Instantly inspect conservative and optimistic scenarios without erasing your working numbers.</li>
+      <li><strong>Local Data Portability:</strong> Export institutional-ready CSV pro-formas, copy clean text summaries, or print reports cleanly.</li>
+    </ul>
+
+    <h2 class="rccr-h2">Primary Real Estate Investment Use Cases</h2>
+    <ul style="padding-left:1.25rem; line-height:1.7;">
+      <li><strong>Single-Family & Multi-Family Acquisitions:</strong> Screen active MLS listings or off-market deals against your target cash yield hurdle before submitting offers.</li>
+      <li><strong>Financing Structure Analysis:</strong> Evaluate whether placing 20% down versus 25% down optimizes your cash-on-cash yield considering prevailing mortgage rates.</li>
+      <li><strong>BRRRR Strategy Equity Review:</strong> Analyze how completing initial renovations affects cash-on-cash return relative to all-cash purchases versus leveraged acquisitions.</li>
+      <li><strong>Lender Underwriting Preparation:</strong> Confirm that your projected Net Operating Income satisfies institutional lender DSCR constraints (typically &ge; 1.20&times;).</li>
+    </ul>
+
+    <h2 class="rccr-h2">Frequently Asked Questions</h2>
+    <dl class="rccr-faq">
+      <dt>1. What is cash-on-cash return for a rental property?</dt>
+      <dd>Cash-on-cash return is a real estate rate-of-return ratio that calculates the annual pre-tax cash flow generated by a property divided by the total initial cash out-of-pocket investment required to purchase it.</dd>
+
+      <dt>2. How do you calculate rental property cash-on-cash return?</dt>
+      <dd>Determine your annual rental income, subtract vacancy loss, operating expenses, scheduled mortgage payments, and capital expenditure reserves to find your annual pre-tax cash flow. Divide that figure by your total upfront cash (down payment, closing fees, initial renovations) and multiply by 100.</dd>
+
+      <dt>3. What is the cash-on-cash return formula?</dt>
+      <dd>The standard formula is: <code>CoC Return = (Annual Pre-Tax Cash Flow / Total Cash Invested) &times; 100</code>.</dd>
+
+      <dt>4. What expenses should be included in the calculation?</dt>
+      <dd>Operating expenses should include property taxes, insurance, management fees, ongoing repairs and maintenance, utilities paid by the landlord, HOA dues, and landscaping. Financing costs and CapEx reserves are accounted for separately below NOI.</dd>
+
+      <dt>5. Is mortgage principal included in NOI?</dt>
+      <dd>No. Net Operating Income (NOI) measures property-level operational profitability and deliberately excludes financing decisions such as mortgage principal, interest, and lender fees.</dd>
+
+      <dt>6. Should closing costs be included in initial cash invested?</dt>
+      <dd>Yes. Total cash invested must reflect every dollar spent to acquire and stabilize the asset, including down payment, escrow charges, title fees, inspections, appraisal costs, and initial repairs.</dd>
+
+      <dt>7. Does cash-on-cash return include property appreciation?</dt>
+      <dd>No. Cash-on-cash return measures only realized annual pre-tax cash distributions. Unrealized future capital appreciation is excluded until the property is sold or refinanced.</dd>
+
+      <dt>8. What is the difference between cash-on-cash return and ROI?</dt>
+      <dd>Return on Investment (ROI) typically measures overall profitability including principal debt paydown, tax shelter benefits, and equity appreciation over time. Cash-on-cash return measures strictly the cash yield generated on cash invested.</dd>
+
+      <dt>9. Can a rental property have a negative cash-on-cash return?</dt>
+      <dd>Yes. If your operating expenses, vacancy loss, and debt service exceed your collected rental income, the property produces negative annual cash flow, resulting in a negative cash-on-cash return.</dd>
+
+      <dt>10. How does vacancy affect rental property cash flow?</dt>
+      <dd>Vacancy reduces gross potential rent to effective gross income. Even a modest 5% vacancy rate on a $2,000/month property removes $1,200 in gross annual cash distributions.</dd>
+
+      <dt>11. Should capital expenditure reserves be included?</dt>
+      <dd>Yes. While omitted from pure NOI, setting aside an annual CapEx reserve for long-term replacements (roof, water heaters, HVAC) provides a realistic picture of distributable cash flow.</dd>
+
+      <dt>12. Is cash-on-cash return calculated before or after taxes?</dt>
+      <dd>Standard commercial real estate cash-on-cash calculations are performed on a pre-tax basis because individual investor income tax brackets, depreciation deductions, and 1031 exchanges vary widely.</dd>
+    </dl>
+
+    <div class="rccr-disclaimer">
+      <strong>Financial and Real Estate Disclaimer:</strong> This calculator provides financial estimates based on user-supplied assumptions and standard investment modeling formulas. It does not constitute formal underwriting, financial, tax, or legal advice. Real estate investments carry risk, and actual operating revenues, vacancies, mortgage rates, and capital expenses may vary materially. Perform independent due diligence with certified legal, accounting, and lending professionals before committing capital.
+    </div>
+  </div>
+
+  <!-- 5. Client-Side JavaScript Calculation Engine -->
+  <script>
+    (function () {
+      "use strict";
+
+      const app = document.getElementById("rccr-app");
+      if (!app) return;
+
+      // Element Selectors
+      const elPrice = app.querySelector("#rccr-purchase-price");
+      const elCurrency = app.querySelector("#rccr-currency");
+      const elPropName = app.querySelector("#rccr-prop-name");
+      const elAppreciation = app.querySelector("#rccr-appreciation");
+      const elDownPct = app.querySelector("#rccr-down-pct");
+      const elRate = app.querySelector("#rccr-interest-rate");
+      const elTerm = app.querySelector("#rccr-loan-term");
+      const elExtraPrincipal = app.querySelector("#rccr-extra-principal");
+      const elOverrideLoanToggle = app.querySelector("#rccr-override-loan-toggle");
+      const elOverrideLoanAmt = app.querySelector("#rccr-override-loan-amt");
+      const elMonthlyRent = app.querySelector("#rccr-monthly-rent");
+      const elVacancyPct = app.querySelector("#rccr-vacancy-pct");
+      const elOtherMonthlyInc = app.querySelector("#rccr-other-monthly-income");
+      const elOtherAnnualInc = app.querySelector("#rccr-other-annual-income");
+      const elPropTax = app.querySelector("#rccr-prop-tax");
+      const elInsurance = app.querySelector("#rccr-insurance");
+      const elMgmtType = app.querySelector("#rccr-mgmt-type");
+      const elMgmtVal = app.querySelector("#rccr-mgmt-val");
+      const elMgmtValLabel = app.querySelector("#rccr-mgmt-val-label");
+      const elMaintenance = app.querySelector("#rccr-maintenance");
+      const elUtilities = app.querySelector("#rccr-utilities");
+      const elHoa = app.querySelector("#rccr-hoa");
+      const elMiscExp = app.querySelector("#rccr-misc-exp");
+      const elCapexReserve = app.querySelector("#rccr-capex-reserve");
+      const elClosingCosts = app.querySelector("#rccr-closing-costs");
+      const elRenovation = app.querySelector("#rccr-renovation");
+      const elOtherUpfront = app.querySelector("#rccr-other-upfront");
+      const elOverrideInvestedToggle = app.querySelector("#rccr-override-invested-toggle");
+      const elOverrideInvestedAmt = app.querySelector("#rccr-override-invested-amt");
+
+      // Buttons
+      const btnRecalc = app.querySelector("#rccr-btn-recalc");
+      const btnDemoCash = app.querySelector("#rccr-btn-demo-cash");
+      const btnReset = app.querySelector("#rccr-btn-reset");
+      const btnCopy = app.querySelector("#rccr-btn-copy");
+      const btnCsv = app.querySelector("#rccr-btn-csv");
+      const btnPrint = app.querySelector("#rccr-btn-print");
+      const copyStatus = app.querySelector("#rccr-copy-status");
+
+      let lastResult = null;
+
+      // Currency Formatter
+      function formatCurrency(amount, currencyCode) {
+        if (isNaN(amount) || !isFinite(amount)) return "—";
+        try {
+          return new Intl.NumberFormat(undefined, {
+            style: "currency",
+            currency: currencyCode,
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+          }).format(amount);
+        } catch (e) {
+          return currencyCode + " " + amount.toFixed(0);
+        }
+      }
+
+      function formatPct(val) {
+        if (isNaN(val) || !isFinite(val)) return "—";
+        return val.toFixed(2) + "%";
+      }
+
+      // Input Parser
+      function getNum(el) {
+        const v = parseFloat(el.value);
+        return isNaN(v) ? 0 : v;
+      }
+
+      // Mortgage Payment Calculation
+      function calcMonthlyPayment(principal, annualRatePct, termYears) {
+        if (principal <= 0 || termYears <= 0) return 0;
+        if (annualRatePct <= 0) return principal / (termYears * 12);
+        const r = (annualRatePct / 100) / 12;
+        const n = termYears * 12;
+        const factor = Math.pow(1 + r, n);
+        return principal * (r * factor) / (factor - 1);
+      }
+
+      // Main Calculation Engine
+      function runCalculations(customOverrides) {
+        const price = customOverrides && customOverrides.price !== undefined ? customOverrides.price : getNum(elPrice);
+        const downPct = customOverrides && customOverrides.downPct !== undefined ? customOverrides.downPct : getNum(elDownPct);
+        const rate = customOverrides && customOverrides.rate !== undefined ? customOverrides.rate : getNum(elRate);
+        const term = customOverrides && customOverrides.term !== undefined ? customOverrides.term : getNum(elTerm);
+        const extraPrincipalM = customOverrides && customOverrides.extraPrincipal !== undefined ? customOverrides.extraPrincipal : getNum(elExtraPrincipal);
+
+        // Financing
+        let downPaymentAmt = price * (downPct / 100);
+        let loanAmt = Math.max(0, price - downPaymentAmt);
+
+        if (!customOverrides && elOverrideLoanToggle.checked) {
+          const overrideLoan = getNum(elOverrideLoanAmt);
+          loanAmt = Math.max(0, overrideLoan);
+          downPaymentAmt = Math.max(0, price - loanAmt);
+        }
+
+        const monthlyPI = calcMonthlyPayment(loanAmt, rate, term);
+        const annualDebtService = monthlyPI * 12;
+        const annualAdditionalPrincipal = extraPrincipalM * 12;
+
+        // Income
+        const rentM = customOverrides && customOverrides.monthlyRent !== undefined ? customOverrides.monthlyRent : getNum(elMonthlyRent);
+        const vacancyPct = customOverrides && customOverrides.vacancyPct !== undefined ? customOverrides.vacancyPct : getNum(elVacancyPct);
+        const otherM = customOverrides && customOverrides.otherMonthly !== undefined ? customOverrides.otherMonthly : getNum(elOtherMonthlyInc);
+        const otherA = customOverrides && customOverrides.otherAnnual !== undefined ? customOverrides.otherAnnual : getNum(elOtherAnnualInc);
+
+        const gpr = rentM * 12;
+        const vacancyLoss = gpr * (vacancyPct / 100);
+        const otherIncAnnual = (otherM * 12) + otherA;
+        const egi = gpr - vacancyLoss + otherIncAnnual;
+
+        // Operating Expenses
+        const pTax = customOverrides && customOverrides.pTax !== undefined ? customOverrides.pTax : getNum(elPropTax);
+        const pIns = customOverrides && customOverrides.pIns !== undefined ? customOverrides.pIns : getNum(elInsurance);
+        const mgmtType = customOverrides && customOverrides.mgmtType !== undefined ? customOverrides.mgmtType : elMgmtType.value;
+        const mgmtVal = customOverrides && customOverrides.mgmtVal !== undefined ? customOverrides.mgmtVal : getNum(elMgmtVal);
+        const maint = customOverrides && customOverrides.maint !== undefined ? customOverrides.maint : getNum(elMaintenance);
+        const util = customOverrides && customOverrides.util !== undefined ? customOverrides.util : getNum(elUtilities);
+        const hoa = customOverrides && customOverrides.hoa !== undefined ? customOverrides.hoa : getNum(elHoa);
+        const misc = customOverrides && customOverrides.misc !== undefined ? customOverrides.misc : getNum(elMiscExp);
+        const capex = customOverrides && customOverrides.capex !== undefined ? customOverrides.capex : getNum(elCapexReserve);
+
+        let mgmtAnnual = 0;
+        if (mgmtType === "percent") {
+          mgmtAnnual = egi * (mgmtVal / 100);
+        } else {
+          mgmtAnnual = mgmtVal;
+        }
+
+        const totalOpex = pTax + pIns + mgmtAnnual + maint + util + hoa + misc;
+        const noi = egi - totalOpex;
+
+        // Upfront Cash Invested
+        let initialCashInvested = 0;
+        if (!customOverrides && elOverrideInvestedToggle.checked) {
+          initialCashInvested = getNum(elOverrideInvestedAmt);
+        } else {
+          const closing = getNum(elClosingCosts);
+          const reno = getNum(elRenovation);
+          const otherUp = getNum(elOtherUpfront);
+          initialCashInvested = downPaymentAmt + closing + reno + otherUp;
+        }
+
+        // Cash Flows
+        const annualPreTaxCashFlow = noi - annualDebtService - annualAdditionalPrincipal - capex;
+        const monthlyCashFlow = annualPreTaxCashFlow / 12;
+
+        // Returns & Ratios
+        let cocReturn = 0;
+        let canCalcCoC = false;
+        if (initialCashInvested > 0) {
+          cocReturn = (annualPreTaxCashFlow / initialCashInvested) * 100;
+          canCalcCoC = true;
+        }
+
+        const dscr = annualDebtService > 0 ? (noi / annualDebtService) : null;
+        const expRatio = egi > 0 ? (totalOpex / egi) * 100 : null;
+        const capRate = price > 0 ? (noi / price) * 100 : null;
+        const grossYield = price > 0 ? (gpr / price) * 100 : null;
+
+        // Break-Even Metrics
+        // Break-even Occupancy: (Opex + Debt + Additional + CapEx - OtherIncome) / GPR
+        const totalAnnualBurden = totalOpex + annualDebtService + annualAdditionalPrincipal + capex - otherIncAnnual;
+        const breakevenOcc = gpr > 0 ? (totalAnnualBurden / gpr) * 100 : null;
+
+        // Break-Even Monthly Rent: Solve RentM such that AnnualCashFlow = 0
+        // EGI = RentM * 12 * (1 - VacancyPct/100) + OtherInc
+        // Mgmt = % of EGI -> accounted for
+        let breakevenRentM = 0;
+        const netOccFactor = (1 - (vacancyPct / 100));
+        const mgmtFactor = mgmtType === "percent" ? (1 - (mgmtVal / 100)) : 1;
+        const fixedNonMgmtBurden = (pTax + pIns + maint + util + hoa + misc + (mgmtType === "fixed" ? mgmtVal : 0) + annualDebtService + annualAdditionalPrincipal + capex - otherIncAnnual);
+        const denominatorRent = 12 * netOccFactor * mgmtFactor;
+        if (denominatorRent > 0) {
+          breakevenRentM = Math.max(0, fixedNonMgmtBurden / denominatorRent);
+        }
+
+        return {
+          price,
+          downPaymentAmt,
+          loanAmt,
+          monthlyPI,
+          annualDebtService,
+          annualAdditionalPrincipal,
+          rentM,
+          gpr,
+          vacancyLoss,
+          otherIncAnnual,
+          egi,
+          totalOpex,
+          noi,
+          capex,
+          initialCashInvested,
+          annualPreTaxCashFlow,
+          monthlyCashFlow,
+          cocReturn,
+          canCalcCoC,
+          dscr,
+          expRatio,
+          capRate,
+          grossYield,
+          breakevenOcc,
+          breakevenRentM,
+          currency: elCurrency.value
+        };
+      }
+
+      // Validation
+      function validateInputs() {
+        let valid = true;
+
+        function check(condition, el, errId) {
+          const errEl = app.querySelector("#" + errId);
+          if (!condition) {
+            el.classList.add("rccr-invalid");
+            if (errEl) errEl.classList.add("rccr-visible");
+            valid = false;
+          } else {
+            el.classList.remove("rccr-invalid");
+            if (errEl) errEl.classList.remove("rccr-visible");
+          }
+        }
+
+        check(getNum(elPrice) > 0, elPrice, "rccr-err-purchase-price");
+        check(getNum(elDownPct) >= 0 && getNum(elDownPct) <= 100, elDownPct, "rccr-err-down-pct");
+        check(getNum(elRate) >= 0, elRate, "rccr-err-interest-rate");
+        check(getNum(elTerm) >= 1, elTerm, "rccr-err-loan-term");
+        check(getNum(elMonthlyRent) >= 0, elMonthlyRent, "rccr-err-monthly-rent");
+        check(getNum(elVacancyPct) >= 0 && getNum(elVacancyPct) <= 100, elVacancyPct, "rccr-err-vacancy-pct");
+
+        return valid;
+      }
+
+      // UI Updater
+      function updateDashboard() {
+        if (!validateInputs()) {
+          app.querySelector("#rccr-val-coc").textContent = "—";
+          app.querySelector("#rccr-status-coc").textContent = "Review highlighted errors";
+          return;
+        }
+
+        const res = runCalculations();
+        lastResult = res;
+        const cur = res.currency;
+
+        // Primary Return Display
+        const elCocVal = app.querySelector("#rccr-val-coc");
+        const elCocStatus = app.querySelector("#rccr-status-coc");
+
+        if (!res.canCalcCoC) {
+          elCocVal.textContent = "Cannot Calculate";
+          elCocStatus.textContent = "Initial cash invested must be > 0";
+        } else {
+          elCocVal.textContent = formatPct(res.cocReturn);
+          if (res.cocReturn > 0) {
+            elCocStatus.textContent = "Positive Cash Flow";
+          } else if (res.cocReturn === 0) {
+            elCocStatus.textContent = "Break-Even Cash Flow";
+          } else {
+            elCocStatus.textContent = "Negative Cash Flow (Deficit)";
+          }
+        }
+
+        // Key Financial KPIs
+        app.querySelector("#rccr-val-monthly-cf").textContent = formatCurrency(res.monthlyCashFlow, cur);
+        app.querySelector("#rccr-val-annual-cf").textContent = formatCurrency(res.annualPreTaxCashFlow, cur);
+        app.querySelector("#rccr-val-noi").textContent = formatCurrency(res.noi, cur);
+        app.querySelector("#rccr-val-cash-invested").textContent = formatCurrency(res.initialCashInvested, cur);
+
+        // Underwriting Ratios
+        app.querySelector("#rccr-val-dscr").textContent = res.dscr !== null ? res.dscr.toFixed(2) + "×" : "N/A (No Debt)";
+        app.querySelector("#rccr-val-exp-ratio").textContent = res.expRatio !== null ? formatPct(res.expRatio) : "—";
+        app.querySelector("#rccr-val-cap-rate").textContent = res.capRate !== null ? formatPct(res.capRate) : "—";
+        app.querySelector("#rccr-val-gross-yield").textContent = res.grossYield !== null ? formatPct(res.grossYield) : "—";
+
+        // Break-even Occupancy handling
+        const elBeOcc = app.querySelector("#rccr-val-breakeven-occ");
+        if (res.breakevenOcc === null) {
+          elBeOcc.textContent = "—";
+        } else if (res.breakevenOcc > 100) {
+          elBeOcc.textContent = res.breakevenOcc.toFixed(1) + "% (Deficit at 100%)";
+        } else if (res.breakevenOcc < 0) {
+          elBeOcc.textContent = "0.0% (Covered by other income)";
+        } else {
+          elBeOcc.textContent = formatPct(res.breakevenOcc);
+        }
+
+        app.querySelector("#rccr-val-breakeven-rent").textContent = formatCurrency(res.breakevenRentM, cur) + "/mo";
+
+        // Reconciliation Table
+        app.querySelector("#rccr-rec-gpr").textContent = formatCurrency(res.gpr, cur);
+        app.querySelector("#rccr-rec-gpr-m").textContent = formatCurrency(res.gpr / 12, cur);
+        app.querySelector("#rccr-rec-vac").textContent = "-" + formatCurrency(res.vacancyLoss, cur);
+        app.querySelector("#rccr-rec-vac-m").textContent = "-" + formatCurrency(res.vacancyLoss / 12, cur);
+        app.querySelector("#rccr-rec-other-inc").textContent = "+" + formatCurrency(res.otherIncAnnual, cur);
+        app.querySelector("#rccr-rec-other-inc-m").textContent = "+" + formatCurrency(res.otherIncAnnual / 12, cur);
+        app.querySelector("#rccr-rec-egi").textContent = formatCurrency(res.egi, cur);
+        app.querySelector("#rccr-rec-egi-m").textContent = formatCurrency(res.egi / 12, cur);
+        app.querySelector("#rccr-rec-opex").textContent = "-" + formatCurrency(res.totalOpex, cur);
+        app.querySelector("#rccr-rec-opex-m").textContent = "-" + formatCurrency(res.totalOpex / 12, cur);
+        app.querySelector("#rccr-rec-noi").textContent = formatCurrency(res.noi, cur);
+        app.querySelector("#rccr-rec-noi-m").textContent = formatCurrency(res.noi / 12, cur);
+        app.querySelector("#rccr-rec-debt").textContent = "-" + formatCurrency(res.annualDebtService, cur);
+        app.querySelector("#rccr-rec-debt-m").textContent = "-" + formatCurrency(res.annualDebtService / 12, cur);
+        app.querySelector("#rccr-rec-add-debt").textContent = "-" + formatCurrency(res.annualAdditionalPrincipal, cur);
+        app.querySelector("#rccr-rec-add-debt-m").textContent = "-" + formatCurrency(res.annualAdditionalPrincipal / 12, cur);
+        app.querySelector("#rccr-rec-capex").textContent = "-" + formatCurrency(res.capex, cur);
+        app.querySelector("#rccr-rec-capex-m").textContent = "-" + formatCurrency(res.capex / 12, cur);
+        app.querySelector("#rccr-rec-cf-final").textContent = formatCurrency(res.annualPreTaxCashFlow, cur);
+        app.querySelector("#rccr-rec-cf-final-m").textContent = formatCurrency(res.monthlyCashFlow, cur);
+
+        // Three-Way Scenario Matrix Calculation
+        updateScenarios(res);
+      }
+
+      function updateScenarios(base) {
+        const cur = base.currency;
+
+        // Base case display
+        app.querySelector("#rccr-scen-base-egi").textContent = formatCurrency(base.egi, cur);
+        app.querySelector("#rccr-scen-base-noi").textContent = formatCurrency(base.noi, cur);
+        app.querySelector("#rccr-scen-base-cf").textContent = formatCurrency(base.annualPreTaxCashFlow, cur);
+        app.querySelector("#rccr-scen-base-inv").textContent = formatCurrency(base.initialCashInvested, cur);
+        app.querySelector("#rccr-scen-base-coc").textContent = base.canCalcCoC ? formatPct(base.cocReturn) : "—";
+
+        // Conservative Stress Test: -10% Rent, +3% Vacancy, +10% Tax/Ins/Maint
+        const consRent = base.rentM * 0.90;
+        const consVac = Math.min(100, getNum(elVacancyPct) + 3.0);
+        const consTax = getNum(elPropTax) * 1.10;
+        const consIns = getNum(elInsurance) * 1.10;
+        const consMaint = getNum(elMaintenance) * 1.15;
+        const consCapex = getNum(elCapexReserve) * 1.10;
+
+        const consRes = runCalculations({
+          monthlyRent: consRent,
+          vacancyPct: consVac,
+          pTax: consTax,
+          pIns: consIns,
+          maint: consMaint,
+          capex: consCapex
+        });
+
+        app.querySelector("#rccr-scen-cons-egi").textContent = formatCurrency(consRes.egi, cur);
+        app.querySelector("#rccr-scen-cons-noi").textContent = formatCurrency(consRes.noi, cur);
+        app.querySelector("#rccr-scen-cons-cf").textContent = formatCurrency(consRes.annualPreTaxCashFlow, cur);
+        app.querySelector("#rccr-scen-cons-inv").textContent = formatCurrency(consRes.initialCashInvested, cur);
+        app.querySelector("#rccr-scen-cons-coc").textContent = consRes.canCalcCoC ? formatPct(consRes.cocReturn) : "—";
+
+        // Optimistic Stress Test: +10% Rent, -2% Vacancy, -5% Tax/Maint
+        const optRent = base.rentM * 1.10;
+        const optVac = Math.max(0, getNum(elVacancyPct) - 2.0);
+        const optMaint = getNum(elMaintenance) * 0.95;
+
+        const optRes = runCalculations({
+          monthlyRent: optRent,
+          vacancyPct: optVac,
+          maint: optMaint
+        });
+
+        app.querySelector("#rccr-scen-opt-egi").textContent = formatCurrency(optRes.egi, cur);
+        app.querySelector("#rccr-scen-opt-noi").textContent = formatCurrency(optRes.noi, cur);
+        app.querySelector("#rccr-scen-opt-cf").textContent = formatCurrency(optRes.annualPreTaxCashFlow, cur);
+        app.querySelector("#rccr-scen-opt-inv").textContent = formatCurrency(optRes.initialCashInvested, cur);
+        app.querySelector("#rccr-scen-opt-coc").textContent = optRes.canCalcCoC ? formatPct(optRes.cocReturn) : "—";
+      }
+
+      // Safe CSV Escape
+      function sanitizeCsv(text) {
+        if (!text) return '""';
+        let str = String(text).trim();
+        if (/^[+=@-|\t\r]/.test(str)) {
+          str = "'" + str;
+        }
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+
+      // Copy Text Summary
+      function copySummary() {
+        if (!lastResult) return;
+        const res = lastResult;
+        const cur = res.currency;
+        const propTitle = elPropName.value.trim() || "Rental Property Analysis";
+
+        const summary = [
+          "==================================================",
+          " " + propTitle.toUpperCase(),
+          " Rental Property Cash-on-Cash Return Summary",
+          "==================================================",
+          "Purchase Price             : " + formatCurrency(res.price, cur),
+          "Total Cash Invested        : " + formatCurrency(res.initialCashInvested, cur),
+          "Gross Potential Rent (Yr)  : " + formatCurrency(res.gpr, cur),
+          "Effective Gross Income     : " + formatCurrency(res.egi, cur),
+          "Operating Expenses         : " + formatCurrency(res.totalOpex, cur),
+          "Net Operating Income (NOI) : " + formatCurrency(res.noi, cur),
+          "Mortgage Debt Service (P&I): " + formatCurrency(res.annualDebtService, cur),
+          "CapEx Reserve Set-Aside    : " + formatCurrency(res.capex, cur),
+          "--------------------------------------------------",
+          "Annual Pre-Tax Cash Flow   : " + formatCurrency(res.annualPreTaxCashFlow, cur),
+          "Monthly Pre-Tax Cash Flow  : " + formatCurrency(res.monthlyCashFlow, cur),
+          "Cash-on-Cash Return        : " + (res.canCalcCoC ? formatPct(res.cocReturn) : "Cannot Calculate"),
+          "DSCR Ratio                 : " + (res.dscr !== null ? res.dscr.toFixed(2) + "x" : "N/A"),
+          "Cap Rate                   : " + (res.capRate !== null ? formatPct(res.capRate) : "N/A"),
+          "Break-Even Monthly Rent    : " + formatCurrency(res.breakevenRentM, cur) + "/mo",
+          "==================================================",
+          "Generated via Rental Property Cash-on-Cash Return Calculator"
+        ].join("\n");
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(summary).then(() => {
+            copyStatus.style.display = "block";
+            setTimeout(() => { copyStatus.style.display = "none"; }, 3500);
+          }).catch(() => fallbackCopy(summary));
+        } else {
+          fallbackCopy(summary);
+        }
+      }
+
+      function fallbackCopy(text) {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand("copy");
+          copyStatus.style.display = "block";
+          setTimeout(() => { copyStatus.style.display = "none"; }, 3500);
+        } catch (e) {
+          alert("Clipboard copy failed. Please select and copy results manually.");
+        }
+        document.body.removeChild(ta);
+      }
+
+      // Export CSV File
+      function exportCsv() {
+        if (!lastResult) return;
+        const res = lastResult;
+        const cur = res.currency;
+        const propTitle = elPropName.value.trim() || "Rental_Property";
+
+        const headers = ["Metric", "Annual (" + cur + ")", "Monthly (" + cur + ")", "Notes"];
+        const rows = [
+          headers.join(","),
+          [sanitizeCsv("Gross Potential Rent"), res.gpr.toFixed(2), (res.gpr / 12).toFixed(2), sanitizeCsv("Scheduled rent")].join(","),
+          [sanitizeCsv("Vacancy Loss"), (-res.vacancyLoss).toFixed(2), (-res.vacancyLoss / 12).toFixed(2), sanitizeCsv(elVacancyPct.value + "% vacancy")].join(","),
+          [sanitizeCsv("Other Income"), res.otherIncAnnual.toFixed(2), (res.otherIncAnnual / 12).toFixed(2), sanitizeCsv("Laundry/storage")].join(","),
+          [sanitizeCsv("Effective Gross Income (EGI)"), res.egi.toFixed(2), (res.egi / 12).toFixed(2), sanitizeCsv("Collected revenue")].join(","),
+          [sanitizeCsv("Operating Expenses"), (-res.totalOpex).toFixed(2), (-res.totalOpex / 12).toFixed(2), sanitizeCsv("Tax/Ins/Mgmt/Maint")].join(","),
+          [sanitizeCsv("Net Operating Income (NOI)"), res.noi.toFixed(2), (res.noi / 12).toFixed(2), sanitizeCsv("Operating profit before debt")].join(","),
+          [sanitizeCsv("Scheduled Debt Service (P&I)"), (-res.annualDebtService).toFixed(2), (-res.monthlyPI).toFixed(2), sanitizeCsv("Mortgage amortizing")].join(","),
+          [sanitizeCsv("Additional Principal Curtailment"), (-res.annualAdditionalPrincipal).toFixed(2), (-res.annualAdditionalPrincipal / 12).toFixed(2), sanitizeCsv("Voluntary payoff")].join(","),
+          [sanitizeCsv("CapEx Reserve"), (-res.capex).toFixed(2), (-res.capex / 12).toFixed(2), sanitizeCsv("Capital replacement pool")].join(","),
+          [sanitizeCsv("Annual Pre-Tax Cash Flow"), res.annualPreTaxCashFlow.toFixed(2), res.monthlyCashFlow.toFixed(2), sanitizeCsv("Distributable cash flow")].join(","),
+          [sanitizeCsv("Total Initial Cash Invested"), res.initialCashInvested.toFixed(2), "N/A", sanitizeCsv("Denominator equity")].join(","),
+          [sanitizeCsv("Cash-on-Cash Return"), res.canCalcCoC ? res.cocReturn.toFixed(2) + "%" : "N/A", "N/A", sanitizeCsv("Annual Cash Flow / Cash Invested")].join(","),
+          [sanitizeCsv("DSCR Coverage"), res.dscr !== null ? res.dscr.toFixed(2) + "x" : "N/A", "N/A", sanitizeCsv("NOI / Debt Service")].join(",")
+        ];
+
+        const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + encodeURIComponent(rows.join("\r\n"));
+        const dlLink = document.createElement("a");
+        dlLink.setAttribute("href", csvContent);
+        dlLink.setAttribute("download", propTitle.replace(/\s+/g, "_") + "_Cash_on_Cash_Report.csv");
+        document.body.appendChild(dlLink);
+        dlLink.click();
+        document.body.removeChild(dlLink);
+      }
+
+      // Event Wiring
+      function attachEvents() {
+        const inputs = app.querySelectorAll("input, select");
+        inputs.forEach(inp => {
+          inp.addEventListener("input", updateDashboard);
+          inp.addEventListener("change", updateDashboard);
+        });
+
+        // Toggle Manual Loan Override
+        elOverrideLoanToggle.addEventListener("change", () => {
+          elOverrideLoanAmt.style.display = elOverrideLoanToggle.checked ? "block" : "none";
+          if (elOverrideLoanToggle.checked && !elOverrideLoanAmt.value) {
+            const price = getNum(elPrice);
+            const down = price * (getNum(elDownPct) / 100);
+            elOverrideLoanAmt.value = Math.max(0, price - down);
+          }
+          updateDashboard();
+        });
+
+        // Toggle Manual Cash Invested Override
+        elOverrideInvestedToggle.addEventListener("change", () => {
+          elOverrideInvestedAmt.style.display = elOverrideInvestedToggle.checked ? "block" : "none";
+          if (elOverrideInvestedToggle.checked && !elOverrideInvestedAmt.value) {
+            const price = getNum(elPrice);
+            const down = price * (getNum(elDownPct) / 100);
+            elOverrideInvestedAmt.value = down + getNum(elClosingCosts) + getNum(elRenovation) + getNum(elOtherUpfront);
+          }
+          updateDashboard();
+        });
+
+        // Property Management Field Label Updater
+        elMgmtType.addEventListener("change", () => {
+          if (elMgmtType.value === "percent") {
+            elMgmtValLabel.textContent = "Mgmt Fee (% of EGI)";
+            if (getNum(elMgmtVal) > 50) elMgmtVal.value = 8;
+          } else {
+            elMgmtValLabel.textContent = "Annual Fixed Mgmt Amount";
+            if (getNum(elMgmtVal) < 50) elMgmtVal.value = 1800;
+          }
+          updateDashboard();
+        });
+
+        btnRecalc.addEventListener("click", updateDashboard);
+
+        // Load All-Cash Demo (Test Case A)
+        btnDemoCash.addEventListener("click", () => {
+          elPrice.value = 200000;
+          elDownPct.value = 100;
+          elOverrideLoanToggle.checked = false;
+          elOverrideLoanAmt.style.display = "none";
+          elRate.value = 7.0;
+          elMonthlyRent.value = 2000;
+          elVacancyPct.value = 5.0;
+          elOtherMonthlyInc.value = 0;
+          elOtherAnnualInc.value = 0;
+          elPropTax.value = 2400;
+          elInsurance.value = 1200;
+          elMgmtType.value = "fixed";
+          elMgmtValLabel.textContent = "Annual Fixed Mgmt Amount";
+          elMgmtVal.value = 0;
+          elMaintenance.value = 2400;
+          elUtilities.value = 0;
+          elHoa.value = 0;
+          elMiscExp.value = 0;
+          elCapexReserve.value = 2000;
+          elClosingCosts.value = 10000;
+          elRenovation.value = 0;
+          elOtherUpfront.value = 0;
+          elOverrideInvestedToggle.checked = false;
+          elOverrideInvestedAmt.style.display = "none";
+          updateDashboard();
+        });
+
+        // Reset to Standard Default Assumptions
+        btnReset.addEventListener("click", () => {
+          if (confirm("Reset all inputs to default market underwriting assumptions?")) {
+            elPrice.value = 200000;
+            elCurrency.value = "USD";
+            elPropName.value = "";
+            elAppreciation.value = 3.0;
+            elDownPct.value = 25;
+            elRate.value = 7.0;
+            elTerm.value = 30;
+            elExtraPrincipal.value = 0;
+            elOverrideLoanToggle.checked = false;
+            elOverrideLoanAmt.style.display = "none";
+            elOverrideLoanAmt.value = "";
+            elMonthlyRent.value = 2000;
+            elVacancyPct.value = 5.0;
+            elOtherMonthlyInc.value = 0;
+            elOtherAnnualInc.value = 0;
+            elPropTax.value = 2400;
+            elInsurance.value = 1200;
+            elMgmtType.value = "percent";
+            elMgmtValLabel.textContent = "Mgmt Fee (% of EGI)";
+            elMgmtVal.value = 8;
+            elMaintenance.value = 1500;
+            elUtilities.value = 0;
+            elHoa.value = 0;
+            elMiscExp.value = 300;
+            elCapexReserve.value = 1200;
+            elClosingCosts.value = 4500;
+            elRenovation.value = 3000;
+            elOtherUpfront.value = 1000;
+            elOverrideInvestedToggle.checked = false;
+            elOverrideInvestedAmt.style.display = "none";
+            elOverrideInvestedAmt.value = "";
+            updateDashboard();
+          }
+        });
+
+        btnCopy.addEventListener("click", copySummary);
+        btnCsv.addEventListener("click", exportCsv);
+        btnPrint.addEventListener("click", () => window.print());
+      }
+
+      // Safe Init
+      attachEvents();
+      updateDashboard();
+    })();
+  </script>
+</div>
+<!-- ==========================================================================
+     END OF RENTAL PROPERTY CASH-ON-CASH RETURN CALCULATOR FRAGMENT
+     ========================================================================== -->
