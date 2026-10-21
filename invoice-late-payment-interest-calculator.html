@@ -1,0 +1,1734 @@
+<!-- ==========================================================================
+     INVOICE LATE PAYMENT INTEREST CALCULATOR FOR GOOGLE BLOGGER
+     Scope: Self-contained HTML/CSS/JS application fragment
+     Target ID: #ilpic-app
+     ========================================================================== -->
+<div id="ilpic-app">
+  <style>
+    /* Scoped Design Tokens & Reset */
+    #ilpic-app {
+      --ilpic-primary: #1e3a8a;
+      --ilpic-primary-hover: #1e40af;
+      --ilpic-accent: #0284c7;
+      --ilpic-accent-light: #e0f2fe;
+      --ilpic-bg: #f8fafc;
+      --ilpic-card-bg: #ffffff;
+      --ilpic-text: #0f172a;
+      --ilpic-text-muted: #475569;
+      --ilpic-border: #cbd5e1;
+      --ilpic-border-light: #e2e8f0;
+      --ilpic-success: #15803d;
+      --ilpic-success-bg: #f0fdf4;
+      --ilpic-warning: #b45309;
+      --ilpic-warning-bg: #fffbeb;
+      --ilpic-danger: #b91c1c;
+      --ilpic-danger-bg: #fef2f2;
+      --ilpic-radius-sm: 4px;
+      --ilpic-radius: 8px;
+      --ilpic-radius-lg: 12px;
+      --ilpic-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --ilpic-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --ilpic-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+      
+      font-family: var(--ilpic-font);
+      color: var(--ilpic-text);
+      background-color: var(--ilpic-bg);
+      line-height: 1.5;
+      box-sizing: border-box;
+      max-width: 1140px;
+      margin: 0 auto 3rem auto;
+      padding: 1.25rem;
+      border-radius: var(--ilpic-radius-lg);
+    }
+
+    #ilpic-app *,
+    #ilpic-app *::before,
+    #ilpic-app *::after {
+      box-sizing: inherit;
+    }
+
+    /* Headings & Typography */
+    #ilpic-app h1.ilpic-main-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--ilpic-primary);
+      margin: 0 0 0.5rem 0;
+      line-height: 1.25;
+      text-align: left;
+    }
+
+    #ilpic-app .ilpic-subtitle {
+      font-size: 1.05rem;
+      color: var(--ilpic-text-muted);
+      margin: 0 0 1.5rem 0;
+    }
+
+    #ilpic-app h2.ilpic-section-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--ilpic-primary);
+      margin: 2rem 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--ilpic-border-light);
+    }
+
+    #ilpic-app h3.ilpic-subsection-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--ilpic-text);
+      margin: 1.25rem 0 0.5rem 0;
+    }
+
+    #ilpic-app p {
+      margin: 0 0 1rem 0;
+      color: var(--ilpic-text);
+    }
+
+    /* Cards & Containers */
+    #ilpic-app .ilpic-card {
+      background-color: var(--ilpic-card-bg);
+      border: 1px solid var(--ilpic-border);
+      border-radius: var(--ilpic-radius);
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--ilpic-shadow);
+    }
+
+    #ilpic-app .ilpic-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--ilpic-border-light);
+    }
+
+    #ilpic-app .ilpic-card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--ilpic-primary);
+      margin: 0;
+    }
+
+    /* Form Grids */
+    #ilpic-app .ilpic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    #ilpic-app .ilpic-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    #ilpic-app .ilpic-field-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0.5rem;
+    }
+
+    #ilpic-app label.ilpic-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--ilpic-text);
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    #ilpic-app .ilpic-input,
+    #ilpic-app .ilpic-select {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--ilpic-text);
+      background-color: #ffffff;
+      border: 1px solid var(--ilpic-border);
+      border-radius: var(--ilpic-radius-sm);
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    #ilpic-app .ilpic-input:focus,
+    #ilpic-app .ilpic-select:focus {
+      outline: none;
+      border-color: var(--ilpic-accent);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+    }
+
+    #ilpic-app .ilpic-input.ilpic-has-error,
+    #ilpic-app .ilpic-select.ilpic-has-error {
+      border-color: var(--ilpic-danger);
+      background-color: #fffaf0;
+    }
+
+    #ilpic-app .ilpic-error-text {
+      color: var(--ilpic-danger);
+      font-size: 0.775rem;
+      margin-top: 0.3rem;
+      display: none;
+      font-weight: 500;
+    }
+
+    #ilpic-app .ilpic-error-text.ilpic-active {
+      display: block;
+    }
+
+    #ilpic-app .ilpic-help-text {
+      font-size: 0.775rem;
+      color: var(--ilpic-text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Buttons & Interactive Elements */
+    #ilpic-app .ilpic-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+    }
+
+    #ilpic-app .ilpic-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: var(--ilpic-radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      text-decoration: none;
+    }
+
+    #ilpic-app .ilpic-btn-primary {
+      background-color: var(--ilpic-primary);
+      color: #ffffff;
+    }
+
+    #ilpic-app .ilpic-btn-primary:hover {
+      background-color: var(--ilpic-primary-hover);
+    }
+
+    #ilpic-app .ilpic-btn-secondary {
+      background-color: #ffffff;
+      color: var(--ilpic-text);
+      border-color: var(--ilpic-border);
+    }
+
+    #ilpic-app .ilpic-btn-secondary:hover {
+      background-color: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    #ilpic-app .ilpic-btn-danger-outline {
+      background-color: transparent;
+      color: var(--ilpic-danger);
+      border-color: var(--ilpic-danger);
+      padding: 0.4rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    #ilpic-app .ilpic-btn-danger-outline:hover {
+      background-color: var(--ilpic-danger-bg);
+    }
+
+    #ilpic-app .ilpic-btn-sm {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.825rem;
+    }
+
+    /* Payments Sub-table */
+    #ilpic-app .ilpic-payments-table-container {
+      overflow-x: auto;
+      margin-top: 0.75rem;
+      border: 1px solid var(--ilpic-border-light);
+      border-radius: var(--ilpic-radius-sm);
+    }
+
+    #ilpic-app table.ilpic-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    #ilpic-app table.ilpic-table th,
+    #ilpic-app table.ilpic-table td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--ilpic-border-light);
+    }
+
+    #ilpic-app table.ilpic-table th {
+      background-color: #f8fafc;
+      color: var(--ilpic-text-muted);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    #ilpic-app table.ilpic-table tbody tr:hover {
+      background-color: #f8fafc;
+    }
+
+    /* Notification and Banner Banners */
+    #ilpic-app .ilpic-banner {
+      padding: 0.85rem 1rem;
+      border-radius: var(--ilpic-radius-sm);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    #ilpic-app .ilpic-banner-warning {
+      background-color: var(--ilpic-warning-bg);
+      color: var(--ilpic-warning);
+      border: 1px solid #fde68a;
+    }
+
+    #ilpic-app .ilpic-banner-info {
+      background-color: var(--ilpic-accent-light);
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+
+    /* Result Dashboard */
+    #ilpic-app #ilpic-results-container {
+      display: none;
+      margin-top: 1.5rem;
+    }
+
+    #ilpic-app .ilpic-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    #ilpic-app .ilpic-kpi-card {
+      background-color: #ffffff;
+      border: 1px solid var(--ilpic-border);
+      border-left: 4px solid var(--ilpic-accent);
+      border-radius: var(--ilpic-radius-sm);
+      padding: 1rem;
+    }
+
+    #ilpic-app .ilpic-kpi-card.ilpic-kpi-highlight {
+      border-left-color: var(--ilpic-danger);
+      background-color: #fffcfc;
+    }
+
+    #ilpic-app .ilpic-kpi-label {
+      font-size: 0.775rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ilpic-text-muted);
+      margin-bottom: 0.35rem;
+      font-weight: 600;
+    }
+
+    #ilpic-app .ilpic-kpi-val {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--ilpic-text);
+      line-height: 1.1;
+    }
+
+    #ilpic-app .ilpic-kpi-sub {
+      font-size: 0.775rem;
+      color: var(--ilpic-text-muted);
+      margin-top: 0.35rem;
+    }
+
+    /* Ledger & Breakdown */
+    #ilpic-app .ilpic-collapsible-trigger {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 0.75rem 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ilpic-primary);
+      text-align: left;
+    }
+
+    #ilpic-app .ilpic-collapsible-trigger:focus {
+      outline: 2px solid var(--ilpic-accent);
+    }
+
+    #ilpic-app .ilpic-live-feedback {
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--ilpic-radius-sm);
+      background-color: var(--ilpic-success-bg);
+      color: var(--ilpic-success);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    /* Rich Explanatory Sections */
+    #ilpic-app .ilpic-info-block {
+      background-color: #ffffff;
+      border: 1px solid var(--ilpic-border-light);
+      border-radius: var(--ilpic-radius);
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    #ilpic-app dl.ilpic-faq-list dt {
+      font-weight: 700;
+      color: var(--ilpic-primary);
+      margin-top: 1.25rem;
+      font-size: 1.05rem;
+    }
+
+    #ilpic-app dl.ilpic-faq-list dd {
+      margin-left: 0;
+      margin-top: 0.35rem;
+      color: var(--ilpic-text);
+      line-height: 1.6;
+    }
+
+    #ilpic-app .ilpic-formula-box {
+      background-color: #f1f5f9;
+      border-left: 3px solid var(--ilpic-primary);
+      padding: 0.85rem 1rem;
+      margin: 1rem 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+
+    #ilpic-app .ilpic-disclaimer-card {
+      background-color: #f8fafc;
+      border: 1px solid var(--ilpic-border);
+      border-left: 4px solid var(--ilpic-text-muted);
+      padding: 1rem;
+      border-radius: var(--ilpic-radius-sm);
+      font-size: 0.825rem;
+      color: var(--ilpic-text-muted);
+      margin-top: 2rem;
+      line-height: 1.5;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 768px) {
+      #ilpic-app .ilpic-grid-2 {
+        grid-template-columns: 1fr;
+      }
+      #ilpic-app .ilpic-actions {
+        flex-direction: column;
+      }
+      #ilpic-app .ilpic-btn {
+        width: 100%;
+      }
+    }
+
+    /* Print Viewport CSS */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #ilpic-app, #ilpic-app * {
+        visibility: visible;
+      }
+      #ilpic-app {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+      }
+      #ilpic-app .ilpic-actions,
+      #ilpic-app .ilpic-collapsible-trigger,
+      #ilpic-app .ilpic-info-block,
+      #ilpic-app .ilpic-faq-list,
+      #ilpic-app .ilpic-btn {
+        display: none !important;
+      }
+      #ilpic-app .ilpic-collapsible-content {
+        display: block !important;
+      }
+      #ilpic-app .ilpic-card {
+        box-shadow: none;
+        border: 1px solid #666;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+
+  <!-- Visible Semantic Hierarchy: Single Visible H1 -->
+  <h1 class="ilpic-main-title">Invoice Late Payment Interest Calculator</h1>
+  <p class="ilpic-subtitle">Accurately compute commercial overdue interest, grace period delays, statutory daily accruals, and partial payment histories in full compliance with standard financial accounting methods.</p>
+
+  <!-- CALCULATOR INTERFACE CARD -->
+  <div class="ilpic-card" id="ilpic-calculator-root">
+    <div class="ilpic-card-header">
+      <h2 class="ilpic-card-title">1. Overdue Invoice Parameters</h2>
+      <button type="button" class="ilpic-btn ilpic-btn-secondary ilpic-btn-sm" id="ilpic-btn-load-example" aria-label="Load sample calculation data">Load Demo Values</button>
+    </div>
+
+    <!-- INVOICE LIST CONTAINER -->
+    <div id="ilpic-invoices-list">
+      <!-- Dynamically Rendered Invoice Blocks will append here -->
+    </div>
+
+    <div class="ilpic-actions">
+      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-add-invoice">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Add Another Invoice
+      </button>
+      <button type="button" class="ilpic-btn ilpic-btn-primary" id="ilpic-btn-calculate">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
+        Calculate Interest
+      </button>
+      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-reset">Reset Form</button>
+    </div>
+
+    <div id="ilpic-notification-area" aria-live="polite"></div>
+  </div>
+
+  <!-- RESULTS DASHBOARD -->
+  <div class="ilpic-card" id="ilpic-results-container" aria-live="polite">
+    <div class="ilpic-card-header">
+      <h2 class="ilpic-card-title">2. Calculation Results & Payment Summary</h2>
+      <span id="ilpic-calculation-timestamp" style="font-size:0.8rem; color:var(--ilpic-text-muted);"></span>
+    </div>
+
+    <!-- Multi-Currency Aggregations -->
+    <div id="ilpic-kpi-summary-cards"></div>
+
+    <!-- Action Toolbar: Copy, Export, Print -->
+    <div class="ilpic-actions" style="margin-top: 1rem;">
+      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-copy">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        Copy Summary
+      </button>
+      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-csv">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        Download CSV
+      </button>
+      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-print">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        Print Report
+      </button>
+    </div>
+    <div id="ilpic-copy-feedback" class="ilpic-live-feedback" role="status">Summary copied to clipboard.</div>
+
+    <!-- Detailed Ledger Section -->
+    <div style="margin-top: 1.5rem;">
+      <button type="button" class="ilpic-collapsible-trigger" id="ilpic-toggle-ledger" aria-expanded="false" aria-controls="ilpic-ledger-panel">
+        <span>Detailed Period Accrual Ledger & Amortization Schedule</span>
+        <span id="ilpic-toggle-icon">▼</span>
+      </button>
+      <div id="ilpic-ledger-panel" class="ilpic-collapsible-content" style="display:none; margin-top:1rem;">
+        <div class="ilpic-payments-table-container">
+          <table class="ilpic-table" id="ilpic-ledger-table">
+            <thead>
+              <tr>
+                <th scope="col">Invoice #</th>
+                <th scope="col">Period Dates</th>
+                <th scope="col">Days</th>
+                <th scope="col">Opening Principal</th>
+                <th scope="col">Annual Rate</th>
+                <th scope="col">Period Accrual</th>
+                <th scope="col">Payment Applied</th>
+                <th scope="col">Closing Principal</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPLANATORY CONTENT SECTIONS (Semantic H2/H3 for Technical SEO) -->
+  <div class="ilpic-info-block">
+    <h2 class="ilpic-section-title">Understanding Late Payment Interest Calculations</h2>
+    <p>Late payment interest is compensatory compensation legally assessed by businesses, contractors, and independent service providers when a commercial debtor fails to settle an invoice on or before its agreed credit maturity date. Implementing this <strong>Late Payment Interest Calculator</strong> ensures your accounting records reflect exact accrual periods without common calculation errors.</p>
+
+    <h3 class="ilpic-subsection-title">Core Calculation Formulas</h3>
+    <p>Commercial overdue interest calculation begins the calendar day immediately following the expiration of your contractual credit terms and grace periods:</p>
+    <div class="ilpic-formula-box">
+      <strong>Simple Commercial Interest Formula:</strong><br>
+      Interest (I) = P × (R / 100) × (D / B)<br><br>
+      Where:<br>
+      • P = Outstanding Principal Balance<br>
+      • R = Annual Percentage Rate (APR)<br>
+      • D = Eligible Overdue Days (End Date - [Due Date + Grace Days])<br>
+      • B = Day-Count Basis Denominator (365 for Actual/365 Fixed; 360 for US 30/360)
+    </div>
+
+    <h3 class="ilpic-subsection-title">How Partial Payments Are Accounted For</h3>
+    <p>When debtors make interim partial payments, simple interest must not be charged on the original gross balance. Our <strong>Invoice Interest Calculator</strong> segments the calculation duration into discrete sub-periods. For each payment received, the system calculates interest accrued up to the payment date, applies the funds to diminish the active balance, and recalibrates subsequent daily interest solely upon the diminished closing principal.</p>
+
+    <h2 class="ilpic-section-title">Step-by-Step Instructions</h2>
+    <ol style="margin-left: 1.25rem; padding-left: 0.5rem; line-height: 1.7;">
+      <li><strong>Enter Invoice Terms:</strong> Supply the invoice identifier, issue date, contractual payment due date, original amount, and currency code (USD, INR, EUR, GBP, CAD, AUD, SGD, AED).</li>
+      <li><strong>Set Grace Period:</strong> Define how many business or calendar days your firm permits beyond the contractual due date before interest legally starts accruing.</li>
+      <li><strong>Specify Calculation End Date:</strong> Choose between calculating interest as of today's date or choosing a past payment settlement date.</li>
+      <li><strong>Configure Payment History:</strong> If the client made partial remittances, click <em>+ Add Partial Payment</em> to log each date and amount received.</li>
+      <li><strong>Select Method & Convention:</strong> Choose between standard Simple Interest, Daily Linear Simple Interest, or Compounding Interest, along with your governing day-count basis (Actual/365 Fixed or 30/360).</li>
+      <li><strong>Review & Export:</strong> Examine the KPI summaries, expand the Period Accrual Ledger, and print or export data to CSV for invoicing attachments.</li>
+    </ol>
+
+    <h2 class="ilpic-section-title">Frequently Asked Questions</h2>
+    <dl class="ilpic-faq-list">
+      <dt>1. What is an Invoice Late Payment Interest Calculator?</dt>
+      <dd>An Invoice Late Payment Interest Calculator is an automated financial utility designed to compute exact interest charges and late fees owed on unpaid commercial bills across customizable interest rates, grace periods, and partial payment histories.</dd>
+
+      <dt>2. How do I calculate interest on an overdue invoice?</dt>
+      <dd>Multiply the outstanding balance by your agreed annual interest rate, multiply by the number of overdue calendar days elapsed beyond the grace period, and divide by the day-count basis (typically 365 days). Subtract interim partial payments at the date they were received.</dd>
+
+      <dt>3. What annual interest rate should I enter?</dt>
+      <dd>You must enter the rate explicitly stated in your commercial contract, master service agreement (MSA), or standard credit terms. If your contract lacks an interest clause, refer to statutory limits under applicable regional legislation (e.g., the UK Late Payment of Commercial Debts Act, EU Directive 2011/7/EU, or local state usury statutes).</dd>
+
+      <dt>4. How are overdue days calculated?</dt>
+      <dd>Overdue days are counted as the difference between the calculation end date (or payment date) and the invoice due date plus any configured grace period days. The day after the grace period expires is designated as the first accrued day.</dd>
+
+      <dt>5. Does the calculator support partial payments?</dt>
+      <dd>Yes. The tool segments your invoice timeline into distinct accrual windows. When a partial payment is applied, it amortizes the principal balance, and future daily interest accrues only on the remaining balance.</dd>
+
+      <dt>6. What is the difference between simple and compound interest?</dt>
+      <dd>Simple interest charges apply purely to the principal balance and never accrue interest on top of unpaid interest. Compound interest capitalizes accrued unpaid interest into the principal at specified intervals (daily, monthly, quarterly), compounding future charges. Simple interest is the default standard in commercial business disputes.</dd>
+
+      <dt>7. Can I calculate interest for multiple invoices simultaneously?</dt>
+      <dd>Yes. You can add multiple invoices with independent dates, currencies, and interest rates. The system maintains clean currency isolation and avoids aggregating incompatible monetary figures.</dd>
+
+      <dt>8. Can I use this tool for invoices in INR, USD, GBP, or EUR?</dt>
+      <dd>Yes. The tool supports multiple global currencies including USD ($), INR (₹), GBP (£), EUR (€), CAD ($), AUD ($), SGD ($), and AED (د.إ) using localized browser currency formatting.</dd>
+
+      <dt>9. Can I download or print the calculation report?</dt>
+      <dd>Yes. The integrated CSV export feature creates an audit-ready breakdown of every accrual sub-period, while the print utility automatically formats an invoice addendum report free of web navigation elements.</dd>
+
+      <dt>10. Is late-payment interest legally enforceable on every invoice?</dt>
+      <dd>Enforceability depends strictly on your underlying contract terms, proper notification to the client prior to purchase, and compliance with governing regional commercial statutes. Simply printing an interest clause on an invoice after contract execution is not legally binding in all jurisdictions.</dd>
+
+      <dt>11. Does this calculator require an API or account?</dt>
+      <dd>No. The calculator operates entirely client-side inside your web browser. No financial data, invoice IDs, or customer balances are ever transmitted to an external server or saved in cookies.</dd>
+
+      <dt>12. Why can the result differ from an accountant's calculation?</dt>
+      <dd>Discrepancies typically stem from different day-count conventions (Actual/365 vs. 30/360), grace period inclusion rules, different rounding steps, or differences in whether payments are credited to outstanding fees or principal balance first.</dd>
+    </dl>
+
+    <div class="ilpic-disclaimer-card">
+      <strong>Financial and Legal Disclaimer:</strong> This calculator provides estimates based on the information and calculation assumptions entered by the user. It does not determine whether interest or late fees are legally recoverable. Contract terms, applicable laws, payment-allocation rules, day-count conventions, and rounding policies may affect the amount due. Verify the result before using it for invoicing, accounting, collection, or legal purposes.
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION CORE (Scoped Vanilla ES6 IIFE) -->
+  <script>
+    (function () {
+      "use strict";
+
+      // Application State
+      let invoiceCounter = 0;
+      let invoices = [];
+      let latestCalculationData = null;
+
+      const SUPPORTED_CURRENCIES = [
+        { code: "USD", symbol: "$", name: "USD – US Dollar" },
+        { code: "INR", symbol: "₹", name: "INR – Indian Rupee" },
+        { code: "GBP", symbol: "£", name: "GBP – British Pound" },
+        { code: "EUR", symbol: "€", name: "EUR – Euro" },
+        { code: "CAD", symbol: "$", name: "CAD – Canadian Dollar" },
+        { code: "AUD", symbol: "$", name: "AUD – Australian Dollar" },
+        { code: "SGD", symbol: "$", name: "SGD – Singapore Dollar" },
+        { code: "AED", symbol: "د.إ", name: "AED – UAE Dirham" }
+      ];
+
+      // Safe DOM Accessor
+      const root = document.getElementById("ilpic-app");
+      if (!root) return;
+
+      const invoicesListContainer = root.querySelector("#ilpic-invoices-list");
+      const btnAddInvoice = root.querySelector("#ilpic-btn-add-invoice");
+      const btnCalculate = root.querySelector("#ilpic-btn-calculate");
+      const btnReset = root.querySelector("#ilpic-btn-reset");
+      const btnLoadExample = root.querySelector("#ilpic-btn-load-example");
+      const resultsContainer = root.querySelector("#ilpic-results-container");
+      const kpiContainer = root.querySelector("#ilpic-kpi-summary-cards");
+      const ledgerTableBody = root.querySelector("#ilpic-ledger-table tbody");
+      const toggleLedgerBtn = root.querySelector("#ilpic-toggle-ledger");
+      const ledgerPanel = root.querySelector("#ilpic-ledger-panel");
+      const toggleIcon = root.querySelector("#ilpic-toggle-icon");
+      const btnCopy = root.querySelector("#ilpic-btn-copy");
+      const btnCsv = root.querySelector("#ilpic-btn-csv");
+      const btnPrint = root.querySelector("#ilpic-btn-print");
+      const copyFeedback = root.querySelector("#ilpic-copy-feedback");
+      const notificationArea = root.querySelector("#ilpic-notification-area");
+
+      // ==========================================
+      // DATE UTILITIES (DST-Safe UTC Decomposition)
+      // ==========================================
+      function parseDateUTC(dateStr) {
+        if (!dateStr || typeof dateStr !== "string") return null;
+        const parts = dateStr.split("-");
+        if (parts.length !== 3) return null;
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const day = parseInt(parts[2], 10);
+        if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
+        const d = new Date(Date.UTC(year, month, day));
+        return isNaN(d.getTime()) ? null : d;
+      }
+
+      function formatIsoDate(dateObj) {
+        if (!dateObj) return "";
+        const y = dateObj.getUTCFullYear();
+        const m = String(dateObj.getUTCMonth() + 1).padStart(2, "0");
+        const d = String(dateObj.getUTCDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
+      }
+
+      function getTodayIso() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, "0");
+        const d = String(now.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
+      }
+
+      function daysBetweenUTC(date1, date2) {
+        const msPerDay = 86400000;
+        return Math.round((date2.getTime() - date1.getTime()) / msPerDay);
+      }
+
+      function isLeapYear(year) {
+        return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+      }
+
+      // 30/360 US/ISDA Day Count Convention
+      function calculate30_360Days(d1, d2) {
+        let day1 = d1.getUTCDate();
+        let month1 = d1.getUTCMonth() + 1;
+        let year1 = d1.getUTCFullYear();
+
+        let day2 = d2.getUTCDate();
+        let month2 = d2.getUTCMonth() + 1;
+        let year2 = d2.getUTCFullYear();
+
+        if (day1 === 31) day1 = 30;
+        if (day2 === 31 && day1 >= 30) day2 = 30;
+
+        return (year2 - year1) * 360 + (month2 - month1) * 30 + (day2 - day1);
+      }
+
+      // ==========================================
+      // NUMBER & CURRENCY FORMATTERS
+      // ==========================================
+      function formatMoney(amount, currencyCode) {
+        const val = typeof amount === "number" && !isNaN(amount) ? amount : 0;
+        try {
+          return new Intl.NumberFormat(undefined, {
+            style: "currency",
+            currency: currencyCode,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }).format(val);
+        } catch (e) {
+          return `${currencyCode} ${val.toFixed(2)}`;
+        }
+      }
+
+      function sanitizeCsvField(text) {
+        if (text === null || text === undefined) return '""';
+        let str = String(text).trim();
+        // Prevent CSV Formula Injection
+        if (/^[+=@-|\t\r]/.test(str)) {
+          str = "'" + str;
+        }
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+
+      // ==========================================
+      // UI COMPONENT FACTORY
+      // ==========================================
+      function createInvoiceCard(id, defaultValues = {}) {
+        const card = document.createElement("div");
+        card.className = "ilpic-card";
+        card.id = `ilpic-inv-card-${id}`;
+        card.setAttribute("data-invoice-id", id);
+
+        const invNumVal = defaultValues.ref || `INV-${1000 + id}`;
+        const issueVal = defaultValues.issueDate || getTodayIso();
+        const dueVal = defaultValues.dueDate || getTodayIso();
+        const amountVal = defaultValues.amount !== undefined ? defaultValues.amount : "10000.00";
+        const currVal = defaultValues.currency || "USD";
+        const rateVal = defaultValues.rate !== undefined ? defaultValues.rate : "12.0";
+        const graceVal = defaultValues.grace !== undefined ? defaultValues.grace : "0";
+        const methodVal = defaultValues.method || "simple";
+        const basisVal = defaultValues.basis || "actual_365";
+        const endModeVal = defaultValues.endMode || "today";
+        const customEndVal = defaultValues.customEndDate || getTodayIso();
+
+        let currOptionsHtml = "";
+        SUPPORTED_CURRENCIES.forEach(c => {
+          currOptionsHtml += `<option value="${c.code}" ${c.code === currVal ? "selected" : ""}>${c.name}</option>`;
+        });
+
+        card.innerHTML = `
+          <div class="ilpic-card-header">
+            <span style="font-weight:700; color:var(--ilpic-primary);">Invoice Entry #${id}</span>
+            <div style="display:flex; gap:0.5rem;">
+              <button type="button" class="ilpic-btn ilpic-btn-secondary ilpic-btn-sm ilpic-btn-duplicate" aria-label="Duplicate invoice">Duplicate</button>
+              <button type="button" class="ilpic-btn ilpic-btn-danger-outline ilpic-btn-remove" aria-label="Delete invoice">Remove</button>
+            </div>
+          </div>
+
+          <div class="ilpic-grid">
+            <div class="ilpic-field-group">
+              <label class="ilpic-label" for="ilpic-ref-${id}">Invoice Reference</label>
+              <input type="text" id="ilpic-ref-${id}" class="ilpic-input ilpic-field-ref" value="${invNumVal}" maxlength="40">
+              <span class="ilpic-error-text" id="ilpic-err-ref-${id}">Required reference.</span>
+            </div>
+
+            <div class="ilpic-field-group">
+              <label class="ilpic-label" for="ilpic-currency-${id}">Currency</label>
+              <select id="ilpic-currency-${id}" class="ilpic-select ilpic-field-currency">
+                ${currOptionsHtml}
+              </select>
+            </div>
+
+            <div class="ilpic-field-group">
+              <label class="ilpic-label" for="ilpic-amount-${id}">Principal Amount</label>
+              <input type="number" step="0.01" min="0.01" id="ilpic-amount-${id}" class="ilpic-input ilpic-field-amount" value="${amountVal}">
+              <span class="ilpic-error-text" id="ilpic-err-amount-${id}">Must be greater than 0.</span>
+            </div>
+
+            <div class="ilpic-field-group">
+              <label class="ilpic-label" for="ilpic-rate-${id}">Annual Interest Rate (%)</label>
+              <input type="number" step="0.01" min="0" max="1000" id="ilpic-rate-${id}" class="ilpic-input ilpic-field-rate" value="${rateVal}">
+              <span class="ilpic-error-text" id="ilpic-err-rate-${id}">Enter valid rate (0-1000%).</span>
+            </div>
+          </div>
+
+          <div class="ilpic-grid" style="margin-top:0.75rem;">
+            <div class="ilpic-field-group">
+              <label class="ilpic-label" for="ilpic-issue-${id}">Issue Date</label>
+              <input type="date" id="ilpic-issue-${id}" class="ilpic-input ilpic-field-issue" value="${issueVal}">
+              <span class="ilpic-error-text" id="ilpic-err-issue-${id}">Valid date required.</span>
+            </div>
+
+            <div class="ilpic-field-group">
+              <label class="ilpic-label" for="ilpic-due-${id}">Due Date</label>
+              <input type="date" id="ilpic-due-${id}" class="ilpic-input ilpic-field-due" value="${dueVal}">
+              <span class="ilpic-error-text" id="ilpic-err-due-${id}">Due date cannot precede issue date.</span>
+            </div>
+
+            <div class="ilpic-field-group">
+              <label class="ilpic-label" for="ilpic-grace-${id}">Grace Period (Days)</label>
+              <input type="number" min="0" max="365" step="1" id="ilpic-grace-${id}" class="ilpic-input ilpic-field-grace" value="${graceVal}">
+              <span class="ilpic-error-text" id="ilpic-err-grace-${id}">Enter 0 or positive integer.</span>
+            </div>
+
+            <div class="ilpic-field-group">
+              <label class="ilpic-label" for="ilpic-endmode-${id}">Calculate Through</label>
+              <select id="ilpic-endmode-${id}" class="ilpic-select ilpic-field-endmode">
+                <option value="today" ${endModeVal === "today" ? "selected" : ""}>Today's Date</option>
+                <option value="custom" ${endModeVal === "custom" ? "selected" : ""}>Specific Settlement Date</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="ilpic-grid" style="margin-top:0.75rem;">
+            <div class="ilpic-field-group ilpic-custom-date-container" style="display:${endModeVal === "custom" ? "flex" : "none"};">
+              <label class="ilpic-label" for="ilpic-custom-end-${id}">Calculation As-of Date</label>
+              <input type="date" id="ilpic-custom-end-${id}" class="ilpic-input ilpic-field-custom-end" value="${customEndVal}">
+              <span class="ilpic-error-text" id="ilpic-err-custom-end-${id}">Cannot be earlier than issue date.</span>
+            </div>
+
+            <div class="ilpic-field-group">
+              <label class="ilpic-label" for="ilpic-method-${id}">Interest Method</label>
+              <select id="ilpic-method-${id}" class="ilpic-select ilpic-field-method">
+                <option value="simple" ${methodVal === "simple" ? "selected" : ""}>Simple Interest (Commercial Std)</option>
+                <option value="daily_simple" ${methodVal === "daily_simple" ? "selected" : ""}>Daily Simple Accrual</option>
+                <option value="compound_daily" ${methodVal === "compound_daily" ? "selected" : ""}>Compound Interest (Daily)</option>
+                <option value="compound_monthly" ${methodVal === "compound_monthly" ? "selected" : ""}>Compound Interest (Monthly)</option>
+                <option value="compound_annually" ${methodVal === "compound_annually" ? "selected" : ""}>Compound Interest (Annual)</option>
+              </select>
+            </div>
+
+            <div class="ilpic-field-group">
+              <label class="ilpic-label" for="ilpic-basis-${id}">Day-Count Convention</label>
+              <select id="ilpic-basis-${id}" class="ilpic-select ilpic-field-basis">
+                <option value="actual_365" ${basisVal === "actual_365" ? "selected" : ""}>Actual/365 Fixed</option>
+                <option value="actual_366" ${basisVal === "actual_366" ? "selected" : ""}>Actual/366 (Leap Year)</option>
+                <option value="30_360" ${basisVal === "30_360" ? "selected" : ""}>30/360 US/ISDA</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Late Fees Configuration Collapsible -->
+          <div style="margin-top: 1rem; padding: 0.75rem; background-color: #f8fafc; border-radius: var(--ilpic-radius-sm); border: 1px dashed var(--ilpic-border);">
+            <div style="font-weight:600; font-size:0.875rem; margin-bottom:0.5rem; color:var(--ilpic-text);">Optional Late Fees</div>
+            <div class="ilpic-grid">
+              <div class="ilpic-field-group">
+                <label class="ilpic-label" for="ilpic-fixed-fee-${id}">Fixed Late Fee Amount</label>
+                <input type="number" min="0" step="0.01" id="ilpic-fixed-fee-${id}" class="ilpic-input ilpic-field-fixed-fee" value="${defaultValues.fixedFee || "0.00"}">
+              </div>
+              <div class="ilpic-field-group">
+                <label class="ilpic-label" for="ilpic-pct-fee-${id}">Percentage Late Fee (%)</label>
+                <input type="number" min="0" step="0.01" id="ilpic-pct-fee-${id}" class="ilpic-input ilpic-field-pct-fee" value="${defaultValues.pctFee || "0.00"}">
+              </div>
+              <div class="ilpic-field-group">
+                <label class="ilpic-label" for="ilpic-pct-base-${id}">Percentage Fee Basis</label>
+                <select id="ilpic-pct-base-${id}" class="ilpic-select ilpic-field-pct-base">
+                  <option value="original">Original Invoice Balance</option>
+                  <option value="outstanding">Outstanding Unpaid Balance</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Partial Payments Schedule Section -->
+          <div style="margin-top: 1.25rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-weight:600; font-size:0.9rem; color:var(--ilpic-text);">Partial Payments History</span>
+              <button type="button" class="ilpic-btn ilpic-btn-secondary ilpic-btn-sm ilpic-btn-add-payment" aria-label="Log partial payment">+ Add Payment</button>
+            </div>
+            <div class="ilpic-payments-table-container">
+              <table class="ilpic-table ilpic-payments-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Payment Date</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Reference / Note</th>
+                    <th scope="col" style="width:60px;">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="ilpic-payments-tbody">
+                  <!-- Payment rows dynamically appended -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+
+        // Event Listeners for Dynamic Card
+        const endModeSelect = card.querySelector(".ilpic-field-endmode");
+        const customDateWrap = card.querySelector(".ilpic-custom-date-container");
+        endModeSelect.addEventListener("change", () => {
+          customDateWrap.style.display = endModeSelect.value === "custom" ? "flex" : "none";
+        });
+
+        const btnRemove = card.querySelector(".ilpic-btn-remove");
+        btnRemove.addEventListener("click", () => {
+          if (root.querySelectorAll(".ilpic-card[data-invoice-id]").length <= 1) {
+            showNotification("At least one invoice must remain active.", "warning");
+            return;
+          }
+          card.remove();
+          markResultsStale();
+        });
+
+        const btnDuplicate = card.querySelector(".ilpic-btn-duplicate");
+        btnDuplicate.addEventListener("click", () => {
+          duplicateInvoice(id);
+        });
+
+        const btnAddPayment = card.querySelector(".ilpic-btn-add-payment");
+        const tbodyPayments = card.querySelector(".ilpic-payments-tbody");
+        btnAddPayment.addEventListener("click", () => {
+          addPaymentRow(tbodyPayments, id);
+        });
+
+        // Add payment rows if passed in defaults
+        if (defaultValues.payments && Array.isArray(defaultValues.payments)) {
+          defaultValues.payments.forEach(p => {
+            addPaymentRow(tbodyPayments, id, p);
+          });
+        }
+
+        // Attach stale indicator triggers
+        card.querySelectorAll("input, select").forEach(el => {
+          el.addEventListener("input", markResultsStale);
+          el.addEventListener("change", markResultsStale);
+        });
+
+        return card;
+      }
+
+      function addPaymentRow(tbody, invId, defaults = {}) {
+        const row = document.createElement("tr");
+        const rowId = Date.now() + Math.random().toString(36).substring(2, 7);
+        const pDate = defaults.date || getTodayIso();
+        const pAmount = defaults.amount !== undefined ? defaults.amount : "1000.00";
+        const pNote = defaults.note || "";
+
+        row.innerHTML = `
+          <td><input type="date" class="ilpic-input ilpic-pay-date" value="${pDate}" required></td>
+          <td><input type="number" step="0.01" min="0.01" class="ilpic-input ilpic-pay-amount" value="${pAmount}" required></td>
+          <td><input type="text" class="ilpic-input ilpic-pay-note" maxlength="30" placeholder="e.g., Check #104" value="${pNote}"></td>
+          <td style="text-align:center;">
+            <button type="button" class="ilpic-btn ilpic-btn-danger-outline ilpic-btn-sm ilpic-btn-del-payment" aria-label="Delete payment">&times;</button>
+          </td>
+        `;
+
+        row.querySelector(".ilpic-btn-del-payment").addEventListener("click", () => {
+          row.remove();
+          markResultsStale();
+        });
+
+        row.querySelectorAll("input").forEach(input => {
+          input.addEventListener("input", markResultsStale);
+          input.addEventListener("change", markResultsStale);
+        });
+
+        tbody.appendChild(row);
+      }
+
+      function markResultsStale() {
+        if (resultsContainer.style.display !== "none") {
+          resultsContainer.style.opacity = "0.7";
+          showNotification("Parameters changed. Click 'Calculate Interest' to update calculations.", "warning");
+        }
+      }
+
+      function showNotification(msg, type = "info") {
+        notificationArea.innerHTML = `
+          <div class="ilpic-banner ilpic-banner-${type}">
+            <span>${msg}</span>
+          </div>
+        `;
+      }
+
+      function clearNotification() {
+        notificationArea.innerHTML = "";
+      }
+
+      function duplicateInvoice(sourceId) {
+        const sourceCard = root.querySelector(`#ilpic-inv-card-${sourceId}`);
+        if (!sourceCard) return;
+
+        invoiceCounter++;
+        const paymentRows = sourceCard.querySelectorAll(".ilpic-payments-tbody tr");
+        const payments = [];
+        paymentRows.forEach(row => {
+          payments.push({
+            date: row.querySelector(".ilpic-pay-date").value,
+            amount: row.querySelector(".ilpic-pay-amount").value,
+            note: row.querySelector(".ilpic-pay-note").value
+          });
+        });
+
+        const values = {
+          ref: sourceCard.querySelector(".ilpic-field-ref").value + "-COPY",
+          currency: sourceCard.querySelector(".ilpic-field-currency").value,
+          amount: sourceCard.querySelector(".ilpic-field-amount").value,
+          rate: sourceCard.querySelector(".ilpic-field-rate").value,
+          issueDate: sourceCard.querySelector(".ilpic-field-issue").value,
+          dueDate: sourceCard.querySelector(".ilpic-field-due").value,
+          grace: sourceCard.querySelector(".ilpic-field-grace").value,
+          endMode: sourceCard.querySelector(".ilpic-field-endmode").value,
+          customEndDate: sourceCard.querySelector(".ilpic-field-custom-end").value,
+          method: sourceCard.querySelector(".ilpic-field-method").value,
+          basis: sourceCard.querySelector(".ilpic-field-basis").value,
+          fixedFee: sourceCard.querySelector(".ilpic-field-fixed-fee").value,
+          pctFee: sourceCard.querySelector(".ilpic-field-pct-fee").value,
+          payments: payments
+        };
+
+        const newCard = createInvoiceCard(invoiceCounter, values);
+        invoicesListContainer.appendChild(newCard);
+        markResultsStale();
+      }
+
+      // ==========================================
+      // VALIDATION ENGINE
+      // ==========================================
+      function validateAll() {
+        let isValid = true;
+        clearNotification();
+        const cards = root.querySelectorAll(".ilpic-card[data-invoice-id]");
+
+        cards.forEach(card => {
+          const id = card.getAttribute("data-invoice-id");
+
+          const refInput = card.querySelector(".ilpic-field-ref");
+          const amountInput = card.querySelector(".ilpic-field-amount");
+          const rateInput = card.querySelector(".ilpic-field-rate");
+          const issueInput = card.querySelector(".ilpic-field-issue");
+          const dueInput = card.querySelector(".ilpic-field-due");
+          const graceInput = card.querySelector(".ilpic-field-grace");
+          const endModeSelect = card.querySelector(".ilpic-field-endmode");
+          const customEndInput = card.querySelector(".ilpic-field-custom-end");
+
+          // Reset errors
+          card.querySelectorAll(".ilpic-error-text").forEach(el => el.classList.remove("ilpic-active"));
+          card.querySelectorAll(".ilpic-input").forEach(el => el.classList.remove("ilpic-has-error"));
+
+          // Reference validation
+          if (!refInput.value.trim()) {
+            card.querySelector(`#ilpic-err-ref-${id}`).classList.add("ilpic-active");
+            refInput.classList.add("ilpic-has-error");
+            isValid = false;
+          }
+
+          // Amount validation
+          const principal = parseFloat(amountInput.value);
+          if (isNaN(principal) || principal <= 0) {
+            card.querySelector(`#ilpic-err-amount-${id}`).classList.add("ilpic-active");
+            amountInput.classList.add("ilpic-has-error");
+            isValid = false;
+          }
+
+          // Rate validation
+          const rate = parseFloat(rateInput.value);
+          if (isNaN(rate) || rate < 0 || rate > 1000) {
+            card.querySelector(`#ilpic-err-rate-${id}`).classList.add("ilpic-active");
+            rateInput.classList.add("ilpic-has-error");
+            isValid = false;
+          }
+
+          // Grace validation
+          const grace = parseInt(graceInput.value, 10);
+          if (isNaN(grace) || grace < 0) {
+            card.querySelector(`#ilpic-err-grace-${id}`).classList.add("ilpic-active");
+            graceInput.classList.add("ilpic-has-error");
+            isValid = false;
+          }
+
+          // Date parsing & logic
+          const issueDate = parseDateUTC(issueInput.value);
+          const dueDate = parseDateUTC(dueInput.value);
+
+          if (!issueDate) {
+            card.querySelector(`#ilpic-err-issue-${id}`).classList.add("ilpic-active");
+            issueInput.classList.add("ilpic-has-error");
+            isValid = false;
+          }
+
+          if (!dueDate) {
+            card.querySelector(`#ilpic-err-due-${id}`).classList.add("ilpic-active");
+            dueInput.classList.add("ilpic-has-error");
+            isValid = false;
+          }
+
+          if (issueDate && dueDate && dueDate < issueDate) {
+            card.querySelector(`#ilpic-err-due-${id}`).textContent = "Due date cannot precede invoice issue date.";
+            card.querySelector(`#ilpic-err-due-${id}`).classList.add("ilpic-active");
+            dueInput.classList.add("ilpic-has-error");
+            isValid = false;
+          }
+
+          let calculationEndDate = endModeSelect.value === "today" ? parseDateUTC(getTodayIso()) : parseDateUTC(customEndInput.value);
+
+          if (!calculationEndDate) {
+            card.querySelector(`#ilpic-err-custom-end-${id}`).classList.add("ilpic-active");
+            customEndInput.classList.add("ilpic-has-error");
+            isValid = false;
+          }
+
+          if (issueDate && calculationEndDate && calculationEndDate < issueDate) {
+            card.querySelector(`#ilpic-err-custom-end-${id}`).textContent = "Calculation end date cannot precede invoice issue date.";
+            card.querySelector(`#ilpic-err-custom-end-${id}`).classList.add("ilpic-active");
+            customEndInput.classList.add("ilpic-has-error");
+            isValid = false;
+          }
+
+          // Payment rows validation
+          const paymentRows = card.querySelectorAll(".ilpic-payments-tbody tr");
+          let cumulativePayments = 0;
+          paymentRows.forEach((row, pIndex) => {
+            const pDateInput = row.querySelector(".ilpic-pay-date");
+            const pAmtInput = row.querySelector(".ilpic-pay-amount");
+            const pDate = parseDateUTC(pDateInput.value);
+            const pAmt = parseFloat(pAmtInput.value);
+
+            pDateInput.classList.remove("ilpic-has-error");
+            pAmtInput.classList.remove("ilpic-has-error");
+
+            if (!pDate || (issueDate && pDate < issueDate)) {
+              pDateInput.classList.add("ilpic-has-error");
+              showNotification(`Invoice #${id}: Payment #${pIndex + 1} date precedes issue date.`, "warning");
+              isValid = false;
+            }
+
+            if (isNaN(pAmt) || pAmt <= 0) {
+              pAmtInput.classList.add("ilpic-has-error");
+              showNotification(`Invoice #${id}: Payment #${pIndex + 1} must be positive.`, "warning");
+              isValid = false;
+            } else {
+              cumulativePayments += pAmt;
+            }
+          });
+
+          if (!isNaN(principal) && cumulativePayments > principal) {
+            showNotification(`Invoice #${id}: Recorded payments (${cumulativePayments.toFixed(2)}) exceed total principal (${principal.toFixed(2)}).`, "warning");
+          }
+        });
+
+        return isValid;
+      }
+
+      // ==========================================
+      // CALCULATION ENGINE
+      // ==========================================
+      function calculateSingleInvoice(card) {
+        const id = card.getAttribute("data-invoice-id");
+        const ref = card.querySelector(".ilpic-field-ref").value.trim();
+        const currency = card.querySelector(".ilpic-field-currency").value;
+        const principal = parseFloat(card.querySelector(".ilpic-field-amount").value);
+        const rate = parseFloat(card.querySelector(".ilpic-field-rate").value);
+        const issueDate = parseDateUTC(card.querySelector(".ilpic-field-issue").value);
+        const dueDate = parseDateUTC(card.querySelector(".ilpic-field-due").value);
+        const grace = parseInt(card.querySelector(".ilpic-field-grace").value, 10);
+        const endMode = card.querySelector(".ilpic-field-endmode").value;
+        const customEnd = card.querySelector(".ilpic-field-custom-end").value;
+        const method = card.querySelector(".ilpic-field-method").value;
+        const basis = card.querySelector(".ilpic-field-basis").value;
+        const fixedFee = parseFloat(card.querySelector(".ilpic-field-fixed-fee").value) || 0;
+        const pctFee = parseFloat(card.querySelector(".ilpic-field-pct-fee").value) || 0;
+        const pctBase = card.querySelector(".ilpic-field-pct-base").value;
+
+        const calculationEndDate = endMode === "today" ? parseDateUTC(getTodayIso()) : parseDateUTC(customEnd);
+
+        // Calculate Interest Start Date (Due Date + Grace Days + 1 day)
+        const msPerDay = 86400000;
+        const graceMs = grace * msPerDay;
+        const graceExpiryDate = new Date(dueDate.getTime() + graceMs);
+        const interestStartDate = new Date(graceExpiryDate.getTime() + msPerDay);
+
+        // Determine if overdue
+        const totalOverdueDays = Math.max(0, daysBetweenUTC(graceExpiryDate, calculationEndDate));
+
+        // Read payments
+        const paymentRows = card.querySelectorAll(".ilpic-payments-tbody tr");
+        const rawPayments = [];
+        paymentRows.forEach(row => {
+          rawPayments.push({
+            date: parseDateUTC(row.querySelector(".ilpic-pay-date").value),
+            amount: parseFloat(row.querySelector(".ilpic-pay-amount").value),
+            note: row.querySelector(".ilpic-pay-note").value.trim()
+          });
+        });
+
+        // Filter and sort valid payments up to calculation end date
+        const payments = rawPayments
+          .filter(p => p.date && !isNaN(p.amount) && p.amount > 0)
+          .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+        // Process Timeline & Periods
+        const timelineEvents = new Set();
+        timelineEvents.add(interestStartDate.getTime());
+        timelineEvents.add(calculationEndDate.getTime());
+
+        payments.forEach(p => {
+          if (p.date.getTime() >= interestStartDate.getTime() && p.date.getTime() <= calculationEndDate.getTime()) {
+            timelineEvents.add(p.date.getTime());
+          }
+        });
+
+        const sortedMilestones = Array.from(timelineEvents)
+          .map(t => new Date(t))
+          .sort((a, b) => a.getTime() - b.getTime());
+
+        // Baseline adjustments for payments made prior to interest accrual start date
+        let startingPrincipal = principal;
+        let earlyPaymentsSum = 0;
+        payments.forEach(p => {
+          if (p.date.getTime() < interestStartDate.getTime()) {
+            earlyPaymentsSum += p.amount;
+          }
+        });
+        startingPrincipal = Math.max(0, startingPrincipal - earlyPaymentsSum);
+
+        const ledger = [];
+        let currentPrincipal = startingPrincipal;
+        let totalInterestAccrued = 0;
+        let totalPaymentsApplied = earlyPaymentsSum;
+
+        if (totalOverdueDays > 0 && currentPrincipal > 0) {
+          for (let i = 0; i < sortedMilestones.length - 1; i++) {
+            const periodStart = sortedMilestones[i];
+            const periodEnd = sortedMilestones[i + 1];
+
+            // Determine days in interval
+            let periodDays = 0;
+            if (basis === "30_360") {
+              periodDays = Math.max(0, calculate30_360Days(periodStart, periodEnd));
+            } else {
+              periodDays = Math.max(0, daysBetweenUTC(periodStart, periodEnd));
+            }
+
+            // Denominator
+            let denominator = 365;
+            if (basis === "actual_366") {
+              denominator = isLeapYear(periodEnd.getUTCFullYear()) ? 366 : 365;
+            } else if (basis === "30_360") {
+              denominator = 360;
+            }
+
+            // Calculate Period Interest
+            let periodInterest = 0;
+            if (periodDays > 0 && currentPrincipal > 0 && rate > 0) {
+              if (method === "simple" || method === "daily_simple") {
+                periodInterest = currentPrincipal * (rate / 100) * (periodDays / denominator);
+              } else if (method.startsWith("compound")) {
+                let m = 365; // Daily
+                if (method === "compound_monthly") m = 12;
+                if (method === "compound_annually") m = 1;
+
+                const t = periodDays / denominator;
+                const r = rate / 100;
+                // Periodic compound accumulation
+                const compFactor = Math.pow(1 + r / m, m * t);
+                periodInterest = currentPrincipal * (compFactor - 1);
+              }
+            }
+
+            // Round intermediate period interest to financial standard
+            periodInterest = Math.round(periodInterest * 100) / 100;
+            totalInterestAccrued += periodInterest;
+
+            // Check payments applied on periodEnd boundary
+            let paymentsInInterval = 0;
+            payments.forEach(p => {
+              if (p.date.getTime() === periodEnd.getTime()) {
+                paymentsInInterval += p.amount;
+              }
+            });
+
+            const openingBal = currentPrincipal;
+            const principalReduction = Math.min(currentPrincipal, paymentsInInterval);
+            let closingBal = Math.max(0, currentPrincipal - principalReduction);
+
+            // Capitalize if compound interest
+            if (method.startsWith("compound")) {
+              closingBal += periodInterest;
+            }
+
+            totalPaymentsApplied += paymentsInInterval;
+
+            ledger.push({
+              invoiceRef: ref,
+              periodStart: formatIsoDate(periodStart),
+              periodEnd: formatIsoDate(periodEnd),
+              days: periodDays,
+              openingPrincipal: openingBal,
+              rate: rate,
+              interest: periodInterest,
+              payment: paymentsInInterval,
+              principalReduction: principalReduction,
+              closingPrincipal: closingBal
+            });
+
+            currentPrincipal = closingBal;
+          }
+        }
+
+        // Calculate Fees
+        let calculatedPctFee = 0;
+        if (pctFee > 0 && totalOverdueDays > 0) {
+          const feeBase = pctBase === "original" ? principal : currentPrincipal;
+          calculatedPctFee = Math.round((feeBase * (pctFee / 100)) * 100) / 100;
+        }
+
+        const calculatedFixedFee = totalOverdueDays > 0 ? fixedFee : 0;
+        const totalFees = calculatedFixedFee + calculatedPctFee;
+
+        // Final totals
+        const totalAmountDue = Math.round((currentPrincipal + totalInterestAccrued + totalFees) * 100) / 100;
+
+        return {
+          id: id,
+          ref: ref,
+          currency: currency,
+          originalPrincipal: principal,
+          remainingPrincipal: currentPrincipal,
+          totalPaid: totalPaymentsApplied,
+          rate: rate,
+          method: method,
+          basis: basis,
+          issueDate: formatIsoDate(issueDate),
+          dueDate: formatIsoDate(dueDate),
+          interestStartDate: formatIsoDate(interestStartDate),
+          calculationEndDate: formatIsoDate(calculationEndDate),
+          overdueDays: totalOverdueDays,
+          interestAccrued: totalInterestAccrued,
+          fixedFee: calculatedFixedFee,
+          pctFee: calculatedPctFee,
+          totalFees: totalFees,
+          totalAmountDue: totalAmountDue,
+          ledger: ledger
+        };
+      }
+
+      function executeCalculations() {
+        if (!validateAll()) {
+          resultsContainer.style.display = "none";
+          return;
+        }
+
+        const cards = root.querySelectorAll(".ilpic-card[data-invoice-id]");
+        const results = [];
+        cards.forEach(card => {
+          results.push(calculateSingleInvoice(card));
+        });
+
+        latestCalculationData = results;
+        renderResultsDashboard(results);
+      }
+
+      // ==========================================
+      // RENDERING ENGINE (Safe DOM Insertion)
+      // ==========================================
+      function renderResultsDashboard(results) {
+        resultsContainer.style.display = "block";
+        resultsContainer.style.opacity = "1";
+        root.querySelector("#ilpic-calculation-timestamp").textContent = `Calculated: ${new Date().toLocaleString()}`;
+
+        // Aggregate by Currency
+        const aggregates = {};
+        results.forEach(res => {
+          if (!aggregates[res.currency]) {
+            aggregates[res.currency] = {
+              currency: res.currency,
+              originalPrincipal: 0,
+              remainingPrincipal: 0,
+              totalPaid: 0,
+              interest: 0,
+              fees: 0,
+              totalDue: 0,
+              count: 0
+            };
+          }
+          const agg = aggregates[res.currency];
+          agg.originalPrincipal += res.originalPrincipal;
+          agg.remainingPrincipal += res.remainingPrincipal;
+          agg.totalPaid += res.totalPaid;
+          agg.interest += res.interestAccrued;
+          agg.fees += res.totalFees;
+          agg.totalDue += res.totalAmountDue;
+          agg.count++;
+        });
+
+        // Render KPI Cards
+        kpiContainer.innerHTML = "";
+        Object.keys(aggregates).forEach(curr => {
+          const agg = aggregates[curr];
+          const currCard = document.createElement("div");
+          currCard.className = "ilpic-card";
+          currCard.style.marginBottom = "1rem";
+          currCard.style.borderLeft = "4px solid var(--ilpic-primary)";
+
+          currCard.innerHTML = `
+            <div style="font-weight:700; font-size:1rem; margin-bottom:0.75rem; color:var(--ilpic-primary);">
+              Consolidated Summary [${curr}] (${agg.count} Invoice${agg.count > 1 ? "s" : ""})
+            </div>
+            <div class="ilpic-kpi-grid">
+              <div class="ilpic-kpi-card">
+                <div class="ilpic-kpi-label">Original Principal</div>
+                <div class="ilpic-kpi-val">${formatMoney(agg.originalPrincipal, curr)}</div>
+                <div class="ilpic-kpi-sub">Total billed face value</div>
+              </div>
+              <div class="ilpic-kpi-card">
+                <div class="ilpic-kpi-label">Total Payments Received</div>
+                <div class="ilpic-kpi-val" style="color:var(--ilpic-success);">${formatMoney(agg.totalPaid, curr)}</div>
+                <div class="ilpic-kpi-sub">Remitted funds applied</div>
+              </div>
+              <div class="ilpic-kpi-card">
+                <div class="ilpic-kpi-label">Remaining Principal</div>
+                <div class="ilpic-kpi-val">${formatMoney(agg.remainingPrincipal, curr)}</div>
+                <div class="ilpic-kpi-sub">Unpaid base capital</div>
+              </div>
+              <div class="ilpic-kpi-card">
+                <div class="ilpic-kpi-label">Accrued Late Interest</div>
+                <div class="ilpic-kpi-val" style="color:var(--ilpic-warning);">${formatMoney(agg.interest, curr)}</div>
+                <div class="ilpic-kpi-sub">Commercial statutory rate</div>
+              </div>
+              <div class="ilpic-kpi-card">
+                <div class="ilpic-kpi-label">Late Fees</div>
+                <div class="ilpic-kpi-val">${formatMoney(agg.fees, curr)}</div>
+                <div class="ilpic-kpi-sub">Fixed + percentage charges</div>
+              </div>
+              <div class="ilpic-kpi-card ilpic-kpi-highlight">
+                <div class="ilpic-kpi-label">Total Amount Due</div>
+                <div class="ilpic-kpi-val" style="color:var(--ilpic-danger);">${formatMoney(agg.totalDue, curr)}</div>
+                <div class="ilpic-kpi-sub">Remaining balance + interest + fees</div>
+              </div>
+            </div>
+          `;
+          kpiContainer.appendChild(currCard);
+        });
+
+        // Render Ledger Schedule Rows
+        ledgerTableBody.innerHTML = "";
+        let hasLedgerRows = false;
+
+        results.forEach(res => {
+          if (res.ledger && res.ledger.length > 0) {
+            hasLedgerRows = true;
+            res.ledger.forEach(item => {
+              const tr = document.createElement("tr");
+
+              const tdRef = document.createElement("td");
+              tdRef.textContent = item.invoiceRef;
+              tr.appendChild(tdRef);
+
+              const tdDates = document.createElement("td");
+              tdDates.textContent = `${item.periodStart} to ${item.periodEnd}`;
+              tr.appendChild(tdDates);
+
+              const tdDays = document.createElement("td");
+              tdDays.textContent = String(item.days);
+              tr.appendChild(tdDays);
+
+              const tdOpen = document.createElement("td");
+              tdOpen.textContent = formatMoney(item.openingPrincipal, res.currency);
+              tr.appendChild(tdOpen);
+
+              const tdRate = document.createElement("td");
+              tdRate.textContent = `${item.rate}%`;
+              tr.appendChild(tdRate);
+
+              const tdInt = document.createElement("td");
+              tdInt.textContent = formatMoney(item.interest, res.currency);
+              tr.appendChild(tdInt);
+
+              const tdPay = document.createElement("td");
+              tdPay.textContent = item.payment > 0 ? `-${formatMoney(item.payment, res.currency)}` : "—";
+              if (item.payment > 0) tdPay.style.color = "var(--ilpic-success)";
+              tr.appendChild(tdPay);
+
+              const tdClose = document.createElement("td");
+              tdClose.textContent = formatMoney(item.closingPrincipal, res.currency);
+              tdClose.style.fontWeight = "600";
+              tr.appendChild(tdClose);
+
+              ledgerTableBody.appendChild(tr);
+            });
+          }
+        });
+
+        if (!hasLedgerRows) {
+          const emptyTr = document.createElement("tr");
+          emptyTr.innerHTML = `<td colspan="8" style="text-align:center; color:var(--ilpic-text-muted); padding:1rem;">No overdue interest accrual periods recorded (invoices are settled or within grace limits).</td>`;
+          ledgerTableBody.appendChild(emptyTr);
+        }
+
+        resultsContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      // ==========================================
+      // EXPORT & REPORTING FEATURES
+      // ==========================================
+      function generatePlainTextSummary(results) {
+        if (!results || results.length === 0) return "";
+        let text = "=====================================================\n";
+        text += "   INVOICE LATE PAYMENT INTEREST CALCULATION REPORT  \n";
+        text += "=====================================================\n";
+        text += `Report Generated: ${new Date().toLocaleString()}\n`;
+        text += `Calculation Standard: ISO Localized UTC Accrual\n\n`;
+
+        results.forEach((res, idx) => {
+          text += `--- Invoice #${idx + 1}: ${res.ref} [${res.currency}] ---\n`;
+          text += `Issue Date           : ${res.issueDate}\n`;
+          text += `Due Date             : ${res.dueDate}\n`;
+          text += `Interest Start Date  : ${res.interestStartDate}\n`;
+          text += `Calculation As-of    : ${res.calculationEndDate}\n`;
+          text += `Eligible Overdue Days: ${res.overdueDays} days\n`;
+          text += `Calculation Method   : ${res.method} (${res.basis})\n`;
+          text += `Annual Interest Rate : ${res.rate}%\n`;
+          text += `Original Principal   : ${formatMoney(res.originalPrincipal, res.currency)}\n`;
+          text += `Payments Remitted    : ${formatMoney(res.totalPaid, res.currency)}\n`;
+          text += `Remaining Principal  : ${formatMoney(res.remainingPrincipal, res.currency)}\n`;
+          text += `Accrued Interest     : ${formatMoney(res.interestAccrued, res.currency)}\n`;
+          text += `Late Fees Assessed   : ${formatMoney(res.totalFees, res.currency)}\n`;
+          text += `TOTAL AMOUNT DUE     : ${formatMoney(res.totalAmountDue, res.currency)}\n\n`;
+        });
+
+        text += "=====================================================\n";
+        text += "Disclaimer: This calculation provides financial estimates based\n";
+        text += "on user-entered inputs. Legal recovery of interest is subject to\n";
+        text += "contractual terms and governing regional commercial statutes.\n";
+        return text;
+      }
+
+      function copySummaryToClipboard() {
+        if (!latestCalculationData) return;
+        const summaryText = generatePlainTextSummary(latestCalculationData);
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(summaryText)
+            .then(() => {
+              copyFeedback.style.display = "block";
+              setTimeout(() => { copyFeedback.style.display = "none"; }, 4000);
+            })
+            .catch(() => {
+              fallbackCopy(summaryText);
+            });
+        } else {
+          fallbackCopy(summaryText);
+        }
+      }
+
+      function fallbackCopy(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand("copy");
+          copyFeedback.style.display = "block";
+          setTimeout(() => { copyFeedback.style.display = "none"; }, 4000);
+        } catch (err) {
+          alert("Clipboard copy failed. Please highlight and copy report manually.");
+        }
+        document.body.removeChild(textArea);
+      }
+
+      function exportLedgerToCsv() {
+        if (!latestCalculationData || latestCalculationData.length === 0) return;
+
+        const headers = [
+          "Invoice Reference",
+          "Currency",
+          "Period Start",
+          "Period End",
+          "Elapsed Days",
+          "Opening Principal",
+          "Annual Rate (%)",
+          "Accrued Interest",
+          "Payment Credited",
+          "Closing Principal"
+        ];
+
+        const rows = [headers.join(",")];
+
+        latestCalculationData.forEach(res => {
+          if (res.ledger && res.ledger.length > 0) {
+            res.ledger.forEach(item => {
+              const row = [
+                sanitizeCsvField(item.invoiceRef),
+                sanitizeCsvField(res.currency),
+                sanitizeCsvField(item.periodStart),
+                sanitizeCsvField(item.periodEnd),
+                item.days,
+                item.openingPrincipal.toFixed(2),
+                item.rate.toFixed(2),
+                item.interest.toFixed(2),
+                item.payment.toFixed(2),
+                item.closingPrincipal.toFixed(2)
+              ];
+              rows.push(row.join(","));
+            });
+          }
+        });
+
+        const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + encodeURIComponent(rows.join("\r\n"));
+        const downloadLink = document.createElement("a");
+        downloadLink.setAttribute("href", csvContent);
+        downloadLink.setAttribute("download", `invoice-late-interest-${getTodayIso()}.csv`);
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      }
+
+      // ==========================================
+      // INITIALIZATION & EVENT DISPATCHERS
+      // ==========================================
+      function initApp() {
+        // Clear containers
+        invoicesListContainer.innerHTML = "";
+        invoiceCounter = 1;
+
+        // Create default first invoice
+        const initialCard = createInvoiceCard(invoiceCounter);
+        invoicesListContainer.appendChild(initialCard);
+
+        // Add Invoice Listener
+        btnAddInvoice.addEventListener("click", () => {
+          invoiceCounter++;
+          const nextCard = createInvoiceCard(invoiceCounter);
+          invoicesListContainer.appendChild(nextCard);
+          markResultsStale();
+        });
+
+        // Calculate Listener
+        btnCalculate.addEventListener("click", () => {
+          executeCalculations();
+        });
+
+        // Reset Listener
+        btnReset.addEventListener("click", () => {
+          if (confirm("Reset all invoice parameters and calculation schedules?")) {
+            initApp();
+            resultsContainer.style.display = "none";
+            clearNotification();
+          }
+        });
+
+        // Load Example Listener
+        btnLoadExample.addEventListener("click", () => {
+          invoicesListContainer.innerHTML = "";
+          invoiceCounter = 1;
+
+          const exampleData = {
+            ref: "INV-1001",
+            currency: "USD",
+            amount: "10000.00",
+            rate: "12.0",
+            issueDate: "2026-10-01",
+            dueDate: "2026-10-10",
+            grace: "0",
+            endMode: "custom",
+            customEndDate: "2026-10-20",
+            method: "simple",
+            basis: "actual_365",
+            fixedFee: "0.00",
+            pctFee: "0.00",
+            payments: []
+          };
+
+          const exampleCard = createInvoiceCard(invoiceCounter, exampleData);
+          invoicesListContainer.appendChild(exampleCard);
+          executeCalculations();
+        });
+
+        // Toggle Ledger Expand/Collapse
+        toggleLedgerBtn.addEventListener("click", () => {
+          const isExpanded = toggleLedgerBtn.getAttribute("aria-expanded") === "true";
+          toggleLedgerBtn.setAttribute("aria-expanded", String(!isExpanded));
+          ledgerPanel.style.display = isExpanded ? "none" : "block";
+          toggleIcon.textContent = isExpanded ? "▼" : "▲";
+        });
+
+        // Action Buttons
+        btnCopy.addEventListener("click", copySummaryToClipboard);
+        btnCsv.addEventListener("click", exportLedgerToCsv);
+        btnPrint.addEventListener("click", () => {
+          window.print();
+        });
+      }
+
+      // Safe Launch
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initApp);
+      } else {
+        initApp();
+      }
+    })();
+  </script>
+</div>
+<!-- ==========================================================================
+     END OF INVOICE LATE PAYMENT INTEREST CALCULATOR FRAGMENT
+     ========================================================================== -->
