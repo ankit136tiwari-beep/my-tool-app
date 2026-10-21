@@ -1,7 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice Late Payment Interest Calculator – Free Tool</title>
+  <meta name="description" content="Calculate interest on overdue invoices with flexible annual rates, grace periods, partial payments, daily interest calculations, and a detailed payment breakdown.">
+  <link rel="canonical" href="https://my-tool-app.pages.dev/">
+
+  <!-- ==========================================================================
+       GOOGLE SCHEMA / STRUCTURED DATA (JSON-LD) - सही जगह सेट किया हुआ
+       ========================================================================== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Invoice Late Payment Interest Calculator",
+    "url": "https://my-tool-app.pages.dev/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All modern browsers (Chrome, Edge, Safari, Firefox)",
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "description": "Calculate interest on overdue commercial invoices with flexible annual rates, grace periods, partial payments, daily accrual schedules, and ledger exports.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+</head>
+<body style="margin: 0; padding: 10px; background-color: #f1f5f9;">
+
 <!-- ==========================================================================
-     INVOICE LATE PAYMENT INTEREST CALCULATOR FOR GOOGLE BLOGGER
-     Scope: Self-contained HTML/CSS/JS application fragment
-     Target ID: #ilpic-app
+     INVOICE LATE PAYMENT INTEREST CALCULATOR APP ROOT
      ========================================================================== -->
 <div id="ilpic-app">
   <style>
@@ -482,9 +512,7 @@
     </div>
 
     <!-- INVOICE LIST CONTAINER -->
-    <div id="ilpic-invoices-list">
-      <!-- Dynamically Rendered Invoice Blocks will append here -->
-    </div>
+    <div id="ilpic-invoices-list"></div>
 
     <div class="ilpic-actions">
       <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-add-invoice">
@@ -637,7 +665,6 @@
 
       // Application State
       let invoiceCounter = 0;
-      let invoices = [];
       let latestCalculationData = null;
 
       const SUPPORTED_CURRENCIES = [
@@ -911,9 +938,7 @@
                     <th scope="col" style="width:60px;">Action</th>
                   </tr>
                 </thead>
-                <tbody class="ilpic-payments-tbody">
-                  <!-- Payment rows dynamically appended -->
-                </tbody>
+                <tbody class="ilpic-payments-tbody"></tbody>
               </table>
             </div>
           </div>
@@ -965,7 +990,6 @@
 
       function addPaymentRow(tbody, invId, defaults = {}) {
         const row = document.createElement("tr");
-        const rowId = Date.now() + Math.random().toString(36).substring(2, 7);
         const pDate = defaults.date || getTodayIso();
         const pAmount = defaults.amount !== undefined ? defaults.amount : "1000.00";
         const pNote = defaults.note || "";
@@ -1647,15 +1671,12 @@
       // INITIALIZATION & EVENT DISPATCHERS
       // ==========================================
       function initApp() {
-        // Clear containers
         invoicesListContainer.innerHTML = "";
         invoiceCounter = 1;
 
-        // Create default first invoice
         const initialCard = createInvoiceCard(invoiceCounter);
         invoicesListContainer.appendChild(initialCard);
 
-        // Add Invoice Listener
         btnAddInvoice.addEventListener("click", () => {
           invoiceCounter++;
           const nextCard = createInvoiceCard(invoiceCounter);
@@ -1663,12 +1684,10 @@
           markResultsStale();
         });
 
-        // Calculate Listener
         btnCalculate.addEventListener("click", () => {
           executeCalculations();
         });
 
-        // Reset Listener
         btnReset.addEventListener("click", () => {
           if (confirm("Reset all invoice parameters and calculation schedules?")) {
             initApp();
@@ -1677,7 +1696,6 @@
           }
         });
 
-        // Load Example Listener
         btnLoadExample.addEventListener("click", () => {
           invoicesListContainer.innerHTML = "";
           invoiceCounter = 1;
@@ -1704,7 +1722,6 @@
           executeCalculations();
         });
 
-        // Toggle Ledger Expand/Collapse
         toggleLedgerBtn.addEventListener("click", () => {
           const isExpanded = toggleLedgerBtn.getAttribute("aria-expanded") === "true";
           toggleLedgerBtn.setAttribute("aria-expanded", String(!isExpanded));
@@ -1712,7 +1729,6 @@
           toggleIcon.textContent = isExpanded ? "▼" : "▲";
         });
 
-        // Action Buttons
         btnCopy.addEventListener("click", copySummaryToClipboard);
         btnCsv.addEventListener("click", exportLedgerToCsv);
         btnPrint.addEventListener("click", () => {
@@ -1729,6 +1745,5 @@
     })();
   </script>
 </div>
-<!-- ==========================================================================
-     END OF INVOICE LATE PAYMENT INTEREST CALCULATOR FRAGMENT
-     ========================================================================== -->
+</body>
+</html>
