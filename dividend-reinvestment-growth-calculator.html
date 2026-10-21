@@ -1,0 +1,1337 @@
+<!-- ==========================================================================
+     DIVIDEND REINVESTMENT GROWTH CALCULATOR (BLOGGER PRODUCTION EMBED)
+     Scope: #drip-calculator
+     Zero Backend | Vanilla JavaScript | Embedded Responsive SVG Engine
+     ========================================================================== -->
+<div id="drip-calculator" class="drip-scope">
+  <style>
+    #drip-calculator {
+      --drip-navy: #0f172a;
+      --drip-blue: #1e40af;
+      --drip-blue-accent: #2563eb;
+      --drip-teal: #0d9488;
+      --drip-teal-light: #ccfbf1;
+      --drip-bg-light: #f8fafc;
+      --drip-card-bg: #ffffff;
+      --drip-border: #e2e8f0;
+      --drip-text-dark: #1e293b;
+      --drip-text-muted: #64748b;
+      --drip-success: #16a34a;
+      --drip-danger: #dc2626;
+      --drip-radius: 12px;
+      --drip-shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.04);
+      --drip-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.03);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--drip-text-dark);
+      background-color: var(--drip-bg-light);
+      line-height: 1.5;
+      padding: 16px;
+      border-radius: var(--drip-radius);
+      box-sizing: border-box;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    #drip-calculator *, #drip-calculator *::before, #drip-calculator *::after {
+      box-sizing: inherit;
+    }
+    #drip-calculator .drip-header {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    #drip-calculator .drip-title {
+      font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+      font-weight: 800;
+      color: var(--drip-navy);
+      margin: 0 0 8px 0;
+      letter-spacing: -0.02em;
+    }
+    #drip-calculator .drip-subtitle {
+      font-size: 1rem;
+      color: var(--drip-text-muted);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    #drip-calculator .drip-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media (min-width: 1024px) {
+      #drip-calculator .drip-layout {
+        grid-template-columns: 410px 1fr;
+      }
+    }
+    #drip-calculator .drip-card {
+      background: var(--drip-card-bg);
+      border: 1px solid var(--drip-border);
+      border-radius: var(--drip-radius);
+      padding: 20px;
+      box-shadow: var(--drip-shadow);
+    }
+    #drip-calculator .drip-section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--drip-navy);
+      margin: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #drip-calculator .drip-form-group {
+      margin-bottom: 14px;
+    }
+    #drip-calculator .drip-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    #drip-calculator label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--drip-text-dark);
+    }
+    #drip-calculator .drip-hint {
+      font-size: 0.75rem;
+      color: var(--drip-text-muted);
+    }
+    #drip-calculator input[type="number"],
+    #drip-calculator select {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      border: 1px solid var(--drip-border);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--drip-text-dark);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    #drip-calculator input[type="number"]:focus,
+    #drip-calculator select:focus {
+      outline: none;
+      border-color: var(--drip-blue-accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    #drip-calculator .drip-toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: var(--drip-bg-light);
+      border-radius: 8px;
+      border: 1px solid var(--drip-border);
+      margin-bottom: 14px;
+    }
+    #drip-calculator .drip-toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 26px;
+    }
+    #drip-calculator .drip-toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    #drip-calculator .drip-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #cbd5e1;
+      transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 34px;
+    }
+    #drip-calculator .drip-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 50%;
+    }
+    #drip-calculator input:checked + .drip-slider {
+      background-color: var(--drip-teal);
+    }
+    #drip-calculator input:checked + .drip-slider:before {
+      transform: translateX(22px);
+    }
+    #drip-calculator .drip-btn-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    #drip-calculator .drip-btn {
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.15s, transform 0.05s;
+    }
+    #drip-calculator .drip-btn:active {
+      transform: scale(0.98);
+    }
+    #drip-calculator .drip-btn-primary {
+      background: var(--drip-blue-accent);
+      color: #fff;
+    }
+    #drip-calculator .drip-btn-primary:hover {
+      background: var(--drip-blue);
+    }
+    #drip-calculator .drip-btn-secondary {
+      background: #e2e8f0;
+      color: var(--drip-text-dark);
+    }
+    #drip-calculator .drip-btn-secondary:hover {
+      background: #cbd5e1;
+    }
+    #drip-calculator .drip-mode-pills {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: var(--drip-border);
+      padding: 4px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+    }
+    #drip-calculator .drip-pill-btn {
+      padding: 6px 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--drip-text-muted);
+      transition: all 0.2s;
+    }
+    #drip-calculator .drip-pill-btn.active {
+      background: #fff;
+      color: var(--drip-navy);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    #drip-calculator .drip-dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    #drip-calculator .drip-stat-card {
+      background: #fff;
+      border: 1px solid var(--drip-border);
+      border-radius: var(--drip-radius);
+      padding: 14px;
+      box-shadow: var(--drip-shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    #drip-calculator .drip-stat-card.highlight {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-color: #86efac;
+    }
+    #drip-calculator .drip-stat-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--drip-text-muted);
+      margin-bottom: 4px;
+    }
+    #drip-calculator .drip-stat-val {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--drip-navy);
+      word-break: break-all;
+    }
+    #drip-calculator .drip-stat-sub {
+      font-size: 0.75rem;
+      color: var(--drip-text-muted);
+      margin-top: 4px;
+    }
+    #drip-calculator .drip-stat-sub.positive {
+      color: var(--drip-success);
+      font-weight: 600;
+    }
+    #drip-calculator .drip-chart-wrapper {
+      position: relative;
+      background: #fff;
+      border: 1px solid var(--drip-border);
+      border-radius: var(--drip-radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: var(--drip-shadow);
+    }
+    #drip-calculator .drip-chart-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    #drip-calculator .drip-chart-container {
+      width: 100%;
+      height: 320px;
+      overflow: hidden;
+      position: relative;
+    }
+    #drip-calculator svg.drip-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    #drip-calculator .drip-chart-tooltip {
+      position: absolute;
+      background: rgba(15, 23, 42, 0.95);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      pointer-events: none;
+      display: none;
+      z-index: 20;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+      line-height: 1.4;
+    }
+    #drip-calculator .drip-scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    #drip-calculator .drip-scenario-card {
+      background: #fff;
+      border: 1px solid var(--drip-border);
+      border-radius: var(--drip-radius);
+      padding: 14px;
+      font-size: 0.85rem;
+    }
+    #drip-calculator .drip-scenario-card h4 {
+      margin: 0 0 6px 0;
+      font-size: 0.95rem;
+      color: var(--drip-navy);
+    }
+    #drip-calculator .drip-table-container {
+      background: #fff;
+      border: 1px solid var(--drip-border);
+      border-radius: var(--drip-radius);
+      overflow-x: auto;
+      box-shadow: var(--drip-shadow);
+    }
+    #drip-calculator table.drip-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: right;
+      min-width: 900px;
+    }
+    #drip-calculator table.drip-table th,
+    #drip-calculator table.drip-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--drip-border);
+    }
+    #drip-calculator table.drip-table th {
+      background: #f1f5f9;
+      color: var(--drip-navy);
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+    }
+    #drip-calculator table.drip-table tr:hover {
+      background: #f8fafc;
+    }
+    #drip-calculator table.drip-table td:first-child,
+    #drip-calculator table.drip-table th:first-child {
+      text-align: center;
+      font-weight: 600;
+    }
+    #drip-calculator .drip-accordion {
+      margin-top: 14px;
+      border: 1px solid var(--drip-border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    #drip-calculator .drip-accordion-header {
+      background: var(--drip-bg-light);
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      user-select: none;
+    }
+    #drip-calculator .drip-accordion-body {
+      padding: 14px;
+      display: none;
+      background: #fff;
+    }
+    #drip-calculator .drip-accordion.open .drip-accordion-body {
+      display: block;
+    }
+    #drip-calculator .drip-seo-content {
+      margin-top: 36px;
+      padding-top: 24px;
+      border-top: 1px solid var(--drip-border);
+      color: var(--drip-text-dark);
+    }
+    #drip-calculator .drip-seo-content h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--drip-navy);
+      margin: 24px 0 12px 0;
+    }
+    #drip-calculator .drip-seo-content h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--drip-blue);
+      margin: 18px 0 8px 0;
+    }
+    #drip-calculator .drip-seo-content p {
+      margin: 0 0 14px 0;
+      color: #334155;
+    }
+    #drip-calculator .drip-seo-content ul {
+      margin: 0 0 16px 20px;
+      padding: 0;
+    }
+    #drip-calculator .drip-seo-content li {
+      margin-bottom: 6px;
+    }
+    #drip-calculator .drip-faq-item {
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--drip-border);
+      padding-bottom: 14px;
+    }
+    #drip-calculator .drip-faq-q {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--drip-navy);
+      margin-bottom: 6px;
+    }
+  </style>
+
+  <div class="drip-header">
+    <h1 class="drip-title">Dividend Reinvestment Growth Calculator</h1>
+    <p class="drip-subtitle">
+      Plan, project, and visualize the wealth-compounding impact of automatic dividend reinvestment (DRIP), 
+      recurring monthly additions (SIP), dynamic dividend escalation, and long-term capital appreciation.
+    </p>
+  </div>
+
+  <div class="drip-layout">
+    <!-- INPUT COLUMN -->
+    <div class="drip-card">
+      <div class="drip-section-title">
+        <span>Investment Parameters</span>
+        <button id="drip-btn-reset-top" class="drip-btn drip-btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;">Reset</button>
+      </div>
+
+      <!-- Mode Selector -->
+      <div class="drip-form-group">
+        <label>Modeling Framework</label>
+        <div class="drip-mode-pills" role="radiogroup">
+          <button type="button" class="drip-pill-btn active" data-mode="stock">Stock</button>
+          <button type="button" class="drip-pill-btn" data-mode="etf">ETF</button>
+          <button type="button" class="drip-pill-btn" data-mode="portfolio">Portfolio</button>
+        </div>
+        <div id="drip-mode-desc" class="drip-hint">Generic single equity accumulation model with fractional shares.</div>
+      </div>
+
+      <!-- Core Inputs -->
+      <div class="drip-form-group">
+        <div class="drip-label-row">
+          <label for="drip-input-initial">Initial Investment</label>
+          <span class="drip-hint">Starting principal</span>
+        </div>
+        <input type="number" id="drip-input-initial" value="5000" min="0" step="100">
+      </div>
+
+      <div class="drip-form-group">
+        <div class="drip-label-row">
+          <label for="drip-input-monthly">Monthly Addition (SIP)</label>
+          <span class="drip-hint">Recurring monthly deposit</span>
+        </div>
+        <input type="number" id="drip-input-monthly" value="300" min="0" step="25">
+      </div>
+
+      <div class="drip-form-group">
+        <div class="drip-label-row">
+          <label for="drip-input-years">Time Horizon (Years)</label>
+          <span id="drip-val-years" style="font-weight:700; color:var(--drip-blue-accent);">20 Years</span>
+        </div>
+        <input type="range" id="drip-input-years" value="20" min="1" max="60" step="1" style="width:100%;">
+      </div>
+
+      <div class="drip-form-group">
+        <div class="drip-label-row">
+          <label for="drip-input-yield">Annual Dividend Yield (%)</label>
+          <span class="drip-hint">Trailing / Starting yield</span>
+        </div>
+        <input type="number" id="drip-input-yield" value="3.5" min="0" max="100" step="0.1">
+      </div>
+
+      <div class="drip-form-group">
+        <div class="drip-label-row">
+          <label for="drip-input-price-growth">Annual Price Appreciation (%)</label>
+          <span class="drip-hint">Expected capital gain</span>
+        </div>
+        <input type="number" id="drip-input-price-growth" value="5.0" min="-100" max="100" step="0.1">
+      </div>
+
+      <div class="drip-form-group">
+        <div class="drip-label-row">
+          <label for="drip-input-div-growth">Annual Dividend Growth (%)</label>
+          <span class="drip-hint">Dividend per share hike</span>
+        </div>
+        <input type="number" id="drip-input-div-growth" value="6.0" min="-100" max="100" step="0.1">
+      </div>
+
+      <!-- DRIP Switch -->
+      <div class="drip-toggle-container">
+        <div>
+          <label style="display:block; margin:0; cursor:pointer;" for="drip-toggle-reinvest">Reinvest Dividends (DRIP)</label>
+          <span class="drip-hint">Compound fractional shares automatically</span>
+        </div>
+        <label class="drip-toggle-switch">
+          <input type="checkbox" id="drip-toggle-reinvest" checked>
+          <span class="drip-slider"></span>
+        </label>
+      </div>
+
+      <!-- Advanced Expandable Section -->
+      <div class="drip-accordion" id="drip-adv-accordion">
+        <div class="drip-accordion-header" id="drip-adv-header">
+          <span>Advanced Adjustments &amp; Settings</span>
+          <span id="drip-adv-icon">+</span>
+        </div>
+        <div class="drip-accordion-body">
+          <div class="drip-form-group">
+            <div class="drip-label-row">
+              <label for="drip-input-sip-step">Annual Contribution Step-Up (%)</label>
+            </div>
+            <input type="number" id="drip-input-sip-step" value="0.0" min="0" max="100" step="0.5">
+            <div class="drip-hint">Increases monthly deposit each year.</div>
+          </div>
+          <div class="drip-form-group">
+            <div class="drip-label-row">
+              <label for="drip-input-share-price">Initial Unit / Share Price</label>
+            </div>
+            <input type="number" id="drip-input-share-price" value="100" min="0.01" step="1">
+            <div class="drip-hint">Base unit price for share-count tracking.</div>
+          </div>
+          <div class="drip-form-group">
+            <div class="drip-label-row">
+              <label for="drip-input-inflation">Annual Inflation Rate (%)</label>
+            </div>
+            <input type="number" id="drip-input-inflation" value="2.5" min="0" max="30" step="0.1">
+            <div class="drip-hint">Used to compute real purchasing power.</div>
+          </div>
+          <div class="drip-form-group">
+            <label for="drip-input-currency">Display Currency</label>
+            <select id="drip-input-currency">
+              <option value="USD" selected>USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+              <option value="INR">INR (₹)</option>
+              <option value="CAD">CAD ($)</option>
+              <option value="AUD">AUD ($)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="drip-btn-grid">
+        <button id="drip-btn-copy" class="drip-btn drip-btn-secondary" title="Copy high-level summary to clipboard">
+          📋 Copy Summary
+        </button>
+        <button id="drip-btn-csv" class="drip-btn drip-btn-primary" title="Export complete multi-year dataset to CSV for Excel">
+          📥 Download CSV
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULTS DASHBOARD & VISUALIZATIONS -->
+    <div>
+      <!-- Key Metric Cards -->
+      <div class="drip-dashboard">
+        <div class="drip-stat-card highlight">
+          <div class="drip-stat-label">Total Nominal Wealth</div>
+          <div class="drip-stat-val" id="drip-out-wealth">$0</div>
+          <div class="drip-stat-sub" id="drip-out-real-wealth">Real: $0 (Inflation-Adj)</div>
+        </div>
+        <div class="drip-stat-card">
+          <div class="drip-stat-label">Total Contributions</div>
+          <div class="drip-stat-val" id="drip-out-contrib">$0</div>
+          <div class="drip-stat-sub" id="drip-out-contrib-pct">0% of final balance</div>
+        </div>
+        <div class="drip-stat-card">
+          <div class="drip-stat-label">Total Dividends Generated</div>
+          <div class="drip-stat-val" id="drip-out-dividends">$0</div>
+          <div class="drip-stat-sub positive" id="drip-out-drip-status">Reinvested in Units</div>
+        </div>
+        <div class="drip-stat-card">
+          <div class="drip-stat-label">Annual Dividend Income</div>
+          <div class="drip-stat-val" id="drip-out-annual-div">$0 / yr</div>
+          <div class="drip-stat-sub" id="drip-out-monthly-div">$0 / mo</div>
+        </div>
+        <div class="drip-stat-card">
+          <div class="drip-stat-label">Net Investment Profit</div>
+          <div class="drip-stat-val" id="drip-out-profit">$0</div>
+          <div class="drip-stat-sub positive" id="drip-out-roi">0% Total Return</div>
+        </div>
+        <div class="drip-stat-card">
+          <div class="drip-stat-label">Ending Units / Shares</div>
+          <div class="drip-stat-val" id="drip-out-shares">0.00</div>
+          <div class="drip-stat-sub" id="drip-out-share-price">Share Price: $0</div>
+        </div>
+      </div>
+
+      <!-- Chart Card -->
+      <div class="drip-chart-wrapper">
+        <div class="drip-chart-header">
+          <span style="font-weight:700; color:var(--drip-navy);" id="drip-chart-title">Portfolio Trajectory &amp; Contributions</span>
+          <select id="drip-chart-view" style="width:auto; padding:6px 10px; font-size:0.85rem;">
+            <option value="wealth">Total Wealth vs. Total Contributions</option>
+            <option value="income">Annual Dividend Cash Flow</option>
+            <option value="shares">Total Shares / Units Accumulated</option>
+          </select>
+        </div>
+        <div class="drip-chart-container" id="drip-chart-box">
+          <svg id="drip-chart-svg" class="drip-svg" preserveAspectRatio="none"></svg>
+          <div id="drip-tooltip" class="drip-chart-tooltip"></div>
+        </div>
+      </div>
+
+      <!-- Scenario Comparisons -->
+      <div class="drip-section-title" style="margin-top:20px; font-size:1rem;">
+        <span>Multi-Scenario Stress Test (Same Horizon &amp; SIP)</span>
+      </div>
+      <div class="drip-scenario-grid">
+        <div class="drip-scenario-card" style="border-left: 4px solid #f59e0b;">
+          <h4>Conservative Case</h4>
+          <div class="drip-hint" style="margin-bottom:6px;">Price: +2.5% | Div: +2% | Yld: 3.0%</div>
+          <div style="font-weight:700; font-size:1.1rem;" id="drip-scen-cons-wealth">$0</div>
+          <div class="drip-hint" id="drip-scen-cons-income">Income: $0/yr</div>
+        </div>
+        <div class="drip-scenario-card" style="border-left: 4px solid var(--drip-blue-accent); background: #f8fafc;">
+          <h4>Active Inputs (Base)</h4>
+          <div class="drip-hint" style="margin-bottom:6px;">Current parameters selected</div>
+          <div style="font-weight:700; font-size:1.1rem; color:var(--drip-blue);" id="drip-scen-base-wealth">$0</div>
+          <div class="drip-hint" id="drip-scen-base-income">Income: $0/yr</div>
+        </div>
+        <div class="drip-scenario-card" style="border-left: 4px solid var(--drip-teal);">
+          <h4>Growth / Aggressive</h4>
+          <div class="drip-hint" style="margin-bottom:6px;">Price: +7.5% | Div: +8% | Yld: 4.0%</div>
+          <div style="font-weight:700; font-size:1.1rem;" id="drip-scen-aggr-wealth">$0</div>
+          <div class="drip-hint" id="drip-scen-aggr-income">Income: $0/yr</div>
+        </div>
+      </div>
+
+      <!-- Year-by-Year Table -->
+      <div class="drip-section-title" style="margin-top:20px; font-size:1rem;">
+        <span>Annual Projection Table</span>
+      </div>
+      <div class="drip-table-container">
+        <table class="drip-table">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Annual Deposits</th>
+              <th>Total Invested</th>
+              <th>Annual Dividends</th>
+              <th>Cumulative Divs</th>
+              <th>Reinvested Units</th>
+              <th>End Share Price</th>
+              <th>Total Shares</th>
+              <th>Portfolio Value</th>
+              <th>Total Wealth</th>
+              <th>Net Profit</th>
+              <th>Inflation-Adj Wealth</th>
+            </tr>
+          </thead>
+          <tbody id="drip-table-body">
+            <!-- Programmatically injected rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPREHENSIVE SEO CONTENT & KNOWLEDGE BASE -->
+  <div class="drip-seo-content">
+    <h2>How the Dividend Reinvestment Growth Calculator Works</h2>
+    <p>
+      The <strong>Dividend Reinvestment Growth Calculator</strong> performs a continuous monthly asset allocation simulation. 
+      Rather than relying on basic annual compound interest formulas, it breaks down capital contributions, price appreciation, 
+      dividend declarations, and fractional unit repurchases across monthly calculation slices.
+    </p>
+
+    <h3>Mathematical Compounding Logic</h3>
+    <p>
+      In each monthly period, the model introduces recurring deposits (SIP) at the start of the month, accounts for price changes, 
+      determines total dividend distributions from owned shares, and automatically reinvests capital back into fractional shares 
+      at current unit market values. Over multi-decade timelines, this creates a compounding dynamic: 
+      <em>more capital buys more shares, which generates higher dividend payouts, which repurchases even more shares.</em>
+    </p>
+
+    <h3>Framework Modes: Stock, ETF, and Portfolio</h3>
+    <ul>
+      <li><strong>Stock Mode:</strong> Tracks a single equity position with dedicated unit pricing, dynamic yield adjustments, and direct share accumulation counts.</li>
+      <li><strong>ETF Mode:</strong> Simulates a broad-market or dividend-focused exchange-traded fund with regular monthly additions, tracking blended distributions.</li>
+      <li><strong>Portfolio Mode:</strong> Evaluates a combined multi-holding dividend growth strategy under aggregate total-return assumptions.</li>
+    </ul>
+
+    <h2>Practical Investment Scenarios &amp; Examples</h2>
+    <p>
+      Consider an investor starting with $5,000, depositing $300 every month for 20 years into a quality dividend asset yielding 3.5% with 
+      5.0% annual price appreciation and 6.0% annual dividend growth. Over 240 months:
+    </p>
+    <ul>
+      <li>Cumulative out-of-pocket cash deposits equal $77,000 ($5,000 principal + $72,000 monthly contributions).</li>
+      <li>Due to continuous dividend reinvestment and underlying dividend hikes, the portfolio balance outpaces standard non-reinvested plans, generating substantial five-figure annual cash flows by year 20.</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <div class="drip-faq-item">
+      <div class="drip-faq-q">What is a dividend reinvestment growth calculator?</div>
+      <p>It is an analytical simulation tool that calculates the future portfolio balance, cumulative contributions, and forward dividend income of an investment where regular deposits and dividend payments are systematically used to buy more units over time.</p>
+    </div>
+
+    <div class="drip-faq-item">
+      <div class="drip-faq-q">How do monthly contributions affect dividend compounding?</div>
+      <p>Monthly contributions accelerate compounding by steadily increasing your share count between dividend declaration dates. Each new monthly purchase immediately begins generating its own dividend stream during the next payout cycle.</p>
+    </div>
+
+    <div class="drip-faq-item">
+      <div class="drip-faq-q">What does DRIP mean?</div>
+      <p>DRIP stands for Dividend Reinvestment Plan. It is an automated arrangement provided by brokerages or companies where cash distributions are instantly converted into additional full or fractional shares rather than deposited as liquid cash.</p>
+    </div>
+
+    <div class="drip-faq-item">
+      <div class="drip-faq-q">How does dividend growth differ from dividend yield?</div>
+      <p>Dividend yield is the annual dividend payout divided by the current share price. Dividend growth is the annual percentage rate at which a company increases its payout per share over time.</p>
+    </div>
+
+    <div class="drip-faq-item">
+      <div class="drip-faq-q">Can I use the calculator for individual stocks?</div>
+      <p>Yes. Select "Stock Mode" to input your specific initial share price, starting dividend yield, and dividend growth assumptions to track total shares accumulated over your investment horizon.</p>
+    </div>
+
+    <div class="drip-faq-item">
+      <div class="drip-faq-q">Can I use this tool for dividend-paying ETFs?</div>
+      <p>Yes. "ETF Mode" applies the exact same continuous compounding engine to model blended distributions from index funds like SCHD, VYM, or VIG.</p>
+    </div>
+
+    <div class="drip-faq-item">
+      <div class="drip-faq-q">How does monthly SIP investing work in this calculator?</div>
+      <p>SIP (Systematic Investment Plan) models regular monthly deposits. The calculator can also apply an annual step-up percentage to increase your monthly contribution as your income grows.</p>
+    </div>
+
+    <div class="drip-faq-item">
+      <div class="drip-faq-q">What is the difference between share-price growth and dividend yield?</div>
+      <p>Share-price growth reflects capital appreciation (how much the market price of the unit rises), while dividend yield reflects the cash payout distributed relative to that unit price.</p>
+    </div>
+
+    <div class="drip-faq-item">
+      <div class="drip-faq-q">Can I turn dividend reinvestment off?</div>
+      <p>Yes. Toggle the "Reinvest Dividends (DRIP)" switch off. The calculator will collect dividends in a separate cash pool while maintaining regular monthly equity contributions.</p>
+    </div>
+
+    <div class="drip-faq-item">
+      <div class="drip-faq-q">Can I export my projection to Excel or Google Sheets?</div>
+      <p>Yes. Click "Download CSV" to save an RFC 4180-compliant spreadsheet file containing all monthly simulation parameters and full year-by-year data rows.</p>
+    </div>
+
+    <div class="drip-faq-item">
+      <div class="drip-faq-q">Are the calculator's returns guaranteed?</div>
+      <p>No. Projections are strictly hypothetical illustrations based on constant mathematical rates. Real-world financial markets experience volatility, dividend cuts, economic downturns, and tax consequences.</p>
+    </div>
+
+    <div class="drip-faq-item">
+      <div class="drip-faq-q">Does the calculator include taxes and brokerage fees?</div>
+      <p>The core engine models gross returns before capital gains or dividend income taxes. For taxable accounts, you can input net after-tax dividend yields and conservative price growth rates to simulate tax friction.</p>
+    </div>
+
+    <h2>Financial Disclaimer</h2>
+    <p style="font-size: 0.85rem; color: var(--drip-text-muted);">
+      This calculator is provided solely for educational and financial modeling purposes. It does not constitute investment advice, 
+      financial endorsement, or portfolio management recommendations. Securities investments are subject to market risks, 
+      including possible loss of principal. Past performance and theoretical dividend growth rates do not guarantee future results.
+    </p>
+  </div>
+
+  <!-- VANILLA JAVASCRIPT CONTROLLER -->
+  <script>
+  (function() {
+    "use strict";
+
+    // Scope DOM helper
+    const root = document.getElementById("drip-calculator");
+    const $ = (sel) => root.querySelector(sel);
+    const $$ = (sel) => root.querySelectorAll(sel);
+
+    // State Variables
+    let currentMode = "stock";
+    let chartView = "wealth";
+    let simulationResults = null;
+
+    // Currency Formatter Cache
+    let currencyFormatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0
+    });
+
+    function updateCurrencyFormatter(currencyCode) {
+      try {
+        currencyFormatter = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: currencyCode,
+          maximumFractionDigits: 0
+        });
+      } catch(e) {
+        currencyFormatter = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          maximumFractionDigits: 0
+        });
+      }
+    }
+
+    function formatMoney(num) {
+      return currencyFormatter.format(num);
+    }
+
+    function formatNumber(num, decimals = 2) {
+      return Number(num).toLocaleString("en-US", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      });
+    }
+
+    // Mathematical Engine (Monthly Step-Through Simulation)
+    function runSimulation(params) {
+      const {
+        initialInvestment,
+        monthlySIP,
+        years,
+        annualYield,
+        annualPriceGrowth,
+        annualDivGrowth,
+        annualSIPStep,
+        reinvestDividends,
+        initialSharePrice,
+        inflationRate
+      } = params;
+
+      const totalMonths = Math.min(Math.max(Math.round(years * 12), 12), 720);
+      const monthlyPriceRate = Math.pow(1 + annualPriceGrowth / 100, 1 / 12) - 1;
+      const monthlyDivGrowthFactor = Math.pow(1 + annualDivGrowth / 100, 1 / 12);
+      const monthlyInflationFactor = Math.pow(1 + inflationRate / 100, 1 / 12);
+
+      let currentPrice = Math.max(initialSharePrice, 0.01);
+      let currentUnits = initialInvestment / currentPrice;
+      let annualDivPerShare = currentPrice * (annualYield / 100);
+      let currentMonthlySIP = monthlySIP;
+
+      let cumulativeContrib = initialInvestment;
+      let cumulativeDivs = 0;
+      let cashDividends = 0;
+
+      const yearlyRecords = [];
+      let yearRunningContrib = 0;
+      let yearRunningDivs = 0;
+
+      for (let m = 1; m <= totalMonths; m++) {
+        // Step-up monthly contribution at the start of each new year
+        if (m > 1 && (m - 1) % 12 === 0) {
+          currentMonthlySIP *= (1 + annualSIPStep / 100);
+        }
+
+        // Monthly Deposit
+        cumulativeContrib += currentMonthlySIP;
+        yearRunningContrib += currentMonthlySIP;
+        currentUnits += (currentMonthlySIP / currentPrice);
+
+        // Price Appreciation
+        currentPrice *= (1 + monthlyPriceRate);
+
+        // Dividend Payout Escalation
+        annualDivPerShare *= monthlyDivGrowthFactor;
+        const monthlyDivPerShare = annualDivPerShare / 12;
+
+        // Current Month Distribution
+        const monthlyDividend = currentUnits * monthlyDivPerShare;
+        cumulativeDivs += monthlyDividend;
+        yearRunningDivs += monthlyDividend;
+
+        // Reinvestment vs. Cash
+        if (reinvestDividends) {
+          currentUnits += (monthlyDividend / currentPrice);
+        } else {
+          cashDividends += monthlyDividend;
+        }
+
+        // Record year-end snapshot
+        if (m % 12 === 0 || m === totalMonths) {
+          const currentYear = Math.ceil(m / 12);
+          const portfolioValue = currentUnits * currentPrice;
+          const totalWealth = portfolioValue + cashDividends;
+          const discountFactor = Math.pow(monthlyInflationFactor, m);
+          const realWealth = totalWealth / discountFactor;
+          const netProfit = totalWealth - cumulativeContrib;
+          const forwardAnnualIncome = currentUnits * annualDivPerShare;
+
+          yearlyRecords.push({
+            year: currentYear,
+            month: m,
+            annualContributions: yearRunningContrib,
+            cumulativeContributions: cumulativeContrib,
+            annualDividends: yearRunningDivs,
+            cumulativeDividends: cumulativeDivs,
+            reinvestedUnits: reinvestDividends ? (yearRunningDivs / currentPrice) : 0,
+            endingPrice: currentPrice,
+            endingUnits: currentUnits,
+            portfolioValue: portfolioValue,
+            totalWealth: totalWealth,
+            cashDividends: cashDividends,
+            netProfit: netProfit,
+            realWealth: realWealth,
+            forwardAnnualIncome: forwardAnnualIncome
+          });
+
+          yearRunningContrib = 0;
+          yearRunningDivs = 0;
+        }
+      }
+
+      const finalRecord = yearlyRecords[yearlyRecords.length - 1];
+
+      return {
+        params,
+        yearlyRecords,
+        final: finalRecord,
+        totalMonths
+      };
+    }
+
+    // Input Extractor
+    function getParamsFromUI() {
+      return {
+        initialInvestment: Math.max(parseFloat($("#drip-input-initial").value) || 0, 0),
+        monthlySIP: Math.max(parseFloat($("#drip-input-monthly").value) || 0, 0),
+        years: Math.min(Math.max(parseInt($("#drip-input-years").value, 10) || 1, 1), 60),
+        annualYield: Math.max(parseFloat($("#drip-input-yield").value) || 0, 0),
+        annualPriceGrowth: parseFloat($("#drip-input-price-growth").value) || 0,
+        annualDivGrowth: parseFloat($("#drip-input-div-growth").value) || 0,
+        annualSIPStep: Math.max(parseFloat($("#drip-input-sip-step").value) || 0, 0),
+        reinvestDividends: $("#drip-toggle-reinvest").checked,
+        initialSharePrice: Math.max(parseFloat($("#drip-input-share-price").value) || 100, 0.01),
+        inflationRate: Math.max(parseFloat($("#drip-input-inflation").value) || 0, 0)
+      };
+    }
+
+    // UI Updates
+    function updateDashboard() {
+      const params = getParamsFromUI();
+      $("#drip-val-years").textContent = `${params.years} Years`;
+      updateCurrencyFormatter($("#drip-input-currency").value);
+
+      simulationResults = runSimulation(params);
+      const f = simulationResults.final;
+
+      // Update Key Metric Cards
+      $("#drip-out-wealth").textContent = formatMoney(f.totalWealth);
+      $("#drip-out-real-wealth").textContent = `Real: ${formatMoney(f.realWealth)} (Inflation-Adj)`;
+
+      $("#drip-out-contrib").textContent = formatMoney(f.cumulativeContributions);
+      const contribPct = f.totalWealth > 0 ? (f.cumulativeContributions / f.totalWealth * 100).toFixed(1) : 0;
+      $("#drip-out-contrib-pct").textContent = `${contribPct}% of final balance`;
+
+      $("#drip-out-dividends").textContent = formatMoney(f.cumulativeDividends);
+      $("#drip-out-drip-status").textContent = params.reinvestDividends ? "100% Reinvested in Shares" : "Held in Cash Reserve";
+      $("#drip-out-drip-status").style.color = params.reinvestDividends ? "var(--drip-success)" : "var(--drip-text-muted)";
+
+      $("#drip-out-annual-div").textContent = `${formatMoney(f.forwardAnnualIncome)} / yr`;
+      $("#drip-out-monthly-div").textContent = `${formatMoney(f.forwardAnnualIncome / 12)} / mo`;
+
+      $("#drip-out-profit").textContent = formatMoney(f.netProfit);
+      const totalRoi = f.cumulativeContributions > 0 ? (f.netProfit / f.cumulativeContributions * 100).toFixed(1) : 0;
+      $("#drip-out-roi").textContent = `${totalRoi >= 0 ? "+" : ""}${totalRoi}% Total Return`;
+      $("#drip-out-roi").style.color = f.netProfit >= 0 ? "var(--drip-success)" : "var(--drip-danger)";
+
+      $("#drip-out-shares").textContent = formatNumber(f.endingUnits, 2);
+      $("#drip-out-share-price").textContent = `Share Price: ${formatMoney(f.endingPrice)}`;
+
+      // Render Table, Charts, and Scenarios
+      renderTable(simulationResults.yearlyRecords);
+      renderChart(simulationResults.yearlyRecords, chartView);
+      renderScenarios(params);
+    }
+
+    // Render Year-by-Year Table
+    function renderTable(records) {
+      const tbody = $("#drip-table-body");
+      let html = "";
+      records.forEach(r => {
+        html += `
+          <tr>
+            <td>${r.year}</td>
+            <td>${formatMoney(r.annualContributions)}</td>
+            <td>${formatMoney(r.cumulativeContributions)}</td>
+            <td>${formatMoney(r.annualDividends)}</td>
+            <td>${formatMoney(r.cumulativeDividends)}</td>
+            <td>${formatNumber(r.reinvestedUnits, 2)}</td>
+            <td>${formatMoney(r.endingPrice)}</td>
+            <td>${formatNumber(r.endingUnits, 2)}</td>
+            <td>${formatMoney(r.portfolioValue)}</td>
+            <td style="font-weight:700; color:var(--drip-blue);">${formatMoney(r.totalWealth)}</td>
+            <td style="color:${r.netProfit >= 0 ? "var(--drip-success)" : "var(--drip-danger)};">${formatMoney(r.netProfit)}</td>
+            <td style="color:var(--drip-text-muted);">${formatMoney(r.realWealth)}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    // Render Native SVG Chart
+    function renderChart(records, viewType) {
+      const svg = $("#drip-chart-svg");
+      const title = $("#drip-chart-title");
+      const box = $("#drip-chart-box");
+      const tooltip = $("#drip-tooltip");
+
+      const width = box.clientWidth || 700;
+      const height = box.clientHeight || 320;
+      const padding = { top: 20, right: 30, bottom: 35, left: 75 };
+
+      const chartW = width - padding.left - padding.right;
+      const chartH = height - padding.top - padding.bottom;
+
+      // Extract Series
+      let series1 = [];
+      let series2 = [];
+      let s1Color = "var(--drip-blue-accent)";
+      let s2Color = "#94a3b8";
+
+      if (viewType === "wealth") {
+        title.textContent = "Total Wealth vs. Total Principal Contributed";
+        series1 = records.map(r => ({ x: r.year, y: r.totalWealth, label: "Total Wealth" }));
+        series2 = records.map(r => ({ x: r.year, y: r.cumulativeContributions, label: "Principal Contributed" }));
+      } else if (viewType === "income") {
+        title.textContent = "Annual Dividend Income Trajectory";
+        series1 = records.map(r => ({ x: r.year, y: r.forwardAnnualIncome, label: "Forward Dividend Income" }));
+        s1Color = "var(--drip-teal)";
+      } else if (viewType === "shares") {
+        title.textContent = "Cumulative Units / Shares Accumulated";
+        series1 = records.map(r => ({ x: r.year, y: r.endingUnits, label: "Shares Held" }));
+        s1Color = "#8b5cf6";
+      }
+
+      // Compute Scales
+      const allY = [...series1.map(d => d.y), ...(series2.length ? series2.map(d => d.y) : [0])];
+      const minY = 0;
+      const maxY = Math.max(...allY) * 1.1 || 1;
+
+      const minX = records[0].year;
+      const maxX = records[records.length - 1].year;
+
+      const getX = (val) => padding.left + ((val - minX) / (maxX - minX || 1)) * chartW;
+      const getY = (val) => padding.top + chartH - ((val - minY) / (maxY - minY || 1)) * chartH;
+
+      // Build SVG Strings
+      let svgContent = `
+        <defs>
+          <linearGradient id="grad-blue" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2563eb" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#2563eb" stop-opacity="0.0"/>
+          </linearGradient>
+        </defs>
+      `;
+
+      // Horizontal Grid lines (5 tiers)
+      for (let i = 0; i <= 4; i++) {
+        const yVal = minY + (maxY - minY) * (i / 4);
+        const yPos = getY(yVal);
+        const displayLabel = viewType === "shares" ? formatNumber(yVal, 0) : formatMoney(yVal);
+        svgContent += `
+          <line x1="${padding.left}" y1="${yPos}" x2="${width - padding.right}" y2="${yPos}" stroke="#e2e8f0" stroke-dasharray="4"/>
+          <text x="${padding.left - 8}" y="${yPos + 4}" font-size="10" fill="#64748b" text-anchor="end">${displayLabel}</text>
+        `;
+      }
+
+      // Year Axis Labels
+      records.forEach((r, idx) => {
+        if (records.length <= 15 || idx % Math.ceil(records.length / 10) === 0 || idx === records.length - 1) {
+          const xPos = getX(r.year);
+          svgContent += `
+            <text x="${xPos}" y="${height - 10}" font-size="10" fill="#64748b" text-anchor="middle">Y${r.year}</text>
+          `;
+        }
+      });
+
+      // Path Builder
+      const buildPath = (data) => data.map((d, i) => `${i === 0 ? "M" : "L"} ${getX(d.x)} ${getY(d.y)}`).join(" ");
+
+      if (series2.length) {
+        svgContent += `<path d="${buildPath(series2)}" fill="none" stroke="${s2Color}" stroke-width="2.5" stroke-dasharray="5"/>`;
+      }
+
+      if (series1.length) {
+        const areaPath = `${buildPath(series1)} L ${getX(series1[series1.length - 1].x)} ${getY(0)} L ${getX(series1[0].x)} ${getY(0)} Z`;
+        svgContent += `<path d="${areaPath}" fill="url(#grad-blue)"/>`;
+        svgContent += `<path d="${buildPath(series1)}" fill="none" stroke="${s1Color}" stroke-width="3"/>`;
+      }
+
+      // Interactive Hover Circles
+      series1.forEach((pt, i) => {
+        const xPos = getX(pt.x);
+        const yPos = getY(pt.y);
+        const valFormatted = viewType === "shares" ? formatNumber(pt.y, 2) : formatMoney(pt.y);
+        const s2Val = series2.length ? formatMoney(series2[i].y) : null;
+
+        svgContent += `
+          <circle cx="${xPos}" cy="${yPos}" r="4" fill="${s1Color}" class="drip-hover-pt"
+            data-year="${pt.x}" data-val="${valFormatted}" data-s2="${s2Val || ""}"
+            style="cursor:pointer; transition:r 0.15s;"></circle>
+        `;
+      });
+
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.innerHTML = svgContent;
+
+      // Tooltip Attachment
+      $$(".drip-hover-pt").forEach(el => {
+        el.addEventListener("mouseenter", (e) => {
+          el.setAttribute("r", "7");
+          const yr = el.getAttribute("data-year");
+          const val = el.getAttribute("data-val");
+          const s2 = el.getAttribute("data-s2");
+
+          tooltip.style.display = "block";
+          tooltip.innerHTML = `
+            <strong>Year ${yr}</strong><br/>
+            ${title.textContent.split(" vs.")[0]}: <strong>${val}</strong>
+            ${s2 ? `<br/>Principal Contributed: <strong>${s2}</strong>` : ""}
+          `;
+        });
+        el.addEventListener("mousemove", (e) => {
+          const rect = box.getBoundingClientRect();
+          tooltip.style.left = `${e.clientX - rect.left + 10}px`;
+          tooltip.style.top = `${e.clientY - rect.top - 35}px`;
+        });
+        el.addEventListener("mouseleave", () => {
+          el.setAttribute("r", "4");
+          tooltip.style.display = "none";
+        });
+      });
+    }
+
+    // Render 3-Tier Comparison
+    function renderScenarios(baseParams) {
+      // Conservative
+      const consRes = runSimulation({
+        ...baseParams,
+        annualYield: 3.0,
+        annualPriceGrowth: 2.5,
+        annualDivGrowth: 2.0
+      });
+      $("#drip-scen-cons-wealth").textContent = formatMoney(consRes.final.totalWealth);
+      $("#drip-scen-cons-income").textContent = `Income: ${formatMoney(consRes.final.forwardAnnualIncome)}/yr`;
+
+      // Base
+      $("#drip-scen-base-wealth").textContent = formatMoney(simulationResults.final.totalWealth);
+      $("#drip-scen-base-income").textContent = `Income: ${formatMoney(simulationResults.final.forwardAnnualIncome)}/yr`;
+
+      // Aggressive
+      const aggrRes = runSimulation({
+        ...baseParams,
+        annualYield: 4.0,
+        annualPriceGrowth: 7.5,
+        annualDivGrowth: 8.0
+      });
+      $("#drip-scen-aggr-wealth").textContent = formatMoney(aggrRes.final.totalWealth);
+      $("#drip-scen-aggr-income").textContent = `Income: ${formatMoney(aggrRes.final.forwardAnnualIncome)}/yr`;
+    }
+
+    // CSV Generator (RFC 4180 Compliant)
+    function exportToCSV() {
+      if (!simulationResults) return;
+      const p = simulationResults.params;
+      const records = simulationResults.yearlyRecords;
+
+      let csv = "DIVIDEND REINVESTMENT GROWTH CALCULATOR EXPORT\r\n";
+      csv += `Generated On,${new Date().toISOString()}\r\n`;
+      csv += `Initial Investment,${p.initialInvestment}\r\n`;
+      csv += `Monthly Addition (SIP),${p.monthlySIP}\r\n`;
+      csv += `Duration (Years),${p.years}\r\n`;
+      csv += `Annual Dividend Yield (%),${p.annualYield}%\r\n`;
+      csv += `Annual Price Growth (%),${p.annualPriceGrowth}%\r\n`;
+      csv += `Annual Dividend Growth (%),${p.annualDivGrowth}%\r\n`;
+      csv += `Annual SIP Step-Up (%),${p.annualSIPStep}%\r\n`;
+      csv += `DRIP Enabled,${p.reinvestDividends ? "YES" : "NO"}\r\n`;
+      csv += `Inflation Rate (%),${p.inflationRate}%\r\n\r\n`;
+
+      // Table Headers
+      csv += "Year,Annual Deposits,Cumulative Deposits,Annual Dividends,Cumulative Dividends,Reinvested Units,Share Price,Total Shares Held,Portfolio Market Value,Total Nominal Wealth,Net Gain/Loss,Inflation-Adjusted Real Wealth\r\n";
+
+      records.forEach(r => {
+        csv += [
+          r.year,
+          r.annualContributions.toFixed(2),
+          r.cumulativeContributions.toFixed(2),
+          r.annualDividends.toFixed(2),
+          r.cumulativeDividends.toFixed(2),
+          r.reinvestedUnits.toFixed(4),
+          r.endingPrice.toFixed(2),
+          r.endingUnits.toFixed(4),
+          r.portfolioValue.toFixed(2),
+          r.totalWealth.toFixed(2),
+          r.netProfit.toFixed(2),
+          r.realWealth.toFixed(2)
+        ].join(",") + "\r\n";
+      });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `dividend_reinvestment_projection_${p.years}yr.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    // Clipboard Copy
+    function copySummaryToClipboard() {
+      if (!simulationResults) return;
+      const f = simulationResults.final;
+      const p = simulationResults.params;
+
+      const summaryText = `DIVIDEND REINVESTMENT PROJECTION SUMMARY
+------------------------------------------------
+Duration: ${p.years} Years | DRIP: ${p.reinvestDividends ? "ON" : "OFF"}
+Initial Principal: ${formatMoney(p.initialInvestment)}
+Monthly SIP: ${formatMoney(p.monthlySIP)}
+------------------------------------------------
+Total Capital Invested: ${formatMoney(f.cumulativeContributions)}
+Total Dividends Generated: ${formatMoney(f.cumulativeDividends)}
+Net Investment Gain: ${formatMoney(f.netProfit)}
+Final Nominal Wealth: ${formatMoney(f.totalWealth)}
+Inflation-Adjusted Wealth: ${formatMoney(f.realWealth)}
+Estimated Annual Dividend Income: ${formatMoney(f.forwardAnnualIncome)}/yr (${formatMoney(f.forwardAnnualIncome/12)}/mo)
+Total Shares Accumulated: ${formatNumber(f.endingUnits, 2)}
+Ending Share Price: ${formatMoney(f.endingPrice)}
+------------------------------------------------
+Simulated via Dividend Reinvestment Growth Calculator`;
+
+      navigator.clipboard.writeText(summaryText).then(() => {
+        const btn = $("#drip-btn-copy");
+        const origText = btn.innerHTML;
+        btn.innerHTML = "✓ Copied!";
+        setTimeout(() => { btn.innerHTML = origText; }, 2000);
+      }).catch(() => {
+        alert("Clipboard permission denied. Please copy manually.");
+      });
+    }
+
+    // Reset Defaults
+    function resetDefaults() {
+      $("#drip-input-initial").value = 5000;
+      $("#drip-input-monthly").value = 300;
+      $("#drip-input-years").value = 20;
+      $("#drip-input-yield").value = 3.5;
+      $("#drip-input-price-growth").value = 5.0;
+      $("#drip-input-div-growth").value = 6.0;
+      $("#drip-input-sip-step").value = 0.0;
+      $("#drip-input-share-price").value = 100;
+      $("#drip-input-inflation").value = 2.5;
+      $("#drip-toggle-reinvest").checked = true;
+      $("#drip-input-currency").value = "USD";
+
+      setMode("stock");
+      updateDashboard();
+    }
+
+    // Mode Selector
+    function setMode(mode) {
+      currentMode = mode;
+      $$(".drip-pill-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-mode") === mode);
+      });
+
+      const desc = $("#drip-mode-desc");
+      if (mode === "stock") {
+        desc.textContent = "Generic single equity accumulation model with fractional shares.";
+      } else if (mode === "etf") {
+        desc.textContent = "Blended distribution index framework for dividend-growth exchange-traded funds.";
+      } else {
+        desc.textContent = "Diversified aggregate portfolio model reflecting combined total-return parameters.";
+      }
+      updateDashboard();
+    }
+
+    // Event Bindings
+    function bindEvents() {
+      // Inputs
+      const liveInputs = [
+        "#drip-input-initial", "#drip-input-monthly", "#drip-input-years",
+        "#drip-input-yield", "#drip-input-price-growth", "#drip-input-div-growth",
+        "#drip-input-sip-step", "#drip-input-share-price", "#drip-input-inflation",
+        "#drip-input-currency"
+      ];
+      liveInputs.forEach(id => {
+        const el = $(id);
+        if (el) el.addEventListener("input", updateDashboard);
+      });
+
+      $("#drip-toggle-reinvest").addEventListener("change", updateDashboard);
+
+      // Mode pills
+      $$(".drip-pill-btn").forEach(btn => {
+        btn.addEventListener("click", () => setMode(btn.getAttribute("data-mode")));
+      });
+
+      // Chart selector
+      $("#drip-chart-view").addEventListener("change", (e) => {
+        chartView = e.target.value;
+        if (simulationResults) renderChart(simulationResults.yearlyRecords, chartView);
+      });
+
+      // Accordion toggle
+      $("#drip-adv-header").addEventListener("click", () => {
+        const acc = $("#drip-adv-accordion");
+        acc.classList.toggle("open");
+        $("#drip-adv-icon").textContent = acc.classList.contains("open") ? "−" : "+";
+      });
+
+      // Action buttons
+      $("#drip-btn-csv").addEventListener("click", exportToCSV);
+      $("#drip-btn-copy").addEventListener("click", copySummaryToClipboard);
+      $("#drip-btn-reset-top").addEventListener("click", resetDefaults);
+
+      // Window resize re-render for responsive SVG
+      window.addEventListener("resize", () => {
+        if (simulationResults) renderChart(simulationResults.yearlyRecords, chartView);
+      });
+    }
+
+    // Initialization
+    bindEvents();
+    updateDashboard();
+  })();
+  </script>
+</div>
