@@ -1,0 +1,1560 @@
+<!-- ==========================================================================
+     FREE AIRBNB OCCUPANCY BREAK-EVEN CALCULATOR
+     Scoped Namespace: #airbnb-break-even-tool
+     Target: Google Blogger / Cloudflare Pages (100% Client-Side)
+     ========================================================================== -->
+
+<div id="airbnb-break-even-tool">
+  <style>
+    /* Scoped Design System */
+    #airbnb-break-even-tool {
+      --abe-primary: #ff385c;
+      --abe-primary-hover: #e00b41;
+      --abe-primary-light: #fff1f3;
+      --abe-success: #059669;
+      --abe-success-bg: #ecfdf5;
+      --abe-warning: #d97706;
+      --abe-warning-bg: #fffbeb;
+      --abe-danger: #dc2626;
+      --abe-danger-bg: #fef2f2;
+      --abe-dark: #1e293b;
+      --abe-gray-700: #334155;
+      --abe-gray-600: #475569;
+      --abe-gray-500: #64748b;
+      --abe-gray-300: #cbd5e1;
+      --abe-gray-200: #e2e8f0;
+      --abe-gray-100: #f1f5f9;
+      --abe-gray-50: #f8fafc;
+      --abe-card-bg: #ffffff;
+      --abe-radius: 12px;
+      --abe-radius-sm: 8px;
+      --abe-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --abe-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --abe-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+
+      font-family: var(--abe-font);
+      color: var(--abe-dark);
+      background-color: transparent;
+      line-height: 1.5;
+      box-sizing: border-box;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px;
+    }
+
+    #airbnb-break-even-tool *,
+    #airbnb-break-even-tool *::before,
+    #airbnb-break-even-tool *::after {
+      box-sizing: inherit;
+    }
+
+    /* Typography */
+    #airbnb-break-even-tool h1.abe-main-title {
+      font-size: clamp(1.75rem, 4vw, 2.35rem);
+      font-weight: 800;
+      color: var(--abe-dark);
+      text-align: center;
+      margin: 0 0 8px 0;
+      letter-spacing: -0.02em;
+    }
+
+    #airbnb-break-even-tool p.abe-lead-tagline {
+      font-size: 1.05rem;
+      color: var(--abe-gray-600);
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 24px auto;
+    }
+
+    /* Disclaimer Bar */
+    #airbnb-break-even-tool .abe-disclaimer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--abe-gray-100);
+      border: 1px solid var(--abe-gray-200);
+      border-radius: var(--abe-radius-sm);
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      color: var(--abe-gray-600);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    /* Main Grid Layout */
+    #airbnb-break-even-tool .abe-app-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    @media (min-width: 900px) {
+      #airbnb-break-even-tool .abe-app-grid {
+        grid-template-columns: 1.05fr 0.95fr;
+      }
+    }
+
+    /* Cards */
+    #airbnb-break-even-tool .abe-card {
+      background: var(--abe-card-bg);
+      border: 1px solid var(--abe-gray-200);
+      border-radius: var(--abe-radius);
+      box-shadow: var(--abe-shadow);
+      padding: 20px;
+    }
+
+    #airbnb-break-even-tool .abe-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--abe-gray-100);
+    }
+
+    #airbnb-break-even-tool .abe-section-header h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--abe-dark);
+      margin: 0;
+    }
+
+    /* Forms & Inputs */
+    #airbnb-break-even-tool .abe-form-group {
+      margin-bottom: 14px;
+    }
+
+    #airbnb-break-even-tool .abe-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    #airbnb-break-even-tool .abe-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    #airbnb-break-even-tool label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--abe-gray-700);
+      margin-bottom: 4px;
+    }
+
+    #airbnb-break-even-tool input[type="number"],
+    #airbnb-break-even-tool input[type="text"],
+    #airbnb-break-even-tool select {
+      width: 100%;
+      padding: 9px 12px;
+      font-size: 0.95rem;
+      border: 1px solid var(--abe-gray-300);
+      border-radius: var(--abe-radius-sm);
+      background-color: #fff;
+      color: var(--abe-dark);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #airbnb-break-even-tool input:focus,
+    #airbnb-break-even-tool select:focus {
+      border-color: var(--abe-primary);
+      box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.15);
+    }
+
+    #airbnb-break-even-tool .abe-help-text {
+      font-size: 0.75rem;
+      color: var(--abe-gray-500);
+      margin-top: 3px;
+    }
+
+    /* Collapsible Panels */
+    #airbnb-break-even-tool .abe-accordion {
+      margin-top: 14px;
+      border: 1px solid var(--abe-gray-200);
+      border-radius: var(--abe-radius-sm);
+      overflow: hidden;
+    }
+
+    #airbnb-break-even-tool .abe-accordion-btn {
+      width: 100%;
+      background: var(--abe-gray-50);
+      border: none;
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--abe-dark);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    #airbnb-break-even-tool .abe-accordion-content {
+      padding: 16px;
+      background: #ffffff;
+      display: none;
+    }
+
+    #airbnb-break-even-tool .abe-accordion.open .abe-accordion-content {
+      display: block;
+    }
+
+    /* Buttons */
+    #airbnb-break-even-tool .abe-btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    #airbnb-break-even-tool button.abe-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 18px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: var(--abe-radius-sm);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      min-height: 42px;
+    }
+
+    #airbnb-break-even-tool .abe-btn-primary {
+      background: var(--abe-primary);
+      color: #fff;
+    }
+
+    #airbnb-break-even-tool .abe-btn-primary:hover {
+      background: var(--abe-primary-hover);
+    }
+
+    #airbnb-break-even-tool .abe-btn-secondary {
+      background: var(--abe-gray-100);
+      color: var(--abe-gray-700);
+      border-color: var(--abe-gray-300);
+    }
+
+    #airbnb-break-even-tool .abe-btn-secondary:hover {
+      background: var(--abe-gray-200);
+    }
+
+    /* Primary Result Alert Banner */
+    #airbnb-break-even-tool .abe-alert-banner {
+      border-radius: var(--abe-radius-sm);
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    #airbnb-break-even-tool .abe-alert-success {
+      background: var(--abe-success-bg);
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+
+    #airbnb-break-even-tool .abe-alert-danger {
+      background: var(--abe-danger-bg);
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+
+    #airbnb-break-even-tool .abe-alert-warning {
+      background: var(--abe-warning-bg);
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    /* Metrics Grid */
+    #airbnb-break-even-tool .abe-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 480px) {
+      #airbnb-break-even-tool .abe-metrics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    #airbnb-break-even-tool .abe-metric-card {
+      background: var(--abe-gray-50);
+      border: 1px solid var(--abe-gray-200);
+      border-radius: var(--abe-radius-sm);
+      padding: 14px;
+    }
+
+    #airbnb-break-even-tool .abe-metric-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--abe-gray-500);
+    }
+
+    #airbnb-break-even-tool .abe-metric-val {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--abe-dark);
+      margin: 4px 0 2px 0;
+    }
+
+    #airbnb-break-even-tool .abe-metric-sub {
+      font-size: 0.75rem;
+      color: var(--abe-gray-600);
+    }
+
+    /* Occupancy Gauge Bar */
+    #airbnb-break-even-tool .abe-gauge-container {
+      margin: 20px 0;
+      padding: 16px;
+      background: var(--abe-gray-50);
+      border: 1px solid var(--abe-gray-200);
+      border-radius: var(--abe-radius-sm);
+    }
+
+    #airbnb-break-even-tool .abe-gauge-track {
+      position: relative;
+      height: 20px;
+      background: var(--abe-gray-200);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 12px 0 24px 0;
+    }
+
+    #airbnb-break-even-tool .abe-gauge-fill {
+      height: 100%;
+      background: var(--abe-primary);
+      width: 0%;
+      transition: width 0.3s ease;
+      border-radius: 10px;
+    }
+
+    #airbnb-break-even-tool .abe-gauge-marker {
+      position: absolute;
+      top: -4px;
+      bottom: -4px;
+      width: 3px;
+      background: var(--abe-dark);
+      transform: translateX(-50%);
+    }
+
+    #airbnb-break-even-tool .abe-gauge-marker-label {
+      position: absolute;
+      top: 24px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      color: var(--abe-dark);
+    }
+
+    /* Breakdown Bar Graph */
+    #airbnb-break-even-tool .abe-breakdown-bar {
+      height: 14px;
+      display: flex;
+      border-radius: 7px;
+      overflow: hidden;
+      margin: 10px 0;
+      background: var(--abe-gray-200);
+    }
+
+    #airbnb-break-even-tool .abe-bar-fixed {
+      background: #64748b;
+    }
+    #airbnb-break-even-tool .abe-bar-var {
+      background: #f59e0b;
+    }
+    #airbnb-break-even-tool .abe-bar-profit {
+      background: #10b981;
+    }
+
+    #airbnb-break-even-tool .abe-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.75rem;
+      margin-top: 6px;
+    }
+
+    #airbnb-break-even-tool .abe-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    #airbnb-break-even-tool .abe-legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Scenario Simulation Table */
+    #airbnb-break-even-tool .abe-scenario-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 14px;
+    }
+
+    #airbnb-break-even-tool .abe-scenario-table th,
+    #airbnb-break-even-tool .abe-scenario-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--abe-gray-200);
+      text-align: right;
+    }
+
+    #airbnb-break-even-tool .abe-scenario-table th:first-child,
+    #airbnb-break-even-tool .abe-scenario-table td:first-child {
+      text-align: left;
+      font-weight: 600;
+    }
+
+    #airbnb-break-even-tool .abe-scenario-table th {
+      background: var(--abe-gray-100);
+      color: var(--abe-gray-700);
+    }
+
+    /* Article & SEO Content Sections */
+    #airbnb-break-even-tool .abe-content-block {
+      margin-top: 48px;
+      border-top: 1px solid var(--abe-gray-200);
+      padding-top: 32px;
+    }
+
+    #airbnb-break-even-tool .abe-content-block h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--abe-dark);
+      margin: 28px 0 12px 0;
+    }
+
+    #airbnb-break-even-tool .abe-content-block h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--abe-gray-700);
+      margin: 18px 0 8px 0;
+    }
+
+    #airbnb-break-even-tool .abe-content-block p,
+    #airbnb-break-even-tool .abe-content-block li {
+      font-size: 0.95rem;
+      color: var(--abe-gray-600);
+      line-height: 1.65;
+    }
+
+    #airbnb-break-even-tool .abe-content-block ul,
+    #airbnb-break-even-tool .abe-content-block ol {
+      padding-left: 22px;
+      margin: 10px 0 18px 0;
+    }
+
+    #airbnb-break-even-tool .abe-faq-item {
+      border-bottom: 1px solid var(--abe-gray-200);
+      padding: 14px 0;
+    }
+
+    /* Print Optimization */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #airbnb-break-even-tool,
+      #airbnb-break-even-tool * {
+        visibility: visible;
+      }
+      #airbnb-break-even-tool {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 0;
+      }
+      #airbnb-break-even-tool .abe-btn-row,
+      #airbnb-break-even-tool .abe-disclaimer-bar {
+        display: none !important;
+      }
+    }
+  </style>
+
+  <!-- 1. Single H1 Tag -->
+  <h1 class="abe-main-title">Airbnb Occupancy Break-Even Calculator</h1>
+  <p class="abe-lead-tagline">
+    Determine exactly how many nights your vacation rental must be booked every month to cover mortgage, utilities, cleaning, and platform fees.
+  </p>
+
+  <div class="abe-disclaimer-bar">
+    <span>🔒 100% Client-Side: Your financial inputs stay in your browser. Not affiliated with or endorsed by Airbnb, Inc.</span>
+  </div>
+
+  <!-- 2. Interactive Calculator Application -->
+  <div class="abe-app-grid" role="region" aria-label="Airbnb Break-Even Calculator Tool">
+    <!-- Left Column: Inputs -->
+    <div class="abe-card">
+      <div class="abe-section-header">
+        <h2>1. Booking &amp; Revenue Assumptions</h2>
+        <select id="abeCurrency" style="width: auto; padding: 4px 8px; font-weight: 600;" aria-label="Select Currency">
+          <option value="USD">USD ($)</option>
+          <option value="INR">INR (₹)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="CAD">CAD ($)</option>
+          <option value="AUD">AUD ($)</option>
+        </select>
+      </div>
+
+      <div class="abe-form-group">
+        <label for="abePropertyName">Property Nickname (Optional)</label>
+        <input type="text" id="abePropertyName" placeholder="e.g. Mountain View Villa" maxlength="60" />
+      </div>
+
+      <div class="abe-row-2">
+        <div class="abe-form-group">
+          <label for="abeAvailableNights">Available Nights / Month</label>
+          <input type="number" id="abeAvailableNights" min="1" max="31" value="30" />
+          <div class="abe-help-text">Calendar days open for guest bookings</div>
+        </div>
+        <div class="abe-form-group">
+          <label for="abeExpectedNights">Expected Booked Nights</label>
+          <input type="number" id="abeExpectedNights" min="0" max="31" value="18" />
+          <div class="abe-help-text">Current occupancy forecast</div>
+        </div>
+      </div>
+
+      <div class="abe-row-2">
+        <div class="abe-form-group">
+          <label for="abeNightlyRate">Average Nightly Rate</label>
+          <input type="number" id="abeNightlyRate" min="1" step="0.5" value="160" />
+          <div class="abe-help-text">Base accommodation charge per night</div>
+        </div>
+        <div class="abe-form-group">
+          <label for="abeStayLength">Average Stay Length (Nights)</label>
+          <input type="number" id="abeStayLength" min="1" step="0.5" value="3" />
+          <div class="abe-help-text">Typical guest reservation length</div>
+        </div>
+      </div>
+
+      <div class="abe-row-2">
+        <div class="abe-form-group">
+          <label for="abeCleaningFeeCharged">Guest Cleaning Fee (Per Stay)</label>
+          <input type="number" id="abeCleaningFeeCharged" min="0" step="1" value="75" />
+          <div class="abe-help-text">Cleaning revenue charged to guest</div>
+        </div>
+        <div class="abe-form-group">
+          <label for="abeDesiredProfit">Desired Monthly Profit Target</label>
+          <input type="number" id="abeDesiredProfit" min="0" step="10" value="800" />
+          <div class="abe-help-text">Net profit target above break-even</div>
+        </div>
+      </div>
+
+      <!-- Monthly Fixed Costs Accordion -->
+      <div class="abe-accordion open" id="abeFixedAccordion">
+        <button type="button" class="abe-accordion-btn" id="abeToggleFixed">
+          <span>2. Monthly Fixed Operating Costs</span>
+          <span id="abeFixedTotalBadge" style="font-size: 0.8rem; color: var(--abe-primary); font-weight: 700;">$0.00</span>
+        </button>
+        <div class="abe-accordion-content">
+          <div class="abe-row-2">
+            <div class="abe-form-group">
+              <label for="abeRentMortgage">Rent / Mortgage Payment</label>
+              <input type="number" id="abeRentMortgage" min="0" value="1400" />
+            </div>
+            <div class="abe-form-group">
+              <label for="abeInsurance">Property Insurance</label>
+              <input type="number" id="abeInsurance" min="0" value="120" />
+            </div>
+          </div>
+          <div class="abe-row-2">
+            <div class="abe-form-group">
+              <label for="abeUtilities">Base Utilities (Power/Water)</label>
+              <input type="number" id="abeUtilities" min="0" value="180" />
+            </div>
+            <div class="abe-form-group">
+              <label for="abeInternet">Internet &amp; TV Services</label>
+              <input type="number" id="abeInternet" min="0" value="70" />
+            </div>
+          </div>
+          <div class="abe-row-2">
+            <div class="abe-form-group">
+              <label for="abeHOA">HOA / Condo Association</label>
+              <input type="number" id="abeHOA" min="0" value="50" />
+            </div>
+            <div class="abe-form-group">
+              <label for="abeSoftware">Software &amp; Pricing Tools</label>
+              <input type="number" id="abeSoftware" min="0" value="30" />
+            </div>
+          </div>
+          <div class="abe-row-2">
+            <div class="abe-form-group">
+              <label for="abeFixedManagement">Fixed Property Management</label>
+              <input type="number" id="abeFixedManagement" min="0" value="0" />
+            </div>
+            <div class="abe-form-group">
+              <label for="abeOtherFixed">Other Fixed Expenses</label>
+              <input type="number" id="abeOtherFixed" min="0" value="50" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Variable Costs Accordion -->
+      <div class="abe-accordion" id="abeVarAccordion">
+        <button type="button" class="abe-accordion-btn" id="abeToggleVar">
+          <span>3. Variable Costs &amp; Commissions</span>
+          <span style="font-size: 0.8rem; color: var(--abe-gray-500);">Per Stay &amp; Revenue-Based</span>
+        </button>
+        <div class="abe-accordion-content">
+          <div class="abe-row-3">
+            <div class="abe-form-group">
+              <label for="abeHostCleaningCost">Cleaning Cost / Stay</label>
+              <input type="number" id="abeHostCleaningCost" min="0" value="65" />
+            </div>
+            <div class="abe-form-group">
+              <label for="abeLaundryCost">Laundry / Stay</label>
+              <input type="number" id="abeLaundryCost" min="0" value="10" />
+            </div>
+            <div class="abe-form-group">
+              <label for="abeSuppliesCost">Supplies / Stay</label>
+              <input type="number" id="abeSuppliesCost" min="0" value="10" />
+            </div>
+          </div>
+          <div class="abe-row-3">
+            <div class="abe-form-group">
+              <label for="abePlatformFeePercent">Platform Fee (%)</label>
+              <input type="number" id="abePlatformFeePercent" min="0" max="50" step="0.1" value="3.0" />
+              <div class="abe-help-text">Standard host split: ~3%</div>
+            </div>
+            <div class="abe-form-group">
+              <label for="abeManagementPercent">Mgmt Commission (%)</label>
+              <input type="number" id="abeManagementPercent" min="0" max="60" step="0.5" value="0.0" />
+            </div>
+            <div class="abe-form-group">
+              <label for="abeMaintenanceReserve">Maintenance Res. (%)</label>
+              <input type="number" id="abeMaintenanceReserve" min="0" max="50" step="0.5" value="5.0" />
+            </div>
+          </div>
+          <div class="abe-row-2">
+            <div class="abe-form-group">
+              <label for="abeNightlyVariableCost">Other Variable Cost / Night</label>
+              <input type="number" id="abeNightlyVariableCost" min="0" value="5" />
+            </div>
+            <div class="abe-form-group">
+              <label for="abeStayVariableCost">Extra Variable Cost / Stay</label>
+              <input type="number" id="abeStayVariableCost" min="0" value="0" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="abe-btn-row">
+        <button type="button" class="abe-btn abe-btn-primary" id="abeRecalcBtn">Recalculate</button>
+        <button type="button" class="abe-btn abe-btn-secondary" id="abeResetBtn">Reset Defaults</button>
+        <button type="button" class="abe-btn abe-btn-secondary" id="abeCopyBtn">Copy Summary</button>
+        <button type="button" class="abe-btn abe-btn-secondary" id="abeCsvBtn">Export CSV</button>
+        <button type="button" class="abe-btn abe-btn-secondary" id="abePrintBtn">Print</button>
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive Results Dashboard -->
+    <div class="abe-card" aria-live="polite">
+      <div class="abe-section-header">
+        <h2>Break-Even Analysis &amp; Forecast</h2>
+        <span id="abeStatusTag" style="font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: var(--abe-success-bg); color: var(--abe-success);">EVALUATING</span>
+      </div>
+
+      <!-- Diagnostic Status Alert -->
+      <div id="abeAlertBox" class="abe-alert-banner abe-alert-success">
+        <div id="abeAlertIcon" style="font-size: 1.25rem;">✓</div>
+        <div>
+          <strong id="abeAlertHeading">Operating at a Profit</strong>
+          <div id="abeAlertMsg" style="font-size: 0.85rem; margin-top: 2px;">
+            Your forecast covers all fixed and variable expenses with an occupancy buffer.
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Figures Grid -->
+      <div class="abe-metrics-grid">
+        <div class="abe-metric-card">
+          <div class="abe-metric-label">Break-Even Occupancy</div>
+          <div class="abe-metric-val" id="abeBreakEvenPct">0.0%</div>
+          <div class="abe-metric-sub" id="abeBreakEvenNightsText">0 nights needed</div>
+        </div>
+
+        <div class="abe-metric-card">
+          <div class="abe-metric-label">Net Operating Result</div>
+          <div class="abe-metric-val" id="abeNetProfitVal">$0.00</div>
+          <div class="abe-metric-sub" id="abeNetProfitSub">Based on expected occupancy</div>
+        </div>
+
+        <div class="abe-metric-card">
+          <div class="abe-metric-label">Total Monthly Revenue</div>
+          <div class="abe-metric-val" id="abeTotalRevVal">$0.00</div>
+          <div class="abe-metric-sub" id="abeRevPanVal">RevPAN: $0.00 / night</div>
+        </div>
+
+        <div class="abe-metric-card">
+          <div class="abe-metric-label">Target Profit Nights</div>
+          <div class="abe-metric-val" id="abeTargetNightsVal">0.0</div>
+          <div class="abe-metric-sub" id="abeTargetPctVal">0.0% occupancy target</div>
+        </div>
+      </div>
+
+      <!-- Visual 1: Dual Occupancy Gauge -->
+      <div class="abe-gauge-container">
+        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700;">
+          <span>Occupancy Gauge (Expected: <span id="abeGaugeExpectedText">0%</span>)</span>
+          <span id="abeOccupancyGapText" style="color: var(--abe-primary);">Gap: 0 nights</span>
+        </div>
+        <div class="abe-gauge-track">
+          <div class="abe-gauge-fill" id="abeGaugeFill"></div>
+          <div class="abe-gauge-marker" id="abeGaugeBreakEvenMarker">
+            <span class="abe-gauge-marker-label">Break-Even</span>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--abe-gray-500);">
+          <span>0%</span>
+          <span>50%</span>
+          <span>100%</span>
+        </div>
+      </div>
+
+      <!-- Visual 2: Revenue vs Expenses Breakdown -->
+      <div style="margin-top: 20px;">
+        <label>Monthly Financial Allocation</label>
+        <div class="abe-breakdown-bar">
+          <div class="abe-bar-fixed" id="abeBarFixed" style="width: 50%;"></div>
+          <div class="abe-bar-var" id="abeBarVar" style="width: 25%;"></div>
+          <div class="abe-bar-profit" id="abeBarProfit" style="width: 25%;"></div>
+        </div>
+        <div class="abe-legend">
+          <div class="abe-legend-item"><span class="abe-legend-dot" style="background:#64748b;"></span> Fixed: <strong id="abeLegFixed">$0</strong></div>
+          <div class="abe-legend-item"><span class="abe-legend-dot" style="background:#f59e0b;"></span> Variable: <strong id="abeLegVar">$0</strong></div>
+          <div class="abe-legend-item"><span class="abe-legend-dot" style="background:#10b981;"></span> Net Cash Flow: <strong id="abeLegProfit">$0</strong></div>
+        </div>
+      </div>
+
+      <!-- Visual 3: Scenario Simulation Matrix -->
+      <div style="margin-top: 24px;">
+        <label>Scenario Stress-Test</label>
+        <table class="abe-scenario-table">
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th>Occupancy</th>
+              <th>Revenue</th>
+              <th>Net Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Conservative (-20%)</td>
+              <td id="abeScenLowOcc">0%</td>
+              <td id="abeScenLowRev">$0</td>
+              <td id="abeScenLowNet">$0</td>
+            </tr>
+            <tr style="background: var(--abe-primary-light);">
+              <td><strong>Base Case</strong></td>
+              <td id="abeScenBaseOcc"><strong>0%</strong></td>
+              <td id="abeScenBaseRev"><strong>$0</strong></td>
+              <td id="abeScenBaseNet"><strong>$0</strong></td>
+            </tr>
+            <tr>
+              <td>Optimistic (+20%)</td>
+              <td id="abeScenHighOcc">0%</td>
+              <td id="abeScenHighRev">$0</td>
+              <td id="abeScenHighNet">$0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Informational & Technical SEO Content -->
+  <div class="abe-content-block">
+    <h2>Understanding Short-Term Rental Break-Even Analysis</h2>
+    <p>
+      An <strong>Airbnb occupancy break-even calculator</strong> enables property hosts and real estate investors to identify the minimum operational threshold of a vacation rental. Unlike traditional long-term rentals with static monthly cash inflows, short-term rentals experience fluctuating occupancy, seasonal nightly pricing, variable laundry expenses, and transaction fees.
+    </p>
+
+    <h2>Key Features of This Calculator</h2>
+    <ul>
+      <li><strong>Precision Contribution Margin:</strong> Deducts guest cleaning revenue differentials and platform percentages to compute true net contribution per booked night.</li>
+      <li><strong>Dual-Expense Architecture:</strong> Categorizes fixed overhead (mortgages, HOA, subscriptions) independently from per-stay operational turnover costs.</li>
+      <li><strong>Dynamic Profit Target Modeling:</strong> Calculates the exact booked nights required to achieve your target financial return above operational break-even.</li>
+      <li><strong>RevPAN Analytics:</strong> Measures <em>Revenue Per Available Night</em> across your full monthly calendar availability.</li>
+      <li><strong>Scenario Stress-Testing:</strong> Instantaneous conservative vs. optimistic performance projections.</li>
+      <li><strong>Local Privacy &amp; Offline Portability:</strong> 100% in-browser calculations; zero tracking or server-side transmission.</li>
+    </ul>
+
+    <h2>How to Use the Calculator</h2>
+    <ol>
+      <li><strong>Select Currency:</strong> Choose your functional operating currency (USD, INR, EUR, GBP, CAD, or AUD).</li>
+      <li><strong>Set Calendar Capacity:</strong> Specify available nights (typically 30 or 31) and current expected bookings.</li>
+      <li><strong>Enter Pricing &amp; Length of Stay:</strong> Input your average nightly rate and average guest duration (which governs turnover frequency).</li>
+      <li><strong>Itemize Fixed Costs:</strong> Enter recurring monthly charges including rent, mortgages, insurance, utilities, and software.</li>
+      <li><strong>Configure Turnover &amp; Percentage Fees:</strong> Itemize cleaning costs, host platform fees (typically 3%), management commissions, and maintenance allocations.</li>
+      <li><strong>Analyze the Break-Even Gauge:</strong> Review the required break-even occupancy, night buffer, and stress-test matrix.</li>
+    </ol>
+
+    <h2>Practical Use Cases</h2>
+    <ul>
+      <li><strong>Airbnb Rental Arbitrage Evaluation:</strong> Determine if a prospective lease allows sufficient margin between master lease rent and realistic market occupancy.</li>
+      <li><strong>Off-Season Pricing Adjustments:</strong> Verify how low you can discount nightly rates during low-demand months without generating operating deficits.</li>
+      <li><strong>Property Management Proposals:</strong> Present objective break-even projections to prospective property co-hosts and homeowner clients.</li>
+      <li><strong>Short-Term Loan Cash-Flow Verification:</strong> Calculate mortgage coverage stability under fluctuating booking patterns.</li>
+    </ul>
+
+    <h2>Calculation Methodology &amp; Mathematical Formulas</h2>
+    <p>
+      The core mathematical engine models reservations as discrete booking events driven by average length of stay ($L$).
+    </p>
+    <ul>
+      <li><strong>Estimated Reservations ($S$):</strong> $S = \frac{\text{Booked Nights } (N)}{L}$</li>
+      <li><strong>Total Revenue:</strong> $(N \times \text{Nightly Rate } R) + (S \times \text{Guest Cleaning Fee } G)$</li>
+      <li><strong>Net Contribution Per Booked Night ($C_n$):</strong>
+        <br />
+        $$C_n = R \times (1 - p) + \frac{G - K}{L} - V$$
+        <em>Where $p$ is the sum of percentage-based fees (platform, management, reserves), $K$ is the sum of turnover expenses (cleaning, laundry, supplies), and $V$ represents nightly variable costs.</em>
+      </li>
+      <li><strong>Break-Even Nights ($N_{be}$):</strong>
+        <br />
+        $$N_{be} = \frac{\text{Total Fixed Costs } (F)}{C_n}$$
+      </li>
+      <li><strong>Break-Even Occupancy (%):</strong>
+        <br />
+        $$\text{Occupancy}_{be} = \left(\frac{N_{be}}{\text{Available Nights } A}\right) \times 100$$
+      </li>
+      <li><strong>Target Profit Nights ($N_{target}$):</strong>
+        <br />
+        $$N_{target} = \frac{F + \text{Desired Profit } T}{C_n}$$
+      </li>
+    </ul>
+
+    <h2>Assumptions and Operational Limitations</h2>
+    <p>
+      This model is an executive planning utility. Keep in mind:
+    </p>
+    <ul>
+      <li><strong>Uniformity Assumption:</strong> All calculations assume consistent stay lengths and nightly rates across the month. Actual reservations feature mixed durations.</li>
+      <li><strong>Cash Flow vs. Accounting Profit:</strong> Entering mortgage payments models cash-flow break-even, not taxable net profit (as mortgage principal is not tax-deductible).</li>
+      <li><strong>Lodging &amp; Transient Taxes:</strong> Local occupancy taxes collected directly by platforms on behalf of municipalities are excluded from gross revenue.</li>
+      <li><strong>No Direct MLS/Airbnb Connection:</strong> Projections depend on user assumptions rather than live algorithm-driven algorithmic demand data.</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <div class="abe-faq-item">
+      <h3>1. What is an Airbnb occupancy break-even calculator?</h3>
+      <p>It is a specialized financial model that computes the precise percentage of calendar days your short-term rental property must be booked each month to cover total fixed and variable operating costs.</p>
+    </div>
+
+    <div class="abe-faq-item">
+      <h3>2. How do I calculate Airbnb break-even occupancy?</h3>
+      <p>Divide your total fixed monthly overhead by your net contribution per booked night (nightly accommodation revenue minus commissions, nightly operating costs, and per-stay turnover deficits). Then divide the resulting night count by total available booking days.</p>
+    </div>
+
+    <div class="abe-faq-item">
+      <h3>3. How many nights must my Airbnb be booked to break even?</h3>
+      <p>The exact nights vary based on your overhead. For example, if fixed costs total $2,000/month and your net nightly contribution is $100, you require exactly 20 booked nights to reach financial break-even.</p>
+    </div>
+
+    <div class="abe-faq-item">
+      <h3>4. Does this Airbnb calculator include cleaning fees?</h3>
+      <p>Yes. It distinguishes between the cleaning fee collected from guests (revenue) and the actual turnover cleaning expense paid to housekeeping contractors (variable cost).</p>
+    </div>
+
+    <div class="abe-faq-item">
+      <h3>5. Can I include mortgage or rent payments?</h3>
+      <p>Yes. Enter your lease or debt service under Fixed Operating Costs. The resulting output will reflect cash-flow break-even after debt service.</p>
+    </div>
+
+    <div class="abe-faq-item">
+      <h3>6. Is Airbnb occupancy the same as profitability?</h3>
+      <p>No. A property can boast 90% occupancy and still suffer net losses if discounted nightly rates fail to offset per-stay laundry, utility spikes, and management commissions.</p>
+    </div>
+
+    <div class="abe-faq-item">
+      <h3>7. Can I use this calculator for vacation rentals and short-term rentals?</h3>
+      <p>Yes. The mathematical formulas apply to Vrbo, Booking.com, direct-booking sites, and hybrid mid-term rentals.</p>
+    </div>
+
+    <div class="abe-faq-item">
+      <h3>8. Does the calculator use real Airbnb market data?</h3>
+      <p>No. Calculations are derived strictly from your custom financial inputs and operational assumptions. It does not scrape external short-term rental market databases.</p>
+    </div>
+
+    <div class="abe-faq-item">
+      <h3>9. Is this Airbnb break-even calculator free?</h3>
+      <p>Yes. The tool is 100% free with no registration, subscription barriers, or hidden server uploads.</p>
+    </div>
+
+    <div class="abe-faq-item">
+      <h3>10. Are the results guaranteed to match my actual earnings?</h3>
+      <p>No. Projections serve as an analytical benchmark. Variable seasonality, booking cancellations, emergency maintenance, and local regulations will alter real-world performance.</p>
+    </div>
+  </div>
+
+  <!-- 4. Client-Side Script Engine -->
+  <script>
+    (function () {
+      "use strict";
+
+      var airbnbBE = {
+        dom: {},
+
+        init: function () {
+          this.cacheDom();
+          this.bindEvents();
+          this.calculate();
+        },
+
+        cacheDom: function () {
+          var root = document.getElementById("airbnb-break-even-tool");
+          if (!root) return;
+
+          this.dom.root = root;
+          this.dom.currency = root.querySelector("#abeCurrency");
+          this.dom.propertyName = root.querySelector("#abePropertyName");
+          this.dom.availableNights = root.querySelector("#abeAvailableNights");
+          this.dom.expectedNights = root.querySelector("#abeExpectedNights");
+          this.dom.nightlyRate = root.querySelector("#abeNightlyRate");
+          this.dom.stayLength = root.querySelector("#abeStayLength");
+          this.dom.cleaningFeeCharged = root.querySelector("#abeCleaningFeeCharged");
+          this.dom.desiredProfit = root.querySelector("#abeDesiredProfit");
+
+          // Fixed costs
+          this.dom.rentMortgage = root.querySelector("#abeRentMortgage");
+          this.dom.insurance = root.querySelector("#abeInsurance");
+          this.dom.utilities = root.querySelector("#abeUtilities");
+          this.dom.internet = root.querySelector("#abeInternet");
+          this.dom.hoa = root.querySelector("#abeHOA");
+          this.dom.software = root.querySelector("#abeSoftware");
+          this.dom.fixedManagement = root.querySelector("#abeFixedManagement");
+          this.dom.otherFixed = root.querySelector("#abeOtherFixed");
+          this.dom.fixedTotalBadge = root.querySelector("#abeFixedTotalBadge");
+
+          // Variable costs
+          this.dom.hostCleaningCost = root.querySelector("#abeHostCleaningCost");
+          this.dom.laundryCost = root.querySelector("#abeLaundryCost");
+          this.dom.suppliesCost = root.querySelector("#abeSuppliesCost");
+          this.dom.platformFeePercent = root.querySelector("#abePlatformFeePercent");
+          this.dom.managementPercent = root.querySelector("#abeManagementPercent");
+          this.dom.maintenanceReserve = root.querySelector("#abeMaintenanceReserve");
+          this.dom.nightlyVariableCost = root.querySelector("#abeNightlyVariableCost");
+          this.dom.stayVariableCost = root.querySelector("#abeStayVariableCost");
+
+          // Accordions
+          this.dom.toggleFixed = root.querySelector("#abeToggleFixed");
+          this.dom.toggleVar = root.querySelector("#abeToggleVar");
+          this.dom.fixedAccordion = root.querySelector("#abeFixedAccordion");
+          this.dom.varAccordion = root.querySelector("#abeVarAccordion");
+
+          // Buttons
+          this.dom.recalcBtn = root.querySelector("#abeRecalcBtn");
+          this.dom.resetBtn = root.querySelector("#abeResetBtn");
+          this.dom.copyBtn = root.querySelector("#abeCopyBtn");
+          this.dom.csvBtn = root.querySelector("#abeCsvBtn");
+          this.dom.printBtn = root.querySelector("#abePrintBtn");
+
+          // Outputs
+          this.dom.statusTag = root.querySelector("#abeStatusTag");
+          this.dom.alertBox = root.querySelector("#abeAlertBox");
+          this.dom.alertIcon = root.querySelector("#abeAlertIcon");
+          this.dom.alertHeading = root.querySelector("#abeAlertHeading");
+          this.dom.alertMsg = root.querySelector("#abeAlertMsg");
+
+          this.dom.breakEvenPct = root.querySelector("#abeBreakEvenPct");
+          this.dom.breakEvenNightsText = root.querySelector("#abeBreakEvenNightsText");
+          this.dom.netProfitVal = root.querySelector("#abeNetProfitVal");
+          this.dom.netProfitSub = root.querySelector("#abeNetProfitSub");
+          this.dom.totalRevVal = root.querySelector("#abeTotalRevVal");
+          this.dom.revPanVal = root.querySelector("#abeRevPanVal");
+          this.dom.targetNightsVal = root.querySelector("#abeTargetNightsVal");
+          this.dom.targetPctVal = root.querySelector("#abeTargetPctVal");
+
+          this.dom.gaugeFill = root.querySelector("#abeGaugeFill");
+          this.dom.gaugeBreakEvenMarker = root.querySelector("#abeGaugeBreakEvenMarker");
+          this.dom.gaugeExpectedText = root.querySelector("#abeGaugeExpectedText");
+          this.dom.occupancyGapText = root.querySelector("#abeOccupancyGapText");
+
+          this.dom.barFixed = root.querySelector("#abeBarFixed");
+          this.dom.barVar = root.querySelector("#abeBarVar");
+          this.dom.barProfit = root.querySelector("#abeBarProfit");
+          this.dom.legFixed = root.querySelector("#abeLegFixed");
+          this.dom.legVar = root.querySelector("#abeLegVar");
+          this.dom.legProfit = root.querySelector("#abeLegProfit");
+
+          // Scenario elements
+          this.dom.scenLowOcc = root.querySelector("#abeScenLowOcc");
+          this.dom.scenLowRev = root.querySelector("#abeScenLowRev");
+          this.dom.scenLowNet = root.querySelector("#abeScenLowNet");
+          this.dom.scenBaseOcc = root.querySelector("#abeScenBaseOcc");
+          this.dom.scenBaseRev = root.querySelector("#abeScenBaseRev");
+          this.dom.scenBaseNet = root.querySelector("#abeScenBaseNet");
+          this.dom.scenHighOcc = root.querySelector("#abeScenHighOcc");
+          this.dom.scenHighRev = root.querySelector("#abeScenHighRev");
+          this.dom.scenHighNet = root.querySelector("#abeScenHighNet");
+        },
+
+        bindEvents: function () {
+          var self = this;
+          var inputs = this.dom.root.querySelectorAll("input, select");
+
+          inputs.forEach(function (el) {
+            el.addEventListener("input", function () {
+              self.calculate();
+            });
+            el.addEventListener("change", function () {
+              self.calculate();
+            });
+          });
+
+          this.dom.toggleFixed.addEventListener("click", function () {
+            self.dom.fixedAccordion.classList.toggle("open");
+          });
+
+          this.dom.toggleVar.addEventListener("click", function () {
+            self.dom.varAccordion.classList.toggle("open");
+          });
+
+          this.dom.recalcBtn.addEventListener("click", function () {
+            self.calculate();
+          });
+
+          this.dom.resetBtn.addEventListener("click", function () {
+            self.resetDefaults();
+          });
+
+          this.dom.copyBtn.addEventListener("click", function () {
+            self.copySummary();
+          });
+
+          this.dom.csvBtn.addEventListener("click", function () {
+            self.exportCSV();
+          });
+
+          this.dom.printBtn.addEventListener("click", function () {
+            window.print();
+          });
+        },
+
+        parseVal: function (elem, fallback) {
+          var val = parseFloat(elem.value);
+          return isNaN(val) ? (fallback || 0) : val;
+        },
+
+        formatMoney: function (amount) {
+          var curr = this.dom.currency.value;
+          try {
+            return new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: curr,
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+            }).format(amount);
+          } catch (e) {
+            return "$" + Math.round(amount).toLocaleString();
+          }
+        },
+
+        calculate: function () {
+          var A = Math.max(1, this.parseVal(this.dom.availableNights, 30));
+          var N = Math.min(A, Math.max(0, this.parseVal(this.dom.expectedNights, 0)));
+          var R = Math.max(0, this.parseVal(this.dom.nightlyRate, 0));
+          var L = Math.max(0.5, this.parseVal(this.dom.stayLength, 3));
+          var G = Math.max(0, this.parseVal(this.dom.cleaningFeeCharged, 0));
+          var T = Math.max(0, this.parseVal(this.dom.desiredProfit, 0));
+
+          // Sum Fixed Costs
+          var F =
+            this.parseVal(this.dom.rentMortgage) +
+            this.parseVal(this.dom.insurance) +
+            this.parseVal(this.dom.utilities) +
+            this.parseVal(this.dom.internet) +
+            this.parseVal(this.dom.hoa) +
+            this.parseVal(this.dom.software) +
+            this.parseVal(this.dom.fixedManagement) +
+            this.parseVal(this.dom.otherFixed);
+
+          this.dom.fixedTotalBadge.textContent = this.formatMoney(F) + " / mo";
+
+          // Sum Variable Elements
+          var K =
+            this.parseVal(this.dom.hostCleaningCost) +
+            this.parseVal(this.dom.laundryCost) +
+            this.parseVal(this.dom.suppliesCost) +
+            this.parseVal(this.dom.stayVariableCost);
+
+          var p =
+            (this.parseVal(this.dom.platformFeePercent) +
+              this.parseVal(this.dom.managementPercent) +
+              this.parseVal(this.dom.maintenanceReserve)) /
+            100;
+
+          var V = this.parseVal(this.dom.nightlyVariableCost);
+
+          // 1. Contribution per booked night: Cn = R*(1-p) + (G - K)/L - V
+          var netTurnoverPerNight = (G - K) / L;
+          var contributionPerNight = R * (1 - p) + netTurnoverPerNight - V;
+
+          // 2. Expected Performance
+          var expectedStays = N / L;
+          var accRevenue = N * R;
+          var cleanRevenue = expectedStays * G;
+          var totalRevenue = accRevenue + cleanRevenue;
+
+          var revenueBasedExp = accRevenue * p;
+          var stayBasedExp = expectedStays * K;
+          var nightlyExp = N * V;
+          var totalVarExpenses = revenueBasedExp + stayBasedExp + nightlyExp;
+          var netOperatingProfit = totalRevenue - F - totalVarExpenses;
+
+          var expectedOccupancyPct = (N / A) * 100;
+          var revPAN = totalRevenue / A;
+
+          // 3. Break-Even Calculations
+          var breakEvenNights = 0;
+          var breakEvenPct = 0;
+          var targetNights = 0;
+          var targetPct = 0;
+          var isFeasible = true;
+
+          if (contributionPerNight <= 0) {
+            isFeasible = false;
+          } else {
+            breakEvenNights = F / contributionPerNight;
+            breakEvenPct = (breakEvenNights / A) * 100;
+
+            targetNights = (F + T) / contributionPerNight;
+            targetPct = (targetNights / A) * 100;
+          }
+
+          // Render Outputs
+          this.renderResults({
+            A: A,
+            N: N,
+            F: F,
+            totalRevenue: totalRevenue,
+            totalVarExpenses: totalVarExpenses,
+            netOperatingProfit: netOperatingProfit,
+            expectedOccupancyPct: expectedOccupancyPct,
+            revPAN: revPAN,
+            breakEvenNights: breakEvenNights,
+            breakEvenPct: breakEvenPct,
+            targetNights: targetNights,
+            targetPct: targetPct,
+            contributionPerNight: contributionPerNight,
+            isFeasible: isFeasible,
+            R: R,
+            L: L,
+            G: G,
+            K: K,
+            p: p,
+            V: V
+          });
+        },
+
+        renderResults: function (data) {
+          var self = this;
+
+          this.dom.totalRevVal.textContent = this.formatMoney(data.totalRevenue);
+          this.dom.revPanVal.textContent = "RevPAN: " + this.formatMoney(data.revPAN) + " / night";
+          this.dom.netProfitVal.textContent = this.formatMoney(data.netOperatingProfit);
+
+          if (data.netOperatingProfit >= 0) {
+            this.dom.netProfitVal.style.color = "var(--abe-success)";
+            this.dom.netProfitSub.textContent = "Profitable cash-flow result";
+          } else {
+            this.dom.netProfitVal.style.color = "var(--abe-danger)";
+            this.dom.netProfitSub.textContent = "Projected operating loss";
+          }
+
+          if (!data.isFeasible) {
+            this.dom.breakEvenPct.textContent = "N/A";
+            this.dom.breakEvenNightsText.textContent = "Negative unit contribution";
+            this.dom.targetNightsVal.textContent = "Infeasible";
+            this.dom.targetPctVal.textContent = "Contribution ≤ 0";
+
+            this.dom.statusTag.textContent = "DEFICIT PRICING";
+            this.dom.statusTag.style.background = "var(--abe-danger-bg)";
+            this.dom.statusTag.style.color = "var(--abe-danger)";
+
+            this.dom.alertBox.className = "abe-alert-banner abe-alert-danger";
+            this.dom.alertIcon.textContent = "⚠";
+            this.dom.alertHeading.textContent = "Critical Pricing Deficit";
+            this.dom.alertMsg.textContent =
+              "Your nightly rate and cleaning fee do not cover variable operating costs and platform fees. Every booked night increases losses. Raise rates or reduce turnover costs.";
+            return;
+          }
+
+          this.dom.breakEvenPct.textContent = data.breakEvenPct.toFixed(1) + "%";
+          this.dom.breakEvenNightsText.textContent = data.breakEvenNights.toFixed(1) + " nights needed";
+
+          this.dom.targetNightsVal.textContent = data.targetNights.toFixed(1);
+          this.dom.targetPctVal.textContent = data.targetPct.toFixed(1) + "% occupancy target";
+
+          // Alert Message States
+          var nightsDelta = data.N - data.breakEvenNights;
+
+          if (data.breakEvenNights > data.A) {
+            this.dom.statusTag.textContent = "INFEASIBLE BREAK-EVEN";
+            this.dom.statusTag.style.background = "var(--abe-danger-bg)";
+            this.dom.statusTag.style.color = "var(--abe-danger)";
+
+            this.dom.alertBox.className = "abe-alert-banner abe-alert-danger";
+            this.dom.alertIcon.textContent = "✕";
+            this.dom.alertHeading.textContent = "Break-Even Exceeds Monthly Availability";
+            this.dom.alertMsg.textContent =
+              "You need " +
+              data.breakEvenNights.toFixed(1) +
+              " booked nights to break even, but only " +
+              data.A +
+              " nights are available. Reduce fixed overhead or raise nightly pricing.";
+          } else if (nightsDelta >= 0) {
+            this.dom.statusTag.textContent = "PROFITABLE";
+            this.dom.statusTag.style.background = "var(--abe-success-bg)";
+            this.dom.statusTag.style.color = "var(--abe-success)";
+
+            this.dom.alertBox.className = "abe-alert-banner abe-alert-success";
+            this.dom.alertIcon.textContent = "✓";
+            this.dom.alertHeading.textContent = "Above Break-Even Threshold";
+            this.dom.alertMsg.textContent =
+              "You have an operational buffer of " +
+              nightsDelta.toFixed(1) +
+              " nights (" +
+              (data.expectedOccupancyPct - data.breakEvenPct).toFixed(1) +
+              "%). Costs are covered.";
+          } else {
+            this.dom.statusTag.textContent = "OCCUPANCY DEFICIT";
+            this.dom.statusTag.style.background = "var(--abe-warning-bg)";
+            this.dom.statusTag.style.color = "var(--abe-warning)";
+
+            this.dom.alertBox.className = "abe-alert-banner abe-alert-warning";
+            this.dom.alertIcon.textContent = "!";
+            this.dom.alertHeading.textContent = "Below Break-Even";
+            this.dom.alertMsg.textContent =
+              "You need " +
+              Math.abs(nightsDelta).toFixed(1) +
+              " additional booked nights (" +
+              Math.abs(data.expectedOccupancyPct - data.breakEvenPct).toFixed(1) +
+              "% occupancy) to cover monthly expenses.";
+          }
+
+          // Visual Gauge Update
+          var fillPct = Math.min(100, Math.max(0, data.expectedOccupancyPct));
+          var markerPct = Math.min(100, Math.max(0, data.breakEvenPct));
+
+          this.dom.gaugeFill.style.width = fillPct + "%";
+          this.dom.gaugeBreakEvenMarker.style.left = markerPct + "%";
+          this.dom.gaugeExpectedText.textContent = data.expectedOccupancyPct.toFixed(1) + "%";
+
+          if (nightsDelta >= 0) {
+            this.dom.occupancyGapText.textContent = "Buffer: +" + nightsDelta.toFixed(1) + " nights";
+            this.dom.occupancyGapText.style.color = "var(--abe-success)";
+          } else {
+            this.dom.occupancyGapText.textContent = "Gap: -" + Math.abs(nightsDelta).toFixed(1) + " nights";
+            this.dom.occupancyGapText.style.color = "var(--abe-danger)";
+          }
+
+          // Visual Financial Breakdown Bar
+          var grandTotal = data.F + data.totalVarExpenses + Math.max(0, data.netOperatingProfit);
+          if (grandTotal > 0) {
+            var fWidth = (data.F / grandTotal) * 100;
+            var vWidth = (data.totalVarExpenses / grandTotal) * 100;
+            var pWidth = (Math.max(0, data.netOperatingProfit) / grandTotal) * 100;
+
+            this.dom.barFixed.style.width = fWidth + "%";
+            this.dom.barVar.style.width = vWidth + "%";
+            this.dom.barProfit.style.width = pWidth + "%";
+          }
+
+          this.dom.legFixed.textContent = this.formatMoney(data.F);
+          this.dom.legVar.textContent = this.formatMoney(data.totalVarExpenses);
+          this.dom.legProfit.textContent = this.formatMoney(data.netOperatingProfit);
+
+          // Stress-Test Scenarios
+          this.renderScenario(
+            Math.max(0, data.N * 0.8),
+            data,
+            this.dom.scenLowOcc,
+            this.dom.scenLowRev,
+            this.dom.scenLowNet
+          );
+          this.renderScenario(data.N, data, this.dom.scenBaseOcc, this.dom.scenBaseRev, this.dom.scenBaseNet);
+          this.renderScenario(
+            Math.min(data.A, data.N * 1.2),
+            data,
+            this.dom.scenHighOcc,
+            this.dom.scenHighRev,
+            this.dom.scenHighNet
+          );
+        },
+
+        renderScenario: function (nights, data, occElem, revElem, netElem) {
+          var occ = (nights / data.A) * 100;
+          var stays = nights / data.L;
+          var rev = nights * data.R + stays * data.G;
+          var exp = nights * data.R * data.p + stays * data.K + nights * data.V;
+          var net = rev - data.F - exp;
+
+          occElem.textContent = occ.toFixed(0) + "% (" + nights.toFixed(1) + "n)";
+          revElem.textContent = this.formatMoney(rev);
+          netElem.textContent = this.formatMoney(net);
+
+          if (net >= 0) {
+            netElem.style.color = "var(--abe-success)";
+          } else {
+            netElem.style.color = "var(--abe-danger)";
+          }
+        },
+
+        resetDefaults: function () {
+          this.dom.availableNights.value = 30;
+          this.dom.expectedNights.value = 18;
+          this.dom.nightlyRate.value = 160;
+          this.dom.stayLength.value = 3;
+          this.dom.cleaningFeeCharged.value = 75;
+          this.dom.desiredProfit.value = 800;
+
+          this.dom.rentMortgage.value = 1400;
+          this.dom.insurance.value = 120;
+          this.dom.utilities.value = 180;
+          this.dom.internet.value = 70;
+          this.dom.hoa.value = 50;
+          this.dom.software.value = 30;
+          this.dom.fixedManagement.value = 0;
+          this.dom.otherFixed.value = 50;
+
+          this.dom.hostCleaningCost.value = 65;
+          this.dom.laundryCost.value = 10;
+          this.dom.suppliesCost.value = 10;
+          this.dom.platformFeePercent.value = 3.0;
+          this.dom.managementPercent.value = 0.0;
+          this.dom.maintenanceReserve.value = 5.0;
+          this.dom.nightlyVariableCost.value = 5;
+          this.dom.stayVariableCost.value = 0;
+
+          this.calculate();
+        },
+
+        copySummary: function () {
+          var text =
+            "Airbnb Break-Even Analysis (" +
+            (this.dom.propertyName.value || "My Property") +
+            ")\n" +
+            "------------------------------------\n" +
+            "Break-Even Occupancy: " +
+            this.dom.breakEvenPct.textContent +
+            " (" +
+            this.dom.breakEvenNightsText.textContent +
+            ")\n" +
+            "Expected Monthly Revenue: " +
+            this.dom.totalRevVal.textContent +
+            "\n" +
+            "Projected Net Cash Flow: " +
+            this.dom.netProfitVal.textContent +
+            "\n" +
+            "Revenue Per Available Night: " +
+            this.dom.revPanVal.textContent +
+            "\n" +
+            "Profit Target Nights: " +
+            this.dom.targetNightsVal.textContent +
+            " nights\n" +
+            "Status: " +
+            this.dom.alertHeading.textContent +
+            "\n";
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () {
+              alert("Summary copied to clipboard!");
+            });
+          } else {
+            prompt("Copy summary manually:", text);
+          }
+        },
+
+        exportCSV: function () {
+          var prop = this.dom.propertyName.value || "airbnb_property";
+          var csv =
+            "Metric,Value\n" +
+            "Property," +
+            '"' +
+            prop.replace(/"/g, '""') +
+            '"' +
+            "\n" +
+            "Currency," +
+            this.dom.currency.value +
+            "\n" +
+            "Available Nights," +
+            this.dom.availableNights.value +
+            "\n" +
+            "Expected Booked Nights," +
+            this.dom.expectedNights.value +
+            "\n" +
+            "Average Nightly Rate," +
+            this.dom.nightlyRate.value +
+            "\n" +
+            "Break-Even Occupancy Pct," +
+            this.dom.breakEvenPct.textContent +
+            "\n" +
+            "Break-Even Nights," +
+            this.dom.breakEvenNightsText.textContent +
+            "\n" +
+            "Total Monthly Revenue," +
+            '"' +
+            this.dom.totalRevVal.textContent +
+            '"' +
+            "\n" +
+            "Net Operating Profit," +
+            '"' +
+            this.dom.netProfitVal.textContent +
+            '"' +
+            "\n";
+
+          var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          var link = document.createElement("a");
+          var url = URL.createObjectURL(blob);
+          link.setAttribute("href", url);
+          link.setAttribute("download", prop.toLowerCase().replace(/[^a-z0-9]/g, "_") + "_breakeven.csv");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function () {
+          airbnbBE.init();
+        });
+      } else {
+        airbnbBE.init();
+      }
+    })();
+  </script>
+</div>
+
+<!-- 5. Search Engine Structured Data (JSON-LD) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://my-tool-app.pages.dev/airbnb-occupancy-break-even-calculator.html#webapp",
+      "url": "https://my-tool-app.pages.dev/airbnb-occupancy-break-even-calculator.html",
+      "name": "Free Airbnb Occupancy Break-Even Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Runs 100% locally in all modern browsers.",
+      "description": "Calculate Airbnb break-even occupancy, required booked nights, operating costs, and monthly cash flow with zero server uploads.",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://my-tool-app.pages.dev/airbnb-occupancy-break-even-calculator.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is an Airbnb occupancy break-even calculator?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An Airbnb occupancy break-even calculator is an analytical tool that calculates the exact percentage of monthly calendar nights a short-term rental must be booked to cover all fixed and variable expenses."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate Airbnb break-even occupancy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Divide total fixed overhead by the net contribution margin per booked night (nightly accommodation revenue minus platform commissions, variable turnover costs, and cleaning deficits), then divide by total available nights."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many nights must my Airbnb be booked to break even?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The required nights depend on your fixed overhead and unit margin. If fixed costs are $2,000/month and your net nightly contribution is $100, you need exactly 20 booked nights to break even."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this Airbnb calculator include cleaning fees?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. It separates the cleaning fee collected from guests as revenue from the actual housekeeping and laundry expenses paid by the host."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I include mortgage or rent payments?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. You can enter mortgage or lease amounts under Fixed Costs to calculate your cash-flow break-even."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Airbnb occupancy the same as profitability?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. High occupancy at deeply discounted nightly rates can still result in operational losses due to turnover costs, utilities, and platform commissions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use this calculator for vacation rentals and short-term rentals?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The underlying contribution margin formulas work for Vrbo, direct booking websites, and boutique short-term rental properties."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the calculator use real Airbnb market data?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The calculator operates exclusively on your user-defined operational inputs and cost assumptions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this Airbnb break-even calculator free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. This calculator is completely free with no registration or payment required."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are the results guaranteed to match my actual earnings?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Real-world results will vary due to booking seasonality, unexpected repairs, cancellation policies, and local tax regulations."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
