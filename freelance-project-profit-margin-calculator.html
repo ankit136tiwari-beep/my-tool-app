@@ -1,0 +1,1646 @@
+<!-- ======================================================== -->
+<!-- FREELANCE PROJECT PROFIT MARGIN CALCULATOR - FULL SUITE  -->
+<!-- Compatible with Google Blogger & Static Web Applications  -->
+<!-- ======================================================== -->
+
+<div id="fppm-calculator" class="fppm-scope" role="region" aria-label="Freelance Project Profit Margin Calculator">
+  <style>
+    /* Scoped CSS to prevent conflicts with Blogger themes */
+    #fppm-calculator {
+      --fppm-bg: #ffffff;
+      --fppm-card-bg: #f8fafc;
+      --fppm-border: #cbd5e1;
+      --fppm-border-focus: #2563eb;
+      --fppm-text: #0f172a;
+      --fppm-text-muted: #64748b;
+      --fppm-primary: #1e40af;
+      --fppm-primary-hover: #1d4ed8;
+      --fppm-success: #15803d;
+      --fppm-success-bg: #f0fdf4;
+      --fppm-warning: #b45309;
+      --fppm-warning-bg: #fffbeb;
+      --fppm-danger: #b91c1c;
+      --fppm-danger-bg: #fef2f2;
+      --fppm-radius: 8px;
+      --fppm-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: var(--fppm-font);
+      color: var(--fppm-text);
+      line-height: 1.5;
+      background-color: var(--fppm-bg);
+      border: 1px solid var(--fppm-border);
+      border-radius: var(--fppm-radius);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      box-sizing: border-box;
+    }
+    #fppm-calculator *, #fppm-calculator *::before, #fppm-calculator *::after {
+      box-sizing: border-box;
+    }
+    #fppm-calculator .fppm-header {
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 1rem;
+    }
+    #fppm-calculator .fppm-header h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--fppm-text);
+    }
+    #fppm-calculator .fppm-header p {
+      margin: 0;
+      color: var(--fppm-text-muted);
+      font-size: 0.95rem;
+    }
+    #fppm-calculator .fppm-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 992px) {
+      #fppm-calculator .fppm-grid {
+        grid-template-columns: 1.25fr 1fr;
+      }
+    }
+    #fppm-calculator fieldset {
+      border: 1px solid var(--fppm-border);
+      border-radius: var(--fppm-radius);
+      padding: 1.25rem;
+      margin: 0 0 1.25rem 0;
+      background-color: #ffffff;
+    }
+    #fppm-calculator legend {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--fppm-primary);
+      padding: 0 0.5rem;
+    }
+    #fppm-calculator .fppm-form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    #fppm-calculator .fppm-form-row:last-child {
+      margin-bottom: 0;
+    }
+    #fppm-calculator .fppm-col {
+      flex: 1 1 calc(50% - 0.5rem);
+      min-width: 140px;
+    }
+    #fppm-calculator label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      color: var(--fppm-text);
+    }
+    #fppm-calculator input[type="text"],
+    #fppm-calculator input[type="number"],
+    #fppm-calculator select {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.95rem;
+      border: 1px solid var(--fppm-border);
+      border-radius: 4px;
+      background-color: #fff;
+      color: var(--fppm-text);
+      transition: border-color 0.15s ease-in-out;
+    }
+    #fppm-calculator input:focus,
+    #fppm-calculator select:focus {
+      outline: none;
+      border-color: var(--fppm-border-focus);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    #fppm-calculator .fppm-help-text {
+      font-size: 0.75rem;
+      color: var(--fppm-text-muted);
+      margin-top: 0.25rem;
+      display: block;
+    }
+    #fppm-calculator .fppm-table-wrapper {
+      overflow-x: auto;
+      margin-bottom: 0.75rem;
+    }
+    #fppm-calculator table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    #fppm-calculator th, #fppm-calculator td {
+      padding: 0.5rem;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    #fppm-calculator th {
+      background-color: var(--fppm-card-bg);
+      font-weight: 600;
+    }
+    #fppm-calculator .fppm-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      gap: 0.35rem;
+    }
+    #fppm-calculator .fppm-btn-primary {
+      background-color: var(--fppm-primary);
+      color: #ffffff;
+    }
+    #fppm-calculator .fppm-btn-primary:hover {
+      background-color: var(--fppm-primary-hover);
+    }
+    #fppm-calculator .fppm-btn-secondary {
+      background-color: #ffffff;
+      border-color: var(--fppm-border);
+      color: var(--fppm-text);
+    }
+    #fppm-calculator .fppm-btn-secondary:hover {
+      background-color: var(--fppm-card-bg);
+    }
+    #fppm-calculator .fppm-btn-danger {
+      background-color: #fff;
+      color: var(--fppm-danger);
+      border-color: #fca5a5;
+      padding: 0.25rem 0.5rem;
+    }
+    #fppm-calculator .fppm-btn-danger:hover {
+      background-color: var(--fppm-danger-bg);
+    }
+    #fppm-calculator .fppm-btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    #fppm-calculator .fppm-results-panel {
+      background-color: var(--fppm-card-bg);
+      border: 1px solid var(--fppm-border);
+      border-radius: var(--fppm-radius);
+      padding: 1.25rem;
+      position: sticky;
+      top: 1rem;
+      height: fit-content;
+    }
+    #fppm-calculator .fppm-status-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+    #fppm-calculator .fppm-status-profitable {
+      background-color: var(--fppm-success-bg);
+      color: var(--fppm-success);
+      border: 1px solid var(--fppm-success);
+    }
+    #fppm-calculator .fppm-status-loss {
+      background-color: var(--fppm-danger-bg);
+      color: var(--fppm-danger);
+      border: 1px solid var(--fppm-danger);
+    }
+    #fppm-calculator .fppm-status-breakeven {
+      background-color: var(--fppm-warning-bg);
+      color: var(--fppm-warning);
+      border: 1px solid var(--fppm-warning);
+    }
+    #fppm-calculator .fppm-metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    #fppm-calculator .fppm-metric-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 0.75rem;
+    }
+    #fppm-calculator .fppm-metric-card.fppm-metric-highlight {
+      grid-column: span 2;
+      border-left: 4px solid var(--fppm-primary);
+    }
+    #fppm-calculator .fppm-metric-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--fppm-text-muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+    }
+    #fppm-calculator .fppm-metric-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--fppm-text);
+      font-variant-numeric: tabular-nums;
+    }
+    #fppm-calculator .fppm-chart-container {
+      margin: 1.25rem 0;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 0.85rem;
+    }
+    #fppm-calculator .fppm-stacked-bar {
+      display: flex;
+      height: 20px;
+      border-radius: 4px;
+      overflow: hidden;
+      background-color: #e2e8f0;
+      margin-top: 0.5rem;
+    }
+    #fppm-calculator .fppm-bar-segment {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    #fppm-calculator .fppm-bar-labor { background-color: #3b82f6; }
+    #fppm-calculator .fppm-bar-direct { background-color: #06b6d4; }
+    #fppm-calculator .fppm-bar-overhead { background-color: #8b5cf6; }
+    #fppm-calculator .fppm-bar-contingency { background-color: #f59e0b; }
+    #fppm-calculator .fppm-bar-tax { background-color: #ef4444; }
+    #fppm-calculator .fppm-bar-profit { background-color: #10b981; }
+    #fppm-calculator .fppm-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      font-size: 0.72rem;
+      margin-top: 0.65rem;
+    }
+    #fppm-calculator .fppm-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    #fppm-calculator .fppm-legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+    #fppm-calculator .fppm-summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.825rem;
+      margin-top: 0.75rem;
+    }
+    #fppm-calculator .fppm-summary-table td {
+      padding: 0.35rem 0;
+      border-bottom: 1px dotted #e2e8f0;
+    }
+    #fppm-calculator .fppm-summary-table td:last-child {
+      text-align: right;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    #fppm-calculator .fppm-scenarios {
+      margin-top: 1.5rem;
+      border-top: 2px solid #e2e8f0;
+      padding-top: 1.25rem;
+    }
+    #fppm-calculator .fppm-client-tracker {
+      margin-top: 2rem;
+      border-top: 2px solid #e2e8f0;
+      padding-top: 1.25rem;
+    }
+    @media print {
+      #fppm-calculator { border: none; padding: 0; }
+      #fppm-calculator .fppm-btn-group,
+      #fppm-calculator .fppm-add-btn,
+      #fppm-calculator .fppm-actions-cell { display: none !important; }
+    }
+  </style>
+
+  <div class="fppm-header">
+    <h2>Freelance Project Profit Margin Calculator</h2>
+    <p>Estimate project revenue, labor allocation, direct expenses, overhead, tax obligations, markup, and net earnings.</p>
+  </div>
+
+  <div class="fppm-grid">
+    <!-- INPUT FORM COLUMN -->
+    <div class="fppm-form-col">
+      <!-- SECTION 1: PROJECT SETUP -->
+      <fieldset>
+        <legend>1. Project Setup &amp; Currency</legend>
+        <div class="fppm-form-row">
+          <div class="fppm-col">
+            <label for="fppm-project-name">Project Name</label>
+            <input type="text" id="fppm-project-name" placeholder="e.g. Website Redesign">
+          </div>
+          <div class="fppm-col">
+            <label for="fppm-currency">Display Currency</label>
+            <select id="fppm-currency">
+              <option value="USD" selected>USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+              <option value="INR">INR (₹)</option>
+              <option value="CAD">CAD (C$)</option>
+              <option value="AUD">AUD (A$)</option>
+            </select>
+            <span class="fppm-help-text">Controls symbol only; no automatic conversion.</span>
+          </div>
+        </div>
+        <div class="fppm-form-row">
+          <div class="fppm-col">
+            <label for="fppm-pricing-model">Pricing Model</label>
+            <select id="fppm-pricing-model">
+              <option value="fixed" selected>Fixed-Price Project</option>
+              <option value="hourly">Hourly Billing</option>
+              <option value="value">Value-Based Price</option>
+            </select>
+          </div>
+          <div class="fppm-col">
+            <label for="fppm-project-type">Project Type</label>
+            <select id="fppm-project-type">
+              <option value="web-dev">Web Development</option>
+              <option value="web-design">Web Design</option>
+              <option value="copywriting">Writing &amp; Content</option>
+              <option value="consulting">Consulting / Strategy</option>
+              <option value="agency">Agency / Contracting</option>
+              <option value="other">Other Creative Work</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- SECTION 2: PROJECT REVENUE -->
+      <fieldset>
+        <legend>2. Projected Revenue</legend>
+        <div id="fppm-fixed-revenue-fields">
+          <div class="fppm-form-row">
+            <div class="fppm-col">
+              <label for="fppm-base-fee">Base Agreed Quote</label>
+              <input type="number" id="fppm-base-fee" value="2000" min="0" step="any">
+            </div>
+            <div class="fppm-col">
+              <label for="fppm-extra-revenue">Approved Extras / Add-ons</label>
+              <input type="number" id="fppm-extra-revenue" value="0" min="0" step="any">
+            </div>
+          </div>
+        </div>
+        <div id="fppm-hourly-revenue-fields" style="display: none;">
+          <div class="fppm-form-row">
+            <div class="fppm-col">
+              <label for="fppm-billable-hours">Billable Client Hours</label>
+              <input type="number" id="fppm-billable-hours" value="40" min="0" step="any">
+            </div>
+            <div class="fppm-col">
+              <label for="fppm-client-rate">Client Hourly Billing Rate</label>
+              <input type="number" id="fppm-client-rate" value="50" min="0" step="any">
+            </div>
+          </div>
+        </div>
+        <div class="fppm-form-row">
+          <div class="fppm-col">
+            <label for="fppm-discount">Client Discount / Concessions</label>
+            <input type="number" id="fppm-discount" value="0" min="0" step="any">
+          </div>
+          <div class="fppm-col">
+            <label for="fppm-payment-fee-rate">Payment Processing Fee (%)</label>
+            <input type="number" id="fppm-payment-fee-rate" value="2.9" min="0" max="100" step="0.1">
+            <span class="fppm-help-text">Payment gateways, e.g. Stripe / PayPal.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- SECTION 3: LABOR ALLOCATION -->
+      <fieldset>
+        <legend>3. Labor Allocation &amp; Working Hours</legend>
+        <div class="fppm-form-row">
+          <div class="fppm-col">
+            <label for="fppm-total-hours">Total Working Hours</label>
+            <input type="number" id="fppm-total-hours" value="40" min="0.1" step="any">
+            <span class="fppm-help-text">Include client meetings, calls, and administration.</span>
+          </div>
+          <div class="fppm-col">
+            <label for="fppm-internal-rate">Internal Hourly Labor Cost</label>
+            <input type="number" id="fppm-internal-rate" value="15" min="0" step="any">
+            <span class="fppm-help-text">Baseline pay floor for your time (or subcontractor).</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- SECTION 4: DIRECT EXPENSES -->
+      <fieldset>
+        <legend>4. Direct Project Expenses</legend>
+        <div class="fppm-table-wrapper">
+          <table id="fppm-expenses-table">
+            <thead>
+              <tr>
+                <th>Expense Description</th>
+                <th style="width: 120px;">Amount</th>
+                <th class="fppm-actions-cell" style="width: 50px;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="fppm-expenses-tbody">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+          </table>
+        </div>
+        <button type="button" class="fppm-btn fppm-btn-secondary fppm-add-btn" id="fppm-add-expense-btn">
+          + Add Expense Row
+        </button>
+      </fieldset>
+
+      <!-- SECTION 5: OVERHEAD, CONTINGENCY & TAXES -->
+      <fieldset>
+        <legend>5. Overhead, Scope Creep &amp; Taxes</legend>
+        <div class="fppm-form-row">
+          <div class="fppm-col">
+            <label for="fppm-overhead-type">Overhead Method</label>
+            <select id="fppm-overhead-type">
+              <option value="percentage">Percentage of Revenue</option>
+              <option value="fixed">Fixed Flat Allocation</option>
+            </select>
+          </div>
+          <div class="fppm-col">
+            <label for="fppm-overhead-val" id="fppm-overhead-label">Overhead Value (%)</label>
+            <input type="number" id="fppm-overhead-val" value="5" min="0" step="any">
+          </div>
+        </div>
+        <div class="fppm-form-row">
+          <div class="fppm-col">
+            <label for="fppm-contingency-rate">Cost Contingency Buffer (%)</label>
+            <input type="number" id="fppm-contingency-rate" value="5" min="0" max="100" step="any">
+            <span class="fppm-help-text">Applied to internal labor &amp; direct costs.</span>
+          </div>
+          <div class="fppm-col">
+            <label for="fppm-tax-rate">Estimated Effective Tax Rate (%)</label>
+            <input type="number" id="fppm-tax-rate" value="20" min="0" max="100" step="any">
+            <span class="fppm-help-text">Applied to positive pre-tax profit only.</span>
+          </div>
+        </div>
+        <div class="fppm-form-row">
+          <div class="fppm-col">
+            <label for="fppm-scope-creep-hours">Unplanned Scope Creep (Hours)</label>
+            <input type="number" id="fppm-scope-creep-hours" value="0" min="0" step="any">
+            <span class="fppm-help-text">Simulates the profit lost to unbilled revision hours.</span>
+          </div>
+          <div class="fppm-col">
+            <label for="fppm-target-margin">Target Operating Margin (%)</label>
+            <input type="number" id="fppm-target-margin" value="30" min="0" max="99" step="any">
+            <span class="fppm-help-text">Used for minimum quote recommendations.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Action Buttons -->
+      <div class="fppm-btn-group">
+        <button type="button" class="fppm-btn fppm-btn-primary" id="fppm-recalc-btn">Recalculate</button>
+        <button type="button" class="fppm-btn fppm-btn-secondary" id="fppm-save-btn">Save Project Locally</button>
+        <button type="button" class="fppm-btn fppm-btn-secondary" id="fppm-demo-btn">Load Demo Data</button>
+        <button type="button" class="fppm-btn fppm-btn-secondary" id="fppm-reset-btn">Reset</button>
+      </div>
+      <div id="fppm-alert" style="margin-top:0.75rem; font-size:0.85rem; font-weight:600; display:none;"></div>
+    </div>
+
+    <!-- RESULTS DASHBOARD COLUMN -->
+    <div class="fppm-results-col">
+      <div class="fppm-results-panel">
+        <div id="fppm-status-indicator" class="fppm-status-badge fppm-status-profitable">
+          Profitable Project
+        </div>
+
+        <div class="fppm-metrics-grid">
+          <div class="fppm-metric-card fppm-metric-highlight">
+            <div class="fppm-metric-title">Operating Profit Margin</div>
+            <div class="fppm-metric-value" id="fppm-display-margin">0.00%</div>
+          </div>
+          <div class="fppm-metric-card">
+            <div class="fppm-metric-title">Net Project Revenue</div>
+            <div class="fppm-metric-value" id="fppm-display-revenue">$0.00</div>
+          </div>
+          <div class="fppm-metric-card">
+            <div class="fppm-metric-title">Total Modeled Cost</div>
+            <div class="fppm-metric-value" id="fppm-display-cost">$0.00</div>
+          </div>
+          <div class="fppm-metric-card">
+            <div class="fppm-metric-title">Pre-Tax Profit</div>
+            <div class="fppm-metric-value" id="fppm-display-profit">$0.00</div>
+          </div>
+          <div class="fppm-metric-card">
+            <div class="fppm-metric-title">After-Tax Net Profit</div>
+            <div class="fppm-metric-value" id="fppm-display-after-tax">$0.00</div>
+          </div>
+        </div>
+
+        <!-- Visual Distribution Chart -->
+        <div class="fppm-chart-container">
+          <div style="font-size:0.8rem; font-weight:600; color:var(--fppm-text);">
+            Cost &amp; Profit Distribution Breakdown
+          </div>
+          <div class="fppm-stacked-bar" role="img" aria-label="Visual breakdown of cost and profit">
+            <div class="fppm-bar-segment fppm-bar-labor" id="fppm-bar-labor" title="Labor Cost" style="width: 0%;"></div>
+            <div class="fppm-bar-segment fppm-bar-direct" id="fppm-bar-direct" title="Direct Expenses" style="width: 0%;"></div>
+            <div class="fppm-bar-segment fppm-bar-overhead" id="fppm-bar-overhead" title="Overhead" style="width: 0%;"></div>
+            <div class="fppm-bar-segment fppm-bar-contingency" id="fppm-bar-contingency" title="Contingency & Fees" style="width: 0%;"></div>
+            <div class="fppm-bar-segment fppm-bar-tax" id="fppm-bar-tax" title="Taxes" style="width: 0%;"></div>
+            <div class="fppm-bar-segment fppm-bar-profit" id="fppm-bar-profit" title="Net Profit" style="width: 0%;"></div>
+          </div>
+          <div class="fppm-legend">
+            <div class="fppm-legend-item"><span class="fppm-legend-dot fppm-bar-labor"></span> Labor</div>
+            <div class="fppm-legend-item"><span class="fppm-legend-dot fppm-bar-direct"></span> Direct Costs</div>
+            <div class="fppm-legend-item"><span class="fppm-legend-dot fppm-bar-overhead"></span> Overhead</div>
+            <div class="fppm-legend-item"><span class="fppm-legend-dot fppm-bar-contingency"></span> Buffer &amp; Fees</div>
+            <div class="fppm-legend-item"><span class="fppm-legend-dot fppm-bar-tax"></span> Taxes</div>
+            <div class="fppm-legend-item"><span class="fppm-legend-dot fppm-bar-profit"></span> After-Tax Net</div>
+          </div>
+        </div>
+
+        <!-- Detailed Summary Line Items -->
+        <table class="fppm-summary-table">
+          <tbody>
+            <tr>
+              <td>Monetized Internal Labor Cost</td>
+              <td id="fppm-row-labor">$0.00</td>
+            </tr>
+            <tr>
+              <td>Total Direct Project Expenses</td>
+              <td id="fppm-row-expenses">$0.00</td>
+            </tr>
+            <tr>
+              <td>Allocated Business Overhead</td>
+              <td id="fppm-row-overhead">$0.00</td>
+            </tr>
+            <tr>
+              <td>Cost Contingency Buffer</td>
+              <td id="fppm-row-contingency">$0.00</td>
+            </tr>
+            <tr>
+              <td>Payment Processing Fees</td>
+              <td id="fppm-row-fees">$0.00</td>
+            </tr>
+            <tr>
+              <td><strong>Operating Profit Before Tax</strong></td>
+              <td id="fppm-row-operating-profit">$0.00</td>
+            </tr>
+            <tr>
+              <td>Estimated Effective Tax Provision</td>
+              <td id="fppm-row-tax">$0.00</td>
+            </tr>
+            <tr>
+              <td>Markup on Modeled Cost</td>
+              <td id="fppm-row-markup">0.00%</td>
+            </tr>
+            <tr>
+              <td>Break-Even Minimum Project Fee</td>
+              <td id="fppm-row-breakeven">$0.00</td>
+            </tr>
+            <tr>
+              <td>Quote Required for Target Margin</td>
+              <td id="fppm-row-target-quote">$0.00</td>
+            </tr>
+            <tr>
+              <td>Effective Revenue / Working Hour</td>
+              <td id="fppm-row-rev-per-hour">$0.00</td>
+            </tr>
+            <tr>
+              <td>Effective After-Tax Profit / Hour</td>
+              <td id="fppm-row-profit-per-hour">$0.00</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Output Tools -->
+        <div class="fppm-btn-group" style="margin-top: 1.25rem;">
+          <button type="button" class="fppm-btn fppm-btn-secondary" id="fppm-copy-btn" title="Copy text summary">
+            📋 Copy Summary
+          </button>
+          <button type="button" class="fppm-btn fppm-btn-secondary" id="fppm-csv-btn" title="Export CSV for spreadsheet">
+            📥 Download CSV
+          </button>
+          <button type="button" class="fppm-btn fppm-btn-secondary" id="fppm-print-btn" title="Print Estimate Sheet">
+            🖨️ Print
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESTIMATE SCENARIO COMPARISON -->
+  <div class="fppm-scenarios">
+    <h3 style="font-size:1.15rem; margin-bottom:0.5rem; color:var(--fppm-text);">Estimate Scenarios &amp; Scope Creep Impact</h3>
+    <p style="font-size:0.85rem; color:var(--fppm-text-muted); margin-bottom:0.75rem;">
+      See how your quote holds up against unexpected revisions and labor variances:
+    </p>
+    <div class="fppm-table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>Revenue</th>
+            <th>Total Cost</th>
+            <th>Pre-Tax Profit</th>
+            <th>Operating Margin</th>
+            <th>After-Tax Net</th>
+          </tr>
+        </thead>
+        <tbody id="fppm-scenarios-body">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- LOCAL CLIENT TRACKER -->
+  <div class="fppm-client-tracker">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+      <div>
+        <h3 style="font-size:1.15rem; margin:0 0 0.25rem 0; color:var(--fppm-text);">Local Client Profitability Comparison</h3>
+        <p style="font-size:0.8rem; color:var(--fppm-text-muted); margin:0;">
+          Saved privately inside your browser storage (localStorage). No data is sent to a server.
+        </p>
+      </div>
+      <div>
+        <button type="button" class="fppm-btn fppm-btn-secondary fppm-btn-danger" id="fppm-clear-storage-btn">
+          Clear Saved Records
+        </button>
+      </div>
+    </div>
+    <div class="fppm-table-wrapper" style="margin-top:1rem;">
+      <table id="fppm-client-table">
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>Revenue</th>
+            <th>Total Cost</th>
+            <th>Pre-Tax Profit</th>
+            <th>Margin</th>
+            <th>Hours</th>
+            <th class="fppm-actions-cell">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="fppm-client-tbody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- VANILLA JAVASCRIPT ENGINE                      -->
+  <!-- ============================================== -->
+  <script>
+    (function () {
+      "use strict";
+
+      const root = document.getElementById("fppm-calculator");
+      if (!root) return;
+
+      let expensesList = [
+        { id: 1, desc: "Stock Photography & Assets", amount: 120 },
+        { id: 2, desc: "Web Hosting & Cloud Setup", amount: 80 }
+      ];
+
+      const STORAGE_KEY = "fppm_freelance_records";
+
+      const els = {
+        projectName: root.querySelector("#fppm-project-name"),
+        currency: root.querySelector("#fppm-currency"),
+        pricingModel: root.querySelector("#fppm-pricing-model"),
+        projectType: root.querySelector("#fppm-project-type"),
+        baseFee: root.querySelector("#fppm-base-fee"),
+        extraRevenue: root.querySelector("#fppm-extra-revenue"),
+        billableHours: root.querySelector("#fppm-billable-hours"),
+        clientRate: root.querySelector("#fppm-client-rate"),
+        discount: root.querySelector("#fppm-discount"),
+        paymentFeeRate: root.querySelector("#fppm-payment-fee-rate"),
+        totalHours: root.querySelector("#fppm-total-hours"),
+        internalRate: root.querySelector("#fppm-internal-rate"),
+        expensesTbody: root.querySelector("#fppm-expenses-tbody"),
+        addExpenseBtn: root.querySelector("#fppm-add-expense-btn"),
+        overheadType: root.querySelector("#fppm-overhead-type"),
+        overheadLabel: root.querySelector("#fppm-overhead-label"),
+        overheadVal: root.querySelector("#fppm-overhead-val"),
+        contingencyRate: root.querySelector("#fppm-contingency-rate"),
+        taxRate: root.querySelector("#fppm-tax-rate"),
+        scopeCreepHours: root.querySelector("#fppm-scope-creep-hours"),
+        targetMargin: root.querySelector("#fppm-target-margin"),
+        recalcBtn: root.querySelector("#fppm-recalc-btn"),
+        saveBtn: root.querySelector("#fppm-save-btn"),
+        demoBtn: root.querySelector("#fppm-demo-btn"),
+        resetBtn: root.querySelector("#fppm-reset-btn"),
+        copyBtn: root.querySelector("#fppm-copy-btn"),
+        csvBtn: root.querySelector("#fppm-csv-btn"),
+        printBtn: root.querySelector("#fppm-print-btn"),
+        clearStorageBtn: root.querySelector("#fppm-clear-storage-btn"),
+        alertBox: root.querySelector("#fppm-alert"),
+        fixedRevGroup: root.querySelector("#fppm-fixed-revenue-fields"),
+        hourlyRevGroup: root.querySelector("#fppm-hourly-revenue-fields"),
+        statusIndicator: root.querySelector("#fppm-status-indicator"),
+        displayMargin: root.querySelector("#fppm-display-margin"),
+        displayRevenue: root.querySelector("#fppm-display-revenue"),
+        displayCost: root.querySelector("#fppm-display-cost"),
+        displayProfit: root.querySelector("#fppm-display-profit"),
+        displayAfterTax: root.querySelector("#fppm-display-after-tax"),
+        barLabor: root.querySelector("#fppm-bar-labor"),
+        barDirect: root.querySelector("#fppm-bar-direct"),
+        barOverhead: root.querySelector("#fppm-bar-overhead"),
+        barContingency: root.querySelector("#fppm-bar-contingency"),
+        barTax: root.querySelector("#fppm-bar-tax"),
+        barProfit: root.querySelector("#fppm-bar-profit"),
+        rowLabor: root.querySelector("#fppm-row-labor"),
+        rowExpenses: root.querySelector("#fppm-row-expenses"),
+        rowOverhead: root.querySelector("#fppm-row-overhead"),
+        rowContingency: root.querySelector("#fppm-row-contingency"),
+        rowFees: root.querySelector("#fppm-row-fees"),
+        rowOperatingProfit: root.querySelector("#fppm-row-operating-profit"),
+        rowTax: root.querySelector("#fppm-row-tax"),
+        rowMarkup: root.querySelector("#fppm-row-markup"),
+        rowBreakeven: root.querySelector("#fppm-row-breakeven"),
+        rowTargetQuote: root.querySelector("#fppm-row-target-quote"),
+        rowRevPerHour: root.querySelector("#fppm-row-rev-per-hour"),
+        rowProfitPerHour: root.querySelector("#fppm-row-profit-per-hour"),
+        scenariosBody: root.querySelector("#fppm-scenarios-body"),
+        clientTbody: root.querySelector("#fppm-client-tbody")
+      };
+
+      function parseNum(val, defaultVal = 0) {
+        const num = parseFloat(val);
+        return isNaN(num) || !isFinite(num) ? defaultVal : num;
+      }
+
+      function formatMoney(amount, currencyCode) {
+        if (!isFinite(amount)) return "—";
+        try {
+          return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: currencyCode || "USD",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }).format(amount);
+        } catch (e) {
+          return "$" + amount.toFixed(2);
+        }
+      }
+
+      function formatPercent(val) {
+        if (!isFinite(val)) return "0.00%";
+        return val.toFixed(2) + "%";
+      }
+
+      function showAlert(msg, isSuccess = false) {
+        els.alertBox.textContent = msg;
+        els.alertBox.style.color = isSuccess ? "var(--fppm-success)" : "var(--fppm-danger)";
+        els.alertBox.style.display = "block";
+        setTimeout(() => {
+          els.alertBox.style.display = "none";
+        }, 4000);
+      }
+
+      // Authoritative Calculation Routine
+      function calculateProjectMetrics(inputs) {
+        let netRevenue = 0;
+        if (inputs.pricingModel === "hourly") {
+          netRevenue = (inputs.billableHours * inputs.clientRate) + inputs.extraRevenue - inputs.discount;
+        } else {
+          netRevenue = inputs.baseFee + inputs.extraRevenue - inputs.discount;
+        }
+        netRevenue = Math.max(0, netRevenue);
+
+        const internalLaborCost = inputs.totalHours * inputs.internalRate;
+        const directExpenses = inputs.expenses.reduce((acc, curr) => acc + curr.amount, 0);
+
+        let allocatedOverhead = 0;
+        if (inputs.overheadType === "percentage") {
+          allocatedOverhead = (netRevenue * inputs.overheadVal) / 100;
+        } else {
+          allocatedOverhead = inputs.overheadVal;
+        }
+
+        const eligibleContingencyBase = internalLaborCost + directExpenses;
+        const contingencyCost = (eligibleContingencyBase * inputs.contingencyRate) / 100;
+        const paymentFee = (netRevenue * inputs.paymentFeeRate) / 100;
+
+        const baseCost = internalLaborCost + directExpenses + allocatedOverhead + contingencyCost + paymentFee;
+        const operatingProfit = netRevenue - baseCost;
+        const operatingMargin = netRevenue > 0 ? (operatingProfit / netRevenue) * 100 : 0;
+
+        const estimatedTax = operatingProfit > 0 ? (operatingProfit * inputs.taxRate) / 100 : 0;
+        const afterTaxProfit = operatingProfit - estimatedTax;
+        const afterTaxMargin = netRevenue > 0 ? (afterTaxProfit / netRevenue) * 100 : 0;
+
+        const markup = baseCost > 0 ? (operatingProfit / baseCost) * 100 : 0;
+
+        let variableCostRate = inputs.paymentFeeRate / 100;
+        if (inputs.overheadType === "percentage") {
+          variableCostRate += inputs.overheadVal / 100;
+        }
+
+        let fixedCosts = internalLaborCost + directExpenses + contingencyCost;
+        if (inputs.overheadType === "fixed") {
+          fixedCosts += inputs.overheadVal;
+        }
+
+        let breakEvenQuote = 0;
+        if (variableCostRate < 1) {
+          breakEvenQuote = fixedCosts / (1 - variableCostRate);
+        } else {
+          breakEvenQuote = baseCost;
+        }
+
+        let targetQuote = 0;
+        const targetMarginRate = inputs.targetMargin / 100;
+        const denominator = 1 - variableCostRate - targetMarginRate;
+        if (denominator > 0.01) {
+          targetQuote = fixedCosts / denominator;
+        } else {
+          targetQuote = breakEvenQuote * (1 + targetMarginRate);
+        }
+
+        const safeHours = inputs.totalHours > 0 ? inputs.totalHours : 1;
+        const revPerHour = netRevenue / safeHours;
+        const profitPerHour = afterTaxProfit / safeHours;
+
+        return {
+          netRevenue,
+          internalLaborCost,
+          directExpenses,
+          allocatedOverhead,
+          contingencyCost,
+          paymentFee,
+          baseCost,
+          operatingProfit,
+          operatingMargin,
+          estimatedTax,
+          afterTaxProfit,
+          afterTaxMargin,
+          markup,
+          breakEvenQuote,
+          targetQuote,
+          revPerHour,
+          profitPerHour
+        };
+      }
+
+      function readInputs() {
+        return {
+          projectName: els.projectName.value.trim() || "Untitled Project",
+          currency: els.currency.value,
+          pricingModel: els.pricingModel.value,
+          projectType: els.projectType.value,
+          baseFee: parseNum(els.baseFee.value, 0),
+          extraRevenue: parseNum(els.extraRevenue.value, 0),
+          billableHours: parseNum(els.billableHours.value, 0),
+          clientRate: parseNum(els.clientRate.value, 0),
+          discount: parseNum(els.discount.value, 0),
+          paymentFeeRate: Math.min(100, Math.max(0, parseNum(els.paymentFeeRate.value, 0))),
+          totalHours: Math.max(0.1, parseNum(els.totalHours.value, 1)),
+          internalRate: parseNum(els.internalRate.value, 0),
+          overheadType: els.overheadType.value,
+          overheadVal: parseNum(els.overheadVal.value, 0),
+          contingencyRate: Math.min(100, Math.max(0, parseNum(els.contingencyRate.value, 0))),
+          taxRate: Math.min(100, Math.max(0, parseNum(els.taxRate.value, 0))),
+          scopeCreepHours: parseNum(els.scopeCreepHours.value, 0),
+          targetMargin: Math.min(99, Math.max(0, parseNum(els.targetMargin.value, 30))),
+          expenses: expensesList
+        };
+      }
+
+      function render() {
+        const inputs = readInputs();
+        const res = calculateProjectMetrics(inputs);
+        const curr = inputs.currency;
+
+        if (inputs.pricingModel === "hourly") {
+          els.fixedRevGroup.style.display = "none";
+          els.hourlyRevGroup.style.display = "block";
+        } else {
+          els.fixedRevGroup.style.display = "block";
+          els.hourlyRevGroup.style.display = "none";
+        }
+
+        els.overheadLabel.textContent = inputs.overheadType === "percentage" ? "Overhead Value (%)" : "Overhead Flat Amount";
+
+        els.statusIndicator.className = "fppm-status-badge";
+        if (res.netRevenue === 0 && res.baseCost === 0) {
+          els.statusIndicator.textContent = "Awaiting Project Input";
+          els.statusIndicator.classList.add("fppm-status-breakeven");
+        } else if (res.operatingProfit > 0.01) {
+          els.statusIndicator.textContent = "Profitable Estimate";
+          els.statusIndicator.classList.add("fppm-status-profitable");
+        } else if (Math.abs(res.operatingProfit) <= 0.01) {
+          els.statusIndicator.textContent = "Break-Even Quote";
+          els.statusIndicator.classList.add("fppm-status-breakeven");
+        } else {
+          els.statusIndicator.textContent = "Operating Loss Project";
+          els.statusIndicator.classList.add("fppm-status-loss");
+        }
+
+        els.displayMargin.textContent = formatPercent(res.operatingMargin);
+        els.displayMargin.style.color = res.operatingProfit >= 0 ? "var(--fppm-success)" : "var(--fppm-danger)";
+        els.displayRevenue.textContent = formatMoney(res.netRevenue, curr);
+        els.displayCost.textContent = formatMoney(res.baseCost, curr);
+        els.displayProfit.textContent = formatMoney(res.operatingProfit, curr);
+        els.displayProfit.style.color = res.operatingProfit >= 0 ? "var(--fppm-text)" : "var(--fppm-danger)";
+        els.displayAfterTax.textContent = formatMoney(res.afterTaxProfit, curr);
+
+        const chartDenominator = Math.max(res.netRevenue, res.baseCost, 1);
+        const pLabor = Math.min(100, Math.max(0, (res.internalLaborCost / chartDenominator) * 100));
+        const pDirect = Math.min(100, Math.max(0, (res.directExpenses / chartDenominator) * 100));
+        const pOverhead = Math.min(100, Math.max(0, (res.allocatedOverhead / chartDenominator) * 100));
+        const pContingency = Math.min(100, Math.max(0, ((res.contingencyCost + res.paymentFee) / chartDenominator) * 100));
+        const pTax = Math.min(100, Math.max(0, (res.estimatedTax / chartDenominator) * 100));
+        const pProfit = Math.min(100, Math.max(0, (Math.max(0, res.afterTaxProfit) / chartDenominator) * 100));
+
+        els.barLabor.style.width = pLabor + "%";
+        els.barDirect.style.width = pDirect + "%";
+        els.barOverhead.style.width = pOverhead + "%";
+        els.barContingency.style.width = pContingency + "%";
+        els.barTax.style.width = pTax + "%";
+        els.barProfit.style.width = pProfit + "%";
+
+        els.rowLabor.textContent = formatMoney(res.internalLaborCost, curr);
+        els.rowExpenses.textContent = formatMoney(res.directExpenses, curr);
+        els.rowOverhead.textContent = formatMoney(res.allocatedOverhead, curr);
+        els.rowContingency.textContent = formatMoney(res.contingencyCost, curr);
+        els.rowFees.textContent = formatMoney(res.paymentFee, curr);
+        els.rowOperatingProfit.textContent = formatMoney(res.operatingProfit, curr);
+        els.rowTax.textContent = formatMoney(res.estimatedTax, curr);
+        els.rowMarkup.textContent = formatPercent(res.markup);
+        els.rowBreakeven.textContent = formatMoney(res.breakEvenQuote, curr);
+        els.rowTargetQuote.textContent = formatMoney(res.targetQuote, curr);
+        els.rowRevPerHour.textContent = formatMoney(res.revPerHour, curr);
+        els.rowProfitPerHour.textContent = formatMoney(res.profitPerHour, curr);
+
+        renderScenarios(inputs, res);
+      }
+
+      function renderScenarios(inputs, baseRes) {
+        const curr = inputs.currency;
+
+        const conservativeInputs = Object.assign({}, inputs, {
+          totalHours: inputs.totalHours * 1.2,
+          expenses: inputs.expenses.map(e => ({ id: e.id, desc: e.desc, amount: e.amount * 1.1 }))
+        });
+        const conservativeRes = calculateProjectMetrics(conservativeInputs);
+
+        const optimisticInputs = Object.assign({}, inputs, {
+          totalHours: Math.max(0.5, inputs.totalHours * 0.85)
+        });
+        const optimisticRes = calculateProjectMetrics(optimisticInputs);
+
+        const rows = [
+          { name: "Expected (Current Baseline)", res: baseRes },
+          { name: "Conservative (+20% time, +10% direct costs)", res: conservativeRes },
+          { name: "Optimistic (-15% time required)", res: optimisticRes }
+        ];
+
+        if (inputs.scopeCreepHours > 0) {
+          const creepInputs = Object.assign({}, inputs, {
+            totalHours: inputs.totalHours + inputs.scopeCreepHours
+          });
+          const creepRes = calculateProjectMetrics(creepInputs);
+          rows.push({
+            name: `With +${inputs.scopeCreepHours}h Scope Creep`,
+            res: creepRes
+          });
+        }
+
+        els.scenariosBody.innerHTML = "";
+        rows.forEach(item => {
+          const tr = document.createElement("tr");
+
+          const tdName = document.createElement("td");
+          tdName.textContent = item.name;
+          tdName.style.fontWeight = item.name.startsWith("Expected") ? "600" : "400";
+          tr.appendChild(tdName);
+
+          const tdRev = document.createElement("td");
+          tdRev.textContent = formatMoney(item.res.netRevenue, curr);
+          tr.appendChild(tdRev);
+
+          const tdCost = document.createElement("td");
+          tdCost.textContent = formatMoney(item.res.baseCost, curr);
+          tr.appendChild(tdCost);
+
+          const tdProf = document.createElement("td");
+          tdProf.textContent = formatMoney(item.res.operatingProfit, curr);
+          tdProf.style.color = item.res.operatingProfit >= 0 ? "var(--fppm-success)" : "var(--fppm-danger)";
+          tr.appendChild(tdProf);
+
+          const tdMargin = document.createElement("td");
+          tdMargin.textContent = formatPercent(item.res.operatingMargin);
+          tr.appendChild(tdMargin);
+
+          const tdNet = document.createElement("td");
+          tdNet.textContent = formatMoney(item.res.afterTaxProfit, curr);
+          tr.appendChild(tdNet);
+
+          els.scenariosBody.appendChild(tr);
+        });
+      }
+
+      function renderExpenses() {
+        els.expensesTbody.innerHTML = "";
+        expensesList.forEach((exp) => {
+          const tr = document.createElement("tr");
+
+          const tdDesc = document.createElement("td");
+          const inputDesc = document.createElement("input");
+          inputDesc.type = "text";
+          inputDesc.value = exp.desc;
+          inputDesc.setAttribute("aria-label", "Expense description");
+          inputDesc.addEventListener("input", (e) => {
+            exp.desc = e.target.value;
+          });
+          tdDesc.appendChild(inputDesc);
+
+          const tdAmt = document.createElement("td");
+          const inputAmt = document.createElement("input");
+          inputAmt.type = "number";
+          inputAmt.value = exp.amount;
+          inputAmt.min = "0";
+          inputAmt.step = "any";
+          inputAmt.setAttribute("aria-label", "Expense amount");
+          inputAmt.addEventListener("input", (e) => {
+            exp.amount = parseNum(e.target.value, 0);
+            render();
+          });
+          tdAmt.appendChild(inputAmt);
+
+          const tdAct = document.createElement("td");
+          tdAct.className = "fppm-actions-cell";
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "fppm-btn fppm-btn-danger";
+          delBtn.textContent = "×";
+          delBtn.setAttribute("aria-label", "Remove expense item");
+          delBtn.addEventListener("click", () => {
+            expensesList = expensesList.filter(item => item.id !== exp.id);
+            renderExpenses();
+            render();
+          });
+          tdAct.appendChild(delBtn);
+
+          tr.appendChild(tdDesc);
+          tr.appendChild(tdAmt);
+          tr.appendChild(tdAct);
+          els.expensesTbody.appendChild(tr);
+        });
+      }
+
+      function getSavedProjects() {
+        try {
+          const item = localStorage.getItem(STORAGE_KEY);
+          return item ? JSON.parse(item) : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function saveProjectToStorage() {
+        const inputs = readInputs();
+        const metrics = calculateProjectMetrics(inputs);
+        const projects = getSavedProjects();
+
+        const record = {
+          id: Date.now(),
+          date: new Date().toLocaleDateString(),
+          name: inputs.projectName,
+          currency: inputs.currency,
+          revenue: metrics.netRevenue,
+          cost: metrics.baseCost,
+          profit: metrics.operatingProfit,
+          margin: metrics.operatingMargin,
+          hours: inputs.totalHours
+        };
+
+        projects.unshift(record);
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(projects.slice(0, 30)));
+          showAlert("Project successfully saved in local tracker!", true);
+          renderClientTable();
+        } catch (e) {
+          showAlert("Browser storage quota exceeded or disabled.");
+        }
+      }
+
+      function renderClientTable() {
+        const projects = getSavedProjects();
+        els.clientTbody.innerHTML = "";
+
+        if (projects.length === 0) {
+          const tr = document.createElement("tr");
+          const td = document.createElement("td");
+          td.colSpan = 7;
+          td.style.textAlign = "center";
+          td.style.color = "var(--fppm-text-muted)";
+          td.textContent = "No saved projects found in local browser storage.";
+          tr.appendChild(td);
+          els.clientTbody.appendChild(tr);
+          return;
+        }
+
+        projects.forEach(p => {
+          const tr = document.createElement("tr");
+
+          const tdName = document.createElement("td");
+          tdName.textContent = p.name;
+          tr.appendChild(tdName);
+
+          const tdRev = document.createElement("td");
+          tdRev.textContent = formatMoney(p.revenue, p.currency);
+          tr.appendChild(tdRev);
+
+          const tdCost = document.createElement("td");
+          tdCost.textContent = formatMoney(p.cost, p.currency);
+          tr.appendChild(tdCost);
+
+          const tdProf = document.createElement("td");
+          tdProf.textContent = formatMoney(p.profit, p.currency);
+          tdProf.style.color = p.profit >= 0 ? "var(--fppm-success)" : "var(--fppm-danger)";
+          tr.appendChild(tdProf);
+
+          const tdMargin = document.createElement("td");
+          tdMargin.textContent = formatPercent(p.margin);
+          tr.appendChild(tdMargin);
+
+          const tdHours = document.createElement("td");
+          tdHours.textContent = p.hours + " h";
+          tr.appendChild(tdHours);
+
+          const tdAct = document.createElement("td");
+          tdAct.className = "fppm-actions-cell";
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "fppm-btn fppm-btn-danger";
+          delBtn.textContent = "Delete";
+          delBtn.addEventListener("click", () => {
+            const updated = getSavedProjects().filter(item => item.id !== p.id);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+            renderClientTable();
+          });
+          tdAct.appendChild(delBtn);
+          tr.appendChild(tdAct);
+
+          els.clientTbody.appendChild(tr);
+        });
+      }
+
+      function sanitizeCsv(str) {
+        let val = String(str);
+        if (/^[=\+\-\@\t\r]/.test(val)) {
+          val = "'" + val;
+        }
+        return `"${val.replace(/"/g, '""')}"`;
+      }
+
+      function downloadCsv() {
+        const inputs = readInputs();
+        const res = calculateProjectMetrics(inputs);
+
+        const rows = [
+          ["Freelance Project Profitability Report"],
+          ["Project Name", sanitizeCsv(inputs.projectName)],
+          ["Currency", inputs.currency],
+          ["Pricing Model", inputs.pricingModel],
+          ["Net Revenue", res.netRevenue.toFixed(2)],
+          ["Internal Labor Cost", res.internalLaborCost.toFixed(2)],
+          ["Direct Expenses", res.directExpenses.toFixed(2)],
+          ["Allocated Overhead", res.allocatedOverhead.toFixed(2)],
+          ["Contingency Buffer", res.contingencyCost.toFixed(2)],
+          ["Payment Processing Fees", res.paymentFee.toFixed(2)],
+          ["Total Modeled Cost", res.baseCost.toFixed(2)],
+          ["Operating Profit Before Tax", res.operatingProfit.toFixed(2)],
+          ["Operating Profit Margin (%)", res.operatingMargin.toFixed(2)],
+          ["Estimated Tax Provision", res.estimatedTax.toFixed(2)],
+          ["Estimated After-Tax Profit", res.afterTaxProfit.toFixed(2)],
+          ["Markup on Cost (%)", res.markup.toFixed(2)],
+          ["Break-Even Quote", res.breakEvenQuote.toFixed(2)],
+          ["Target Margin Quote", res.targetQuote.toFixed(2)],
+          ["Total Working Hours", inputs.totalHours]
+        ];
+
+        const csvContent = rows.map(r => r.join(",")).join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${inputs.projectName.replace(/\s+/g, "_")}_profit_margin_report.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function copySummary() {
+        const inputs = readInputs();
+        const res = calculateProjectMetrics(inputs);
+        const curr = inputs.currency;
+
+        const text = `Project Estimate: ${inputs.projectName}
+Revenue: ${formatMoney(res.netRevenue, curr)}
+Total Modeled Cost: ${formatMoney(res.baseCost, curr)}
+Operating Profit: ${formatMoney(res.operatingProfit, curr)}
+Operating Margin: ${formatPercent(res.operatingMargin)}
+After-Tax Profit: ${formatMoney(res.afterTaxProfit, curr)}
+Break-Even Price: ${formatMoney(res.breakEvenQuote, curr)}
+Recommended Quote (${inputs.targetMargin}% Margin): ${formatMoney(res.targetQuote, curr)}
+Generated by Freelance Project Profit Margin Calculator`;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            showAlert("Summary copied to clipboard!", true);
+          }).catch(() => {
+            showAlert("Failed copying to clipboard.");
+          });
+        } else {
+          const tempArea = document.createElement("textarea");
+          tempArea.value = text;
+          document.body.appendChild(tempArea);
+          tempArea.select();
+          document.execCommand("copy");
+          document.body.removeChild(tempArea);
+          showAlert("Summary copied to clipboard!", true);
+        }
+      }
+
+      function loadDemo() {
+        els.projectName.value = "Full-Stack Brand Portal Redesign";
+        els.currency.value = "USD";
+        els.pricingModel.value = "fixed";
+        els.baseFee.value = 4500;
+        els.extraRevenue.value = 500;
+        els.discount.value = 250;
+        els.paymentFeeRate.value = 2.9;
+        els.totalHours.value = 65;
+        els.internalRate.value = 35;
+        els.overheadType.value = "percentage";
+        els.overheadVal.value = 8;
+        els.contingencyRate.value = 10;
+        els.taxRate.value = 22;
+        els.scopeCreepHours.value = 10;
+        els.targetMargin.value = 35;
+
+        expensesList = [
+          { id: 101, desc: "Stock Video Footage & Audio", amount: 180 },
+          { id: 102, desc: "Managed Cloud Server (1 yr)", amount: 240 },
+          { id: 103, desc: "Typography Commercial License", amount: 99 }
+        ];
+
+        renderExpenses();
+        render();
+        showAlert("Loaded standard agency project demo data.", true);
+      }
+
+      function resetCalculator() {
+        els.projectName.value = "";
+        els.currency.value = "USD";
+        els.pricingModel.value = "fixed";
+        els.baseFee.value = 2000;
+        els.extraRevenue.value = 0;
+        els.billableHours.value = 40;
+        els.clientRate.value = 50;
+        els.discount.value = 0;
+        els.paymentFeeRate.value = 2.9;
+        els.totalHours.value = 40;
+        els.internalRate.value = 15;
+        els.overheadType.value = "percentage";
+        els.overheadVal.value = 5;
+        els.contingencyRate.value = 5;
+        els.taxRate.value = 20;
+        els.scopeCreepHours.value = 0;
+        els.targetMargin.value = 30;
+
+        expensesList = [];
+        renderExpenses();
+        render();
+        showAlert("Calculator inputs reset to defaults.");
+      }
+
+      const liveInputs = [
+        els.currency, els.pricingModel, els.baseFee, els.extraRevenue,
+        els.billableHours, els.clientRate, els.discount, els.paymentFeeRate,
+        els.totalHours, els.internalRate, els.overheadType, els.overheadVal,
+        els.contingencyRate, els.taxRate, els.scopeCreepHours, els.targetMargin
+      ];
+
+      liveInputs.forEach(input => {
+        if (input) {
+          input.addEventListener("input", render);
+          input.addEventListener("change", render);
+        }
+      });
+
+      els.addExpenseBtn.addEventListener("click", () => {
+        expensesList.push({ id: Date.now(), desc: "Custom Project Addon", amount: 50 });
+        renderExpenses();
+        render();
+      });
+
+      els.recalcBtn.addEventListener("click", render);
+      els.saveBtn.addEventListener("click", saveProjectToStorage);
+      els.demoBtn.addEventListener("click", loadDemo);
+      els.resetBtn.addEventListener("click", resetCalculator);
+      els.copyBtn.addEventListener("click", copySummary);
+      els.csvBtn.addEventListener("click", downloadCsv);
+      els.printBtn.addEventListener("click", () => window.print());
+
+      els.clearStorageBtn.addEventListener("click", () => {
+        if (confirm("Are you sure you want to clear all locally saved client estimates?")) {
+          localStorage.removeItem(STORAGE_KEY);
+          renderClientTable();
+          showAlert("Local client records cleared.");
+        }
+      });
+
+      // Initial execution
+      renderExpenses();
+      render();
+      renderClientTable();
+    })();
+  </script>
+</div>
+
+<!-- ============================================== -->
+<!-- ON-PAGE COMPREHENSIVE SEO CONTENT & GUIDE       -->
+<!-- ============================================== -->
+<article class="fppm-article-content" style="margin-top: 2.5rem; line-height: 1.7; color: #1e293b;">
+  <h1>Freelance Project Profit Margin Calculator</h1>
+  
+  <p>
+    Estimate your freelance project's profitability before sending a quote. Calculate revenue, labor costs, overhead, expenses, profit margin, markup, taxes, and the price needed to reach your target margin. Use this <strong>freelance project profit margin calculator</strong> to compare project scenarios and understand how extra hours or unexpected costs can affect your net earnings.
+  </p>
+
+  <h2>Professional Pricing and Profitability Engine</h2>
+  <p>
+    Pricing client proposals solely on guesswork or arbitrary hourly figures leaves independent contractors vulnerable to unexpected scope expansion, unpaid administration, and platform transaction cuts. This tool is an end-to-end <strong>freelance project pricing calculator tool</strong> engineered to isolate every operational dimension of independent service delivery.
+  </p>
+  <ul>
+    <li><strong>Accurate Markup vs Margin Differentiation:</strong> Avoid underpricing by separating cost-plus markups from actual top-line profit margins.</li>
+    <li><strong>Dual Pricing Models:</strong> Seamlessly toggle between fixed-price contract milestones and hourly billing arrangements.</li>
+    <li><strong>Comprehensive Overhead Apportionment:</strong> Allocate indirect expenses (software licenses, internet, office hardware) directly or as a percentage of gross billings.</li>
+    <li><strong>Monetized Labor Baseline:</strong> Evaluate your true internal baseline labor so you never treat your personal working time as economically free.</li>
+    <li><strong>Scope Creep Sensitivity Testing:</strong> Instantly simulate the exact erosion of profit caused by extra revision rounds or scope expansions.</li>
+  </ul>
+
+  <h2>Tailored Use Cases Across Independent Disciplines</h2>
+  <p>
+    Different freelance disciplines face distinct cost structures and variable expenditure profiles:
+  </p>
+  <ul>
+    <li><strong>Web Designers:</strong> Use this as a <strong>web designer project profit margin calculator</strong> to account for commercial font licenses, stock graphics, third-party plugin purchases, and multi-viewport review cycles.</li>
+    <li><strong>Freelance Developers:</strong> Functions as a dedicated <strong>freelance developer project margin estimator</strong> to model staging server charges, API test keys, and unbilled code deployment time.</li>
+    <li><strong>Small Creative Agencies:</strong> Operates as a <strong>freelance agency project profitability calculator</strong> that tracks combined subcontractor fees, project management overhead, and retained agency margins.</li>
+    <li><strong>Consultants &amp; Copywriters:</strong> Calculate value-based proposals and assess how unexpected client meetings cut into net billable rates.</li>
+  </ul>
+
+  <h2>Calculation Methodology and Authoritative Formulas</h2>
+  <p>
+    To make reliable pricing choices, you must know how every financial output is derived. Our calculation engine utilizes the following sequential financial logic:
+  </p>
+  
+  <h3>1. Net Revenue Model</h3>
+  <p>
+    For fixed-price deliverables:
+    <br>
+    <code>Net Revenue (R) = Agreed Base Fee + Approved Add-ons − Client Discounts</code>
+  </p>
+  <p>
+    For hourly billing:
+    <br>
+    <code>Net Revenue (R) = (Billable Hours × Hourly Client Rate) + Approved Add-ons − Client Discounts</code>
+  </p>
+
+  <h3>2. Base Modeled Project Cost Breakdown</h3>
+  <p>
+    A project's cost consists of more than just out-of-pocket receipts:
+    <br>
+    <code>Base Cost = Internal Labor (L) + Direct Expenses (D) + Allocated Overhead (O) + Contingency (C) + Payment Processing Fees (F)</code>
+  </p>
+  <ul>
+    <li><code>Internal Labor (L) = Total Working Hours × Internal Hourly Labor Cost</code></li>
+    <li><code>Direct Expenses (D) = Sum of all billable external purchases</code></li>
+    <li><code>Allocated Overhead (O) = (Net Revenue × Overhead %) / 100</code> (or flat fixed allocation)</li>
+    <li><code>Contingency (C) = (L + D) × Contingency Rate / 100</code></li>
+    <li><code>Payment Processing Fees (F) = Net Revenue × Processing Fee Rate / 100</code></li>
+  </ul>
+
+  <h3>3. Operating Margin vs. Cost Markup</h3>
+  <p>
+    Freelancers frequently confuse markup with profit margin. They represent completely different mathematical relationships:
+  </p>
+  <p>
+    <code>Operating Profit = Net Revenue (R) − Base Cost</code>
+    <br>
+    <code>Operating Profit Margin (%) = (Operating Profit / Net Revenue) × 100</code>
+    <br>
+    <code>Markup (%) = (Operating Profit / Base Cost) × 100</code>
+  </p>
+
+  <h3>4. Worked Numerical Example</h3>
+  <p>
+    Suppose you secure a fixed-price web redesign contract with the following parameters:
+  </p>
+  <ul>
+    <li>Proposed project fee: <strong>$2,000.00</strong></li>
+    <li>Monetized internal labor (40 hours @ $15.00/hr baseline): <strong>$600.00</strong></li>
+    <li>Direct expenses (Hosting &amp; Stock templates): <strong>$200.00</strong></li>
+    <li>Allocated business overhead (5% flat rate): <strong>$100.00</strong></li>
+    <li>Cost contingency buffer (apportioned risk): <strong>$50.00</strong></li>
+    <li>Payment gateway transaction charges: <strong>$50.00</strong></li>
+  </ul>
+  <p>
+    Total modeled project cost = <code>$600 + $200 + $100 + $50 + $50 = $1,000.00</code>.
+    <br>
+    Pre-tax operating profit = <code>$2,000.00 − $1,000.00 = $1,000.00</code>.
+    <br>
+    Operating Profit Margin = <code>($1,000 / $2,000) × 100 = 50.00%</code>.
+    <br>
+    Markup on Modeled Cost = <code>($1,000 / $1,000) × 100 = 100.00%</code>.
+  </p>
+  <p>
+    If you allocate an illustrative 20% effective tax provision on pre-tax earnings:
+    <br>
+    Estimated Tax Provision = <code>$1,000.00 × 0.20 = $200.00</code>.
+    <br>
+    After-Tax Net Profit = <code>$1,000.00 − $200.00 = $800.00</code>.
+    <br>
+    After-Tax Profit Margin = <code>($800 / $2,000) × 100 = 40.00%</code>.
+  </p>
+
+  <h2>Frequently Asked Questions (FAQ)</h2>
+  
+  <h3>How do I calculate profit margin on freelance projects?</h3>
+  <p>
+    Subtract all internal labor costs, direct software/asset purchases, allocated overhead, payment fees, and risk contingency from your net project revenue. Divide that remaining operating profit by the net project revenue, then multiply by 100 to get your profit margin percentage.
+  </p>
+
+  <h3>What is the difference between profit margin and markup?</h3>
+  <p>
+    Profit margin expresses profit as a percentage of total project revenue (the client quote), whereas markup expresses profit as a percentage of total project costs. A project that costs $1,000 and quotes at $2,000 yields a 100% markup on cost, but a 50% profit margin on revenue.
+  </p>
+
+  <h3>How much profit margin should freelancers charge?</h3>
+  <p>
+    Independent service providers generally target an operating profit margin between 25% and 45% on fixed-price projects. Highly specialized consultants and technical agencies often aim for 40% to 60% margins to protect against unexpected revision cycles and business downtime.
+  </p>
+
+  <h3>How do I calculate my freelance hourly rate?</h3>
+  <p>
+    Sum your annual living expenses, business operating costs, target savings, and tax obligations. Divide this total required income by your actual billable hours per year (typically 1,000 to 1,200 hours, after factoring in unpaid marketing, administrative tasks, sick leave, and vacation).
+  </p>
+
+  <h3>How do I calculate a fixed-price project margin?</h3>
+  <p>
+    Determine the total estimated working hours multiplied by your internal baseline hourly labor cost. Add all specific project purchases, allocated operational overhead, payment platform fees, and a contingency buffer (typically 10%–15%). Subtract this combined sum from your total flat quote to determine the project margin.
+  </p>
+
+  <h3>What costs should freelancers include in a project estimate?</h3>
+  <p>
+    Always account for internal labor costs (your personal baseline pay), third-party subcontractor fees, software licenses purchased for the client, fonts, stock photography, payment gateway fees, general overhead (broadband, subscriptions, rent), and contingency reserves for scope creep.
+  </p>
+
+  <h3>How should freelancers allocate overhead costs?</h3>
+  <p>
+    You can allocate overhead as a fixed percentage of each project's billings (typically 5%–15% based on your overall operating ratios) or by calculating your total monthly fixed expenses and dividing them across expected monthly client hours.
+  </p>
+
+  <h3>How do billable hours affect profitability?</h3>
+  <p>
+    Time spent on unbilled project administration, exploratory calls, or scope creep directly increases total project hours without adding revenue, driving down your effective hourly earnings. Tracking billable utilization helps ensure non-billable overhead is factored into baseline quotes.
+  </p>
+
+  <h3>How can scope creep reduce project profit?</h3>
+  <p>
+    Unbilled revisions and extra feature requests consume working hours that were not included in the original agreement. Because fixed quotes do not expand automatically, every additional unpaid hour increases your internal labor cost, lowering your pre-tax profit and effective hourly earnings.
+  </p>
+
+  <h3>How do I calculate a break-even project price?</h3>
+  <p>
+    Divide all fixed project costs (labor, direct expenses, flat overhead, and contingency) by <code>1 − Variable Cost Rate</code> (such as payment processing and percentage overhead fees). This determines the minimum revenue floor required to avoid an operating loss.
+  </p>
+
+  <h3>How do I estimate net income after taxes and expenses?</h3>
+  <p>
+    Subtract all valid business expenses and baseline labor from total revenue to determine pre-tax operating profit. Apply your jurisdiction's effective income and self-employment tax rate to positive pre-tax profit to arrive at your estimated after-tax net profit.
+  </p>
+
+  <h3>Can a freelance project have a negative profit margin?</h3>
+  <p>
+    Yes. If unforeseen direct expenses occur or if unbilled scope creep adds substantial hours, total modeled costs can exceed the fixed revenue collected, resulting in an operating loss and a negative margin percentage.
+  </p>
+
+  <h3>How should web designers and developers estimate project costs?</h3>
+  <p>
+    Break the project into milestones (wireframing, UI design, front-end development, backend integration, testing). Assign estimated working hours to each milestone, multiply by your internal labor rate, add direct charges (commercial plugins, domains, staging servers), and include a 10%–20% buffer for revision cycles.
+  </p>
+
+  <h3>How can agencies compare the profitability of different clients?</h3>
+  <p>
+    Log each client's final revenue, billable hours, and actual expenditures upon project completion. Comparing the resulting operating margins and effective revenue per hour reveals which client segments provide sustainable profit and which consume excessive non-billable time.
+  </p>
+
+  <h3>Is this freelance profit calculator free?</h3>
+  <p>
+    Yes. This tool is free to use directly in your browser, with no subscription, account creation, or software installation required.
+  </p>
+
+  <h3>Does this calculator send my financial data to a server?</h3>
+  <p>
+    No. All calculations, CSV generation, and storage routines execute exclusively within your local browser sandbox. No project figures or commercial records are sent to an external server or remote database.
+  </p>
+
+  <hr style="margin: 2rem 0; border: none; border-top: 1px solid #e2e8f0;">
+
+  <h2>Related Financial Utilities &amp; Further Reading</h2>
+  <p>
+    Expand your operational efficiency and evaluate related hardware runtimes using our companion tools:
+  </p>
+  <ul>
+    <li>
+      <a href="https://my-tool-app.pages.dev/">Explore more free online tools</a> across our main utility index.
+    </li>
+    <li>
+      Plan backup power and remote studio requirements with our <a href="https://my-tool-app.pages.dev/solar-battery-runtime-calculator">Solar Battery Runtime Calculator</a>.
+    </li>
+  </ul>
+
+  <h3>Official Financial &amp; Technical References</h3>
+  <p>
+    For formal business guidelines and structured data standards, consult these official resources:
+  </p>
+  <ul>
+    <li>
+      <a href="https://www.sba.gov/business-guide/manage-your-business/manage-your-finances" target="_blank" rel="noopener noreferrer">U.S. Small Business Administration: Manage Your Finances</a>
+    </li>
+    <li>
+      <a href="https://www.irs.gov/businesses/small-businesses-self-employed" target="_blank" rel="noopener noreferrer">IRS Small Business and Self-Employed Tax Center</a>
+    </li>
+    <li>
+      <a href="https://developers.google.com/search/docs/appearance/structured-data/software-app" target="_blank" rel="noopener noreferrer">Google Search Central: Software Application Structured Data</a>
+    </li>
+    <li>
+      <a href="https://developers.google.com/search/docs/appearance" target="_blank" rel="noopener noreferrer">Google Search Central Search Appearance Documentation</a>
+    </li>
+  </ul>
+</article>
+
+<!-- ============================================== -->
+<!-- SEARCH ENGINE STRUCTURED DATA (JSON-LD SCHEMA) -->
+<!-- ============================================== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Freelance Project Profit Margin Calculator",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All modern browsers",
+      "browserRequirements": "Requires JavaScript. Requires HTML5 support.",
+      "description": "Calculate freelance project profit margin, hourly rates, costs, taxes, markup, break-even point and net earnings with this free calculator.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "name": "Freelance Project Profit Margin Calculator Tool",
+      "description": "Calculate freelance project profit margin, hourly rates, costs, taxes, markup, break-even point and net earnings with this free calculator.",
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I calculate profit margin on freelance projects?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Subtract all internal labor costs, direct expenses, allocated overhead, payment fees, and contingency from net project revenue. Divide that operating profit by net revenue and multiply by 100."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between profit margin and markup?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Profit margin expresses profit as a percentage of total project revenue, while markup expresses profit as a percentage of total project costs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this calculator send my financial data to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. All calculations, CSV file generations, and local storage operations execute completely within your local browser sandbox."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
