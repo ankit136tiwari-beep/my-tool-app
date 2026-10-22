@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Invoice Late Payment Interest Calculator – Free Tool</title>
   <meta name="description" content="Calculate interest on overdue invoices with flexible annual rates, grace periods, partial payments, daily interest calculations, and a detailed payment breakdown.">
-  <link rel="canonical" href="https://my-tool-app.pages.dev/">
+  <link rel="canonical" href="https://my-tool-app.pages.dev/invoice-late-payment-interest-calculator">
 
   <!-- ==========================================================================
-       GOOGLE SCHEMA / STRUCTURED DATA (JSON-LD) - सही जगह सेट किया हुआ
+       GOOGLE SCHEMA / STRUCTURED DATA (JSON-LD)
        ========================================================================== -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Invoice Late Payment Interest Calculator",
-    "url": "https://my-tool-app.pages.dev/",
+    "url": "https://my-tool-app.pages.dev/invoice-late-payment-interest-calculator",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "All modern browsers (Chrome, Edge, Safari, Firefox)",
     "browserRequirements": "Requires JavaScript. Requires HTML5.",
@@ -31,9 +31,9 @@
 <body style="margin: 0; padding: 10px; background-color: #f1f5f9;">
 
 <!-- ==========================================================================
-     INVOICE LATE PAYMENT INTEREST CALCULATOR APP ROOT
+     INVOICE LATE PAYMENT INTEREST CALCULATOR APP ROOT (MAIN LANDMARK)
      ========================================================================== -->
-<div id="ilpic-app">
+<main id="ilpic-app">
   <style>
     /* Scoped Design Tokens & Reset */
     #ilpic-app {
@@ -60,6 +60,7 @@
       --ilpic-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
       --ilpic-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
       
+      display: block;
       font-family: var(--ilpic-font);
       color: var(--ilpic-text);
       background-color: var(--ilpic-bg);
@@ -122,6 +123,10 @@
       padding: 1.25rem;
       margin-bottom: 1.25rem;
       box-shadow: var(--ilpic-shadow);
+    }
+
+    #ilpic-app #ilpic-invoices-list {
+      min-height: 400px;
     }
 
     #ilpic-app .ilpic-card-header {
@@ -205,12 +210,6 @@
 
     #ilpic-app .ilpic-error-text.ilpic-active {
       display: block;
-    }
-
-    #ilpic-app .ilpic-help-text {
-      font-size: 0.775rem;
-      color: var(--ilpic-text-muted);
-      margin-top: 0.25rem;
     }
 
     /* Buttons & Interactive Elements */
@@ -328,10 +327,10 @@
       border: 1px solid #bae6fd;
     }
 
-    /* Result Dashboard */
+    /* Result Dashboard & Layout Shift Stability */
     #ilpic-app #ilpic-results-container {
-      display: none;
       margin-top: 1.5rem;
+      transition: opacity 0.2s ease;
     }
 
     #ilpic-app .ilpic-kpi-grid {
@@ -406,7 +405,7 @@
       display: none;
     }
 
-    /* Rich Explanatory Sections */
+    /* Informational Content */
     #ilpic-app .ilpic-info-block {
       background-color: #ffffff;
       border: 1px solid var(--ilpic-border-light);
@@ -511,26 +510,169 @@
       <button type="button" class="ilpic-btn ilpic-btn-secondary ilpic-btn-sm" id="ilpic-btn-load-example" aria-label="Load sample calculation data">Load Demo Values</button>
     </div>
 
-    <!-- INVOICE LIST CONTAINER -->
-    <div id="ilpic-invoices-list"></div>
+    <!-- INVOICE LIST CONTAINER (Pre-rendered Card 1 avoids dynamic load CLS) -->
+    <div id="ilpic-invoices-list">
+      <div class="ilpic-card" id="ilpic-inv-card-1" data-invoice-id="1">
+        <div class="ilpic-card-header">
+          <span style="font-weight:700; color:var(--ilpic-primary);">Invoice Entry #1</span>
+          <div style="display:flex; gap:0.5rem;">
+            <button type="button" class="ilpic-btn ilpic-btn-secondary ilpic-btn-sm ilpic-btn-duplicate" aria-label="Duplicate invoice">Duplicate</button>
+            <button type="button" class="ilpic-btn ilpic-btn-danger-outline ilpic-btn-remove" aria-label="Delete invoice">Remove</button>
+          </div>
+        </div>
+
+        <div class="ilpic-grid">
+          <div class="ilpic-field-group">
+            <label class="ilpic-label" for="ilpic-ref-1">Invoice Reference</label>
+            <input type="text" id="ilpic-ref-1" class="ilpic-input ilpic-field-ref" value="INV-1001" maxlength="40">
+            <span class="ilpic-error-text" id="ilpic-err-ref-1">Required reference.</span>
+          </div>
+
+          <div class="ilpic-field-group">
+            <label class="ilpic-label" for="ilpic-currency-1">Currency</label>
+            <select id="ilpic-currency-1" class="ilpic-select ilpic-field-currency">
+              <option value="USD" selected>USD – US Dollar</option>
+              <option value="INR">INR – Indian Rupee</option>
+              <option value="GBP">GBP – British Pound</option>
+              <option value="EUR">EUR – Euro</option>
+              <option value="CAD">CAD – Canadian Dollar</option>
+              <option value="AUD">AUD – Australian Dollar</option>
+              <option value="SGD">SGD – Singapore Dollar</option>
+              <option value="AED">AED – UAE Dirham</option>
+            </select>
+          </div>
+
+          <div class="ilpic-field-group">
+            <label class="ilpic-label" for="ilpic-amount-1">Principal Amount</label>
+            <input type="number" step="0.01" min="0.01" id="ilpic-amount-1" class="ilpic-input ilpic-field-amount" value="10000.00">
+            <span class="ilpic-error-text" id="ilpic-err-amount-1">Must be greater than 0.</span>
+          </div>
+
+          <div class="ilpic-field-group">
+            <label class="ilpic-label" for="ilpic-rate-1">Annual Interest Rate (%)</label>
+            <input type="number" step="0.01" min="0" max="1000" id="ilpic-rate-1" class="ilpic-input ilpic-field-rate" value="12.0">
+            <span class="ilpic-error-text" id="ilpic-err-rate-1">Enter valid rate (0-1000%).</span>
+          </div>
+        </div>
+
+        <div class="ilpic-grid" style="margin-top:0.75rem;">
+          <div class="ilpic-field-group">
+            <label class="ilpic-label" for="ilpic-issue-1">Issue Date</label>
+            <input type="date" id="ilpic-issue-1" class="ilpic-input ilpic-field-issue">
+            <span class="ilpic-error-text" id="ilpic-err-issue-1">Valid date required.</span>
+          </div>
+
+          <div class="ilpic-field-group">
+            <label class="ilpic-label" for="ilpic-due-1">Due Date</label>
+            <input type="date" id="ilpic-due-1" class="ilpic-input ilpic-field-due">
+            <span class="ilpic-error-text" id="ilpic-err-due-1">Due date cannot precede issue date.</span>
+          </div>
+
+          <div class="ilpic-field-group">
+            <label class="ilpic-label" for="ilpic-grace-1">Grace Period (Days)</label>
+            <input type="number" min="0" max="365" step="1" id="ilpic-grace-1" class="ilpic-input ilpic-field-grace" value="0">
+            <span class="ilpic-error-text" id="ilpic-err-grace-1">Enter 0 or positive integer.</span>
+          </div>
+
+          <div class="ilpic-field-group">
+            <label class="ilpic-label" for="ilpic-endmode-1">Calculate Through</label>
+            <select id="ilpic-endmode-1" class="ilpic-select ilpic-field-endmode">
+              <option value="today" selected>Today's Date</option>
+              <option value="custom">Specific Settlement Date</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="ilpic-grid" style="margin-top:0.75rem;">
+          <div class="ilpic-field-group ilpic-custom-date-container" style="display:none;">
+            <label class="ilpic-label" for="ilpic-custom-end-1">Calculation As-of Date</label>
+            <input type="date" id="ilpic-custom-end-1" class="ilpic-input ilpic-field-custom-end">
+            <span class="ilpic-error-text" id="ilpic-err-custom-end-1">Cannot be earlier than issue date.</span>
+          </div>
+
+          <div class="ilpic-field-group">
+            <label class="ilpic-label" for="ilpic-method-1">Interest Method</label>
+            <select id="ilpic-method-1" class="ilpic-select ilpic-field-method">
+              <option value="simple" selected>Simple Interest (Commercial Std)</option>
+              <option value="daily_simple">Daily Simple Accrual</option>
+              <option value="compound_daily">Compound Interest (Daily)</option>
+              <option value="compound_monthly">Compound Interest (Monthly)</option>
+              <option value="compound_annually">Compound Interest (Annual)</option>
+            </select>
+          </div>
+
+          <div class="ilpic-field-group">
+            <label class="ilpic-label" for="ilpic-basis-1">Day-Count Convention</label>
+            <select id="ilpic-basis-1" class="ilpic-select ilpic-field-basis">
+              <option value="actual_365" selected>Actual/365 Fixed</option>
+              <option value="actual_366">Actual/366 (Leap Year)</option>
+              <option value="30_360">30/360 US/ISDA</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Late Fees Configuration Collapsible -->
+        <div style="margin-top: 1rem; padding: 0.75rem; background-color: #f8fafc; border-radius: var(--ilpic-radius-sm); border: 1px dashed var(--ilpic-border);">
+          <div style="font-weight:600; font-size:0.875rem; margin-bottom:0.5rem; color:var(--ilpic-text);">Optional Late Fees</div>
+          <div class="ilpic-grid">
+            <div class="ilpic-field-group">
+              <label class="ilpic-label" for="ilpic-fixed-fee-1">Fixed Late Fee Amount</label>
+              <input type="number" min="0" step="0.01" id="ilpic-fixed-fee-1" class="ilpic-input ilpic-field-fixed-fee" value="0.00">
+            </div>
+            <div class="ilpic-field-group">
+              <label class="ilpic-label" for="ilpic-pct-fee-1">Percentage Late Fee (%)</label>
+              <input type="number" min="0" step="0.01" id="ilpic-pct-fee-1" class="ilpic-input ilpic-field-pct-fee" value="0.00">
+            </div>
+            <div class="ilpic-field-group">
+              <label class="ilpic-label" for="ilpic-pct-base-1">Percentage Fee Basis</label>
+              <select id="ilpic-pct-base-1" class="ilpic-select ilpic-field-pct-base">
+                <option value="original">Original Invoice Balance</option>
+                <option value="outstanding">Outstanding Unpaid Balance</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Partial Payments Schedule Section -->
+        <div style="margin-top: 1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-weight:600; font-size:0.9rem; color:var(--ilpic-text);">Partial Payments History</span>
+            <button type="button" class="ilpic-btn ilpic-btn-secondary ilpic-btn-sm ilpic-btn-add-payment" aria-label="Log partial payment">+ Add Payment</button>
+          </div>
+          <div class="ilpic-payments-table-container">
+            <table class="ilpic-table ilpic-payments-table">
+              <thead>
+                <tr>
+                  <th scope="col">Payment Date</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Reference / Note</th>
+                  <th scope="col" style="width:60px;">Action</th>
+                </tr>
+              </thead>
+              <tbody class="ilpic-payments-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="ilpic-actions">
-      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-add-invoice">
+      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-add-invoice" aria-label="Add Another Invoice to calculation">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
         Add Another Invoice
       </button>
-      <button type="button" class="ilpic-btn ilpic-btn-primary" id="ilpic-btn-calculate">
+      <button type="button" class="ilpic-btn ilpic-btn-primary" id="ilpic-btn-calculate" aria-label="Calculate Late Payment Interest">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
         Calculate Interest
       </button>
-      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-reset">Reset Form</button>
+      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-reset" aria-label="Reset all inputs">Reset Form</button>
     </div>
 
     <div id="ilpic-notification-area" aria-live="polite"></div>
   </div>
 
-  <!-- RESULTS DASHBOARD -->
-  <div class="ilpic-card" id="ilpic-results-container" aria-live="polite">
+  <!-- RESULTS DASHBOARD (Hidden cleanly, structured for zero layout shifts) -->
+  <div class="ilpic-card" id="ilpic-results-container" style="display:none;" aria-live="polite">
     <div class="ilpic-card-header">
       <h2 class="ilpic-card-title">2. Calculation Results & Payment Summary</h2>
       <span id="ilpic-calculation-timestamp" style="font-size:0.8rem; color:var(--ilpic-text-muted);"></span>
@@ -541,15 +683,15 @@
 
     <!-- Action Toolbar: Copy, Export, Print -->
     <div class="ilpic-actions" style="margin-top: 1rem;">
-      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-copy">
+      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-copy" aria-label="Copy summary to clipboard">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
         Copy Summary
       </button>
-      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-csv">
+      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-csv" aria-label="Export calculation schedule to CSV">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
         Download CSV
       </button>
-      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-print">
+      <button type="button" class="ilpic-btn ilpic-btn-secondary" id="ilpic-btn-print" aria-label="Print detailed report">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
         Print Report
       </button>
@@ -664,7 +806,7 @@
       "use strict";
 
       // Application State
-      let invoiceCounter = 0;
+      let invoiceCounter = 1;
       let latestCalculationData = null;
 
       const SUPPORTED_CURRENCIES = [
@@ -783,8 +925,42 @@
       }
 
       // ==========================================
-      // UI COMPONENT FACTORY
+      // UI COMPONENT FACTORY & EVENT ATTACHMENT
       // ==========================================
+      function attachCardEventListeners(card, id) {
+        const endModeSelect = card.querySelector(".ilpic-field-endmode");
+        const customDateWrap = card.querySelector(".ilpic-custom-date-container");
+        endModeSelect.addEventListener("change", () => {
+          customDateWrap.style.display = endModeSelect.value === "custom" ? "flex" : "none";
+        });
+
+        const btnRemove = card.querySelector(".ilpic-btn-remove");
+        btnRemove.addEventListener("click", () => {
+          if (root.querySelectorAll(".ilpic-card[data-invoice-id]").length <= 1) {
+            showNotification("At least one invoice must remain active.", "warning");
+            return;
+          }
+          card.remove();
+          markResultsStale();
+        });
+
+        const btnDuplicate = card.querySelector(".ilpic-btn-duplicate");
+        btnDuplicate.addEventListener("click", () => {
+          duplicateInvoice(id);
+        });
+
+        const btnAddPayment = card.querySelector(".ilpic-btn-add-payment");
+        const tbodyPayments = card.querySelector(".ilpic-payments-tbody");
+        btnAddPayment.addEventListener("click", () => {
+          addPaymentRow(tbodyPayments, id);
+        });
+
+        card.querySelectorAll("input, select").forEach(el => {
+          el.addEventListener("input", markResultsStale);
+          el.addEventListener("change", markResultsStale);
+        });
+      }
+
       function createInvoiceCard(id, defaultValues = {}) {
         const card = document.createElement("div");
         card.className = "ilpic-card";
@@ -900,7 +1076,6 @@
             </div>
           </div>
 
-          <!-- Late Fees Configuration Collapsible -->
           <div style="margin-top: 1rem; padding: 0.75rem; background-color: #f8fafc; border-radius: var(--ilpic-radius-sm); border: 1px dashed var(--ilpic-border);">
             <div style="font-weight:600; font-size:0.875rem; margin-bottom:0.5rem; color:var(--ilpic-text);">Optional Late Fees</div>
             <div class="ilpic-grid">
@@ -922,7 +1097,6 @@
             </div>
           </div>
 
-          <!-- Partial Payments Schedule Section -->
           <div style="margin-top: 1.25rem;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <span style="font-weight:600; font-size:0.9rem; color:var(--ilpic-text);">Partial Payments History</span>
@@ -944,46 +1118,14 @@
           </div>
         `;
 
-        // Event Listeners for Dynamic Card
-        const endModeSelect = card.querySelector(".ilpic-field-endmode");
-        const customDateWrap = card.querySelector(".ilpic-custom-date-container");
-        endModeSelect.addEventListener("change", () => {
-          customDateWrap.style.display = endModeSelect.value === "custom" ? "flex" : "none";
-        });
+        attachCardEventListeners(card, id);
 
-        const btnRemove = card.querySelector(".ilpic-btn-remove");
-        btnRemove.addEventListener("click", () => {
-          if (root.querySelectorAll(".ilpic-card[data-invoice-id]").length <= 1) {
-            showNotification("At least one invoice must remain active.", "warning");
-            return;
-          }
-          card.remove();
-          markResultsStale();
-        });
-
-        const btnDuplicate = card.querySelector(".ilpic-btn-duplicate");
-        btnDuplicate.addEventListener("click", () => {
-          duplicateInvoice(id);
-        });
-
-        const btnAddPayment = card.querySelector(".ilpic-btn-add-payment");
         const tbodyPayments = card.querySelector(".ilpic-payments-tbody");
-        btnAddPayment.addEventListener("click", () => {
-          addPaymentRow(tbodyPayments, id);
-        });
-
-        // Add payment rows if passed in defaults
         if (defaultValues.payments && Array.isArray(defaultValues.payments)) {
           defaultValues.payments.forEach(p => {
             addPaymentRow(tbodyPayments, id, p);
           });
         }
-
-        // Attach stale indicator triggers
-        card.querySelectorAll("input, select").forEach(el => {
-          el.addEventListener("input", markResultsStale);
-          el.addEventListener("change", markResultsStale);
-        });
 
         return card;
       }
@@ -995,11 +1137,11 @@
         const pNote = defaults.note || "";
 
         row.innerHTML = `
-          <td><input type="date" class="ilpic-input ilpic-pay-date" value="${pDate}" required></td>
-          <td><input type="number" step="0.01" min="0.01" class="ilpic-input ilpic-pay-amount" value="${pAmount}" required></td>
-          <td><input type="text" class="ilpic-input ilpic-pay-note" maxlength="30" placeholder="e.g., Check #104" value="${pNote}"></td>
+          <td><input type="date" class="ilpic-input ilpic-pay-date" value="${pDate}" aria-label="Payment Date" required></td>
+          <td><input type="number" step="0.01" min="0.01" class="ilpic-input ilpic-pay-amount" value="${pAmount}" aria-label="Payment Amount" required></td>
+          <td><input type="text" class="ilpic-input ilpic-pay-note" maxlength="30" placeholder="e.g., Check #104" value="${pNote}" aria-label="Payment Note"></td>
           <td style="text-align:center;">
-            <button type="button" class="ilpic-btn ilpic-btn-danger-outline ilpic-btn-sm ilpic-btn-del-payment" aria-label="Delete payment">&times;</button>
+            <button type="button" class="ilpic-btn ilpic-btn-danger-outline ilpic-btn-sm ilpic-btn-del-payment" aria-label="Delete this payment row">&times;</button>
           </td>
         `;
 
@@ -1310,13 +1452,12 @@
 
                 const t = periodDays / denominator;
                 const r = rate / 100;
-                // Periodic compound accumulation
                 const compFactor = Math.pow(1 + r / m, m * t);
                 periodInterest = currentPrincipal * (compFactor - 1);
               }
             }
 
-            // Round intermediate period interest to financial standard
+            // Round intermediate period interest
             periodInterest = Math.round(periodInterest * 100) / 100;
             totalInterestAccrued += periodInterest;
 
@@ -1671,11 +1812,21 @@
       // INITIALIZATION & EVENT DISPATCHERS
       // ==========================================
       function initApp() {
-        invoicesListContainer.innerHTML = "";
-        invoiceCounter = 1;
+        const todayStr = getTodayIso();
 
-        const initialCard = createInvoiceCard(invoiceCounter);
-        invoicesListContainer.appendChild(initialCard);
+        // Setup existing pre-rendered initial card
+        const initialCard = root.querySelector("#ilpic-inv-card-1");
+        if (initialCard) {
+          const issueInput = initialCard.querySelector(".ilpic-field-issue");
+          const dueInput = initialCard.querySelector(".ilpic-field-due");
+          const customEndInput = initialCard.querySelector(".ilpic-field-custom-end");
+          
+          if (!issueInput.value) issueInput.value = todayStr;
+          if (!dueInput.value) dueInput.value = todayStr;
+          if (!customEndInput.value) customEndInput.value = todayStr;
+
+          attachCardEventListeners(initialCard, 1);
+        }
 
         btnAddInvoice.addEventListener("click", () => {
           invoiceCounter++;
@@ -1690,7 +1841,10 @@
 
         btnReset.addEventListener("click", () => {
           if (confirm("Reset all invoice parameters and calculation schedules?")) {
-            initApp();
+            invoicesListContainer.innerHTML = "";
+            invoiceCounter = 1;
+            const freshCard = createInvoiceCard(invoiceCounter);
+            invoicesListContainer.appendChild(freshCard);
             resultsContainer.style.display = "none";
             clearNotification();
           }
@@ -1744,6 +1898,6 @@
       }
     })();
   </script>
-</div>
+</main>
 </body>
 </html>
