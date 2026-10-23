@@ -126,7 +126,8 @@ const TOOLS=[
 {id:"airbnb-occupancy-break-even-calculator",c:"calc",n:"Airbnb Occupancy Break-Even Calculator",d:"Calculate the break-even occupancy rate needed to cover property expenses and mortgage.",url:"https://my-tool-app.pages.dev/airbnb-occupancy-break-even-calculator"},
 {id:"dividend-reinvestment-growth-calculator",c:"calc",n:"Dividend Reinvestment Growth Calculator",d:"Calculate long-term investment growth with dividend reinvestment (DRIP compounding).",url:"https://my-tool-app.pages.dev/dividend-reinvestment-growth-calculator"},
 {id:"emergency-fund-months-of-expenses-calculator",c:"calc",n:"Emergency Fund Months of Expenses Calculator",d:"Determine how many months of financial runway your current emergency savings provide.",url:"https://my-tool-app.pages.dev/emergency-fund-months-of-expenses-calculator"},
-{id:"freelance-project-profit-margin-calculator",c:"calc",n:"Freelance Project Profit Margin Calculator",d:"Calculate net profit margins and markup for freelance projects and client deliverables.",url:"https://my-tool-app.pages.dev/freelance-project-profit-margin-calculator"}
+{id:"freelance-project-profit-margin-calculator",c:"calc",n:"Freelance Project Profit Margin Calculator",d:"Calculate net profit margins and markup for freelance projects and client deliverables.",url:"https://my-tool-app.pages.dev/freelance-project-profit-margin-calculator"},
+{id:"loan-origination-fee-apr-calculator",c:"calc",n:"Loan Origination Fee APR Calculator",d:"Calculate the true APR of a loan after accounting for upfront origination fees.",url:"https://my-tool-app.pages.dev/loan-origination-fee-apr-calculator"}
 ];
 const $=(s,r=document)=>r.querySelector(s),app=$("#app"),el=(t,a={},...k)=>{const e=document.createElement(t);for(const x in a)x in e&&x!=="list"?e[x]=a[x]:e.setAttribute(x,a[x]);k.flat().forEach(c=>e.append(c));return e};
 const card=t=>el("a",{className:"card",href:t.url||("#/tool/"+t.id)},el("strong",{},t.n),el("span",{},t.d));
