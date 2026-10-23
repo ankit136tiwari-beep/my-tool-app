@@ -1,0 +1,1760 @@
+<!-- ==========================================================================
+     LOAN ORIGINATION FEE APR IMPACT ESTIMATOR - ALL-IN-ONE BLOGGER CODE
+     (HTML + SCOPED CSS + VANILLA JAVASCRIPT + JSON-LD SCHEMA)
+     ========================================================================== -->
+
+<div class="loan-apr-estimator" id="loan-apr-estimator-app">
+
+  <!-- 1. SCOPED CSS STYLESHEET -->
+  <style>
+  .loan-apr-estimator {
+    --lae-primary: #1e3a8a;
+    --lae-primary-hover: #172554;
+    --lae-primary-light: #eff6ff;
+    --lae-accent: #2563eb;
+    --lae-text-main: #0f172a;
+    --lae-text-muted: #475569;
+    --lae-text-light: #64748b;
+    --lae-bg-surface: #ffffff;
+    --lae-bg-canvas: #f8fafc;
+    --lae-border: #e2e8f0;
+    --lae-border-focus: #3b82f6;
+    --lae-error: #dc2626;
+    --lae-error-bg: #fef2f2;
+    --lae-success: #15803d;
+    --lae-success-bg: #f0fdf4;
+    --lae-radius-sm: 4px;
+    --lae-radius-md: 8px;
+    --lae-radius-lg: 12px;
+    --lae-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --lae-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --lae-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+    box-sizing: border-box;
+    font-family: var(--lae-font-sans);
+    color: var(--lae-text-main);
+    background-color: var(--lae-bg-canvas);
+    line-height: 1.5;
+    font-size: 16px;
+    padding: 1.5rem 1rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .loan-apr-estimator *,
+  .loan-apr-estimator *::before,
+  .loan-apr-estimator *::after {
+    box-sizing: inherit;
+  }
+
+  .loan-apr-estimator .lae-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .loan-apr-estimator .lae-breadcrumb {
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    color: var(--lae-text-light);
+  }
+
+  .loan-apr-estimator .lae-breadcrumb ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .loan-apr-estimator .lae-breadcrumb li {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .loan-apr-estimator .lae-breadcrumb a {
+    color: var(--lae-accent);
+    text-decoration: none;
+  }
+
+  .loan-apr-estimator .lae-breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .loan-apr-estimator .lae-breadcrumb-sep {
+    margin: 0 0.5rem;
+    color: var(--lae-border);
+  }
+
+  .loan-apr-estimator .lae-header {
+    margin-bottom: 2rem;
+  }
+
+  .loan-apr-estimator .lae-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--lae-primary);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.25;
+  }
+
+  .loan-apr-estimator .lae-subtitle {
+    font-size: 1.05rem;
+    color: var(--lae-text-muted);
+    margin: 0;
+    max-width: 820px;
+  }
+
+  .loan-apr-estimator .lae-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 900px) {
+    .loan-apr-estimator .lae-grid {
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: start;
+    }
+  }
+
+  .loan-apr-estimator .lae-card {
+    background: var(--lae-bg-surface);
+    border: 1px solid var(--lae-border);
+    border-radius: var(--lae-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--lae-shadow-sm);
+    margin-bottom: 1.5rem;
+  }
+
+  .loan-apr-estimator .lae-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--lae-border);
+  }
+
+  .loan-apr-estimator .lae-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--lae-primary);
+    margin: 0;
+  }
+
+  .loan-apr-estimator .lae-card-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .loan-apr-estimator .lae-fieldset {
+    border: none;
+    padding: 0;
+    margin: 0 0 1.25rem 0;
+  }
+
+  .loan-apr-estimator .lae-legend {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--lae-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .loan-apr-estimator .lae-form-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  @media (min-width: 540px) {
+    .loan-apr-estimator .lae-form-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .loan-apr-estimator .lae-full-width {
+    grid-column: 1 / -1;
+  }
+
+  .loan-apr-estimator .lae-field-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .loan-apr-estimator .lae-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--lae-text-main);
+    margin-bottom: 0.35rem;
+  }
+
+  .loan-apr-estimator .lae-required {
+    color: var(--lae-error);
+  }
+
+  .loan-apr-estimator .lae-input,
+  .loan-apr-estimator .lae-select {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--lae-border);
+    border-radius: var(--lae-radius-md);
+    font-size: 0.95rem;
+    color: var(--lae-text-main);
+    background-color: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .loan-apr-estimator .lae-input:focus,
+  .loan-apr-estimator .lae-select:focus {
+    outline: none;
+    border-color: var(--lae-border-focus);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  }
+
+  .loan-apr-estimator .lae-input.lae-input-invalid {
+    border-color: var(--lae-error);
+    background-color: var(--lae-error-bg);
+  }
+
+  .loan-apr-estimator .lae-input-unit-group {
+    display: flex;
+  }
+
+  .loan-apr-estimator .lae-input-unit-group .lae-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    flex: 1;
+  }
+
+  .loan-apr-estimator .lae-select-unit {
+    width: auto;
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color: var(--lae-bg-canvas);
+    font-weight: 500;
+  }
+
+  .loan-apr-estimator .lae-field-hint {
+    font-size: 0.8rem;
+    color: var(--lae-text-muted);
+    margin: 0.35rem 0 0 0;
+  }
+
+  .loan-apr-estimator .lae-field-error {
+    font-size: 0.775rem;
+    color: var(--lae-error);
+    margin-top: 0.25rem;
+    min-height: 1rem;
+  }
+
+  .loan-apr-estimator .lae-btn-primary {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: var(--lae-accent);
+    color: #fff;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid transparent;
+    border-radius: var(--lae-radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  .loan-apr-estimator .lae-btn-primary:hover {
+    background-color: var(--lae-primary);
+  }
+
+  .loan-apr-estimator .lae-btn-secondary {
+    background-color: var(--lae-primary-light);
+    color: var(--lae-accent);
+    border: 1px solid transparent;
+    border-radius: var(--lae-radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .loan-apr-estimator .lae-btn-secondary:hover {
+    background-color: #dbeafe;
+  }
+
+  .loan-apr-estimator .lae-btn-outline {
+    background-color: transparent;
+    color: var(--lae-text-muted);
+    border: 1px solid var(--lae-border);
+    border-radius: var(--lae-radius-md);
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .loan-apr-estimator .lae-btn-outline:hover {
+    background-color: var(--lae-bg-canvas);
+    color: var(--lae-text-main);
+  }
+
+  .loan-apr-estimator .lae-btn-sm {
+    font-size: 0.825rem;
+    padding: 0.35rem 0.65rem;
+  }
+
+  .loan-apr-estimator .lae-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  @media (min-width: 500px) {
+    .loan-apr-estimator .lae-hero-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .loan-apr-estimator .lae-metric-box {
+    background-color: var(--lae-bg-canvas);
+    border: 1px solid var(--lae-border);
+    border-radius: var(--lae-radius-md);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .loan-apr-estimator .lae-metric-highlight {
+    background-color: var(--lae-primary-light);
+    border-color: #bfdbfe;
+  }
+
+  .loan-apr-estimator .lae-metric-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--lae-text-muted);
+    letter-spacing: 0.025em;
+    margin-bottom: 0.25rem;
+  }
+
+  .loan-apr-estimator .lae-metric-val {
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: var(--lae-primary);
+    line-height: 1.1;
+    margin-bottom: 0.25rem;
+  }
+
+  .loan-apr-estimator .lae-metric-sub {
+    font-size: 0.8rem;
+    color: var(--lae-text-light);
+  }
+
+  .loan-apr-estimator .lae-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 1.25rem;
+  }
+
+  .loan-apr-estimator .lae-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    text-align: left;
+  }
+
+  .loan-apr-estimator .lae-table th,
+  .loan-apr-estimator .lae-table td {
+    padding: 0.7rem 0.6rem;
+    border-bottom: 1px solid var(--lae-border);
+  }
+
+  .loan-apr-estimator .lae-table thead th {
+    background-color: var(--lae-bg-canvas);
+    font-weight: 600;
+    color: var(--lae-text-muted);
+  }
+
+  .loan-apr-estimator .lae-text-right {
+    text-align: right;
+  }
+
+  .loan-apr-estimator .lae-text-center {
+    text-align: center;
+  }
+
+  .loan-apr-estimator .lae-bold {
+    font-weight: 700;
+  }
+
+  .loan-apr-estimator .lae-disclaimer-box {
+    background-color: var(--lae-bg-canvas);
+    border-left: 4px solid var(--lae-accent);
+    padding: 0.75rem 1rem;
+    font-size: 0.825rem;
+    color: var(--lae-text-muted);
+    border-radius: 0 var(--lae-radius-sm) var(--lae-radius-sm) 0;
+    margin-bottom: 1.25rem;
+    line-height: 1.4;
+  }
+
+  .loan-apr-estimator .lae-bar-container {
+    margin-top: 1rem;
+  }
+
+  .loan-apr-estimator .lae-bar-label {
+    font-size: 0.825rem;
+    font-weight: 600;
+    color: var(--lae-text-muted);
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+
+  .loan-apr-estimator .lae-progress-bar {
+    display: flex;
+    height: 14px;
+    background-color: var(--lae-border);
+    border-radius: 7px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+
+  .loan-apr-estimator .lae-progress-segment {
+    height: 100%;
+    transition: width 0.3s ease;
+  }
+
+  .loan-apr-estimator .lae-seg-proceeds { background-color: #2563eb; }
+  .loan-apr-estimator .lae-seg-fees { background-color: #f59e0b; }
+  .loan-apr-estimator .lae-seg-interest { background-color: #64748b; }
+
+  .loan-apr-estimator .lae-bar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: var(--lae-text-muted);
+  }
+
+  .loan-apr-estimator .lae-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 0.25rem;
+  }
+
+  .loan-apr-estimator .lae-dot-proceeds { background-color: #2563eb; }
+  .loan-apr-estimator .lae-dot-fees { background-color: #f59e0b; }
+  .loan-apr-estimator .lae-dot-interest { background-color: #64748b; }
+
+  .loan-apr-estimator .lae-section-desc {
+    font-size: 0.925rem;
+    color: var(--lae-text-muted);
+    margin-top: -0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .loan-apr-estimator .lae-compare-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 600px) {
+    .loan-apr-estimator .lae-compare-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .loan-apr-estimator .lae-scenario-col {
+    background-color: var(--lae-bg-canvas);
+    border: 1px solid var(--lae-border);
+    border-radius: var(--lae-radius-md);
+    padding: 1rem;
+  }
+
+  .loan-apr-estimator .lae-scenario-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--lae-primary);
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--lae-border);
+  }
+
+  .loan-apr-estimator .lae-mt-4 { margin-top: 1rem; }
+
+  .loan-apr-estimator .lae-summary-banner {
+    padding: 0.85rem 1rem;
+    border-radius: var(--lae-radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 1rem;
+  }
+
+  .loan-apr-estimator .lae-banner-win-a {
+    background-color: var(--lae-success-bg);
+    color: var(--lae-success);
+    border: 1px solid #bbf7d0;
+  }
+
+  .loan-apr-estimator .lae-banner-win-b {
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+  }
+
+  .loan-apr-estimator .lae-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .loan-apr-estimator .lae-accordion-item {
+    border: 1px solid var(--lae-border);
+    border-radius: var(--lae-radius-md);
+    overflow: hidden;
+    background-color: #fff;
+  }
+
+  .loan-apr-estimator .lae-accordion-header {
+    padding: 0.9rem 1.1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    background-color: var(--lae-bg-surface);
+    user-select: none;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .loan-apr-estimator .lae-accordion-header::-webkit-details-marker {
+    display: none;
+  }
+
+  .loan-apr-estimator .lae-accordion-header::after {
+    content: "+";
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--lae-text-light);
+  }
+
+  .loan-apr-estimator details[open] .lae-accordion-header::after {
+    content: "\2212";
+  }
+
+  .loan-apr-estimator .lae-accordion-body {
+    padding: 1rem 1.1rem;
+    font-size: 0.9rem;
+    color: var(--lae-text-muted);
+    line-height: 1.6;
+    border-top: 1px solid var(--lae-border);
+  }
+
+  .loan-apr-estimator .lae-equation-block {
+    background-color: var(--lae-bg-canvas);
+    border: 1px solid var(--lae-border);
+    padding: 0.75rem 1rem;
+    border-radius: var(--lae-radius-md);
+    font-family: var(--lae-font-mono);
+    font-size: 0.85rem;
+    color: var(--lae-primary);
+    margin: 0.75rem 0;
+    overflow-x: auto;
+  }
+
+  .loan-apr-estimator .lae-link-list,
+  .loan-apr-estimator .lae-related-nav {
+    padding-left: 1.25rem;
+    margin: 0.5rem 0;
+  }
+
+  .loan-apr-estimator .lae-link-list li,
+  .loan-apr-estimator .lae-related-nav li {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .loan-apr-estimator .lae-link-list a,
+  .loan-apr-estimator .lae-related-nav a {
+    color: var(--lae-accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .loan-apr-estimator .lae-link-list a:hover,
+  .loan-apr-estimator .lae-related-nav a:hover {
+    text-decoration: underline;
+  }
+
+  .loan-apr-estimator .lae-footer {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--lae-border);
+    font-size: 0.85rem;
+    color: var(--lae-text-muted);
+  }
+
+  .loan-apr-estimator .lae-copyright {
+    margin-top: 1rem;
+    color: var(--lae-text-light);
+  }
+
+  @media (max-width: 600px) {
+    .loan-apr-estimator .lae-title {
+      font-size: 1.5rem;
+    }
+    .loan-apr-estimator .lae-metric-val {
+      font-size: 1.35rem;
+    }
+  }
+  </style>
+
+  <!-- 2. BREADCRUMB NAVIGATION -->
+  <nav class="lae-breadcrumb" aria-label="Breadcrumb">
+    <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="https://my-tool-app.pages.dev/" itemprop="item"><span itemprop="name">Financial Calculators</span></a>
+        <meta itemprop="position" content="1" />
+      </li>
+      <li aria-hidden="true" class="lae-breadcrumb-sep">/</li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span itemprop="name" aria-current="page">Loan Origination Fee APR Impact Estimator</span>
+        <meta itemprop="item" content="https://my-tool-app.pages.dev/loan-origination-fee-apr-calculator" />
+        <meta itemprop="position" content="2" />
+      </li>
+    </ol>
+  </nav>
+
+  <!-- 3. HEADER -->
+  <header class="lae-header">
+    <h1 class="lae-title">Loan Origination Fee APR Impact Estimator</h1>
+    <p class="lae-subtitle">
+      Determine how upfront origination charges and administrative closing fees alter your true annual borrowing cost, 
+      reduce your net loan proceeds, and impact scheduled payments.
+    </p>
+  </header>
+
+  <!-- Accessible Screen Reader Announcer -->
+  <div id="lae-live-announcer" class="lae-sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- 4. MAIN CALCULATOR INTERFACE & RESULTS -->
+  <div class="lae-grid">
+
+    <!-- Inputs Form Card -->
+    <section class="lae-card lae-input-card" aria-labelledby="lae-calc-heading">
+      <div class="lae-card-header">
+        <h2 id="lae-calc-heading" class="lae-card-title">Loan &amp; Fee Parameters</h2>
+        <div class="lae-card-actions">
+          <button type="button" id="lae-btn-load-example" class="lae-btn-secondary lae-btn-sm">Load Example</button>
+          <button type="button" id="lae-btn-reset" class="lae-btn-outline lae-btn-sm">Reset</button>
+        </div>
+      </div>
+
+      <form id="lae-calculator-form" novalidate>
+        <!-- Fieldset: Loan Basics -->
+        <fieldset class="lae-fieldset">
+          <legend class="lae-legend">1. Loan Basics</legend>
+
+          <div class="lae-form-row">
+            <div class="lae-field-group">
+              <label for="lae-loan-type" class="lae-label">Loan Type</label>
+              <select id="lae-loan-type" class="lae-select">
+                <option value="personal">Personal Loan</option>
+                <option value="business">Small Business Loan</option>
+                <option value="mortgage">Residential Mortgage</option>
+                <option value="auto">Auto / Vehicle Loan</option>
+                <option value="installment">General Installment Loan</option>
+              </select>
+            </div>
+            <div class="lae-field-group">
+              <label for="lae-gross-amount" class="lae-label">Gross Loan Amount ($) <span class="lae-required">*</span></label>
+              <input type="number" id="lae-gross-amount" class="lae-input" placeholder="e.g. 20000" min="500" max="10000000" step="100" required />
+              <span class="lae-field-error" id="err-lae-gross-amount" role="alert"></span>
+            </div>
+          </div>
+
+          <div class="lae-form-row">
+            <div class="lae-field-group">
+              <label for="lae-nominal-rate" class="lae-label">Annual Interest Rate (%) <span class="lae-required">*</span></label>
+              <input type="number" id="lae-nominal-rate" class="lae-input" placeholder="e.g. 8.5" min="0" max="100" step="0.01" required />
+              <span class="lae-field-error" id="err-lae-nominal-rate" role="alert"></span>
+            </div>
+            <div class="lae-field-group">
+              <label for="lae-term-value" class="lae-label">Loan Term <span class="lae-required">*</span></label>
+              <div class="lae-input-unit-group">
+                <input type="number" id="lae-term-value" class="lae-input" placeholder="e.g. 36" min="1" max="480" step="1" required />
+                <select id="lae-term-unit" class="lae-select lae-select-unit" aria-label="Loan term unit">
+                  <option value="months" selected>Months</option>
+                  <option value="years">Years</option>
+                </select>
+              </div>
+              <span class="lae-field-error" id="err-lae-term-value" role="alert"></span>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Fieldset: Origination Fee Structure -->
+        <fieldset class="lae-fieldset">
+          <legend class="lae-legend">2. Origination Fee Structure</legend>
+
+          <div class="lae-form-row">
+            <div class="lae-field-group">
+              <label for="lae-fee-type" class="lae-label">Origination Calculation Type</label>
+              <select id="lae-fee-type" class="lae-select">
+                <option value="percent" selected>Percentage of Loan Amount</option>
+                <option value="fixed">Fixed Dollar Fee</option>
+              </select>
+            </div>
+            <div class="lae-field-group">
+              <label for="lae-fee-val" id="lae-fee-val-label" class="lae-label">Origination Fee (%) <span class="lae-required">*</span></label>
+              <input type="number" id="lae-fee-val" class="lae-input" placeholder="e.g. 3.0" min="0" max="100" step="0.01" required />
+              <span class="lae-field-error" id="err-lae-fee-val" role="alert"></span>
+            </div>
+          </div>
+
+          <div class="lae-form-row">
+            <div class="lae-field-group lae-full-width">
+              <label for="lae-fee-treatment" class="lae-label">Fee Settlement Treatment</label>
+              <select id="lae-fee-treatment" class="lae-select">
+                <option value="deducted" selected>Deducted from disbursed proceeds (Most Common)</option>
+                <option value="financed">Financed (Added on top of requested principal balance)</option>
+                <option value="separate">Paid separately out-of-pocket at closing</option>
+              </select>
+              <p class="lae-field-hint" id="lae-treatment-hint">
+                Deducted: You receive less cash than borrowed, while repaying the full gross principal.
+              </p>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Fieldset: Optional Fees -->
+        <fieldset class="lae-fieldset">
+          <legend class="lae-legend">3. Additional Upfront Fees (Optional)</legend>
+          <div class="lae-form-row">
+            <div class="lae-field-group">
+              <label for="lae-doc-fee" class="lae-label">Underwriting / Processing Fee ($)</label>
+              <input type="number" id="lae-doc-fee" class="lae-input" placeholder="0" min="0" max="50000" step="10" value="0" />
+            </div>
+            <div class="lae-field-group">
+              <label for="lae-other-fee" class="lae-label">Other Upfront Closing Fees ($)</label>
+              <input type="number" id="lae-other-fee" class="lae-input" placeholder="0" min="0" max="50000" step="10" value="0" />
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="lae-form-actions">
+          <button type="submit" id="lae-btn-calculate" class="lae-btn-primary">Calculate APR Impact</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Results Panel Card -->
+    <section class="lae-card lae-results-card" aria-labelledby="lae-results-heading">
+      <div class="lae-card-header">
+        <h2 id="lae-results-heading" class="lae-card-title">Estimated Cost Breakdown</h2>
+        <div class="lae-card-actions">
+          <button type="button" id="lae-btn-copy-summary" class="lae-btn-secondary lae-btn-sm" title="Copy text summary to clipboard">Copy</button>
+          <button type="button" id="lae-btn-export-csv" class="lae-btn-outline lae-btn-sm" title="Export metrics to CSV file">Export CSV</button>
+        </div>
+      </div>
+
+      <!-- Hero Metrics -->
+      <div class="lae-hero-grid">
+        <div class="lae-metric-box lae-metric-highlight">
+          <span class="lae-metric-title">Illustrative Cash-Flow APR</span>
+          <span class="lae-metric-val" id="res-effective-apr">--%</span>
+          <span class="lae-metric-sub" id="res-apr-delta">-- vs nominal</span>
+        </div>
+        <div class="lae-metric-box">
+          <span class="lae-metric-title">Scheduled Monthly Payment</span>
+          <span class="lae-metric-val" id="res-monthly-payment">$--</span>
+          <span class="lae-metric-sub" id="res-payment-term">36 payments</span>
+        </div>
+        <div class="lae-metric-box">
+          <span class="lae-metric-title">Net Disbursed Proceeds</span>
+          <span class="lae-metric-val" id="res-net-proceeds">$--</span>
+          <span class="lae-metric-sub" id="res-net-proceeds-sub">Actual funds received</span>
+        </div>
+        <div class="lae-metric-box">
+          <span class="lae-metric-title">Total Upfront Fees</span>
+          <span class="lae-metric-val" id="res-total-fees">$--</span>
+          <span class="lae-metric-sub" id="res-origination-fee">Fee breakdown</span>
+        </div>
+      </div>
+
+      <!-- Detail Table -->
+      <div class="lae-table-wrapper">
+        <table class="lae-table" aria-label="Detailed Loan Cost Metrics">
+          <thead>
+            <tr>
+              <th scope="col">Financial Metric</th>
+              <th scope="col" class="lae-text-right">Modeled Value</th>
+              <th scope="col">Cash Flow Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Contract Nominal Rate</th>
+              <td class="lae-text-right" id="res-nominal-rate-disp">--%</td>
+              <td>Base annual interest rate before accounting for fees</td>
+            </tr>
+            <tr>
+              <th scope="row">Gross Stated Loan Amount</th>
+              <td class="lae-text-right" id="res-gross-loan-disp">$--</td>
+              <td>Face value of promissory note</td>
+            </tr>
+            <tr>
+              <th scope="row">Amount Financed</th>
+              <td class="lae-text-right" id="res-amount-financed">$--</td>
+              <td>Actual balance subject to monthly interest accrual</td>
+            </tr>
+            <tr>
+              <th scope="row">Total Scheduled Interest</th>
+              <td class="lae-text-right" id="res-total-interest">$--</td>
+              <td>Cumulative interest paid over full term</td>
+            </tr>
+            <tr>
+              <th scope="row">Total Scheduled Repayment</th>
+              <td class="lae-text-right" id="res-total-repayment">$--</td>
+              <td>Total sum of all monthly installments</td>
+            </tr>
+            <tr>
+              <th scope="row">Total Economic Borrowing Cost</th>
+              <td class="lae-text-right lae-bold" id="res-total-borrowing-cost">$--</td>
+              <td>Total repayment plus separate fees minus net proceeds</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Legal Disclosure -->
+      <div class="lae-disclaimer-box" role="note">
+        <strong>Regulatory Notice:</strong> The estimated cash-flow APR displayed above is an actuarial borrowing-cost 
+        approximation based on scheduled level payments. It is not an official Truth in Lending Act (Regulation Z) 
+        disclosure statement. Disclosed lender APRs may differ depending on custom closing dates, per-diem interest, 
+        and lender fee categorizations under 12 CFR § 1026.4.
+      </div>
+
+      <!-- Dynamic Visual Proportional Bar -->
+      <div class="lae-bar-container" aria-hidden="true">
+        <span class="lae-bar-label">Net Proceeds vs Total Repayment Capital Drain:</span>
+        <div class="lae-progress-bar">
+          <div class="lae-progress-segment lae-seg-proceeds" id="res-bar-proceeds" style="width: 75%;"></div>
+          <div class="lae-progress-segment lae-seg-fees" id="res-bar-fees" style="width: 5%;"></div>
+          <div class="lae-progress-segment lae-seg-interest" id="res-bar-interest" style="width: 20%;"></div>
+        </div>
+        <div class="lae-bar-legend">
+          <span><span class="lae-dot lae-dot-proceeds"></span> Net Cash Disbursed</span>
+          <span><span class="lae-dot lae-dot-fees"></span> Upfront Fees</span>
+          <span><span class="lae-dot lae-dot-interest"></span> Total Interest</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 5. SIDE-BY-SIDE LOAN COMPARISON MODULE -->
+  <section class="lae-card lae-comparison-section" aria-labelledby="lae-compare-heading">
+    <div class="lae-card-header">
+      <h2 id="lae-compare-heading" class="lae-card-title">Side-by-Side Offer Comparison</h2>
+      <div class="lae-card-actions">
+        <button type="button" id="lae-btn-load-compare-presets" class="lae-btn-secondary lae-btn-sm">Load Preset Comparison</button>
+        <button type="button" id="lae-btn-run-compare" class="lae-btn-primary lae-btn-sm">Compare Offers</button>
+      </div>
+    </div>
+    <p class="lae-section-desc">
+      Compare two loan options to evaluate whether paying a higher origination fee to secure a lower interest rate 
+      yields genuine economic savings over your planned holding period.
+    </p>
+
+    <div class="lae-compare-grid">
+      <!-- Scenario A -->
+      <div class="lae-scenario-col">
+        <h3 class="lae-scenario-title">Scenario A (Higher Fee, Lower Rate)</h3>
+        <div class="lae-field-group">
+          <label for="lae-sc-a-principal" class="lae-label">Principal ($)</label>
+          <input type="number" id="lae-sc-a-principal" class="lae-input" value="25000" min="500" max="10000000" />
+        </div>
+        <div class="lae-field-group">
+          <label for="lae-sc-a-rate" class="lae-label">Nominal Rate (%)</label>
+          <input type="number" id="lae-sc-a-rate" class="lae-input" value="6.99" min="0" max="100" step="0.01" />
+        </div>
+        <div class="lae-field-group">
+          <label for="lae-sc-a-term" class="lae-label">Term (Months)</label>
+          <input type="number" id="lae-sc-a-term" class="lae-input" value="48" min="1" max="480" />
+        </div>
+        <div class="lae-field-group">
+          <label for="lae-sc-a-fee-pct" class="lae-label">Origination Fee (%)</label>
+          <input type="number" id="lae-sc-a-fee-pct" class="lae-input" value="4.00" min="0" max="100" step="0.01" />
+        </div>
+      </div>
+
+      <!-- Scenario B -->
+      <div class="lae-scenario-col">
+        <h3 class="lae-scenario-title">Scenario B (No Fee, Higher Rate)</h3>
+        <div class="lae-field-group">
+          <label for="lae-sc-b-principal" class="lae-label">Principal ($)</label>
+          <input type="number" id="lae-sc-b-principal" class="lae-input" value="25000" min="500" max="10000000" />
+        </div>
+        <div class="lae-field-group">
+          <label for="lae-sc-b-rate" class="lae-label">Nominal Rate (%)</label>
+          <input type="number" id="lae-sc-b-rate" class="lae-input" value="8.99" min="0" max="100" step="0.01" />
+        </div>
+        <div class="lae-field-group">
+          <label for="lae-sc-b-term" class="lae-label">Term (Months)</label>
+          <input type="number" id="lae-sc-b-term" class="lae-input" value="48" min="1" max="480" />
+        </div>
+        <div class="lae-field-group">
+          <label for="lae-sc-b-fee-pct" class="lae-label">Origination Fee (%)</label>
+          <input type="number" id="lae-sc-b-fee-pct" class="lae-input" value="0.00" min="0" max="100" step="0.01" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="lae-table-wrapper lae-mt-4">
+      <table class="lae-table lae-compare-table" aria-label="Scenario Comparison Breakdown">
+        <thead>
+          <tr>
+            <th scope="col">Key Comparison Factor</th>
+            <th scope="col" class="lae-text-right">Scenario A</th>
+            <th scope="col" class="lae-text-right">Scenario B</th>
+            <th scope="col" class="lae-text-right">Variance (A - B)</th>
+          </tr>
+        </thead>
+        <tbody id="lae-compare-table-body">
+          <tr>
+            <td colspan="4" class="lae-text-center">Click "Compare Offers" to calculate comparison metrics.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="lae-compare-summary-banner" class="lae-summary-banner" style="display:none;"></div>
+  </section>
+
+  <!-- 6. METHODOLOGY & EDUCATIONAL CONTENT -->
+  <section class="lae-card lae-content-card">
+    <h2>How Loan Origination Fees Distort Borrowing Costs</h2>
+    <p>
+      A loan origination fee is an upfront administrative charge levied by banks, installment lenders, and mortgage brokers 
+      to cover application review, underwriting, and funding capital. While lenders advertise lower nominal interest rates, 
+      origination fees act as prepaid finance charges that immediately erode net disbursement proceeds or inflate the total debt financed.
+    </p>
+
+    <h3>Mathematical Methodology</h3>
+    <p>
+      To compute the real economic rate of an amortizing loan, this calculator applies the actuarial cash-flow method. 
+      Under standard level-payment amortization, the monthly payment is derived from the financed principal, monthly interest rate, and total term:
+    </p>
+    <div class="lae-equation-block">
+      M = P * [r * (1 + r)^n] / [(1 + r)^n - 1]
+    </div>
+    <p>
+      When an origination fee is deducted directly from proceeds, the borrower receives net cash C0 = P - Fees. 
+      The true periodic rate i is solved numerically via the discount polynomial:
+    </p>
+    <div class="lae-equation-block">
+      C0 = Sum of [M / (1 + i)^t] for t = 1 to n
+    </div>
+    <p>
+      The resulting annualized cash-flow APR is expressed as 12 * i, matching the nominal APR standard established by 
+      the Consumer Financial Protection Bureau (CFPB) under Regulation Z Appendix J.
+    </p>
+  </section>
+
+  <!-- 7. FREQUENTLY ASKED QUESTIONS (ACCORDION) -->
+  <section class="lae-card lae-faq-section" aria-labelledby="lae-faq-heading">
+    <h2 id="lae-faq-heading">Frequently Asked Questions</h2>
+
+    <div class="lae-accordion">
+      <details class="lae-accordion-item">
+        <summary class="lae-accordion-header">What is a loan origination fee?</summary>
+        <div class="lae-accordion-body">
+          An origination fee is an upfront processing and underwriting fee charged by lenders to evaluate risk, verify employment, 
+          prepare loan documentation, and disburse capital. It is typically expressed as a percentage of the total requested principal (commonly 1% to 8%).
+        </div>
+      </details>
+
+      <details class="lae-accordion-item">
+        <summary class="lae-accordion-header">How does an origination fee affect net loan proceeds?</summary>
+        <div class="lae-accordion-body">
+          When an origination fee is deducted at funding, it directly reduces the cash deposited into your checking account. 
+          For example, on a $20,000 personal loan carrying a 5% origination fee ($1,000), you receive $19,000 in net cash proceeds, 
+          yet your contract requires you to repay the full $20,000 plus ongoing interest.
+        </div>
+      </details>
+
+      <details class="lae-accordion-item">
+        <summary class="lae-accordion-header">What is the difference between nominal interest rate and APR?</summary>
+        <div class="lae-accordion-body">
+          The nominal interest rate is the percentage applied strictly to your remaining principal balance to calculate monthly interest. 
+          The Annual Percentage Rate (APR) reflects the total cost of credit annualized, integrating both the interest rate and mandatory 
+          upfront finance charges.
+        </div>
+      </details>
+
+      <details class="lae-accordion-item">
+        <summary class="lae-accordion-header">Is an origination fee always included in a lender's disclosed APR?</summary>
+        <div class="lae-accordion-body">
+          Under United States Truth in Lending Act (Regulation Z) rules, mandatory origination fees and discount points are defined as 
+          finance charges and must be incorporated into the federal APR disclosure for consumer loans.
+        </div>
+      </details>
+
+      <details class="lae-accordion-item">
+        <summary class="lae-accordion-header">How can I determine if paying origination fees for a lower rate makes sense?</summary>
+        <div class="lae-accordion-body">
+          Use the side-by-side comparison module above. Calculate your break-even horizon by dividing the additional upfront fee cost by the 
+          monthly payment savings. If you plan to retain the loan significantly longer than the break-even period, paying origination points 
+          to reduce the rate can save money overall.
+        </div>
+      </details>
+
+      <details class="lae-accordion-item">
+        <summary class="lae-accordion-header">Why might this calculator's estimate differ slightly from a lender's Loan Estimate?</summary>
+        <div class="lae-accordion-body">
+          Lender Loan Estimates calculate interest from the specific closing date to the first scheduled payment date (per-diem interest) 
+          and may factor in leap years or odd first calendar intervals. This calculator uses strict actuarial monthly intervals.
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- 8. OFFICIAL REGULATORY REFERENCES -->
+  <section class="lae-card lae-resources-card">
+    <h2>Official Regulatory and Lending Resources</h2>
+    <p>To learn more about federal disclosure mandates and credit cost calculations, consult these official sources:</p>
+    <ul class="lae-link-list">
+      <li>
+        <a href="https://www.consumerfinance.gov/owning-a-home/loan-estimate/" target="_blank" rel="noopener noreferrer">
+          CFPB Loan Estimate Guide
+        </a> — Complete breakdown of official closing disclosures and upfront fee regulations.
+      </li>
+      <li>
+        <a href="https://www.consumerfinance.gov/rules-policy/regulations/1026/" target="_blank" rel="noopener noreferrer">
+          CFPB Regulation Z (12 CFR Part 1026)
+        </a> — Federal statutory guidelines for Truth in Lending actuarial APR determinations.
+      </li>
+      <li>
+        <a href="https://www.consumerfinance.gov/consumer-tools/" target="_blank" rel="noopener noreferrer">
+          Consumer Financial Protection Bureau Tools
+        </a> — Official federal guides for evaluating installment loans and consumer credit rights.
+      </li>
+    </ul>
+  </section>
+
+  <!-- 9. INTERNAL FOOTER NAVIGATION -->
+  <footer class="lae-footer">
+    <div class="lae-related-tools">
+      <h3>Explore More Calculation Tools</h3>
+      <p>Discover other standalone tools from our repository:</p>
+      <ul class="lae-related-nav">
+        <li>
+          <a href="https://my-tool-app.pages.dev/">Explore More Online Tools</a> — Primary directory of calculators and tools.
+        </li>
+        <li>
+          <a href="https://my-tool-app.pages.dev/solar-battery-runtime-calculator">Solar Battery Runtime Calculator</a> — Estimate off-grid battery storage backup duration under real household load conditions.
+        </li>
+      </ul>
+    </div>
+    <div class="lae-copyright">
+      <small>&copy; Loan Origination Fee APR Impact Estimator. Client-side financial estimation tool.</small>
+    </div>
+  </footer>
+
+  <!-- 10. STRUCTURED DATA JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://my-tool-app.pages.dev/loan-origination-fee-apr-calculator#webapp",
+        "url": "https://my-tool-app.pages.dev/loan-origination-fee-apr-calculator",
+        "name": "Loan Origination Fee APR Impact Estimator",
+        "description": "Calculates the impact of loan origination fees on net proceeds, monthly payments, total borrowing cost, and actuarial APR.",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "All modern web browsers",
+        "browserRequirements": "Requires JavaScript. Requires HTML5 support.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://my-tool-app.pages.dev/loan-origination-fee-apr-calculator#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Financial Tools",
+            "item": "https://my-tool-app.pages.dev/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Loan Origination Fee APR Impact Estimator",
+            "item": "https://my-tool-app.pages.dev/loan-origination-fee-apr-calculator"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://my-tool-app.pages.dev/loan-origination-fee-apr-calculator#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is a loan origination fee?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "An origination fee is an upfront processing and underwriting fee charged by lenders to evaluate risk, verify employment, prepare loan documentation, and disburse capital."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does an origination fee affect net loan proceeds?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "When an origination fee is deducted at funding, it directly reduces the cash deposited into your checking account, while your contract requires you to repay the full gross amount plus interest."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the difference between nominal interest rate and APR?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The nominal interest rate is the percentage applied strictly to remaining principal balance. APR reflects the total cost of credit annualized, integrating interest rate and upfront fees."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <!-- 11. COMPLETE VANILLA JAVASCRIPT APPLICATION -->
+  <script>
+  (function () {
+    'use strict';
+
+    // Formatters
+    const currencyFormatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+    const percentFormatter = new Intl.NumberFormat('en-US', {
+      style: 'percent',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 3
+    });
+
+    function formatCurrency(val) {
+      if (isNaN(val) || !isFinite(val)) return '$0.00';
+      return currencyFormatter.format(val);
+    }
+
+    function formatPercent(val) {
+      if (isNaN(val) || !isFinite(val)) return '0.00%';
+      return percentFormatter.format(val);
+    }
+
+    function sanitizeForCSV(str) {
+      const stringVal = String(str);
+      if (/^[=+@-]$/.test(stringVal.charAt(0))) {
+        return `"\t${stringVal.replace(/"/g, '""')}"`;
+      }
+      return `"${stringVal.replace(/"/g, '""')}"`;
+    }
+
+    function announceLive(message) {
+      const el = document.getElementById('lae-live-announcer');
+      if (el) el.textContent = message;
+    }
+
+    // Financial Formulas
+    function calculateMonthlyPayment(principal, annualRate, totalMonths) {
+      if (totalMonths <= 0) return 0;
+      if (annualRate <= 0) return principal / totalMonths;
+      const r = (annualRate / 100) / 12;
+      const factor = Math.pow(1 + r, totalMonths);
+      if (!isFinite(factor)) return 0;
+      return principal * (r * factor) / (factor - 1);
+    }
+
+    function solvePeriodicCashFlowRate(netProceeds, monthlyPayment, totalMonths) {
+      if (netProceeds <= 0 || monthlyPayment <= 0 || totalMonths <= 0) return NaN;
+      const totalPayments = monthlyPayment * totalMonths;
+      if (totalPayments < netProceeds) return -1;
+      if (Math.abs(totalPayments - netProceeds) < 0.0001) return 0;
+
+      function f(i) {
+        if (Math.abs(i) < 1e-12) return totalPayments - netProceeds;
+        return monthlyPayment * (1 - Math.pow(1 + i, -totalMonths)) / i - netProceeds;
+      }
+
+      let iLow = 0.0;
+      let iHigh = 5.0 / 12;
+      let fLow = f(iLow);
+      let fHigh = f(iHigh);
+
+      let bracketIterations = 0;
+      while (fHigh > 0 && bracketIterations < 20) {
+        iHigh *= 2;
+        fHigh = f(iHigh);
+        bracketIterations++;
+      }
+
+      if (fLow * fHigh > 0) return NaN;
+
+      const maxIter = 100;
+      const tolerance = 1e-9;
+      let iMid = 0;
+
+      for (let iter = 0; iter < maxIter; iter++) {
+        iMid = (iLow + iHigh) / 2;
+        const fMid = f(iMid);
+
+        if (Math.abs(fMid) < tolerance || (iHigh - iLow) / 2 < tolerance) {
+          return iMid;
+        }
+
+        if ((fLow > 0 && fMid > 0) || (fLow < 0 && fMid < 0)) {
+          iLow = iMid;
+          fLow = fMid;
+        } else {
+          iHigh = iMid;
+          fHigh = fMid;
+        }
+      }
+
+      return iMid;
+    }
+
+    function evaluateLoanModel(inputs) {
+      const grossPrincipal = Math.max(0, inputs.grossPrincipal);
+      const nominalRate = Math.max(0, inputs.nominalRate);
+      const termMonths = Math.max(1, inputs.termMonths);
+      const feeVal = Math.max(0, inputs.feeVal);
+      const feeType = inputs.feeType;
+      const feeTreatment = inputs.feeTreatment;
+      const docFee = Math.max(0, inputs.docFee || 0);
+      const otherFee = Math.max(0, inputs.otherFee || 0);
+
+      let originationFeeAmount = 0;
+      if (feeType === 'percent') {
+        originationFeeAmount = grossPrincipal * (feeVal / 100);
+      } else {
+        originationFeeAmount = feeVal;
+      }
+
+      const totalUpfrontFees = originationFeeAmount + docFee + otherFee;
+      let financedPrincipal = grossPrincipal;
+      let netProceeds = grossPrincipal;
+      let separateFeesPaid = 0;
+
+      if (feeTreatment === 'deducted') {
+        financedPrincipal = grossPrincipal;
+        netProceeds = grossPrincipal - totalUpfrontFees;
+      } else if (feeTreatment === 'financed') {
+        financedPrincipal = grossPrincipal + originationFeeAmount;
+        netProceeds = grossPrincipal - (docFee + otherFee);
+      } else if (feeTreatment === 'separate') {
+        financedPrincipal = grossPrincipal;
+        netProceeds = grossPrincipal - (docFee + otherFee);
+        separateFeesPaid = originationFeeAmount;
+      }
+
+      const monthlyPayment = calculateMonthlyPayment(financedPrincipal, nominalRate, termMonths);
+      const totalScheduledRepayment = monthlyPayment * termMonths;
+      const totalInterest = Math.max(0, totalScheduledRepayment - financedPrincipal);
+      const totalEconomicCost = (totalScheduledRepayment + separateFeesPaid) - netProceeds;
+
+      let effectiveAPR = NaN;
+      if (netProceeds > 0 && monthlyPayment > 0) {
+        const periodicRate = solvePeriodicCashFlowRate(netProceeds, monthlyPayment, termMonths);
+        if (!isNaN(periodicRate) && periodicRate >= 0) {
+          effectiveAPR = periodicRate * 12;
+        }
+      }
+
+      return {
+        grossPrincipal,
+        nominalRate,
+        termMonths,
+        originationFeeAmount,
+        totalUpfrontFees,
+        financedPrincipal,
+        netProceeds,
+        monthlyPayment,
+        totalScheduledRepayment,
+        totalInterest,
+        totalEconomicCost,
+        effectiveAPR,
+        feeTreatment
+      };
+    }
+
+    // UI Controller
+    let currentResults = null;
+
+    function getFormInputs() {
+      const grossAmount = parseFloat(document.getElementById('lae-gross-amount').value);
+      const nominalRate = parseFloat(document.getElementById('lae-nominal-rate').value);
+      const termValue = parseFloat(document.getElementById('lae-term-value').value);
+      const termUnit = document.getElementById('lae-term-unit').value;
+      const feeType = document.getElementById('lae-fee-type').value;
+      const feeVal = parseFloat(document.getElementById('lae-fee-val').value);
+      const feeTreatment = document.getElementById('lae-fee-treatment').value;
+      const docFee = parseFloat(document.getElementById('lae-doc-fee').value) || 0;
+      const otherFee = parseFloat(document.getElementById('lae-other-fee').value) || 0;
+
+      const termMonths = termUnit === 'years' ? Math.round(termValue * 12) : Math.round(termValue);
+
+      return {
+        grossPrincipal: grossAmount,
+        nominalRate: nominalRate,
+        termMonths: termMonths,
+        feeType: feeType,
+        feeVal: feeVal,
+        feeTreatment: feeTreatment,
+        docFee: docFee,
+        otherFee: otherFee
+      };
+    }
+
+    function validateInputs(inputs) {
+      let isValid = true;
+      document.querySelectorAll('.lae-field-error').forEach(el => el.textContent = '');
+      document.querySelectorAll('.lae-input').forEach(el => el.classList.remove('lae-input-invalid'));
+
+      if (isNaN(inputs.grossPrincipal) || inputs.grossPrincipal <= 0) {
+        showError('lae-gross-amount', 'Enter a valid gross principal greater than $0.');
+        isValid = false;
+      } else if (inputs.grossPrincipal > 10000000) {
+        showError('lae-gross-amount', 'Principal cannot exceed $10,000,000.');
+        isValid = false;
+      }
+
+      if (isNaN(inputs.nominalRate) || inputs.nominalRate < 0) {
+        showError('lae-nominal-rate', 'Enter a valid interest rate (0% or greater).');
+        isValid = false;
+      } else if (inputs.nominalRate > 100) {
+        showError('lae-nominal-rate', 'Interest rate cannot exceed 100%.');
+        isValid = false;
+      }
+
+      if (isNaN(inputs.termMonths) || inputs.termMonths < 1) {
+        showError('lae-term-value', 'Term must be at least 1 month.');
+        isValid = false;
+      } else if (inputs.termMonths > 480) {
+        showError('lae-term-value', 'Term cannot exceed 480 months (40 years).');
+        isValid = false;
+      }
+
+      if (isNaN(inputs.feeVal) || inputs.feeVal < 0) {
+        showError('lae-fee-val', 'Enter a valid fee (0 or greater).');
+        isValid = false;
+      } else if (inputs.feeType === 'percent' && inputs.feeVal > 100) {
+        showError('lae-fee-val', 'Fee percentage cannot exceed 100%.');
+        isValid = false;
+      }
+
+      if (isValid && inputs.feeTreatment === 'deducted') {
+        let feeAmt = inputs.feeType === 'percent' ? inputs.grossPrincipal * (inputs.feeVal / 100) : inputs.feeVal;
+        let totalDeducted = feeAmt + inputs.docFee + inputs.otherFee;
+        if (totalDeducted >= inputs.grossPrincipal) {
+          showError('lae-fee-val', 'Total upfront fees cannot equal or exceed loan principal.');
+          isValid = false;
+        }
+      }
+
+      return isValid;
+    }
+
+    function showError(fieldId, message) {
+      const inputEl = document.getElementById(fieldId);
+      const errEl = document.getElementById(`err-${fieldId}`);
+      if (inputEl) inputEl.classList.add('lae-input-invalid');
+      if (errEl) errEl.textContent = message;
+    }
+
+    function renderResults(model) {
+      currentResults = model;
+
+      const elAPR = document.getElementById('res-effective-apr');
+      const elDelta = document.getElementById('res-apr-delta');
+      const elMonthly = document.getElementById('res-monthly-payment');
+      const elPaymentTerm = document.getElementById('res-payment-term');
+      const elNet = document.getElementById('res-net-proceeds');
+      const elNetSub = document.getElementById('res-net-proceeds-sub');
+      const elTotalFees = document.getElementById('res-total-fees');
+      const elFeeBreakdown = document.getElementById('res-origination-fee');
+
+      if (!isNaN(model.effectiveAPR)) {
+        elAPR.textContent = formatPercent(model.effectiveAPR);
+        const delta = (model.effectiveAPR * 100) - model.nominalRate;
+        elDelta.textContent = `${delta >= 0 ? '+' : ''}${delta.toFixed(2)}% vs nominal`;
+      } else {
+        elAPR.textContent = 'N/A';
+        elDelta.textContent = 'Invalid cash flow';
+      }
+
+      elMonthly.textContent = formatCurrency(model.monthlyPayment);
+      elPaymentTerm.textContent = `${model.termMonths} payments of ${formatCurrency(model.monthlyPayment)}`;
+
+      elNet.textContent = formatCurrency(model.netProceeds);
+      elNetSub.textContent = `${((model.netProceeds / model.grossPrincipal) * 100).toFixed(1)}% of requested loan`;
+
+      elTotalFees.textContent = formatCurrency(model.totalUpfrontFees);
+      elFeeBreakdown.textContent = `Includes ${formatCurrency(model.originationFeeAmount)} origination`;
+
+      document.getElementById('res-nominal-rate-disp').textContent = `${model.nominalRate.toFixed(2)}%`;
+      document.getElementById('res-gross-loan-disp').textContent = formatCurrency(model.grossPrincipal);
+      document.getElementById('res-amount-financed').textContent = formatCurrency(model.financedPrincipal);
+      document.getElementById('res-total-interest').textContent = formatCurrency(model.totalInterest);
+      document.getElementById('res-total-repayment').textContent = formatCurrency(model.totalScheduledRepayment);
+      document.getElementById('res-total-borrowing-cost').textContent = formatCurrency(model.totalEconomicCost);
+
+      const totalOutflow = model.totalScheduledRepayment + model.totalUpfrontFees;
+      if (totalOutflow > 0) {
+        const proceedsPct = Math.max(5, (model.netProceeds / totalOutflow) * 100);
+        const feesPct = Math.max(2, (model.totalUpfrontFees / totalOutflow) * 100);
+        const interestPct = Math.max(2, (model.totalInterest / totalOutflow) * 100);
+
+        document.getElementById('res-bar-proceeds').style.width = `${proceedsPct}%`;
+        document.getElementById('res-bar-fees').style.width = `${feesPct}%`;
+        document.getElementById('res-bar-interest').style.width = `${interestPct}%`;
+      }
+
+      announceLive(`Calculation updated. Illustrative cash-flow APR is ${formatPercent(model.effectiveAPR || 0)}.`);
+    }
+
+    function handleCalculate(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const inputs = getFormInputs();
+      if (validateInputs(inputs)) {
+        const model = evaluateLoanModel(inputs);
+        renderResults(model);
+      }
+    }
+
+    function loadExampleScenario() {
+      document.getElementById('lae-gross-amount').value = '25000';
+      document.getElementById('lae-nominal-rate').value = '7.99';
+      document.getElementById('lae-term-value').value = '36';
+      document.getElementById('lae-term-unit').value = 'months';
+      document.getElementById('lae-fee-type').value = 'percent';
+      document.getElementById('lae-fee-val').value = '4.0';
+      document.getElementById('lae-fee-treatment').value = 'deducted';
+      document.getElementById('lae-doc-fee').value = '150';
+      document.getElementById('lae-other-fee').value = '0';
+      updateTreatmentHint();
+      handleCalculate();
+    }
+
+    function resetForm() {
+      document.getElementById('lae-calculator-form').reset();
+      document.querySelectorAll('.lae-field-error').forEach(el => el.textContent = '');
+      document.querySelectorAll('.lae-input').forEach(el => el.classList.remove('lae-input-invalid'));
+      updateTreatmentHint();
+      handleCalculate();
+    }
+
+    function updateTreatmentHint() {
+      const treatment = document.getElementById('lae-fee-treatment').value;
+      const hint = document.getElementById('lae-treatment-hint');
+      if (treatment === 'deducted') {
+        hint.textContent = 'Deducted: You receive less cash than borrowed, while repaying the full gross principal.';
+      } else if (treatment === 'financed') {
+        hint.textContent = 'Financed: The fee is capitalized into your debt. You receive full funds but pay interest on the fee.';
+      } else {
+        hint.textContent = 'Separate: You pay the fee out-of-pocket at closing. Loan balance matches the gross amount.';
+      }
+    }
+
+    function updateFeeLabel() {
+      const feeType = document.getElementById('lae-fee-type').value;
+      const label = document.getElementById('lae-fee-val-label');
+      if (feeType === 'percent') {
+        label.innerHTML = 'Origination Fee (%) <span class="lae-required">*</span>';
+      } else {
+        label.innerHTML = 'Origination Fee ($) <span class="lae-required">*</span>';
+      }
+    }
+
+    function copySummaryToClipboard() {
+      if (!currentResults) {
+        alert('Please perform a calculation first.');
+        return;
+      }
+      const text = [
+        '--- Loan Origination Fee APR Impact Summary ---',
+        `Gross Loan Principal: ${formatCurrency(currentResults.grossPrincipal)}`,
+        `Nominal Interest Rate: ${currentResults.nominalRate.toFixed(2)}%`,
+        `Loan Term: ${currentResults.termMonths} Months`,
+        `Upfront Origination Fee: ${formatCurrency(currentResults.originationFeeAmount)}`,
+        `Total Upfront Fees: ${formatCurrency(currentResults.totalUpfrontFees)}`,
+        `Net Cash Disbursed: ${formatCurrency(currentResults.netProceeds)}`,
+        `Amount Financed: ${formatCurrency(currentResults.financedPrincipal)}`,
+        `Scheduled Monthly Payment: ${formatCurrency(currentResults.monthlyPayment)}`,
+        `Total Scheduled Interest: ${formatCurrency(currentResults.totalInterest)}`,
+        `Total Scheduled Repayment: ${formatCurrency(currentResults.totalScheduledRepayment)}`,
+        `Total Economic Cost: ${formatCurrency(currentResults.totalEconomicCost)}`,
+        `Illustrative Cash-Flow APR: ${!isNaN(currentResults.effectiveAPR) ? formatPercent(currentResults.effectiveAPR) : 'N/A'}`
+      ].join('\n');
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('Loan summary successfully copied to clipboard.');
+        }).catch(() => fallbackCopyText(text));
+      } else {
+        fallbackCopyText(text);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        alert('Loan summary copied to clipboard.');
+      } catch (err) {
+        alert('Unable to copy automatically. Please copy the values manually.');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function exportResultsToCSV() {
+      if (!currentResults) {
+        alert('Please perform a calculation first.');
+        return;
+      }
+
+      const rows = [
+        ['Metric', 'Value', 'Unit / Note'],
+        ['Gross Stated Principal', currentResults.grossPrincipal.toFixed(2), 'USD'],
+        ['Nominal Contract Rate', currentResults.nominalRate.toFixed(4), 'Percent Annual'],
+        ['Loan Term', currentResults.termMonths, 'Months'],
+        ['Origination Fee Settlement', currentResults.feeTreatment, 'Method'],
+        ['Origination Fee Amount', currentResults.originationFeeAmount.toFixed(2), 'USD'],
+        ['Total Closing Fees', currentResults.totalUpfrontFees.toFixed(2), 'USD'],
+        ['Net Disbursed Proceeds', currentResults.netProceeds.toFixed(2), 'USD'],
+        ['Amount Financed Balance', currentResults.financedPrincipal.toFixed(2), 'USD'],
+        ['Monthly Installment', currentResults.monthlyPayment.toFixed(2), 'USD'],
+        ['Total Scheduled Interest', currentResults.totalInterest.toFixed(2), 'USD'],
+        ['Total Scheduled Payments', currentResults.totalScheduledRepayment.toFixed(2), 'USD'],
+        ['Total Economic Cost', currentResults.totalEconomicCost.toFixed(2), 'USD'],
+        ['Actuarial Cash Flow APR', (!isNaN(currentResults.effectiveAPR) ? (currentResults.effectiveAPR * 100).toFixed(4) : 'N/A'), 'Percent Annual']
+      ];
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + rows.map(e => e.map(sanitizeForCSV).join(',')).join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `loan_apr_analysis_${Date.now()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function runComparison() {
+      const scAPrincipal = parseFloat(document.getElementById('lae-sc-a-principal').value) || 0;
+      const scARate = parseFloat(document.getElementById('lae-sc-a-rate').value) || 0;
+      const scATerm = parseInt(document.getElementById('lae-sc-a-term').value, 10) || 1;
+      const scAFeePct = parseFloat(document.getElementById('lae-sc-a-fee-pct').value) || 0;
+
+      const scBPrincipal = parseFloat(document.getElementById('lae-sc-b-principal').value) || 0;
+      const scBRate = parseFloat(document.getElementById('lae-sc-b-rate').value) || 0;
+      const scBTerm = parseInt(document.getElementById('lae-sc-b-term').value, 10) || 1;
+      const scBFeePct = parseFloat(document.getElementById('lae-sc-b-fee-pct').value) || 0;
+
+      const modA = evaluateLoanModel({
+        grossPrincipal: scAPrincipal,
+        nominalRate: scARate,
+        termMonths: scATerm,
+        feeType: 'percent',
+        feeVal: scAFeePct,
+        feeTreatment: 'deducted',
+        docFee: 0,
+        otherFee: 0
+      });
+
+      const modB = evaluateLoanModel({
+        grossPrincipal: scBPrincipal,
+        nominalRate: scBRate,
+        termMonths: scBTerm,
+        feeType: 'percent',
+        feeVal: scBFeePct,
+        feeTreatment: 'deducted',
+        docFee: 0,
+        otherFee: 0
+      });
+
+      const tbody = document.getElementById('lae-compare-table-body');
+      tbody.innerHTML = '';
+
+      function addRow(label, valA, valB, diff, isCurrency = true, isRate = false) {
+        const tr = document.createElement('tr');
+        const tdLabel = document.createElement('td');
+        tdLabel.textContent = label;
+        tdLabel.style.fontWeight = '500';
+
+        const tdA = document.createElement('td');
+        tdA.className = 'lae-text-right';
+        tdA.textContent = isRate ? formatPercent(valA) : isCurrency ? formatCurrency(valA) : valA;
+
+        const tdB = document.createElement('td');
+        tdB.className = 'lae-text-right';
+        tdB.textContent = isRate ? formatPercent(valB) : isCurrency ? formatCurrency(valB) : valB;
+
+        const tdDiff = document.createElement('td');
+        tdDiff.className = 'lae-text-right';
+        if (isRate) {
+          const d = (valA - valB) * 100;
+          tdDiff.textContent = `${d >= 0 ? '+' : ''}${d.toFixed(2)}%`;
+        } else if (isCurrency) {
+          const d = valA - valB;
+          tdDiff.textContent = `${d >= 0 ? '+' : ''}${formatCurrency(d)}`;
+        } else {
+          tdDiff.textContent = diff;
+        }
+
+        tr.appendChild(tdLabel);
+        tr.appendChild(tdA);
+        tr.appendChild(tdB);
+        tr.appendChild(tdDiff);
+        tbody.appendChild(tr);
+      }
+
+      addRow('Net Loan Proceeds Disbursed', modA.netProceeds, modB.netProceeds, 0, true);
+      addRow('Upfront Origination Points', modA.originationFeeAmount, modB.originationFeeAmount, 0, true);
+      addRow('Monthly Payment', modA.monthlyPayment, modB.monthlyPayment, 0, true);
+      addRow('Total Cumulative Interest', modA.totalInterest, modB.totalInterest, 0, true);
+      addRow('Total Lifetime Repayment', modA.totalScheduledRepayment, modB.totalScheduledRepayment, 0, true);
+      addRow('Total Economic Borrowing Cost', modA.totalEconomicCost, modB.totalEconomicCost, 0, true);
+      addRow('Illustrative Cash-Flow APR', modA.effectiveAPR, modB.effectiveAPR, 0, false, true);
+
+      const banner = document.getElementById('lae-compare-summary-banner');
+      banner.style.display = 'block';
+
+      const costDiff = modA.totalEconomicCost - modB.totalEconomicCost;
+      if (Math.abs(costDiff) < 1) {
+        banner.className = 'lae-summary-banner lae-banner-win-b';
+        banner.textContent = 'Both scenarios carry essentially identical overall economic borrowing costs.';
+      } else if (costDiff < 0) {
+        banner.className = 'lae-summary-banner lae-banner-win-a';
+        banner.textContent = `Scenario A provides the lower total economic cost by ${formatCurrency(Math.abs(costDiff))} over the full holding period.`;
+      } else {
+        banner.className = 'lae-summary-banner lae-banner-win-b';
+        banner.textContent = `Scenario B provides the lower total economic cost by ${formatCurrency(Math.abs(costDiff))} over the full holding period.`;
+      }
+    }
+
+    function loadComparePresets() {
+      document.getElementById('lae-sc-a-principal').value = '30000';
+      document.getElementById('lae-sc-a-rate').value = '6.49';
+      document.getElementById('lae-sc-a-term').value = '60';
+      document.getElementById('lae-sc-a-fee-pct').value = '4.50';
+
+      document.getElementById('lae-sc-b-principal').value = '30000';
+      document.getElementById('lae-sc-b-rate').value = '8.75';
+      document.getElementById('lae-sc-b-term').value = '60';
+      document.getElementById('lae-sc-b-fee-pct').value = '0.00';
+
+      runComparison();
+    }
+
+    function initializeCalculator() {
+      const form = document.getElementById('lae-calculator-form');
+      if (form) form.addEventListener('submit', handleCalculate);
+
+      const btnLoadEx = document.getElementById('lae-btn-load-example');
+      if (btnLoadEx) btnLoadEx.addEventListener('click', loadExampleScenario);
+
+      const btnReset = document.getElementById('lae-btn-reset');
+      if (btnReset) btnReset.addEventListener('click', resetForm);
+
+      const btnCopy = document.getElementById('lae-btn-copy-summary');
+      if (btnCopy) btnCopy.addEventListener('click', copySummaryToClipboard);
+
+      const btnExport = document.getElementById('lae-btn-export-csv');
+      if (btnExport) btnExport.addEventListener('click', exportResultsToCSV);
+
+      const btnCompare = document.getElementById('lae-btn-run-compare');
+      if (btnCompare) btnCompare.addEventListener('click', runComparison);
+
+      const btnComparePresets = document.getElementById('lae-btn-load-compare-presets');
+      if (btnComparePresets) btnComparePresets.addEventListener('click', loadComparePresets);
+
+      const selTreatment = document.getElementById('lae-fee-treatment');
+      if (selTreatment) selTreatment.addEventListener('change', updateTreatmentHint);
+
+      const selFeeType = document.getElementById('lae-fee-type');
+      if (selFeeType) selFeeType.addEventListener('change', updateFeeLabel);
+
+      const liveFields = [
+        'lae-gross-amount',
+        'lae-nominal-rate',
+        'lae-term-value',
+        'lae-term-unit',
+        'lae-fee-type',
+        'lae-fee-val',
+        'lae-fee-treatment',
+        'lae-doc-fee',
+        'lae-other-fee'
+      ];
+
+      liveFields.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', () => {
+            const inputs = getFormInputs();
+            if (inputs.grossPrincipal > 0 && inputs.termMonths > 0) {
+              handleCalculate();
+            }
+          });
+        }
+      });
+
+      loadExampleScenario();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeCalculator);
+    } else {
+      initializeCalculator();
+    }
+  })();
+  </script>
+
+</div>
+<!-- ==========================================================================
+     END ALL-IN-ONE BLOGGER CODE
+     ========================================================================== -->
