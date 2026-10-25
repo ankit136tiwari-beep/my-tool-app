@@ -127,7 +127,8 @@ const TOOLS=[
 {id:"dividend-reinvestment-growth-calculator",c:"calc",n:"Dividend Reinvestment Growth Calculator",d:"Calculate long-term investment growth with dividend reinvestment (DRIP compounding).",url:"https://my-tool-app.pages.dev/dividend-reinvestment-growth-calculator"},
 {id:"emergency-fund-months-of-expenses-calculator",c:"calc",n:"Emergency Fund Months of Expenses Calculator",d:"Determine how many months of financial runway your current emergency savings provide.",url:"https://my-tool-app.pages.dev/emergency-fund-months-of-expenses-calculator"},
 {id:"freelance-project-profit-margin-calculator",c:"calc",n:"Freelance Project Profit Margin Calculator",d:"Calculate net profit margins and markup for freelance projects and client deliverables.",url:"https://my-tool-app.pages.dev/freelance-project-profit-margin-calculator"},
-{id:"loan-origination-fee-apr-calculator",c:"calc",n:"Loan Origination Fee APR Calculator",d:"Calculate the true APR of a loan after accounting for upfront origination fees.",url:"https://my-tool-app.pages.dev/loan-origination-fee-apr-calculator"}
+{id:"loan-origination-fee-apr-calculator",c:"calc",n:"Loan Origination Fee APR Calculator",d:"Calculate the true APR of a loan after accounting for upfront origination fees.",url:"https://my-tool-app.pages.dev/loan-origination-fee-apr-calculator"},
+{id:"crypto-average-cost-basis-calculator",c:"calc",n:"Crypto Average Cost Basis Calculator",d:"Calculate the average purchase price and total cost basis for your cryptocurrency holdings.",url:"https://my-tool-app.pages.dev/crypto-average-cost-basis-calculator"}
 ];
 const $=(s,r=document)=>r.querySelector(s),app=$("#app"),el=(t,a={},...k)=>{const e=document.createElement(t);for(const x in a)x in e&&x!=="list"?e[x]=a[x]:e.setAttribute(x,a[x]);k.flat().forEach(c=>e.append(c));return e};
 const card=t=>el("a",{className:"card",href:t.url||("#/tool/"+t.id)},el("strong",{},t.n),el("span",{},t.d));
@@ -159,7 +160,7 @@ $("#th").onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.da
         <a href="/contact.html" style="color: #0d9488; text-decoration: none; margin: 0 5px;">Contact Us</a> | 
         <a href="/privacy-policy.html" style="color: #0d9488; text-decoration: none; margin: 0 5px;">Privacy Policy</a> | 
         <a href="/terms.html" style="color: #0d9488; text-decoration: none; margin: 0 5px;">Terms & Conditions</a> | 
-        <a href="/disclaimer.html" style="color: #0d9488; text-decoration: none; margin: 0 5px;">Disclaimer</a>
+        <a href="/disclaimer.html" style="color: #0d9488; text-security: none; color: #0d9488; text-decoration: none; margin: 0 5px;">Disclaimer</a>
     </p>
     <p style="margin-top: 8px;">&copy; 2026 ToolBox. All rights reserved.</p>
 </footer>
