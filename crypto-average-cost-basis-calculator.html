@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Average Cost Basis Calculator – Free Tool</title>
+  <meta name="description" content="Calculate your crypto weighted average buy price, total quantity, purchase cost and fees across multiple buys with this free calculator.">
+  <link rel="canonical" href="https://my-tool-app.pages.dev/crypto-average-cost-basis-calculator/">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Crypto Average Cost Basis Calculator – Free Tool">
+  <meta property="og:description" content="Calculate your crypto weighted average buy price, total quantity, purchase cost and fees across multiple buys with this free calculator.">
+  <meta property="og:url" content="https://my-tool-app.pages.dev/crypto-average-cost-basis-calculator/">
+  <meta property="og:site_name" content="Toolbox">
+
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://my-tool-app.pages.dev/crypto-average-cost-basis-calculator/#app",
+        "name": "Crypto Average Cost Basis Calculator",
+        "url": "https://my-tool-app.pages.dev/crypto-average-cost-basis-calculator/",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "description": "Free client-side cryptocurrency cost basis calculator. Computes weighted average purchase prices before and after transaction fees."
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://my-tool-app.pages.dev/crypto-average-cost-basis-calculator/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How do you calculate the average cost of cryptocurrency?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The weighted average cost is calculated by multiplying each purchase quantity by its purchase price, summing those amounts together with any separate transaction fees, and dividing that total acquisition cost by the total quantity of cryptocurrency purchased."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does a crypto average cost calculator include transaction fees?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. This calculator computes both the weighted average buy price before fees and the true acquisition cost per coin including fees, so you understand the exact impact of trading or exchange charges."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is average cost the same as official tax cost basis?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Not necessarily. While average cost provides your true economic break-even acquisition rate, many tax authorities (such as the IRS in the US) require specific tax-lot methods (such as FIFO, LIFO, or Specific Identification) when reporting taxable capital gains upon sale."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-subtle: #f1f5f9;
+      --border: #cbd5e1;
+      --border-focus: #0284c7;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --danger: #b91c1c;
+      --danger-bg: #fee2e2;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.04);
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 0 1rem;
+    }
+
+    .cac-container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 2rem 0 4rem;
+    }
+
+    .cac-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .cac-nav a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .cac-nav a:hover {
+      text-decoration: underline;
+    }
+
+    header.cac-header {
+      margin-bottom: 2rem;
+    }
+
+    h1.cac-title {
+      font-size: 2.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      line-height: 1.25;
+      margin-bottom: 0.5rem;
+    }
+
+    .cac-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 820px;
+    }
+
+    .cac-app-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+      margin-bottom: 3.5rem;
+    }
+
+    @media (min-width: 980px) {
+      .cac-app-grid {
+        grid-template-columns: 1.35fr 1fr;
+        align-items: start;
+      }
+    }
+
+    .cac-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      box-shadow: var(--shadow);
+    }
+
+    .cac-card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cac-settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    @media (max-width: 540px) {
+      .cac-settings-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .cac-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .cac-form-group label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .cac-form-group small {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+    }
+
+    .cac-input, .cac-select {
+      width: 100%;
+      padding: 0.65rem 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: #fff;
+      color: var(--text-main);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .cac-input:focus, .cac-select:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+
+    .cac-input.is-invalid {
+      border-color: var(--danger);
+      background-color: #fff8f8;
+    }
+
+    .cac-input-error {
+      font-size: 0.75rem;
+      color: var(--danger);
+      margin-top: 2px;
+      display: none;
+    }
+
+    .cac-input-error.is-visible {
+      display: block;
+    }
+
+    .cac-tx-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .cac-tx-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .cac-tx-card {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.15rem;
+    }
+
+    .cac-tx-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.85rem;
+    }
+
+    .cac-tx-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: #e2e8f0;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+    }
+
+    .cac-tx-row-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 680px) {
+      .cac-tx-row-inputs {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .cac-subtotal-bar {
+      margin-top: 0.75rem;
+      padding-top: 0.65rem;
+      border-top: 1px dashed var(--border);
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .cac-subtotal-bar strong {
+      color: var(--text-main);
+      font-family: var(--mono);
+    }
+
+    .cac-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.65rem 1.15rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+
+    .cac-btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .cac-btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .cac-btn-secondary {
+      background: #fff;
+      border-color: var(--border);
+      color: var(--text-main);
+    }
+
+    .cac-btn-secondary:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    .cac-btn-danger-text {
+      background: transparent;
+      color: var(--danger);
+      padding: 0.35rem 0.6rem;
+      font-size: 0.8rem;
+    }
+
+    .cac-btn-danger-text:hover {
+      background: var(--danger-bg);
+      border-radius: var(--radius-sm);
+    }
+
+    .cac-button-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-top: 1.25rem;
+    }
+
+    .cac-storage-bar {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .cac-storage-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .cac-storage-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .cac-storage-actions button {
+      background: none;
+      border: none;
+      color: var(--primary);
+      text-decoration: underline;
+      font-size: 0.825rem;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .cac-results-sticky {
+      position: sticky;
+      top: 1.5rem;
+    }
+
+    .cac-summary-highlight {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      text-align: center;
+    }
+
+    .cac-summary-highlight .label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #0369a1;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .cac-summary-highlight .val {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #0c4a6e;
+      font-family: var(--mono);
+      line-height: 1.2;
+    }
+
+    .cac-summary-highlight .sub {
+      font-size: 0.85rem;
+      color: #0284c7;
+      margin-top: 0.25rem;
+    }
+
+    .cac-metric-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .cac-metric-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.95rem;
+    }
+
+    .cac-metric-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .cac-metric-item span.title {
+      color: var(--text-muted);
+    }
+
+    .cac-metric-item span.amount {
+      font-weight: 700;
+      color: var(--text-main);
+      font-family: var(--mono);
+    }
+
+    .cac-status-banner {
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .cac-status-banner.show {
+      display: block;
+    }
+
+    .cac-status-banner.success {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid #86efac;
+    }
+
+    .cac-status-banner.error {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #fca5a5;
+    }
+
+    .cac-prose-wrap {
+      border-top: 1px solid var(--border);
+      padding-top: 3rem;
+      margin-top: 2rem;
+    }
+
+    .cac-prose h2 {
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 2rem 0 0.85rem;
+      letter-spacing: -0.01em;
+    }
+
+    .cac-prose p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 1.15rem;
+      line-height: 1.7;
+    }
+
+    .cac-prose ul, .cac-prose ol {
+      margin: 0 0 1.25rem 1.5rem;
+      color: var(--text-muted);
+    }
+
+    .cac-prose li {
+      margin-bottom: 0.5rem;
+      line-height: 1.65;
+    }
+
+    .cac-formula-box {
+      background: #f1f5f9;
+      border-left: 4px solid var(--primary);
+      padding: 1.15rem 1.35rem;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      color: #0f172a;
+      margin: 1.25rem 0;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+
+    .cac-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 0.95rem;
+    }
+
+    .cac-table th, .cac-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem 0.9rem;
+      text-align: left;
+    }
+
+    .cac-table th {
+      background: var(--surface-subtle);
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .cac-faq-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.75rem;
+      background: #fff;
+    }
+
+    .cac-faq-question {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 1rem 1.25rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: inherit;
+    }
+
+    .cac-faq-question::after {
+      content: '+';
+      font-size: 1.25rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .cac-faq-item.open .cac-faq-question::after {
+      content: '−';
+    }
+
+    .cac-faq-answer {
+      display: none;
+      padding: 0 1.25rem 1.15rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+
+    .cac-faq-item.open .cac-faq-answer {
+      display: block;
+    }
+
+    .cac-disclaimer-box {
+      margin-top: 3rem;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #64748b;
+      padding: 1.25rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cac-container">
+    <nav class="cac-nav" aria-label="Breadcrumb">
+      <a href="/">Toolbox</a>
+      <span>/</span>
+      <a href="/#calculators">Calculators</a>
+      <span>/</span>
+      <span aria-current="page">Crypto Average Cost Basis Calculator</span>
+    </nav>
+
+    <header class="cac-header">
+      <h1 class="cac-title">Crypto Average Cost Basis Calculator</h1>
+      <p class="cac-subtitle">
+        Enter your manual purchase quantities, buy prices, and fees to determine your exact weighted average cost basis across multiple trades.
+      </p>
+    </header>
+
+    <main class="cac-app-grid" id="calculator-app">
+      <section class="cac-card" aria-labelledby="inputs-heading">
+        <div class="cac-card-title">
+          <h2 id="inputs-heading" style="font-size: 1.25rem; margin: 0;">Purchases &amp; Parameters</h2>
+          <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">Runs 100% locally</span>
+        </div>
+
+        <div class="cac-settings-grid">
+          <div class="cac-form-group">
+            <label for="cac-asset-select">Cryptocurrency Asset</label>
+            <select id="cac-asset-select" class="cac-select">
+              <option value="BTC" selected>BTC – Bitcoin</option>
+              <option value="ETH">ETH – Ethereum</option>
+              <option value="SOL">SOL – Solana</option>
+              <option value="CUSTOM">Other / Custom Asset</option>
+            </select>
+            <input type="text" id="cac-custom-asset" class="cac-input" placeholder="e.g. ADA or Ripple" style="display: none; margin-top: 0.4rem;" maxlength="20" aria-label="Custom asset ticker">
+          </div>
+
+          <div class="cac-form-group">
+            <label for="cac-currency-select">Display Currency</label>
+            <select id="cac-currency-select" class="cac-select">
+              <option value="USD" data-symbol="$" selected>USD ($) – US Dollar</option>
+              <option value="EUR" data-symbol="€">EUR (€) – Euro</option>
+              <option value="GBP" data-symbol="£">GBP (£) – British Pound</option>
+              <option value="CAD" data-symbol="CA$">CAD (CA$) – Canadian Dollar</option>
+              <option value="AUD" data-symbol="A$">AUD (A$) – Australian Dollar</option>
+              <option value="INR" data-symbol="₹">INR (₹) – Indian Rupee</option>
+            </select>
+            <small>Formatting label only. All entries must use this currency.</small>
+          </div>
+        </div>
+
+        <div class="cac-tx-header">
+          <label style="font-weight: 700; font-size: 0.95rem;">Purchase Transactions</label>
+          <span id="cac-count-badge" class="cac-tx-badge">2 Buys</span>
+        </div>
+
+        <div id="cac-tx-container" class="cac-tx-list" role="region" aria-label="Purchase entries list"></div>
+
+        <div class="cac-button-cluster">
+          <button type="button" id="cac-add-buy-btn" class="cac-btn cac-btn-secondary">+ Add Another Buy</button>
+          <button type="button" id="cac-load-sample-btn" class="cac-btn cac-btn-secondary">Load Example Buys</button>
+          <button type="button" id="cac-reset-btn" class="cac-btn cac-btn-secondary">Reset Form</button>
+        </div>
+
+        <div class="cac-storage-bar">
+          <label class="cac-storage-toggle">
+            <input type="checkbox" id="cac-save-local-toggle">
+            <span>Remember purchases locally in this browser</span>
+          </label>
+          <div class="cac-storage-actions">
+            <span id="cac-storage-status-text">Data is temporary and cleared upon reload.</span>
+            <button type="button" id="cac-clear-storage-btn" style="display: none;">Clear Saved Data</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="cac-card cac-results-sticky" aria-labelledby="results-heading">
+        <h2 id="results-heading" class="cac-card-title">Cost Basis Summary</h2>
+
+        <div id="cac-status-banner" class="cac-status-banner" role="status" aria-live="polite"></div>
+
+        <div class="cac-summary-highlight">
+          <div class="label">Average Cost (With Fees)</div>
+          <div class="val" id="res-avg-cost-fees">$0.00</div>
+          <div class="sub" id="res-avg-cost-unit">per coin</div>
+        </div>
+
+        <div class="cac-metric-list" role="list">
+          <div class="cac-metric-item" role="listitem">
+            <span class="title">Total Quantity (<span class="cac-lbl-asset">BTC</span>):</span>
+            <span class="amount" id="res-total-qty">0.00000000</span>
+          </div>
+          <div class="cac-metric-item" role="listitem">
+            <span class="title">Purchase Value (Excl. Fees):</span>
+            <span class="amount" id="res-total-val-excl">$0.00</span>
+          </div>
+          <div class="cac-metric-item" role="listitem">
+            <span class="title">Total Transaction Fees:</span>
+            <span class="amount" id="res-total-fees">$0.00</span>
+          </div>
+          <div class="cac-metric-item" role="listitem">
+            <span class="title">Total Acquisition Cost:</span>
+            <span class="amount" id="res-total-cost-incl">$0.00</span>
+          </div>
+          <div class="cac-metric-item" role="listitem">
+            <span class="title">Average Price (Excl. Fees):</span>
+            <span class="amount" id="res-avg-price-excl">$0.00</span>
+          </div>
+          <div class="cac-metric-item" role="listitem">
+            <span class="title">Valid Purchase Transactions:</span>
+            <span class="amount" id="res-valid-count">0</span>
+          </div>
+        </div>
+
+        <div class="cac-button-cluster" style="margin-top: 1.5rem;">
+          <button type="button" id="cac-copy-summary-btn" class="cac-btn cac-btn-primary" style="flex: 1;">Copy Summary</button>
+          <button type="button" id="cac-export-csv-btn" class="cac-btn cac-btn-secondary" style="flex: 1;">Export CSV</button>
+        </div>
+      </section>
+    </main>
+
+    <div id="cac-aria-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+    <article class="cac-prose-wrap cac-prose">
+      <section>
+        <h2>How to Use the Crypto Average Cost Calculator</h2>
+        <p>
+          Managing cryptocurrency portfolios often involves executing dollar-cost averaging (DCA) strategies across multiple market prices. Simple mental math fails to reveal your true break-even point because fees and market levels vary across transactions.
+        </p>
+        <ol>
+          <li><strong>Select your target cryptocurrency:</strong> Choose Bitcoin (BTC), Ethereum (ETH), Solana (SOL), or input a custom asset ticker.</li>
+          <li><strong>Select your base display currency:</strong> Pick the single fiat denomination used across all transactions (USD, EUR, GBP, CAD, AUD, or INR). Do not mix currencies within the same calculation.</li>
+          <li><strong>Enter each buy order:</strong> Specify the exact coin quantity purchased, the execution unit price, and any exchange or network gas fee paid out-of-pocket for that specific order.</li>
+          <li><strong>Review the instant breakdown:</strong> Observe the weighted average cost before fees alongside your fee-inclusive break-even price.</li>
+          <li><strong>Export or copy your records:</strong> Use the <em>Copy Summary</em> or <em>Export CSV</em> features to save your acquisition logs locally for bookkeeping.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>How to Calculate Crypto Average Cost Basis</h2>
+        <p>
+          A volume-weighted average accurately scales each purchase according to how many coins were acquired at each respective price:
+        </p>
+        <div class="cac-formula-box">
+Purchase Value per Order (Vᵢ) = Quantity (qᵢ) × Unit Price (pᵢ)
+Total Quantity Acquired (Q) = Σ qᵢ
+Total Purchase Value Excl. Fees (V) = Σ (qᵢ × pᵢ)
+Total Out-of-Pocket Fees (F) = Σ fᵢ
+Total Acquisition Cost (C) = V + F
+
+Weighted Average Price (Excl. Fees) = V / Q
+Weighted Average Cost Basis (Incl. Fees) = C / Q
+        </div>
+      </section>
+
+      <section>
+        <h2>Average Crypto Cost Before and After Fees</h2>
+        <p>
+          Evaluating average cost solely from the exchange's execution price while ignoring trading commissions or gas fees underestimates your break-even threshold. This calculator presents both figures side-by-side so you can evaluate raw market timing (before fees) as well as net economic break-even (including fees).
+        </p>
+      </section>
+
+      <section>
+        <h2>Example: Calculating Average Cost Across Multiple Crypto Buys</h2>
+        <table class="cac-table">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Quantity (q)</th>
+              <th>Buy Price (p)</th>
+              <th>Fee (f)</th>
+              <th>Trade Value (q × p)</th>
+              <th>Total Cost (Value + Fee)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Buy #1</td>
+              <td>1.00 BTC</td>
+              <td>$100.00</td>
+              <td>$2.00</td>
+              <td>$100.00</td>
+              <td>$102.00</td>
+            </tr>
+            <tr>
+              <td>Buy #2</td>
+              <td>1.00 BTC</td>
+              <td>$200.00</td>
+              <td>$4.00</td>
+              <td>$200.00</td>
+              <td>$204.00</td>
+            </tr>
+            <tr>
+              <td><strong>Totals</strong></td>
+              <td><strong>2.00 BTC</strong></td>
+              <td>—</td>
+              <td><strong>$6.00</strong></td>
+              <td><strong>$300.00</strong></td>
+              <td><strong>$306.00</strong></td>
+            </tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>Average Price (Excl. Fees):</strong> $300.00 / 2.00 BTC = <strong>$150.00 per BTC</strong></li>
+          <li><strong>Average Cost (Incl. Fees):</strong> $306.00 / 2.00 BTC = <strong>$153.00 per BTC</strong></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Average Cost vs. Cost Basis vs. Break-Even Price</h2>
+        <ul>
+          <li><strong>Weighted Average Buy Price:</strong> The volume-weighted mean of what you paid per coin on the open market, omitting trading friction.</li>
+          <li><strong>Break-Even Acquisition Cost:</strong> The true out-of-pocket cash expended per coin, incorporating all platform commissions and gas charges.</li>
+          <li><strong>Official Tax Cost Basis:</strong> The statutory basis used when reporting capital gains. In jurisdictions such as the United States, tax regulations generally require specific tax-lot methods (such as FIFO, LIFO, or Specific Identification) rather than a general portfolio average.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Frequently Asked Questions</h2>
+        <div class="cac-faq-item">
+          <button type="button" class="cac-faq-question" aria-expanded="false">
+            How do you calculate the average cost of cryptocurrency?
+          </button>
+          <div class="cac-faq-answer">
+            To calculate the weighted average cost, multiply the number of coins in each order by their purchase price. Add these amounts together to get the total purchase value, add any separate fees paid, and divide by the total number of coins bought.
+          </div>
+        </div>
+
+        <div class="cac-faq-item">
+          <button type="button" class="cac-faq-question" aria-expanded="false">
+            How do I calculate my average crypto buy price after multiple purchases?
+          </button>
+          <div class="cac-faq-answer">
+            Enter each purchase order's quantity and unit price into the calculator above. The calculator weights larger buys more heavily than smaller buys to display your exact weighted entry price.
+          </div>
+        </div>
+
+        <div class="cac-faq-item">
+          <button type="button" class="cac-faq-question" aria-expanded="false">
+            Does a crypto average cost calculator include transaction fees?
+          </button>
+          <div class="cac-faq-answer">
+            Yes. This tool provides both the weighted average buy price before fees and the true average acquisition cost including fees, so you can measure both trading execution and net cash break-even.
+          </div>
+        </div>
+
+        <div class="cac-faq-item">
+          <button type="button" class="cac-faq-question" aria-expanded="false">
+            Is average cost the same as crypto cost basis?
+          </button>
+          <div class="cac-faq-answer">
+            Economically, average cost represents your ongoing blended cost basis. However, for tax reporting purposes in many countries, tax agencies require lot-by-lot tracking (such as FIFO or Specific Lot Identification) rather than an overall portfolio average.
+          </div>
+        </div>
+
+        <div class="cac-faq-item">
+          <button type="button" class="cac-faq-question" aria-expanded="false">
+            Is average crypto cost the same as break-even price?
+          </button>
+          <div class="cac-faq-answer">
+            Your fee-inclusive average cost represents your immediate break-even price before considering future exit fees. When selling, you will also incur closing fees, which slightly elevate your final required sale price.
+          </div>
+        </div>
+
+        <div class="cac-faq-item">
+          <button type="button" class="cac-faq-question" aria-expanded="false">
+            Can I calculate average cost for Bitcoin, Ethereum and other cryptocurrencies?
+          </button>
+          <div class="cac-faq-answer">
+            Yes. The calculator works for any cryptocurrency, token, or fractional digital asset. You can select BTC, ETH, SOL, or enter any custom ticker or token symbol.
+          </div>
+        </div>
+
+        <div class="cac-faq-item">
+          <button type="button" class="cac-faq-question" aria-expanded="false">
+            Why is my calculated average cost different from my exchange?
+          </button>
+          <div class="cac-faq-answer">
+            Centralized exchanges frequently display simple unweighted averages, omit off-platform withdrawal fees, or calculate averages using only orders executed on that specific platform while ignoring coins transferred from private wallets or external brokers.
+          </div>
+        </div>
+
+        <div class="cac-faq-item">
+          <button type="button" class="cac-faq-question" aria-expanded="false">
+            Can I use this calculator for crypto tax reporting?
+          </button>
+          <div class="cac-faq-answer">
+            No. This calculator is designed for personal portfolio analysis, DCA tracking, and acquisition cost estimation. It is a buy-side tool only and does not compute realized capital gains, taxable events, or jurisdiction-specific tax lots.
+          </div>
+        </div>
+      </section>
+
+      <footer class="cac-disclaimer-box" role="contentinfo">
+        <strong>Financial Disclaimer:</strong> This calculator provides an estimate based on the purchase quantities, prices and fees you enter. It does not provide investment, legal or tax advice and does not determine your official tax cost basis. Tax treatment and accounting requirements vary by jurisdiction and transaction type. Verify your records before using these results for financial or tax reporting.
+      </footer>
+    </article>
+  </div>
+
+  <script>
+  (function () {
+    'use strict';
+
+    const STORAGE_KEY = 'toolbox_crypto_avg_calc_v1';
+    let purchases = [
+      { id: 1, qty: '1', price: '100', fee: '2' },
+      { id: 2, qty: '1', price: '200', fee: '4' }
+    ];
+    let nextId = 3;
+
+    const assetSelect = document.getElementById('cac-asset-select');
+    const customAssetInput = document.getElementById('cac-custom-asset');
+    const currencySelect = document.getElementById('cac-currency-select');
+    const txContainer = document.getElementById('cac-tx-container');
+    const countBadge = document.getElementById('cac-count-badge');
+    const addBuyBtn = document.getElementById('cac-add-buy-btn');
+    const loadSampleBtn = document.getElementById('cac-load-sample-btn');
+    const resetBtn = document.getElementById('cac-reset-btn');
+    const saveLocalToggle = document.getElementById('cac-save-local-toggle');
+    const storageStatusText = document.getElementById('cac-storage-status-text');
+    const clearStorageBtn = document.getElementById('cac-clear-storage-btn');
+    const copySummaryBtn = document.getElementById('cac-copy-summary-btn');
+    const exportCsvBtn = document.getElementById('cac-export-csv-btn');
+    const statusBanner = document.getElementById('cac-status-banner');
+    const ariaLiveRegion = document.getElementById('cac-aria-live');
+
+    const resAvgCostFees = document.getElementById('res-avg-cost-fees');
+    const resAvgCostUnit = document.getElementById('res-avg-cost-unit');
+    const resTotalQty = document.getElementById('res-total-qty');
+    const resTotalValExcl = document.getElementById('res-total-val-excl');
+    const resTotalFees = document.getElementById('res-total-fees');
+    const resTotalCostIncl = document.getElementById('res-total-cost-incl');
+    const resAvgPriceExcl = document.getElementById('res-avg-price-excl');
+    const resValidCount = document.getElementById('res-valid-count');
+    const lblAssetTags = document.querySelectorAll('.cac-lbl-asset');
+
+    const CURRENCY_CONFIG = {
+      USD: { symbol: '$', code: 'USD', locale: 'en-US' },
+      EUR: { symbol: '€', code: 'EUR', locale: 'de-DE' },
+      GBP: { symbol: '£', code: 'GBP', locale: 'en-GB' },
+      CAD: { symbol: 'CA$', code: 'CAD', locale: 'en-CA' },
+      AUD: { symbol: 'A$', code: 'AUD', locale: 'en-AU' },
+      INR: { symbol: '₹', code: 'INR', locale: 'en-IN' }
+    };
+
+    function getSelectedAsset() {
+      if (assetSelect.value === 'CUSTOM') {
+        const val = customAssetInput.value.trim().toUpperCase();
+        return val ? sanitizeText(val) : 'CUSTOM';
+      }
+      return assetSelect.value;
+    }
+
+    function sanitizeText(str) {
+      return str.replace(/[^\w\s-]/gi, '').substring(0, 15);
+    }
+
+    function getSelectedCurrency() {
+      return CURRENCY_CONFIG[currencySelect.value] || CURRENCY_CONFIG.USD;
+    }
+
+    function formatCurrency(amount, curr) {
+      if (!Number.isFinite(amount)) return `${curr.symbol}0.00`;
+      return `${curr.symbol}${amount.toLocaleString(curr.locale, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: amount < 1 && amount > 0 ? 6 : 2
+      })}`;
+    }
+
+    function formatCryptoQty(qty) {
+      if (!Number.isFinite(qty)) return '0.00';
+      return qty.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 8
+      });
+    }
+
+    function computeCalculations(rawItems) {
+      let totalQty = 0;
+      let totalValueExclFees = 0;
+      let totalFees = 0;
+      let validCount = 0;
+      const rowResults = [];
+
+      for (let i = 0; i < rawItems.length; i++) {
+        const item = rawItems[i];
+        const qStr = String(item.qty || '').trim();
+        const pStr = String(item.price || '').trim();
+        const fStr = String(item.fee || '').trim();
+
+        const q = Number(qStr);
+        const p = Number(pStr);
+        const f = fStr === '' ? 0 : Number(fStr);
+
+        let isValid = true;
+        let errorMsg = '';
+
+        if (qStr === '' || isNaN(q) || !Number.isFinite(q) || q <= 0) {
+          isValid = false;
+          errorMsg = 'Quantity must be positive';
+        } else if (pStr === '' || isNaN(p) || !Number.isFinite(p) || p < 0) {
+          isValid = false;
+          errorMsg = 'Price must be non-negative';
+        } else if (isNaN(f) || !Number.isFinite(f) || f < 0) {
+          isValid = false;
+          errorMsg = 'Fee cannot be negative';
+        }
+
+        if (isValid) {
+          const val = q * p;
+          const cost = val + f;
+          totalQty += q;
+          totalValueExclFees += val;
+          totalFees += f;
+          validCount++;
+          rowResults.push({ id: item.id, isValid: true, val, cost, errorMsg: '' });
+        } else {
+          rowResults.push({ id: item.id, isValid: false, val: 0, cost: 0, errorMsg });
+        }
+      }
+
+      const totalCostInclFees = totalValueExclFees + totalFees;
+      const avgPriceExclFees = totalQty > 0 ? totalValueExclFees / totalQty : 0;
+      const avgCostInclFees = totalQty > 0 ? totalCostInclFees / totalQty : 0;
+
+      return {
+        totalQty,
+        totalValueExclFees,
+        totalFees,
+        totalCostInclFees,
+        avgPriceExclFees,
+        avgCostInclFees,
+        validCount,
+        rowResults
+      };
+    }
+
+    function renderTransactions() {
+      txContainer.innerHTML = '';
+      countBadge.textContent = `${purchases.length} Buy${purchases.length === 1 ? '' : 's'}`;
+
+      const curr = getSelectedCurrency();
+      const asset = getSelectedAsset();
+      const results = computeCalculations(purchases);
+
+      purchases.forEach((tx, index) => {
+        const rowRes = results.rowResults.find(r => r.id === tx.id) || { isValid: true, val: 0, cost: 0, errorMsg: '' };
+        const card = document.createElement('div');
+        card.className = 'cac-tx-card';
+        card.dataset.id = tx.id;
+
+        card.innerHTML = `
+          <div class="cac-tx-top">
+            <span class="cac-tx-badge">Buy #${index + 1}</span>
+            ${purchases.length > 1 ? `
+              <button type="button" class="cac-btn cac-btn-danger-text btn-remove" data-id="${tx.id}" aria-label="Remove Buy #${index + 1}">
+                Remove
+              </button>
+            ` : ''}
+          </div>
+          <div class="cac-tx-row-inputs">
+            <div class="cac-form-group">
+              <label for="tx-qty-${tx.id}">Quantity (${asset}) *</label>
+              <input type="number" step="any" min="0.00000001" id="tx-qty-${tx.id}" class="cac-input input-qty ${!rowRes.isValid && (!tx.qty || Number(tx.qty) <= 0) ? 'is-invalid' : ''}" value="${escapeAttr(tx.qty)}" placeholder="e.g. 0.5" data-id="${tx.id}" required>
+            </div>
+            <div class="cac-form-group">
+              <label for="tx-price-${tx.id}">Price per Unit (${curr.symbol}) *</label>
+              <input type="number" step="any" min="0" id="tx-price-${tx.id}" class="cac-input input-price ${!rowRes.isValid && (!tx.price || Number(tx.price) < 0) ? 'is-invalid' : ''}" value="${escapeAttr(tx.price)}" placeholder="e.g. 50000" data-id="${tx.id}" required>
+            </div>
+            <div class="cac-form-group">
+              <label for="tx-fee-${tx.id}">Fee (${curr.symbol}) <span style="font-weight: normal; color: var(--text-muted);">(Optional)</span></label>
+              <input type="number" step="any" min="0" id="tx-fee-${tx.id}" class="cac-input input-fee ${!rowRes.isValid && tx.fee && Number(tx.fee) < 0 ? 'is-invalid' : ''}" value="${escapeAttr(tx.fee)}" placeholder="0.00" data-id="${tx.id}">
+            </div>
+          </div>
+          <div class="cac-subtotal-bar">
+            <span>Trade Value: <strong>${formatCurrency(rowRes.val, curr)}</strong></span>
+            <span>With Fee: <strong>${formatCurrency(rowRes.cost, curr)}</strong></span>
+          </div>
+          ${rowRes.errorMsg ? `<div class="cac-input-error is-visible" role="alert">${rowRes.errorMsg}</div>` : ''}
+        `;
+        txContainer.appendChild(card);
+      });
+
+      updateResultsUI(results, curr, asset);
+    }
+
+    function escapeAttr(val) {
+      if (val === undefined || val === null) return '';
+      return String(val).replace(/"/g, '&quot;');
+    }
+
+    function updateResultsUI(results, curr, asset) {
+      resAvgCostFees.textContent = formatCurrency(results.avgCostInclFees, curr);
+      resAvgCostUnit.textContent = `per ${asset}`;
+      resTotalQty.textContent = formatCryptoQty(results.totalQty);
+      resTotalValExcl.textContent = formatCurrency(results.totalValueExclFees, curr);
+      resTotalFees.textContent = formatCurrency(results.totalFees, curr);
+      resTotalCostIncl.textContent = formatCurrency(results.totalCostInclFees, curr);
+      resAvgPriceExcl.textContent = formatCurrency(results.avgPriceExclFees, curr);
+      resValidCount.textContent = `${results.validCount} of ${purchases.length}`;
+
+      lblAssetTags.forEach(el => {
+        el.textContent = asset;
+      });
+
+      ariaLiveRegion.textContent = `Calculation updated. Average cost with fees is ${formatCurrency(results.avgCostInclFees, curr)} per ${asset}.`;
+
+      if (saveLocalToggle.checked) {
+        saveToLocalStorage();
+      }
+    }
+
+    function handleInputChange(e) {
+      const target = e.target;
+      const id = Number(target.dataset.id);
+      if (!id) return;
+
+      const tx = purchases.find(p => p.id === id);
+      if (!tx) return;
+
+      if (target.classList.contains('input-qty')) {
+        tx.qty = target.value;
+      } else if (target.classList.contains('input-price')) {
+        tx.price = target.value;
+      } else if (target.classList.contains('input-fee')) {
+        tx.fee = target.value;
+      }
+
+      const curr = getSelectedCurrency();
+      const asset = getSelectedAsset();
+      const results = computeCalculations(purchases);
+      const card = txContainer.querySelector(`.cac-tx-card[data-id="${id}"]`);
+      if (card) {
+        const rowRes = results.rowResults.find(r => r.id === id);
+        const subtotalBar = card.querySelector('.cac-subtotal-bar');
+        if (subtotalBar && rowRes) {
+          subtotalBar.innerHTML = `
+            <span>Trade Value: <strong>${formatCurrency(rowRes.val, curr)}</strong></span>
+            <span>With Fee: <strong>${formatCurrency(rowRes.cost, curr)}</strong></span>
+          `;
+        }
+        let errEl = card.querySelector('.cac-input-error');
+        if (rowRes && !rowRes.isValid) {
+          if (!errEl) {
+            errEl = document.createElement('div');
+            errEl.className = 'cac-input-error is-visible';
+            card.appendChild(errEl);
+          }
+          errEl.textContent = rowRes.errorMsg;
+        } else if (errEl) {
+          errEl.remove();
+        }
+      }
+
+      updateResultsUI(results, curr, asset);
+    }
+
+    txContainer.addEventListener('input', handleInputChange);
+
+    txContainer.addEventListener('click', function (e) {
+      if (e.target.classList.contains('btn-remove')) {
+        const id = Number(e.target.dataset.id);
+        if (purchases.length <= 1) {
+          showStatus('At least one purchase row is required.', 'error');
+          return;
+        }
+        purchases = purchases.filter(p => p.id !== id);
+        renderTransactions();
+        showStatus('Purchase removed.', 'success');
+      }
+    });
+
+    addBuyBtn.addEventListener('click', function () {
+      purchases.push({ id: nextId++, qty: '', price: '', fee: '' });
+      renderTransactions();
+      const newCard = txContainer.lastElementChild;
+      if (newCard) {
+        const firstInput = newCard.querySelector('input');
+        if (firstInput) firstInput.focus();
+      }
+    });
+
+    loadSampleBtn.addEventListener('click', function () {
+      purchases = [
+        { id: 1, qty: '1', price: '100', fee: '2' },
+        { id: 2, qty: '1', price: '200', fee: '4' }
+      ];
+      nextId = 3;
+      assetSelect.value = 'BTC';
+      customAssetInput.style.display = 'none';
+      renderTransactions();
+      showStatus('Sample purchases loaded (1 BTC @ $100 + $2 fee, 1 BTC @ $200 + $4 fee).', 'success');
+    });
+
+    resetBtn.addEventListener('click', function () {
+      purchases = [
+        { id: 1, qty: '', price: '', fee: '' }
+      ];
+      nextId = 2;
+      renderTransactions();
+      showStatus('Form cleared. Please enter new purchases.', 'success');
+    });
+
+    assetSelect.addEventListener('change', function () {
+      if (assetSelect.value === 'CUSTOM') {
+        customAssetInput.style.display = 'block';
+        customAssetInput.focus();
+      } else {
+        customAssetInput.style.display = 'none';
+      }
+      renderTransactions();
+    });
+
+    customAssetInput.addEventListener('input', function () {
+      renderTransactions();
+    });
+
+    currencySelect.addEventListener('change', function () {
+      renderTransactions();
+    });
+
+    copySummaryBtn.addEventListener('click', async function () {
+      const asset = getSelectedAsset();
+      const curr = getSelectedCurrency();
+      const calc = computeCalculations(purchases);
+
+      if (calc.validCount === 0) {
+        showStatus('Please enter at least one valid purchase before copying.', 'error');
+        return;
+      }
+
+      const summaryText = [
+        `--- Crypto Average Cost Basis Summary ---`,
+        `Asset: ${asset}`,
+        `Currency: ${curr.code} (${curr.symbol})`,
+        `Total Quantity: ${formatCryptoQty(calc.totalQty)} ${asset}`,
+        `Total Purchase Value (Excl. Fees): ${formatCurrency(calc.totalValueExclFees, curr)}`,
+        `Total Transaction Fees: ${formatCurrency(calc.totalFees, curr)}`,
+        `Total Acquisition Cost (Incl. Fees): ${formatCurrency(calc.totalCostInclFees, curr)}`,
+        `Weighted Average Price (Excl. Fees): ${formatCurrency(calc.avgPriceExclFees, curr)} per ${asset}`,
+        `Weighted Average Cost (Incl. Fees): ${formatCurrency(calc.avgCostInclFees, curr)} per ${asset}`,
+        `Valid Transactions: ${calc.validCount} of ${purchases.length}`,
+        `----------------------------------------`,
+        `Calculation Type: Buy-side acquisition average. Not official tax advice.`,
+        `Calculated securely at: ${window.location.href}`
+      ].join('\n');
+
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(summaryText);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.value = summaryText;
+          textarea.style.position = 'fixed';
+          textarea.style.left = '-9999px';
+          document.body.appendChild(textarea);
+          textarea.focus();
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+        }
+        showStatus('Summary copied to clipboard!', 'success');
+      } catch (err) {
+        showStatus('Could not copy to clipboard. Please copy manually.', 'error');
+      }
+    });
+
+    exportCsvBtn.addEventListener('click', function () {
+      const asset = getSelectedAsset();
+      const curr = getSelectedCurrency();
+      const calc = computeCalculations(purchases);
+
+      if (calc.validCount === 0) {
+        showStatus('Please enter at least one valid purchase before exporting.', 'error');
+        return;
+      }
+
+      function escapeCsv(cell) {
+        let str = String(cell === undefined || cell === null ? '' : cell);
+        if (/^[=\+\-@\t\r]/.test(str)) {
+          str = `'` + str;
+        }
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+
+      const rows = [];
+      rows.push(['Transaction #', 'Asset', 'Quantity', `Unit Price (${curr.code})`, `Trade Value (${curr.code})`, `Fee (${curr.code})`, `Total Cost (${curr.code})`].map(escapeCsv).join(','));
+
+      purchases.forEach((tx, idx) => {
+        const q = Number(tx.qty) || 0;
+        const p = Number(tx.price) || 0;
+        const f = Number(tx.fee) || 0;
+        const val = q * p;
+        const cost = val + f;
+        rows.push([
+          idx + 1,
+          asset,
+          q,
+          p.toFixed(4),
+          val.toFixed(2),
+          f.toFixed(2),
+          cost.toFixed(2)
+        ].map(escapeCsv).join(','));
+      });
+
+      rows.push('');
+      rows.push(['SUMMARY METRICS', '', '', '', '', '', ''].map(escapeCsv).join(','));
+      rows.push(['Total Quantity', asset, calc.totalQty, '', '', '', ''].map(escapeCsv).join(','));
+      rows.push(['Total Purchase Value (Excl Fees)', curr.code, calc.totalValueExclFees.toFixed(2), '', '', '', ''].map(escapeCsv).join(','));
+      rows.push(['Total Transaction Fees', curr.code, calc.totalFees.toFixed(2), '', '', '', ''].map(escapeCsv).join(','));
+      rows.push(['Total Acquisition Cost (Incl Fees)', curr.code, calc.totalCostInclFees.toFixed(2), '', '', '', ''].map(escapeCsv).join(','));
+      rows.push(['Weighted Avg Price (Excl Fees)', `${curr.code}/${asset}`, calc.avgPriceExclFees.toFixed(4), '', '', '', ''].map(escapeCsv).join(','));
+      rows.push(['Weighted Avg Cost (Incl Fees)', `${curr.code}/${asset}`, calc.avgCostInclFees.toFixed(4), '', '', '', ''].map(escapeCsv).join(','));
+
+      const csvContent = '\uFEFF' + rows.join('\r\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `crypto-average-cost-${asset.toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      showStatus('CSV file downloaded successfully.', 'success');
+    });
+
+    function saveToLocalStorage() {
+      try {
+        const payload = {
+          asset: assetSelect.value,
+          customAsset: customAssetInput.value,
+          currency: currencySelect.value,
+          purchases: purchases,
+          nextId: nextId
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        storageStatusText.textContent = 'Purchases saved locally in this browser.';
+        clearStorageBtn.style.display = 'inline';
+      } catch (e) {
+        storageStatusText.textContent = 'Storage unavailable in private mode.';
+      }
+    }
+
+    function loadFromLocalStorage() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return false;
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed.purchases) && parsed.purchases.length > 0) {
+          purchases = parsed.purchases;
+          nextId = parsed.nextId || (purchases.length + 1);
+          if (parsed.asset) assetSelect.value = parsed.asset;
+          if (parsed.customAsset) customAssetInput.value = parsed.customAsset;
+          if (parsed.currency) currencySelect.value = parsed.currency;
+          saveLocalToggle.checked = true;
+          storageStatusText.textContent = 'Loaded saved purchases from this device.';
+          clearStorageBtn.style.display = 'inline';
+          if (assetSelect.value === 'CUSTOM') {
+            customAssetInput.style.display = 'block';
+          }
+          return true;
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+      return false;
+    }
+
+    saveLocalToggle.addEventListener('change', function () {
+      if (this.checked) {
+        saveToLocalStorage();
+      } else {
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch (e) {}
+        storageStatusText.textContent = 'Data is temporary and cleared upon reload.';
+        clearStorageBtn.style.display = 'none';
+        showStatus('Local data storage disabled.', 'success');
+      }
+    });
+
+    clearStorageBtn.addEventListener('click', function () {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (e) {}
+      saveLocalToggle.checked = false;
+      storageStatusText.textContent = 'Local data cleared.';
+      clearStorageBtn.style.display = 'none';
+      showStatus('All saved browser data cleared.', 'success');
+    });
+
+    document.querySelectorAll('.cac-faq-question').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const item = this.parentElement;
+        const isOpen = item.classList.contains('open');
+        item.classList.toggle('open', !isOpen);
+        this.setAttribute('aria-expanded', !isOpen);
+      });
+    });
+
+    let statusTimer = null;
+    function showStatus(msg, type) {
+      if (statusTimer) clearTimeout(statusTimer);
+      statusBanner.textContent = msg;
+      statusBanner.className = `cac-status-banner show ${type}`;
+      statusTimer = setTimeout(() => {
+        statusBanner.className = 'cac-status-banner';
+      }, 4000);
+    }
+
+    const hasLoaded = loadFromLocalStorage();
+    if (!hasLoaded) {
+      purchases = [
+        { id: 1, qty: '1', price: '100', fee: '2' },
+        { id: 2, qty: '1', price: '200', fee: '4' }
+      ];
+      nextId = 3;
+    }
+    renderTransactions();
+  })();
+  </script>
+</body>
+</html>
