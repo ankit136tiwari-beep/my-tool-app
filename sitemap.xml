@@ -2,67 +2,72 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://my-tool-app.pages.dev/</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://my-tool-app.pages.dev/solar-battery-runtime-calculator</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://my-tool-app.pages.dev/100ah-lithium-battery-runtime-calculator</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://my-tool-app.pages.dev/credit-card-minimum-payment-payoff-calculator</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://my-tool-app.pages.dev/debt-snowball-vs-avalanche-payoff-calculator</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://my-tool-app.pages.dev/freelance-hourly-rate-after-tax-estimator</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://my-tool-app.pages.dev/invoice-late-payment-interest-calculator</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://my-tool-app.pages.dev/rental-property-cash-on-cash-return-calculator</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://my-tool-app.pages.dev/airbnb-occupancy-break-even-calculator</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://my-tool-app.pages.dev/dividend-reinvestment-growth-calculator</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://my-tool-app.pages.dev/emergency-fund-months-of-expenses-calculator</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://my-tool-app.pages.dev/freelance-project-profit-margin-calculator</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://my-tool-app.pages.dev/loan-origination-fee-apr-calculator</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://my-tool-app.pages.dev/crypto-average-cost-basis-calculator</loc>
+    <lastmod>2026-10-25</lastmod>
     <priority>0.80</priority>
   </url>
 </urlset>
