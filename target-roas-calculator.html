@@ -1,0 +1,1184 @@
+<!-- IQVO TARGET ROAS CALCULATOR FOR ECOMMERCE PRODUCTS (BLOGGER READY) -->
+<style>
+  /* SCOPED CSS VARIABLES & STYLES FOR BLOGGER COMPATIBILITY */
+  #iqvo-target-roas-tool {
+    --iqvo-bg-main: #f8fafc;
+    --iqvo-card-bg: #ffffff;
+    --iqvo-text-main: #0f172a;
+    --iqvo-text-muted: #475569;
+    --iqvo-primary: #1e293b;
+    --iqvo-primary-hover: #0f172a;
+    --iqvo-accent: #2563eb;
+    --iqvo-accent-light: #eff6ff;
+    --iqvo-border: #cbd5e1;
+    --iqvo-border-light: #e2e8f0;
+    --iqvo-success: #15803d;
+    --iqvo-success-bg: #f0fdf4;
+    --iqvo-warning: #b45309;
+    --iqvo-warning-bg: #fffbeb;
+    --iqvo-danger: #b91c1c;
+    --iqvo-danger-bg: #fef2f2;
+    --iqvo-radius: 8px;
+    --iqvo-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --iqvo-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
+    font-family: var(--iqvo-font);
+    color: var(--iqvo-text-main);
+    background-color: var(--iqvo-bg-main);
+    line-height: 1.6;
+    padding: 20px;
+    border-radius: var(--iqvo-radius);
+    border: 1px solid var(--iqvo-border-light);
+    margin: 20px 0;
+    box-sizing: border-box;
+  }
+
+  #iqvo-target-roas-tool * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* TOOLBAR & NAVIGATION */
+  #iqvo-target-roas-tool .iqvo-nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--iqvo-border-light);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  #iqvo-target-roas-tool .iqvo-nav-group {
+    display: flex;
+    gap: 10px;
+  }
+
+  #iqvo-target-roas-tool .iqvo-btn-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background-color: var(--iqvo-card-bg);
+    color: var(--iqvo-text-main);
+    border: 1px solid var(--iqvo-border);
+    border-radius: var(--iqvo-radius);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+  }
+
+  #iqvo-target-roas-tool .iqvo-btn-nav:hover {
+    background-color: var(--iqvo-accent-light);
+    border-color: var(--iqvo-accent);
+    color: var(--iqvo-accent);
+  }
+
+  /* LAYOUT GRID */
+  #iqvo-target-roas-tool .iqvo-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  @media (min-width: 900px) {
+    #iqvo-target-roas-tool .iqvo-grid {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+  }
+
+  /* FORM CARDS */
+  #iqvo-target-roas-tool .iqvo-card {
+    background: var(--iqvo-card-bg);
+    padding: 20px;
+    border-radius: var(--iqvo-radius);
+    border: 1px solid var(--iqvo-border);
+    box-shadow: var(--iqvo-shadow);
+    margin-bottom: 20px;
+  }
+
+  #iqvo-target-roas-tool .iqvo-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--iqvo-primary);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--iqvo-border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* PRESET BUTTONS */
+  #iqvo-target-roas-tool .iqvo-preset-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  #iqvo-target-roas-tool .iqvo-btn-preset {
+    flex: 1;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--iqvo-bg-main);
+    border: 1px solid var(--iqvo-border);
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  #iqvo-target-roas-tool .iqvo-btn-preset.active {
+    background: var(--iqvo-accent);
+    color: #ffffff;
+    border-color: var(--iqvo-accent);
+  }
+
+  /* FORM CONTROLS */
+  #iqvo-target-roas-tool .iqvo-form-group {
+    margin-bottom: 14px;
+  }
+
+  #iqvo-target-roas-tool label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--iqvo-text-main);
+    margin-bottom: 4px;
+  }
+
+  #iqvo-target-roas-tool .iqvo-help-text {
+    font-size: 11px;
+    color: var(--iqvo-text-muted);
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  #iqvo-target-roas-tool input[type="number"],
+  #iqvo-target-roas-tool select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid var(--iqvo-border);
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: var(--iqvo-text-main);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  #iqvo-target-roas-tool input[type="number"]:focus,
+  #iqvo-target-roas-tool select:focus {
+    border-color: var(--iqvo-accent);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  }
+
+  #iqvo-target-roas-tool .iqvo-input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* ACTION BUTTONS */
+  #iqvo-target-roas-tool .iqvo-action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  #iqvo-target-roas-tool .iqvo-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s;
+  }
+
+  #iqvo-target-roas-tool .iqvo-btn-primary {
+    background-color: var(--iqvo-primary);
+    color: #ffffff;
+  }
+
+  #iqvo-target-roas-tool .iqvo-btn-primary:hover {
+    background-color: var(--iqvo-primary-hover);
+  }
+
+  #iqvo-target-roas-tool .iqvo-btn-secondary {
+    background-color: #e2e8f0;
+    color: var(--iqvo-text-main);
+  }
+
+  #iqvo-target-roas-tool .iqvo-btn-secondary:hover {
+    background-color: #cbd5e1;
+  }
+
+  /* RESULTS DASHBOARD */
+  #iqvo-target-roas-tool .iqvo-dashboard {
+    position: sticky;
+    top: 20px;
+  }
+
+  #iqvo-target-roas-tool .iqvo-metric-card {
+    background: var(--iqvo-accent-light);
+    border: 1px solid #bfdbfe;
+    border-radius: var(--iqvo-radius);
+    padding: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  #iqvo-target-roas-tool .iqvo-metric-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #1e40af;
+    font-weight: 700;
+  }
+
+  #iqvo-target-roas-tool .iqvo-metric-value {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1e3a8a;
+    margin: 4px 0;
+  }
+
+  #iqvo-target-roas-tool .iqvo-metric-sub {
+    font-size: 12px;
+    color: var(--iqvo-text-muted);
+  }
+
+  #iqvo-target-roas-tool .iqvo-results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  #iqvo-target-roas-tool .iqvo-result-box {
+    background: #ffffff;
+    border: 1px solid var(--iqvo-border-light);
+    padding: 12px;
+    border-radius: 6px;
+  }
+
+  #iqvo-target-roas-tool .iqvo-result-title {
+    font-size: 11px;
+    color: var(--iqvo-text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  #iqvo-target-roas-tool .iqvo-result-num {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--iqvo-text-main);
+    margin-top: 2px;
+  }
+
+  /* ALERTS & NOTICES */
+  #iqvo-target-roas-tool .iqvo-alert {
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  #iqvo-target-roas-tool .iqvo-alert-warning {
+    background-color: var(--iqvo-warning-bg);
+    color: var(--iqvo-warning);
+    border: 1px solid #fde68a;
+  }
+
+  #iqvo-target-roas-tool .iqvo-alert-danger {
+    background-color: var(--iqvo-danger-bg);
+    color: var(--iqvo-danger);
+    border: 1px solid #fca5a5;
+  }
+
+  /* CONTENT SECTIONS */
+  #iqvo-target-roas-tool .iqvo-content {
+    margin-top: 32px;
+    background: #ffffff;
+    padding: 24px;
+    border-radius: var(--iqvo-radius);
+    border: 1px solid var(--iqvo-border);
+  }
+
+  #iqvo-target-roas-tool .iqvo-content h1 { font-size: 26px; margin-bottom: 16px; color: var(--iqvo-primary); }
+  #iqvo-target-roas-tool .iqvo-content h2 { font-size: 20px; margin: 20px 0 10px; color: var(--iqvo-primary); border-bottom: 1px solid var(--iqvo-border-light); padding-bottom: 6px; }
+  #iqvo-target-roas-tool .iqvo-content h3 { font-size: 16px; margin: 16px 0 8px; color: var(--iqvo-primary); }
+  #iqvo-target-roas-tool .iqvo-content p { font-size: 14px; margin-bottom: 12px; color: #334155; }
+  #iqvo-target-roas-tool .iqvo-content ul { margin: 0 0 16px 20px; font-size: 14px; color: #334155; }
+  #iqvo-target-roas-tool .iqvo-content li { margin-bottom: 6px; }
+
+  #iqvo-target-roas-tool .iqvo-formula-block {
+    background: var(--iqvo-bg-main);
+    padding: 12px 16px;
+    border-left: 4px solid var(--iqvo-accent);
+    font-family: monospace;
+    font-size: 13px;
+    margin: 12px 0;
+    border-radius: 0 4px 4px 0;
+  }
+
+  /* PRINT MEDIA OVERRIDES */
+  @media print {
+    #iqvo-target-roas-tool .iqvo-nav-bar,
+    #iqvo-target-roas-tool .iqvo-action-grid,
+    #iqvo-target-roas-tool .iqvo-preset-group {
+      display: none !important;
+    }
+    #iqvo-target-roas-tool {
+      background: #ffffff;
+      border: none;
+      padding: 0;
+    }
+  }
+</style>
+
+<div id="iqvo-target-roas-tool">
+  <!-- NAVIGATION BAR -->
+  <div class="iqvo-nav-bar">
+    <div class="iqvo-nav-group">
+      <a href="https://my-tool-app.pages.dev/" class="iqvo-btn-nav">
+        &larr; Home
+      </a>
+      <button type="button" class="iqvo-btn-nav" id="iqvo-btn-back">
+        &larr; Back
+      </button>
+    </div>
+    <div class="iqvo-nav-group">
+      <span style="font-size: 12px; color: var(--iqvo-text-muted); align-self: center;">Currency:</span>
+      <select id="iqvo-currency" style="width: 90px; padding: 4px 8px; font-size: 13px;">
+        <option value="USD">USD ($)</option>
+        <option value="INR">INR (₹)</option>
+        <option value="GBP">GBP (£)</option>
+        <option value="EUR">EUR (€)</option>
+        <option value="CAD">CAD ($)</option>
+        <option value="AUD">AUD ($)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="iqvo-grid">
+    <!-- LEFT COLUMN: INPUTS -->
+    <div class="iqvo-inputs-column">
+      <!-- SCENARIO PRESETS -->
+      <div class="iqvo-card">
+        <div class="iqvo-card-title">
+          <span>Scenario Presets</span>
+        </div>
+        <div class="iqvo-preset-group">
+          <button type="button" class="iqvo-btn-preset" id="iqvo-preset-conservative">Conservative</button>
+          <button type="button" class="iqvo-btn-preset active" id="iqvo-preset-current">Current</button>
+          <button type="button" class="iqvo-btn-preset" id="iqvo-preset-optimistic">Optimistic</button>
+        </div>
+        <span class="iqvo-help-text">Select a pre-configured scenario to test different profit margin and fee expectations.</span>
+      </div>
+
+      <!-- SECTION A: REVENUE & ORDER -->
+      <div class="iqvo-card">
+        <div class="iqvo-card-title">1. Revenue &amp; Order Details</div>
+        
+        <div class="iqvo-form-group">
+          <label for="iqvo-aov">Average Order Value (AOV) / Gross Revenue</label>
+          <span class="iqvo-help-text">Gross selling price per order before discounts and taxes.</span>
+          <input type="number" id="iqvo-aov" step="0.01" min="0" placeholder="2000.00">
+        </div>
+
+        <div class="iqvo-input-row">
+          <div class="iqvo-form-group">
+            <label for="iqvo-discount-type">Discount Type</label>
+            <select id="iqvo-discount-type">
+              <option value="fixed">Fixed Amount</option>
+              <option value="percent">Percentage (%)</option>
+            </select>
+          </div>
+          <div class="iqvo-form-group">
+            <label for="iqvo-discount-val">Discount Value</label>
+            <input type="number" id="iqvo-discount-val" step="0.01" min="0" value="0">
+          </div>
+        </div>
+
+        <div class="iqvo-form-group">
+          <label for="iqvo-tax">Pass-Through Sales Tax / VAT (Per Order)</label>
+          <span class="iqvo-help-text">Tax collected from buyers that must be remitted to authorities.</span>
+          <input type="number" id="iqvo-tax" step="0.01" min="0" value="0">
+        </div>
+      </div>
+
+      <!-- SECTION B: FULFILLMENT & COSTS -->
+      <div class="iqvo-card">
+        <div class="iqvo-card-title">2. Goods &amp; Variable Costs</div>
+        
+        <div class="iqvo-form-group">
+          <label for="iqvo-cogs">Product / Supplier Cost (COGS)</label>
+          <span class="iqvo-help-text">Item procurement cost or dropshipping supplier fee.</span>
+          <input type="number" id="iqvo-cogs" step="0.01" min="0" placeholder="800.00">
+        </div>
+
+        <div class="iqvo-input-row">
+          <div class="iqvo-form-group">
+            <label for="iqvo-shipping">Shipping &amp; Delivery Cost</label>
+            <input type="number" id="iqvo-shipping" step="0.01" min="0" placeholder="150.00">
+          </div>
+          <div class="iqvo-form-group">
+            <label for="iqvo-fulfillment">Pick, Pack &amp; Packaging</label>
+            <input type="number" id="iqvo-fulfillment" step="0.01" min="0" value="0">
+          </div>
+        </div>
+
+        <div class="iqvo-input-row">
+          <div class="iqvo-form-group">
+            <label for="iqvo-gateway-pct">Payment Gateway Fee (%)</label>
+            <input type="number" id="iqvo-gateway-pct" step="0.01" min="0" max="100" placeholder="2.5">
+          </div>
+          <div class="iqvo-form-group">
+            <label for="iqvo-gateway-fixed">Fixed Processing Fee</label>
+            <input type="number" id="iqvo-gateway-fixed" step="0.01" min="0" value="0">
+          </div>
+        </div>
+
+        <div class="iqvo-input-row">
+          <div class="iqvo-form-group">
+            <label for="iqvo-refund-pct">Refund &amp; Return Rate (%)</label>
+            <span class="iqvo-help-text">Provision for returns/chargebacks.</span>
+            <input type="number" id="iqvo-refund-pct" step="0.01" min="0" max="100" value="0">
+          </div>
+          <div class="iqvo-form-group">
+            <label for="iqvo-other-costs">Other Variable Fees</label>
+            <span class="iqvo-help-text">Platform commission, royalties, etc.</span>
+            <input type="number" id="iqvo-other-costs" step="0.01" min="0" placeholder="50.00">
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION C: PROFIT GOALS -->
+      <div class="iqvo-card">
+        <div class="iqvo-card-title">3. Desired Profitability</div>
+        
+        <div class="iqvo-form-group">
+          <label for="iqvo-target-margin">Desired Post-Ad Profit Margin (%)</label>
+          <span class="iqvo-help-text">Net profit margin desired AFTER all ad spend and variable costs.</span>
+          <input type="number" id="iqvo-target-margin" step="0.1" min="0" max="100" placeholder="10.0">
+        </div>
+      </div>
+
+      <!-- SECTION D: ACTUAL CAMPAIGN METRICS (OPTIONAL) -->
+      <div class="iqvo-card">
+        <div class="iqvo-card-title">4. Actual Ad Performance (Optional)</div>
+        
+        <div class="iqvo-input-row">
+          <div class="iqvo-form-group">
+            <label for="iqvo-actual-spend">Total Ad Spend</label>
+            <input type="number" id="iqvo-actual-spend" step="0.01" min="0" placeholder="0.00">
+          </div>
+          <div class="iqvo-form-group">
+            <label for="iqvo-actual-revenue">Attributed Ad Revenue</label>
+            <input type="number" id="iqvo-actual-revenue" step="0.01" min="0" placeholder="0.00">
+          </div>
+        </div>
+        <div class="iqvo-form-group">
+          <label for="iqvo-actual-orders">Attributed Orders</label>
+          <input type="number" id="iqvo-actual-orders" step="1" min="0" placeholder="0">
+        </div>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="iqvo-action-grid">
+        <button type="button" class="iqvo-btn iqvo-btn-primary" id="iqvo-btn-example">Load Example</button>
+        <button type="button" class="iqvo-btn iqvo-btn-secondary" id="iqvo-btn-reset">Reset All</button>
+        <button type="button" class="iqvo-btn iqvo-btn-secondary" id="iqvo-btn-save">Save Inputs</button>
+        <button type="button" class="iqvo-btn iqvo-btn-secondary" id="iqvo-btn-clear-save">Clear Saved</button>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: RESULTS DASHBOARD -->
+    <div class="iqvo-dashboard">
+      <div class="iqvo-card">
+        <div class="iqvo-card-title">Target ROAS Metrics</div>
+
+        <!-- ALERTS -->
+        <div id="iqvo-alert-box" class="iqvo-alert"></div>
+
+        <!-- MAIN TARGET METRIC -->
+        <div class="iqvo-metric-card">
+          <div class="iqvo-metric-label">Target ROAS Required</div>
+          <div class="iqvo-metric-value" id="iqvo-res-target-roas">0.00x</div>
+          <div class="iqvo-metric-sub" id="iqvo-res-target-roas-pct">Equates to 0%</div>
+        </div>
+
+        <!-- SECONDARY TARGET METRIC -->
+        <div class="iqvo-metric-card" style="background: #f0fdf4; border-color: #bbf7d0;">
+          <div class="iqvo-metric-label" style="color: #15803d;">Target CPA (Max Ad Spend/Order)</div>
+          <div class="iqvo-metric-value" style="color: #166534;" id="iqvo-res-target-cpa">$0.00</div>
+          <div class="iqvo-metric-sub">Ad cost threshold to achieve target profit</div>
+        </div>
+
+        <!-- DETAILED BREAKDOWN GRID -->
+        <div class="iqvo-results-grid">
+          <div class="iqvo-result-box">
+            <div class="iqvo-result-title">Break-Even ROAS</div>
+            <div class="iqvo-result-num" id="iqvo-res-be-roas">0.00x</div>
+          </div>
+          <div class="iqvo-result-box">
+            <div class="iqvo-result-title">Break-Even CPA</div>
+            <div class="iqvo-result-num" id="iqvo-res-be-cpa">$0.00</div>
+          </div>
+          <div class="iqvo-result-box">
+            <div class="iqvo-result-title">Net Revenue / Order</div>
+            <div class="iqvo-result-num" id="iqvo-res-net-rev">$0.00</div>
+          </div>
+          <div class="iqvo-result-box">
+            <div class="iqvo-result-title">Total Variable Costs</div>
+            <div class="iqvo-result-num" id="iqvo-res-total-cogs">$0.00</div>
+          </div>
+          <div class="iqvo-result-box">
+            <div class="iqvo-result-title">Contribution / Order</div>
+            <div class="iqvo-result-num" id="iqvo-res-contribution">$0.00</div>
+          </div>
+          <div class="iqvo-result-box">
+            <div class="iqvo-result-title">Contribution Margin</div>
+            <div class="iqvo-result-num" id="iqvo-res-contrib-margin">0.00%</div>
+          </div>
+          <div class="iqvo-result-box">
+            <div class="iqvo-result-title">Expected Profit / Order</div>
+            <div class="iqvo-result-num" id="iqvo-res-exp-profit">$0.00</div>
+          </div>
+          <div class="iqvo-result-box">
+            <div class="iqvo-result-title">Expected Profit Margin</div>
+            <div class="iqvo-result-num" id="iqvo-res-exp-margin">0.00%</div>
+          </div>
+        </div>
+
+        <!-- ACTUAL VS TARGET SECTION -->
+        <div id="iqvo-actual-section" style="display: none; border-top: 1px solid var(--iqvo-border-light); padding-top: 12px; margin-top: 12px;">
+          <div class="iqvo-card-title" style="font-size: 14px;">Actual Performance Tracking</div>
+          <div class="iqvo-results-grid">
+            <div class="iqvo-result-box">
+              <div class="iqvo-result-title">Actual ROAS</div>
+              <div class="iqvo-result-num" id="iqvo-res-actual-roas">0.00x</div>
+            </div>
+            <div class="iqvo-result-box">
+              <div class="iqvo-result-title">Actual CPA</div>
+              <div class="iqvo-result-num" id="iqvo-res-actual-cpa">$0.00</div>
+            </div>
+          </div>
+          <div id="iqvo-roas-diff-msg" style="font-size: 12px; font-weight: 600; text-align: center; padding: 6px; border-radius: 4px;"></div>
+        </div>
+
+        <!-- EXPORT / COPY BUTTONS -->
+        <div class="iqvo-action-grid" style="margin-top: 16px;">
+          <button type="button" class="iqvo-btn iqvo-btn-secondary" id="iqvo-btn-copy">Copy Results</button>
+          <button type="button" class="iqvo-btn iqvo-btn-secondary" id="iqvo-btn-csv">Export CSV</button>
+          <button type="button" class="iqvo-btn iqvo-btn-secondary" onclick="window.print()">Print Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SINGLE-PAGE SEO & EDUCATIONAL CONTENT -->
+  <div class="iqvo-content">
+    <h1>Target ROAS Calculator</h1>
+    <p>
+      The <strong>Target ROAS Calculator</strong> is a specialized financial planning tool designed for ecommerce merchants, media buyers, and dropshippers. It allows you to determine the exact Return On Ad Spend (ROAS) and Cost Per Acquisition (CPA) required to achieve your target profit margins after accounting for all variable product costs, shipping expenses, payment processing fees, and allowances.
+    </p>
+
+    <h2>What the Calculation Results Mean</h2>
+    <p>
+      Running profitability campaigns on platforms like Google Ads, Meta Ads, and TikTok Ads requires looking beyond high-level ad revenue. A high ROAS does not automatically guarantee profit if your underlying product margins are slim.
+    </p>
+    <ul>
+      <li><strong>Target ROAS:</strong> The multiplier of ad spend relative to revenue needed to cover all goods/variable fees AND meet your desired net profit margin.</li>
+      <li><strong>Break-Even ROAS:</strong> The minimum advertising return multiplier required to zero-out variable costs. Any campaign running below this threshold loses money on every order.</li>
+      <li><strong>Target CPA:</strong> The maximum absolute currency amount you can spend to acquire a single customer while still preserving your desired profit goal.</li>
+      <li><strong>Break-Even CPA:</strong> Your gross contribution margin per order. Spending more than this amount to acquire a customer results in a net financial loss per sale.</li>
+    </ul>
+
+    <h2>Target ROAS Formula &amp; Mathematical Breakdown</h2>
+    <p>
+      To maintain absolute accuracy, our calculation model evaluates your true net revenue and contribution margin per unit sold:
+    </p>
+    <div class="iqvo-formula-block">
+      Net Revenue (R) = Gross AOV - Discounts - Pass-Through Taxes<br>
+      Total Costs (C) = COGS + Shipping + Fulfillment + Gateway Fees + Returns + Other Fees<br>
+      Contribution = Net Revenue (R) - Total Costs (C)<br>
+      Contribution Margin (CM) = Contribution / Net Revenue (R)<br><br>
+      Break-Even ROAS = Net Revenue (R) / Contribution<br>
+      Break-Even CPA = Net Revenue (R) - Total Costs (C)<br>
+      Target CPA = Contribution - (Net Revenue × Desired Margin %)<br>
+      Target ROAS = Net Revenue / Target CPA
+    </div>
+
+    <h2>Worked Example with Independently Verified Numbers</h2>
+    <p>
+      Consider an ecommerce product with the following cost structure:
+    </p>
+    <ul>
+      <li><strong>Gross Average Order Value (AOV):</strong> $2,000.00</li>
+      <li><strong>Product Supplier Cost (COGS):</strong> $800.00</li>
+      <li><strong>Shipping &amp; Fulfillment:</strong> $150.00</li>
+      <li><strong>Payment Processing &amp; Platform Fees:</strong> $100.00</li>
+      <li><strong>Other Variable Costs:</strong> $50.00</li>
+      <li><strong>Desired Post-Ad Profit Margin:</strong> 10% ($200.00)</li>
+    </ul>
+    <p>
+      <strong>Calculation Execution:</strong><br>
+      Total Variable Costs = $800 + $150 + $100 + $50 = $1,100.00.<br>
+      Contribution per Order = $2,000 - $1,100 = $900.00 (45% Contribution Margin).<br>
+      Break-Even ROAS = $2,000 / $900 = <strong>2.22x (222.22%)</strong>.<br>
+      Break-Even CPA = <strong>$900.00</strong>.<br>
+      Target CPA = $900 - ($2,000 × 0.10) = <strong>$700.00</strong>.<br>
+      Target ROAS = $2,000 / $700 = <strong>2.86x (285.71%)</strong>.
+    </p>
+
+    <h2>Actual ROAS vs. Target ROAS</h2>
+    <p>
+      Your <em>Target ROAS</em> represents your financial requirement based on internal unit economics. In contrast, <em>Actual ROAS</em> is the real-time performance metric reported by advertising channels (e.g., Google Ads or Meta Ads Manager). If your Actual ROAS is lower than your Target ROAS, your actual profit margin will drop below your target. If your Actual ROAS falls below the Break-Even ROAS, you are operating at a net loss.
+    </p>
+
+    <h2>Target CPA vs. Break-Even CPA</h2>
+    <p>
+      While ROAS evaluates performance as a ratio, Cost Per Acquisition (CPA) evaluates performance as a fixed monetary cost per sale. <strong>Break-Even CPA</strong> is the maximum ad dollars you can spend per order without taking a net loss. <strong>Target CPA</strong> reduces this amount by your desired profit cushion, establishing your ideal target cost in Google Ads target CPA smart bidding campaigns.
+    </p>
+
+    <h2>Ecommerce &amp; Dropshipping Use Cases</h2>
+    <p>
+      <strong>Ecommerce Stores:</strong> Traditional brands with warehousing and inventory holding costs can use the tool to model bulk shipping expenses, custom packaging, and platform commissions to determine sustainable smart bidding goals.
+    </p>
+    <p>
+      <strong>Dropshipping Stores:</strong> Dropshippers operating with slim product margins, variable supplier freight costs, and high payment processing reserve deductions can calculate precise thresholds to prevent over-bidding on high-CPC search terms.
+    </p>
+
+    <h2>Common Calculation Mistakes to Avoid</h2>
+    <ul>
+      <li><strong>Confusing Gross Revenue with Net Revenue:</strong> Failing to deduct pass-through sales tax or customer discounts prior to calculating target ad spend thresholds.</li>
+      <li><strong>Omitting Return &amp; Chargeback Allowance:</strong> Neglecting to reserve 2–5% of revenue for product returns and customer support refunds.</li>
+      <li><strong>Equating ROAS to ROI:</strong> ROAS measures gross ad revenue returned per dollar spent on ads, while Return on Investment (ROI) evaluates net profit earned relative to total business investment.</li>
+    </ul>
+
+    <h2>Frequently Asked Questions (FAQ)</h2>
+    <h3>What is a Target ROAS Calculator?</h3>
+    <p>It is an ecommerce profitability tool that determines the ad spend efficiency (ROAS) and acquisition cost (CPA) needed to hit specific profit margin goals based on unit costs.</p>
+
+    <h3>How do I calculate target ROAS for ecommerce products?</h3>
+    <p>Subtract all variable costs (COGS, shipping, fees) from your sale price to find contribution dollars. Subtract your target profit dollars from contribution to find Target CPA. Divide sale price by Target CPA.</p>
+
+    <h3>What is the difference between target ROAS and break-even ROAS?</h3>
+    <p>Break-Even ROAS covers variable costs with zero profit. Target ROAS includes your required profit margin on top of variable costs.</p>
+
+    <h3>What is the Break-Even ROAS Formula?</h3>
+    <p>Break-Even ROAS = Net Revenue / (Net Revenue - Variable Costs).</p>
+
+    <h3>How do I calculate break-even CPA?</h3>
+    <p>Break-Even CPA = Net Revenue per Order - Total Variable Costs per Order.</p>
+
+    <h3>What is the difference between target CPA and break-even CPA?</h3>
+    <p>Break-Even CPA is the maximum ad spend before losing money. Target CPA is the ad spend limit that preserves your desired net profit per sale.</p>
+
+    <h3>Which costs should I include in my ecommerce target ROAS calculation?</h3>
+    <p>Include product sourcing fees, shipping charges, pick-and-pack expenses, payment gateway percentages, fixed processing fees, platform commissions, and return reserves.</p>
+
+    <h3>Can a high ROAS campaign still lose money?</h3>
+    <p>Yes. If your product variable costs represent 80% of selling price (Break-Even ROAS 5.0x), running an ad campaign at 4.0x ROAS will generate a net financial loss despite generating high ad revenue.</p>
+
+    <h3>Can I use this calculator for dropshipping?</h3>
+    <p>Yes. Enter your supplier item costs, merchant processing fees, and estimated shipping charges to calculate dropshipping advertising thresholds.</p>
+
+    <h3>What happens when my desired profit margin is too high?</h3>
+    <p>If your desired profit margin percentage equals or exceeds your contribution margin, your Target CPA becomes zero or negative, making the campaign mathematically unfeasible.</p>
+
+    <h3>Does this calculator send my inputs to a server?</h3>
+    <p>No. All calculations run strictly inside your Web Browser using local JavaScript. No data is stored or transmitted externally.</p>
+
+    <h3>Is target ROAS the same as ROI?</h3>
+    <p>No. ROAS looks strictly at gross advertising efficiency, whereas ROI measures total business net profitability against overall costs.</p>
+
+    <h2>Related Tools</h2>
+    <p>
+      Planning overall business revenue and personal income alongside your ecommerce store? Check out our 
+      <a href="https://my-tool-app.pages.dev/freelance-hourly-rate-after-tax-estimator" style="color: var(--iqvo-accent); font-weight: 600;">Freelance Hourly Rate After-Tax Estimator</a> 
+      to project personal net take-home earnings after business expenses and income taxes. You can also explore our full collection at 
+      <a href="https://my-tool-app.pages.dev/" style="color: var(--iqvo-accent); font-weight: 600;">Explore More Tools</a>.
+    </p>
+
+    <h2>Trusted External References</h2>
+    <ul>
+      <li><a href="https://support.google.com/google-ads/answer/6268637" target="_blank" rel="noopener noreferrer" style="color: var(--iqvo-accent);">Official Google Ads Documentation: About Target ROAS Bidding</a></li>
+      <li><a href="https://developers.google.com/search/docs/appearance/structured-data/sd-policies" target="_blank" rel="noopener noreferrer" style="color: var(--iqvo-accent);">Google Search Central: Structured Data Policies</a></li>
+      <li><a href="https://developers.google.com/search/docs/appearance/snippet" target="_blank" rel="noopener noreferrer" style="color: var(--iqvo-accent);">Google Search Central: Optimization of Search Snippets</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- CALCULATOR ENGINE & INTERACTION SCRIPT -->
+<script>
+(function() {
+  'use strict';
+
+  // SCOPED DOM SELECTORS
+  const container = document.getElementById('iqvo-target-roas-tool');
+  if (!container) return;
+
+  const $ = (id) => container.querySelector('#' + id);
+
+  // INPUT ELEMENTS
+  const currencyEl = $('iqvo-currency');
+  const aovEl = $('iqvo-aov');
+  const discountTypeEl = $('iqvo-discount-type');
+  const discountValEl = $('iqvo-discount-val');
+  const taxEl = $('iqvo-tax');
+  const cogsEl = $('iqvo-cogs');
+  const shippingEl = $('iqvo-shipping');
+  const fulfillmentEl = $('iqvo-fulfillment');
+  const gatewayPctEl = $('iqvo-gateway-pct');
+  const gatewayFixedEl = $('iqvo-gateway-fixed');
+  const refundPctEl = $('iqvo-refund-pct');
+  const otherCostsEl = $('iqvo-other-costs');
+  const targetMarginEl = $('iqvo-target-margin');
+  const actualSpendEl = $('iqvo-actual-spend');
+  const actualRevenueEl = $('iqvo-actual-revenue');
+  const actualOrdersEl = $('iqvo-actual-orders');
+
+  // OUTPUT ELEMENTS
+  const alertBox = $('iqvo-alert-box');
+  const resTargetRoas = $('iqvo-res-target-roas');
+  const resTargetRoasPct = $('iqvo-res-target-roas-pct');
+  const resTargetCpa = $('iqvo-res-target-cpa');
+  const resBeRoas = $('iqvo-res-be-roas');
+  const resBeCpa = $('iqvo-res-be-cpa');
+  const resNetRev = $('iqvo-res-net-rev');
+  const resTotalCogs = $('iqvo-res-total-cogs');
+  const resContribution = $('iqvo-res-contribution');
+  const resContribMargin = $('iqvo-res-contrib-margin');
+  const resExpProfit = $('iqvo-res-exp-profit');
+  const resExpMargin = $('iqvo-res-exp-margin');
+  const actualSection = $('iqvo-actual-section');
+  const resActualRoas = $('iqvo-res-actual-roas');
+  const resActualCpa = $('iqvo-res-actual-cpa');
+  const roasDiffMsg = $('iqvo-roas-diff-msg');
+
+  // CURRENCY SYMBOLS
+  const currencySymbols = {
+    USD: '$', INR: '₹', GBP: '£', EUR: '€', CAD: '$', AUD: '$'
+  };
+
+  function getCurrencySymbol() {
+    return currencySymbols[currencyEl.value] || '$';
+  }
+
+  function formatMoney(num) {
+    const sym = getCurrencySymbol();
+    if (isNaN(num) || !isFinite(num)) return sym + '0.00';
+    return sym + num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function parseVal(el) {
+    if (!el) return 0;
+    const v = parseFloat(el.value);
+    return isNaN(v) ? 0 : v;
+  }
+
+  // SMART BACK BUTTON NAVIGATION
+  const btnBack = $('iqvo-btn-back');
+  if (btnBack) {
+    btnBack.addEventListener('click', function() {
+      const homeUrl = "https://my-tool-app.pages.dev/";
+      if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+        window.history.back();
+      } else {
+        window.location.href = homeUrl;
+      }
+    });
+  }
+
+  // CALCULATION LOGIC
+  function calculate() {
+    // Clear Alerts
+    alertBox.style.display = 'none';
+    alertBox.className = 'iqvo-alert';
+
+    const grossAov = parseVal(aovEl);
+    const discountVal = parseVal(discountValEl);
+    const discountType = discountTypeEl.value;
+    const tax = parseVal(taxEl);
+
+    // Calculate Net Revenue
+    let discountAmount = 0;
+    if (discountType === 'percent') {
+      discountAmount = grossAov * (discountVal / 100);
+    } else {
+      discountAmount = discountVal;
+    }
+
+    const netRevenue = grossAov - discountAmount - tax;
+
+    if (netRevenue <= 0) {
+      if (grossAov > 0) {
+        showAlert('Net revenue is zero or negative after deducting discounts/taxes. Please review pricing.', 'danger');
+      }
+      resetOutputs();
+      return;
+    }
+
+    // Costs
+    const cogs = parseVal(cogsEl);
+    const shipping = parseVal(shippingEl);
+    const fulfillment = parseVal(fulfillmentEl);
+    const gatewayPct = parseVal(gatewayPctEl);
+    const gatewayFixed = parseVal(gatewayFixedEl);
+    const refundPct = parseVal(refundPctEl);
+    const otherCosts = parseVal(otherCostsEl);
+
+    const gatewayFee = (grossAov * (gatewayPct / 100)) + gatewayFixed;
+    const refundProvision = netRevenue * (refundPct / 100);
+    const totalVariableCosts = cogs + shipping + fulfillment + gatewayFee + refundProvision + otherCosts;
+
+    const contribution = netRevenue - totalVariableCosts;
+    const contributionMarginPct = (contribution / netRevenue) * 100;
+
+    const targetMarginPct = parseVal(targetMarginEl);
+
+    // Render Base Financial Metrics
+    resNetRev.textContent = formatMoney(netRevenue);
+    resTotalCogs.textContent = formatMoney(totalVariableCosts);
+    resContribution.textContent = formatMoney(contribution);
+    resContribMargin.textContent = contributionMarginPct.toFixed(2) + '%';
+
+    // Break-Even Checks
+    if (contribution <= 0) {
+      showAlert('Variable costs exceed or equal revenue. This order has no positive advertising allowance.', 'danger');
+      resBeRoas.textContent = 'N/A';
+      resBeCpa.textContent = formatMoney(0);
+      resTargetRoas.textContent = 'N/A';
+      resTargetRoasPct.textContent = 'Infeasible';
+      resTargetCpa.textContent = formatMoney(0);
+      resExpProfit.textContent = formatMoney(contribution);
+      resExpMargin.textContent = contributionMarginPct.toFixed(2) + '%';
+      return;
+    }
+
+    const breakEvenRoas = netRevenue / contribution;
+    const breakEvenCpa = contribution;
+
+    resBeRoas.textContent = breakEvenRoas.toFixed(2) + 'x';
+    resBeCpa.textContent = formatMoney(breakEvenCpa);
+
+    // Target Checks
+    if (targetMarginPct >= contributionMarginPct) {
+      showAlert('Desired profit margin (' + targetMarginPct + '%) is greater than or equal to Contribution Margin (' + contributionMarginPct.toFixed(2) + '%). Reduce profit margin or lower variable costs.', 'warning');
+      resTargetRoas.textContent = 'Infeasible';
+      resTargetRoasPct.textContent = 'Margin too high';
+      resTargetCpa.textContent = formatMoney(0);
+      resExpProfit.textContent = formatMoney(0);
+      resExpMargin.textContent = '0.00%';
+      return;
+    }
+
+    const targetProfitPerOrder = netRevenue * (targetMarginPct / 100);
+    const targetCpa = contribution - targetProfitPerOrder;
+
+    if (targetCpa <= 0) {
+      resTargetRoas.textContent = 'Infeasible';
+      resTargetRoasPct.textContent = 'Target CPA <= 0';
+      resTargetCpa.textContent = formatMoney(0);
+      return;
+    }
+
+    const targetRoas = netRevenue / targetCpa;
+    const targetRoasPctVal = targetRoas * 100;
+
+    resTargetRoas.textContent = targetRoas.toFixed(2) + 'x';
+    resTargetRoasPct.textContent = 'Equates to ' + targetRoasPctVal.toFixed(0) + '%';
+    resTargetCpa.textContent = formatMoney(targetCpa);
+
+    resExpProfit.textContent = formatMoney(targetProfitPerOrder);
+    resExpMargin.textContent = targetMarginPct.toFixed(2) + '%';
+
+    // Actual Ad Performance Calculations
+    const actualSpend = parseVal(actualSpendEl);
+    const actualRevenue = parseVal(actualRevenueEl);
+    const actualOrders = parseVal(actualOrdersEl);
+
+    if (actualSpend > 0 || actualRevenue > 0 || actualOrders > 0) {
+      actualSection.style.display = 'block';
+
+      let actRoas = 0;
+      let actCpa = 0;
+
+      if (actualSpend > 0 && actualRevenue > 0) {
+        actRoas = actualRevenue / actualSpend;
+        resActualRoas.textContent = actRoas.toFixed(2) + 'x';
+      } else {
+        resActualRoas.textContent = 'N/A';
+      }
+
+      if (actualSpend > 0 && actualOrders > 0) {
+        actCpa = actualSpend / actualOrders;
+        resActualCpa.textContent = formatMoney(actCpa);
+      } else {
+        resActualCpa.textContent = 'N/A';
+      }
+
+      // Comparison Alert
+      if (actRoas > 0 && isFinite(targetRoas)) {
+        if (actRoas >= targetRoas) {
+          roasDiffMsg.style.backgroundColor = 'var(--iqvo-success-bg)';
+          roasDiffMsg.style.color = 'var(--iqvo-success)';
+          roasDiffMsg.textContent = 'Great! Actual ROAS (' + actRoas.toFixed(2) + 'x) meets or exceeds Target ROAS (' + targetRoas.toFixed(2) + 'x).';
+        } else if (actRoas >= breakEvenRoas) {
+          roasDiffMsg.style.backgroundColor = 'var(--iqvo-warning-bg)';
+          roasDiffMsg.style.color = 'var(--iqvo-warning)';
+          roasDiffMsg.textContent = 'Warning: Actual ROAS (' + actRoas.toFixed(2) + 'x) is above Break-Even (' + breakEvenRoas.toFixed(2) + 'x) but below Target ROAS (' + targetRoas.toFixed(2) + 'x).';
+        } else {
+          roasDiffMsg.style.backgroundColor = 'var(--iqvo-danger-bg)';
+          roasDiffMsg.style.color = 'var(--iqvo-danger)';
+          roasDiffMsg.textContent = 'Alert: Actual ROAS (' + actRoas.toFixed(2) + 'x) is below Break-Even ROAS (' + breakEvenRoas.toFixed(2) + 'x). Campaign is running at a loss.';
+        }
+      } else {
+        roasDiffMsg.textContent = '';
+      }
+    } else {
+      actualSection.style.display = 'none';
+    }
+  }
+
+  function showAlert(msg, type) {
+    alertBox.textContent = msg;
+    alertBox.className = 'iqvo-alert iqvo-alert-' + type;
+    alertBox.style.display = 'block';
+  }
+
+  function resetOutputs() {
+    resTargetRoas.textContent = '0.00x';
+    resTargetRoasPct.textContent = 'Equates to 0%';
+    resTargetCpa.textContent = formatMoney(0);
+    resBeRoas.textContent = '0.00x';
+    resBeCpa.textContent = formatMoney(0);
+    resNetRev.textContent = formatMoney(0);
+    resTotalCogs.textContent = formatMoney(0);
+    resContribution.textContent = formatMoney(0);
+    resContribMargin.textContent = '0.00%';
+    resExpProfit.textContent = formatMoney(0);
+    resExpMargin.textContent = '0.00%';
+    actualSection.style.display = 'none';
+  }
+
+  // PRESETS
+  function setPreset(cogsVal, shipVal, feePct, marginVal) {
+    if (!aovEl.value || parseVal(aovEl) === 0) aovEl.value = '2000.00';
+    cogsEl.value = cogsVal;
+    shippingEl.value = shipVal;
+    gatewayPctEl.value = feePct;
+    targetMarginEl.value = marginVal;
+    calculate();
+  }
+
+  $('iqvo-preset-conservative').addEventListener('click', function() {
+    setActivePreset(this);
+    setPreset('900.00', '180.00', '3.5', '5.0');
+  });
+
+  $('iqvo-preset-current').addEventListener('click', function() {
+    setActivePreset(this);
+    setPreset('800.00', '150.00', '2.5', '10.0');
+  });
+
+  $('iqvo-preset-optimistic').addEventListener('click', function() {
+    setActivePreset(this);
+    setPreset('700.00', '120.00', '2.0', '15.0');
+  });
+
+  function setActivePreset(btn) {
+    container.querySelectorAll('.iqvo-btn-preset').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // LOAD EXAMPLE & RESET
+  $('iqvo-btn-example').addEventListener('click', function() {
+    currencyEl.value = 'USD';
+    aovEl.value = '2000.00';
+    discountTypeEl.value = 'fixed';
+    discountValEl.value = '0';
+    taxEl.value = '0';
+    cogsEl.value = '800.00';
+    shippingEl.value = '150.00';
+    fulfillmentEl.value = '0';
+    gatewayPctEl.value = '0';
+    gatewayFixedEl.value = '100.00'; // Matched test case total fee $100
+    refundPctEl.value = '0';
+    otherCostsEl.value = '50.00';
+    targetMarginEl.value = '10.0';
+    actualSpendEl.value = '';
+    actualRevenueEl.value = '';
+    actualOrdersEl.value = '';
+    calculate();
+  });
+
+  $('iqvo-btn-reset').addEventListener('click', function() {
+    const inputs = container.querySelectorAll('input');
+    inputs.forEach(i => i.value = '');
+    discountValEl.value = '0';
+    taxEl.value = '0';
+    fulfillmentEl.value = '0';
+    gatewayFixedEl.value = '0';
+    refundPctEl.value = '0';
+    discountTypeEl.value = 'fixed';
+    currencyEl.value = 'USD';
+    alertBox.style.display = 'none';
+    resetOutputs();
+  });
+
+  // PERSISTENCE (LOCAL STORAGE)
+  $('iqvo-btn-save').addEventListener('click', function() {
+    const data = {
+      currency: currencyEl.value,
+      aov: aovEl.value,
+      discountType: discountTypeEl.value,
+      discountVal: discountValEl.value,
+      tax: taxEl.value,
+      cogs: cogsEl.value,
+      shipping: shippingEl.value,
+      fulfillment: fulfillmentEl.value,
+      gatewayPct: gatewayPctEl.value,
+      gatewayFixed: gatewayFixedEl.value,
+      refundPct: refundPctEl.value,
+      otherCosts: otherCostsEl.value,
+      targetMargin: targetMarginEl.value
+    };
+    try {
+      localStorage.setItem('iqvo_roas_calculator_data', JSON.stringify(data));
+      alert('Inputs successfully saved to local browser storage.');
+    } catch(e) {
+      alert('Could not save to local storage.');
+    }
+  });
+
+  $('iqvo-btn-clear-save').addEventListener('click', function() {
+    try {
+      localStorage.removeItem('iqvo_roas_calculator_data');
+      alert('Saved local storage data cleared.');
+    } catch(e) {}
+  });
+
+  function loadSavedData() {
+    try {
+      const saved = localStorage.getItem('iqvo_roas_calculator_data');
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (data.currency) currencyEl.value = data.currency;
+        if (data.aov) aovEl.value = data.aov;
+        if (data.discountType) discountTypeEl.value = data.discountType;
+        if (data.discountVal) discountValEl.value = data.discountVal;
+        if (data.tax) taxEl.value = data.tax;
+        if (data.cogs) cogsEl.value = data.cogs;
+        if (data.shipping) shippingEl.value = data.shipping;
+        if (data.fulfillment) fulfillmentEl.value = data.fulfillment;
+        if (data.gatewayPct) gatewayPctEl.value = data.gatewayPct;
+        if (data.gatewayFixed) gatewayFixedEl.value = data.gatewayFixed;
+        if (data.refundPct) refundPctEl.value = data.refundPct;
+        if (data.otherCosts) otherCostsEl.value = data.otherCosts;
+        if (data.targetMargin) targetMarginEl.value = data.targetMargin;
+      }
+    } catch(e) {}
+  }
+
+  // EXPORT & COPY
+  $('iqvo-btn-copy').addEventListener('click', function() {
+    const sym = getCurrencySymbol();
+    const summary = [
+      '--- TARGET ROAS CALCULATOR REPORT ---',
+      'Currency: ' + currencyEl.value,
+      'Average Order Value: ' + sym + aovEl.value,
+      'Net Revenue / Order: ' + resNetRev.textContent,
+      'Total Variable Costs: ' + resTotalCogs.textContent,
+      'Contribution Margin: ' + resContribMargin.textContent + ' (' + resContribution.textContent + ')',
+      '-------------------------------------',
+      'Break-Even ROAS: ' + resBeRoas.textContent,
+      'Break-Even CPA: ' + resBeCpa.textContent,
+      'Target CPA: ' + resTargetCpa.textContent,
+      'Target ROAS Required: ' + resTargetRoas.textContent + ' (' + resTargetRoasPct.textContent + ')',
+      'Expected Profit / Order: ' + resExpProfit.textContent,
+      '-------------------------------------'
+    ].join('\n');
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(summary).then(function() {
+        alert('Results summary copied to clipboard!');
+      }).catch(function() {
+        fallbackCopy(summary);
+      });
+    } else {
+      fallbackCopy(summary);
+    }
+  });
+
+  function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('Results summary copied to clipboard!');
+  }
+
+  $('iqvo-btn-csv').addEventListener('click', function() {
+    const sym = getCurrencySymbol();
+    const rows = [
+      ['Metric', 'Value'],
+      ['Currency', currencyEl.value],
+      ['Gross AOV', aovEl.value],
+      ['Net Revenue', resNetRev.textContent.replace(sym, '')],
+      ['Total Variable Costs', resTotalCogs.textContent.replace(sym, '')],
+      ['Contribution per Order', resContribution.textContent.replace(sym, '')],
+      ['Contribution Margin', resContribMargin.textContent],
+      ['Break-Even ROAS', resBeRoas.textContent],
+      ['Break-Even CPA', resBeCpa.textContent.replace(sym, '')],
+      ['Target CPA', resTargetCpa.textContent.replace(sym, '')],
+      ['Target ROAS', resTargetRoas.textContent],
+      ['Expected Profit per Order', resExpProfit.textContent.replace(sym, '')]
+    ];
+
+    let csvContent = "data:text/csv;charset=utf-8,";
+    rows.forEach(function(rowArray) {
+      const row = rowArray.map(item => '"' + String(item).replace(/"/g, '""') + '"').join(",");
+      csvContent += row + "\r\n";
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "target-roas-calculator-results.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+
+  // EVENT LISTENERS FOR AUTO-CALCULATE
+  const allInputs = container.querySelectorAll('input, select');
+  allInputs.forEach(input => {
+    input.addEventListener('input', calculate);
+    input.addEventListener('change', calculate);
+  });
+
+  // INITIALIZATION
+  loadSavedData();
+  if (!aovEl.value) {
+    // Default initial example
+    $('iqvo-btn-example').click();
+  } else {
+    calculate();
+  }
+
+})();
+</script>
