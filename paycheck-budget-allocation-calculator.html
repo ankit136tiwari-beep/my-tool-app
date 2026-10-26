@@ -1,0 +1,1252 @@
+<!-- ================================================================= -->
+<!-- PAYCHECK BUDGET ALLOCATION CALCULATOR BY PERCENTAGE               -->
+<!-- Scoped Container: #pbac-tool | Vanilla HTML5, CSS3, JS & Schema   -->
+<!-- ================================================================= -->
+
+<!-- Structured Data (JSON-LD) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://my-tool-app.pages.dev/paycheck-budget-allocation-calculator#webapp",
+      "name": "Paycheck Budget Allocation Calculator",
+      "url": "https://my-tool-app.pages.dev/paycheck-budget-allocation-calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All modern web browsers",
+      "browserRequirements": "Requires JavaScript. Supports Chrome, Firefox, Safari, Edge.",
+      "description": "Split your paycheck by percentage with custom categories, 50/30/20 budgeting, pay frequency options, and clear spending breakdowns.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://my-tool-app.pages.dev/paycheck-budget-allocation-calculator#webpage",
+      "url": "https://my-tool-app.pages.dev/paycheck-budget-allocation-calculator",
+      "name": "Paycheck Budget Allocation Calculator by %",
+      "description": "Split your paycheck into custom percentage budget categories with weekly, biweekly, and monthly frequency options."
+    }
+  ]
+}
+</script>
+
+<div id="pbac-tool">
+  <style>
+    /* Scoped Styles strictly under #pbac-tool */
+    #pbac-tool {
+      --pbac-navy: #0f172a;
+      --pbac-primary: #1e40af;
+      --pbac-primary-hover: #1d4ed8;
+      --pbac-accent: #0284c7;
+      --pbac-success: #15803d;
+      --pbac-success-bg: #dcfce7;
+      --pbac-warning: #b45309;
+      --pbac-warning-bg: #fef3c7;
+      --pbac-danger: #b91c1c;
+      --pbac-danger-bg: #fee2e2;
+      --pbac-card-bg: #ffffff;
+      --pbac-bg-subtle: #f8fafc;
+      --pbac-border: #cbd5e1;
+      --pbac-text: #1e293b;
+      --pbac-muted: #64748b;
+      --pbac-radius: 10px;
+      --pbac-shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.04);
+      
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--pbac-text);
+      line-height: 1.6;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    #pbac-tool *, #pbac-tool *::before, #pbac-tool *::after {
+      box-sizing: inherit;
+    }
+
+    #pbac-tool h1.pbac-main-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--pbac-navy);
+      margin: 0 0 8px 0;
+      text-align: center;
+      line-height: 1.25;
+    }
+    #pbac-tool p.pbac-lead {
+      text-align: center;
+      color: var(--pbac-muted);
+      font-size: 1.05rem;
+      max-width: 760px;
+      margin: 0 auto 24px auto;
+    }
+
+    /* Main Grid Layout */
+    #pbac-tool .pbac-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (min-width: 860px) {
+      #pbac-tool .pbac-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* Card Panels */
+    #pbac-tool .pbac-card {
+      background: var(--pbac-card-bg);
+      border: 1px solid var(--pbac-border);
+      border-radius: var(--pbac-radius);
+      padding: 20px;
+      box-shadow: var(--pbac-shadow);
+      margin-bottom: 20px;
+    }
+    #pbac-tool .pbac-card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--pbac-navy);
+      margin: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--pbac-border);
+      padding-bottom: 10px;
+    }
+
+    /* Form Fields */
+    #pbac-tool .pbac-form-group {
+      margin-bottom: 14px;
+    }
+    #pbac-tool label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: var(--pbac-text);
+    }
+    #pbac-tool .pbac-helper {
+      font-size: 0.78rem;
+      color: var(--pbac-muted);
+      margin-top: 3px;
+    }
+    #pbac-tool .pbac-input, #pbac-tool .pbac-select {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      border: 1px solid var(--pbac-border);
+      border-radius: 6px;
+      background: var(--pbac-bg-subtle);
+      color: var(--pbac-text);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    #pbac-tool .pbac-input:focus, #pbac-tool .pbac-select:focus {
+      outline: none;
+      border-color: var(--pbac-primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.15);
+    }
+    #pbac-tool .pbac-input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* Preset Buttons */
+    #pbac-tool .pbac-preset-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    #pbac-tool .pbac-btn-preset {
+      background: var(--pbac-bg-subtle);
+      border: 1px solid var(--pbac-border);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--pbac-text);
+      transition: background 0.15s, border-color 0.15s;
+    }
+    #pbac-tool .pbac-btn-preset:hover, #pbac-tool .pbac-btn-preset:focus {
+      background: var(--pbac-primary);
+      color: #ffffff;
+      border-color: var(--pbac-primary);
+    }
+
+    /* Categories Table/List */
+    #pbac-tool .pbac-cat-row {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 40px;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    #pbac-tool .pbac-btn-icon {
+      background: transparent;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--pbac-danger);
+      transition: background 0.15s;
+    }
+    #pbac-tool .pbac-btn-icon:hover {
+      background: var(--pbac-danger-bg);
+      border-color: var(--pbac-danger);
+    }
+    #pbac-tool .pbac-btn-add {
+      background: #ffffff;
+      border: 1px dashed var(--pbac-primary);
+      color: var(--pbac-primary);
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-top: 6px;
+    }
+    #pbac-tool .pbac-btn-add:hover {
+      background: #eff6ff;
+    }
+
+    /* Status & Alerts */
+    #pbac-tool .pbac-status-banner {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #pbac-tool .pbac-status-balanced {
+      background: var(--pbac-success-bg);
+      color: var(--pbac-success);
+      border: 1px solid #86efac;
+    }
+    #pbac-tool .pbac-status-under {
+      background: var(--pbac-warning-bg);
+      color: var(--pbac-warning);
+      border: 1px solid #fde68a;
+    }
+    #pbac-tool .pbac-status-over {
+      background: var(--pbac-danger-bg);
+      color: var(--pbac-danger);
+      border: 1px solid #fca5a5;
+    }
+
+    /* KPI Summary Tiles */
+    #pbac-tool .pbac-kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    #pbac-tool .pbac-kpi-tile {
+      background: var(--pbac-bg-subtle);
+      border: 1px solid var(--pbac-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-align: center;
+    }
+    #pbac-tool .pbac-kpi-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--pbac-muted);
+      margin-bottom: 2px;
+    }
+    #pbac-tool .pbac-kpi-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--pbac-navy);
+    }
+
+    /* Visual Allocation Bar & SVG Chart */
+    #pbac-tool .pbac-progress-bar-wrap {
+      height: 14px;
+      background: #e2e8f0;
+      border-radius: 7px;
+      overflow: hidden;
+      display: flex;
+      margin-bottom: 16px;
+    }
+    #pbac-tool .pbac-progress-seg {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    #pbac-tool .pbac-chart-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 15px 0;
+    }
+    #pbac-tool .pbac-donut-svg {
+      max-width: 180px;
+      max-height: 180px;
+    }
+
+    /* Breakdown Table */
+    #pbac-tool .pbac-table-wrap {
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+    #pbac-tool table.pbac-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      text-align: right;
+    }
+    #pbac-tool table.pbac-table th, #pbac-tool table.pbac-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--pbac-border);
+    }
+    #pbac-tool table.pbac-table th {
+      background: var(--pbac-bg-subtle);
+      font-weight: 600;
+      color: var(--pbac-muted);
+    }
+    #pbac-tool table.pbac-table th:first-child, #pbac-tool table.pbac-table td:first-child {
+      text-align: left;
+    }
+    #pbac-tool table.pbac-table input.pbac-actual-input {
+      width: 80px;
+      padding: 4px 6px;
+      font-size: 0.85rem;
+      border: 1px solid var(--pbac-border);
+      border-radius: 4px;
+      text-align: right;
+    }
+
+    /* Utility Action Buttons */
+    #pbac-tool .pbac-actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    #pbac-tool .pbac-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    #pbac-tool .pbac-btn-primary {
+      background: var(--pbac-primary);
+      color: #ffffff;
+    }
+    #pbac-tool .pbac-btn-primary:hover {
+      background: var(--pbac-primary-hover);
+    }
+    #pbac-tool .pbac-btn-outline {
+      background: #ffffff;
+      border-color: var(--pbac-border);
+      color: var(--pbac-text);
+    }
+    #pbac-tool .pbac-btn-outline:hover {
+      background: var(--pbac-bg-subtle);
+    }
+
+    /* Privacy and Disclaimers */
+    #pbac-tool .pbac-privacy-note {
+      font-size: 0.8rem;
+      color: var(--pbac-muted);
+      text-align: center;
+      margin-top: 12px;
+    }
+    #pbac-tool .pbac-disclaimer-box {
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      color: #92400e;
+      margin-top: 24px;
+    }
+
+    /* SEO Article Sections */
+    #pbac-tool .pbac-seo-content {
+      border-top: 2px solid var(--pbac-border);
+      padding-top: 28px;
+      margin-top: 36px;
+    }
+    #pbac-tool .pbac-seo-content h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--pbac-navy);
+      margin: 24px 0 10px 0;
+    }
+    #pbac-tool .pbac-seo-content h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--pbac-primary);
+      margin: 18px 0 8px 0;
+    }
+    #pbac-tool .pbac-seo-content p, #pbac-tool .pbac-seo-content li {
+      font-size: 0.96rem;
+      color: #334155;
+      line-height: 1.7;
+    }
+    #pbac-tool .pbac-seo-content ul, #pbac-tool .pbac-seo-content ol {
+      padding-left: 22px;
+      margin-bottom: 16px;
+    }
+    #pbac-tool .pbac-code-box {
+      background: var(--pbac-bg-subtle);
+      border-left: 3px solid var(--pbac-primary);
+      padding: 12px 14px;
+      font-family: monospace;
+      font-size: 0.88rem;
+      border-radius: 0 6px 6px 0;
+      margin: 12px 0 16px 0;
+      overflow-x: auto;
+    }
+    #pbac-tool .pbac-faq-card {
+      border: 1px solid var(--pbac-border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      background: #ffffff;
+    }
+    #pbac-tool .pbac-faq-card h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--pbac-navy);
+      margin: 0 0 6px 0;
+    }
+    #pbac-tool .pbac-faq-card p {
+      margin: 0;
+      font-size: 0.92rem;
+    }
+
+    /* Print Specifics */
+    @media print {
+      body * { visibility: hidden; }
+      #pbac-tool, #pbac-tool * { visibility: visible; }
+      #pbac-tool { position: absolute; left: 0; top: 0; width: 100%; max-width: 100%; }
+      #pbac-tool .pbac-actions-row, #pbac-tool .pbac-preset-wrap, #pbac-tool .pbac-btn-add, #pbac-tool .pbac-btn-icon, #pbac-tool .pbac-seo-content {
+        display: none !important;
+      }
+    }
+  </style>
+
+  <!-- Single H1 Heading -->
+  <h1 class="pbac-main-title">Paycheck Budget Allocation Calculator</h1>
+  <p class="pbac-lead">
+    Use this Paycheck Budget Allocation Calculator to divide your take-home pay into budget categories by percentage. Customize the categories, compare planned and actual spending, and view your allocation per paycheck and as a monthly equivalent.
+  </p>
+
+  <!-- Interactive Calculator Interface -->
+  <div class="pbac-grid">
+    <!-- Left Column: Inputs & Category Editor -->
+    <div>
+      <div class="pbac-card">
+        <h2 class="pbac-card-title">1. Income & Pay Cycle Settings</h2>
+        
+        <div class="pbac-form-group">
+          <label for="pbac-net-pay">Net Take-Home Pay (Per Paycheck or Period)</label>
+          <input type="number" id="pbac-net-pay" class="pbac-input" value="2000" min="0" step="10" aria-describedby="pbac-net-hint">
+          <div id="pbac-net-hint" class="pbac-helper">Enter the actual amount deposited into your account after taxes and payroll deductions.</div>
+        </div>
+
+        <div class="pbac-input-row">
+          <div class="pbac-form-group" style="flex: 2;">
+            <label for="pbac-freq">Pay Frequency</label>
+            <select id="pbac-freq" class="pbac-select">
+              <option value="52">Weekly (52 checks/yr)</option>
+              <option value="26" selected>Every two weeks / Biweekly (26 checks/yr)</option>
+              <option value="24">Twice a month / Semimonthly (24 checks/yr)</option>
+              <option value="12">Monthly (12 checks/yr)</option>
+              <option value="1">Annual Net Income (1 check/yr entered)</option>
+              <option value="custom">Custom Pay Periods per Year</option>
+            </select>
+          </div>
+          <div class="pbac-form-group" style="flex: 1;">
+            <label for="pbac-curr">Currency</label>
+            <select id="pbac-curr" class="pbac-select">
+              <option value="$" selected>USD ($)</option>
+              <option value="£">GBP (£)</option>
+              <option value="€">EUR (€)</option>
+              <option value="C$">CAD (C$)</option>
+              <option value="A$">AUD (A$)</option>
+              <option value="₹">INR (₹)</option>
+              <option value="NZ$">NZD (NZ$)</option>
+              <option value="S$">SGD (S$)</option>
+              <option value="¤">Other (¤)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="pbac-custom-freq-group" class="pbac-form-group" style="display: none;">
+          <label for="pbac-custom-periods">Number of Pay Periods per Year</label>
+          <input type="number" id="pbac-custom-periods" class="pbac-input" value="26" min="1" max="365">
+          <div class="pbac-helper">Used to compute accurate monthly equivalents.</div>
+        </div>
+
+        <div class="pbac-form-group">
+          <label for="pbac-gross-pay">Optional Gross Pay (Informational Only)</label>
+          <input type="number" id="pbac-gross-pay" class="pbac-input" placeholder="e.g. 2600" min="0" step="10">
+          <div class="pbac-helper">Gross pay is not budgeted directly; calculations use your spendable net pay.</div>
+        </div>
+      </div>
+
+      <!-- Category Percentages Editor -->
+      <div class="pbac-card">
+        <h2 class="pbac-card-title">
+          <span>2. Category Percentage Allocations</span>
+        </h2>
+
+        <!-- Presets -->
+        <label>Budget Allocation Presets</label>
+        <div class="pbac-preset-wrap" role="group" aria-label="Budget Presets">
+          <button type="button" class="pbac-btn-preset" data-preset="50-30-20">50/30/20 Standard</button>
+          <button type="button" class="pbac-btn-preset" data-preset="70-20-10">70/20/10 Focus</button>
+          <button type="button" class="pbac-btn-preset" data-preset="60-30-10">60/30/10 Balanced</button>
+          <button type="button" class="pbac-btn-preset" data-preset="equal">Equal Split</button>
+        </div>
+
+        <div id="pbac-category-list" aria-live="polite">
+          <!-- Populated by JS -->
+        </div>
+
+        <button type="button" id="pbac-add-cat-btn" class="pbac-btn-add">+ Add Custom Category</button>
+      </div>
+    </div>
+
+    <!-- Right Column: Dashboard & Real-Time Visualization -->
+    <div>
+      <div class="pbac-card">
+        <h2 class="pbac-card-title">Budget Allocation Summary</h2>
+
+        <!-- Status Banner -->
+        <div id="pbac-status-banner" class="pbac-status-banner pbac-status-balanced" role="alert">
+          <!-- Text updated via JS -->
+        </div>
+
+        <!-- KPI Metrics -->
+        <div class="pbac-kpis">
+          <div class="pbac-kpi-tile">
+            <div class="pbac-kpi-label">Paycheck Net</div>
+            <div class="pbac-kpi-value" id="pbac-kpi-paycheck">$0.00</div>
+          </div>
+          <div class="pbac-kpi-tile">
+            <div class="pbac-kpi-label">Allocated %</div>
+            <div class="pbac-kpi-value" id="pbac-kpi-pct">100%</div>
+          </div>
+          <div class="pbac-kpi-tile">
+            <div class="pbac-kpi-label">Monthly Equiv.</div>
+            <div class="pbac-kpi-value" id="pbac-kpi-monthly">$0.00</div>
+          </div>
+        </div>
+
+        <!-- Progress Bar Visualizer -->
+        <div class="pbac-progress-bar-wrap" id="pbac-progress-bar" title="Category percentage allocation visualization">
+          <!-- Colored segments via JS -->
+        </div>
+
+        <!-- SVG Donut Chart -->
+        <div class="pbac-chart-box">
+          <svg id="pbac-donut-svg" class="pbac-donut-svg" viewBox="0 0 42 42" role="img" aria-label="Donut chart showing budget percentage allocation"></svg>
+        </div>
+
+        <!-- Detailed Allocation Table -->
+        <div class="pbac-table-wrap">
+          <table class="pbac-table" id="pbac-summary-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Share</th>
+                <th>Per Check</th>
+                <th>Monthly</th>
+                <th>Actual</th>
+                <th>Diff</th>
+              </tr>
+            </thead>
+            <tbody id="pbac-summary-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Toolbar Buttons -->
+        <div class="pbac-actions-row">
+          <button type="button" id="pbac-copy-btn" class="pbac-btn pbac-btn-primary">Copy Summary</button>
+          <button type="button" id="pbac-csv-btn" class="pbac-btn pbac-btn-outline">Download CSV</button>
+          <button type="button" id="pbac-print-btn" class="pbac-btn pbac-btn-outline">Print Plan</button>
+          <button type="button" id="pbac-save-btn" class="pbac-btn pbac-btn-outline">Save in Browser</button>
+          <button type="button" id="pbac-reset-btn" class="pbac-btn pbac-btn-outline">Reset</button>
+        </div>
+        <div id="pbac-action-msg" class="pbac-helper" style="text-align: center; margin-top: 6px; font-weight: 600;" aria-live="polite"></div>
+
+        <div class="pbac-privacy-note">
+          🔒 <strong>Browser-Only Calculation:</strong> All numbers stay in your browser. No income or financial details are sent to any remote server or stored remotely.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational SEO Long-Form Article -->
+  <section class="pbac-seo-content">
+    <h2>Split Paycheck into Categories: A Practical Financial Guide</h2>
+    <p>
+      Managing personal finances begins with a clear system for every paycheck you earn. Using a dedicated <strong>paycheck budget calculator by percentage</strong> allows individuals, couples, and freelancers to establish a reliable spending plan before expenses occur. Rather than trying to balance numbers at the end of the month, allocating money immediately as it arrives prevents accidental overspending and guarantees continuous contributions toward savings and debt elimination.
+    </p>
+
+    <h2>Key Features of this Paycheck Budget Allocation Calculator</h2>
+    <ul>
+      <li><strong>Custom Percentage Budget Calculator:</strong> Add, rename, or adjust categories to fit your rent, debts, utilities, and lifestyle.</li>
+      <li><strong>50/30/20 Budget Calculator Preset:</strong> Apply Elizabeth Warren's classic 50% Needs, 30% Wants, and 20% Savings split with a single click.</li>
+      <li><strong>Biweekly Paycheck Budget Calculator Engine:</strong> Accurately computes monthly equivalents across 26 biweekly pay periods without simplistic multiplication errors.</li>
+      <li><strong>Planned vs. Actual Tracking:</strong> Enter what you actually spent to identify budget leaks and celebrate under-budget categories.</li>
+      <li><strong>Real-Time Allocation Auditing:</strong> Instantly warns you when allocations exceed 100% or highlights unassigned income.</li>
+      <li><strong>Offline & Secure:</strong> Runs locally with zero tracking, CSV export, and optional local browser storage.</li>
+    </ul>
+
+    <h2>How to Use the Calculator</h2>
+    <ol>
+      <li><strong>Input Net Pay:</strong> Enter your take-home pay (after tax withholdings, healthcare deductions, and 401(k) contributions).</li>
+      <li><strong>Select Pay Frequency:</strong> Choose weekly, biweekly (every two weeks), semimonthly (twice a month), monthly, or annual.</li>
+      <li><strong>Choose or Customize Categories:</strong> Click one of the preset templates (such as 50/30/20) or manually define your percentage shares.</li>
+      <li><strong>Review Breakdown:</strong> Check your Per-Paycheck amount and Monthly Equivalent in the results table and donut chart.</li>
+      <li><strong>Compare Actual Spending:</strong> Enter your actual receipts in the optional "Actual" field to verify if you stayed under budget.</li>
+    </ol>
+
+    <h2>Calculation Methodology & Mathematical Formulas</h2>
+    <p>
+      Our calculation engine translates user-defined percentages into monetary amounts using deterministic mathematical formulas:
+    </p>
+    <div class="pbac-code-box">
+Category Amount per Paycheck = Net Paycheck Income × (Category Percentage ÷ 100)<br>
+Monthly Multiplier (Biweekly) = 26 Pay Periods ÷ 12 Months = ~2.1667<br>
+Monthly Equivalent (Biweekly) = Per Paycheck Amount × 26 ÷ 12<br>
+Monthly Equivalent (Weekly) = Per Paycheck Amount × 52 ÷ 12 = ~4.3333<br>
+Monthly Equivalent (Semimonthly) = Per Paycheck Amount × 2<br>
+Spending Difference = Planned Amount − Actual Amount (Positive = Under Budget, Negative = Over Budget)
+    </div>
+
+    <h2>Worked Example: Biweekly 50/30/20 Budget</h2>
+    <p>
+      Consider a hypothetical take-home paycheck of <strong>$2,000</strong> received every two weeks (biweekly):
+    </p>
+    <ul>
+      <li><strong>Needs / Essential Bills (50%):</strong> $2,000 × 0.50 = <strong>$1,000.00</strong> per check ($2,166.67/month).</li>
+      <li><strong>Wants / Lifestyle (30%):</strong> $2,000 × 0.30 = <strong>$600.00</strong> per check ($1,300.00/month).</li>
+      <li><strong>Savings & Debt (20%):</strong> $2,000 × 0.20 = <strong>$400.00</strong> per check ($866.67/month).</li>
+      <li><strong>Total Allocated:</strong> 100% ($2,000.00 per paycheck; $4,333.33 monthly equivalent).</li>
+    </ul>
+
+    <h2>Understanding Pay Frequencies: Biweekly vs. Semimonthly</h2>
+    <p>
+      One common personal finance mistake is assuming biweekly and semimonthly pay are identical. <strong>Semimonthly</strong> workers are paid twice per month (typically on the 1st and 15th), creating exactly 24 paychecks per year. <strong>Biweekly</strong> workers are paid every alternate week (e.g., every other Friday), yielding 26 paychecks annually. This means biweekly earners enjoy two "three-paycheck months" every calendar year. Our calculator uses the true annual multiplier ($26/12$) so your monthly projection reflects complete annual income.
+    </p>
+
+    <h2>Frequently Asked Questions (FAQ)</h2>
+    <div class="pbac-faq-card">
+      <h4>1. How do I split my paycheck by percentage?</h4>
+      <p>Determine your take-home pay, decide on target percentage buckets (such as 50% essentials, 30% discretionary, and 20% savings), and multiply your net pay by each percentage divided by 100.</p>
+    </div>
+    <div class="pbac-faq-card">
+      <h4>2. What is a paycheck budget allocation calculator?</h4>
+      <p>It is an interactive financial planning tool that divides incoming salary or wages into custom categories as soon as pay arrives, showing both per-paycheck and annualized monthly equivalents.</p>
+    </div>
+    <div class="pbac-faq-card">
+      <h4>3. How does the 50/30/20 budget method work?</h4>
+      <p>Popularized by Senator Elizabeth Warren, it reserves 50% of after-tax income for essentials (housing, groceries, utilities), 30% for lifestyle preferences (dining, recreation), and 20% for debt repayment and financial investments.</p>
+    </div>
+    <div class="pbac-faq-card">
+      <h4>4. Can I create my own budget percentages?</h4>
+      <p>Yes. You can add, delete, rename categories, and adjust percentage values to reflect personal obligations such as higher childcare or accelerated mortgage paydowns.</p>
+    </div>
+    <div class="pbac-faq-card">
+      <h4>5. How do I budget a biweekly paycheck?</h4>
+      <p>Budget your recurrent bills against 2 paychecks per month ($24$ checks), and treat the two extra paychecks each year as dedicated bonuses for emergency funds, debt payoff, or long-term investments.</p>
+    </div>
+    <div class="pbac-faq-card">
+      <h4>6. What is the difference between biweekly and semimonthly pay?</h4>
+      <p>Biweekly schedules occur every two weeks ($26$ paychecks/year). Semimonthly schedules occur twice per month ($24$ paychecks/year). Monthly conversions must account for these different divisor bases.</p>
+    </div>
+    <div class="pbac-faq-card">
+      <h4>7. What happens if my percentages do not add up to 100%?</h4>
+      <p>If your total is below 100%, the remaining cash is unallocated. If your total exceeds 100%, an alert displays the exact cash deficit so you can adjust your categories before overspending.</p>
+    </div>
+    <div class="pbac-faq-card">
+      <h4>8. Should I use gross pay or take-home pay?</h4>
+      <p>Always budget everyday living expenses with <strong>take-home (net) pay</strong>. Gross pay includes statutory taxes and pre-tax payroll deductions that cannot be spent on household bills.</p>
+    </div>
+    <div class="pbac-faq-card">
+      <h4>9. How do I allocate income when my paycheck changes?</h4>
+      <p>Because percentage allocations are relative, entering a variable paycheck amount automatically recalculates appropriate dollar quotas for each category based on your fixed percentage plan.</p>
+    </div>
+    <div class="pbac-faq-card">
+      <h4>10. Can I compare planned spending with actual spending?</h4>
+      <p>Yes. The built-in "Actual" column allows you to enter recorded expenditures. The calculator computes the difference so you immediately see which buckets remained under budget.</p>
+    </div>
+    <div class="pbac-faq-card">
+      <h4>11. Does this calculator convert currencies?</h4>
+      <p>No. The currency selector formats display symbols ($ , £ , € , ₹ , etc.) but does not apply live foreign-exchange rates.</p>
+    </div>
+    <div class="pbac-faq-card">
+      <h4>12. Is my income data sent to a server?</h4>
+      <p>No. All calculations run strictly inside your browser's local memory. No income amounts, budget names, or personal data are transmitted to external servers.</p>
+    </div>
+
+    <h2>Related Financial Calculators & Helpful Resources</h2>
+    <p>Explore our companion debt-reduction planning tool:</p>
+    <ul>
+      <li><a href="https://my-tool-app.pages.dev/credit-card-minimum-payment-payoff-calculator">Credit Card Minimum Payment Payoff Calculator</a> — Calculate interest costs and payoff schedules to accelerate debt freedom.</li>
+    </ul>
+
+    <p>Authoritative independent financial literacy resources:</p>
+    <ul>
+      <li><a href="https://www.consumerfinance.gov/" rel="noopener" target="_blank">Consumer Financial Protection Bureau (CFPB)</a> — Practical consumer guides on budgeting and consumer rights.</li>
+      <li><a href="https://www.moneyhelper.org.uk/" rel="noopener" target="_blank">MoneyHelper (UK)</a> — Free, impartial money and pension guidance provided by the Money and Pensions Service.</li>
+      <li><a href="https://www.canada.ca/en/financial-consumer-agency.html" rel="noopener" target="_blank">Financial Consumer Agency of Canada (FCAC)</a> — Educational budgeting tools and financial literacy resources.</li>
+      <li><a href="https://moneysmart.gov.au/" rel="noopener" target="_blank">Moneysmart (Australia)</a> — Guidance provided by the Australian Securities and Investments Commission (ASIC).</li>
+    </ul>
+
+    <div class="pbac-disclaimer-box">
+      <strong>Financial Disclaimer:</strong> This calculator is for budgeting and educational purposes only. It does not provide personalized financial, tax, investment, or debt advice. Results depend on the information you enter. Consult a certified financial planner for individual advice.
+    </div>
+  </section>
+</div>
+
+<!-- Scoped JavaScript Application Execution -->
+<script>
+(function() {
+  'use strict';
+
+  // Palette for dynamic charts and categories
+  var pbacColors = ['#1e40af', '#0284c7', '#0d9488', '#16a34a', '#ca8a04', '#ea580c', '#e11d48', '#7c3aed', '#64748b'];
+
+  // Application State
+  var pbacState = {
+    netPay: 2000,
+    grossPay: 0,
+    frequency: 26, // 26 biweekly default
+    customPeriods: 26,
+    currency: '$',
+    categories: [
+      { id: 'cat_1', name: 'Needs / Essential Bills', pct: 50, actual: 0 },
+      { id: 'cat_2', name: 'Wants / Lifestyle', pct: 30, actual: 0 },
+      { id: 'cat_3', name: 'Savings / Investments', pct: 20, actual: 0 }
+    ]
+  };
+
+  // Safe DOM query helper
+  function pbacEl(id) {
+    return document.getElementById(id);
+  }
+
+  // Sanitize HTML output
+  function pbacEscapeHTML(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Format currency numbers safely
+  function pbacFormatMoney(amount, currency) {
+    if (isNaN(amount) || !isFinite(amount)) return (currency || '$') + '0.00';
+    var formatted = Math.abs(amount).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    return (amount < 0 ? '-' : '') + (currency || '$') + formatted;
+  }
+
+  // Compute effective paychecks per year
+  function pbacGetPeriodsPerYear() {
+    var freqVal = pbacEl('pbac-freq').value;
+    if (freqVal === 'custom') {
+      var customVal = parseFloat(pbacEl('pbac-custom-periods').value);
+      return (!isNaN(customVal) && customVal > 0) ? customVal : 26;
+    }
+    var parsed = parseFloat(freqVal);
+    return (!isNaN(parsed) && parsed > 0) ? parsed : 26;
+  }
+
+  // Render Category Input Fields
+  function pbacRenderCategories() {
+    var container = pbacEl('pbac-category-list');
+    if (!container) return;
+    container.innerHTML = '';
+
+    pbacState.categories.forEach(function(cat, index) {
+      var row = document.createElement('div');
+      row.className = 'pbac-cat-row';
+      row.dataset.id = cat.id;
+
+      var color = pbacColors[index % pbacColors.length];
+
+      row.innerHTML = 
+        '<div style="display:flex; align-items:center; gap:6px;">' +
+          '<span style="width:10px; height:10px; border-radius:50%; background:' + color + '; flex-shrink:0;"></span>' +
+          '<input type="text" class="pbac-input pbac-cat-name" value="' + pbacEscapeHTML(cat.name) + '" aria-label="Category name" placeholder="Category name">' +
+        '</div>' +
+        '<div style="display:flex; align-items:center; gap:4px;">' +
+          '<input type="number" class="pbac-input pbac-cat-pct" value="' + cat.pct + '" min="0" max="100" step="0.5" aria-label="Percentage">' +
+          '<span style="font-size:0.85rem; font-weight:600;">%</span>' +
+        '</div>' +
+        '<button type="button" class="pbac-btn-icon pbac-btn-del" title="Delete category" aria-label="Delete category">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>' +
+        '</button>';
+
+      container.appendChild(row);
+    });
+  }
+
+  // Main Calculation and UI Update Function
+  function pbacUpdateCalculations() {
+    var netPayInput = parseFloat(pbacEl('pbac-net-pay').value);
+    pbacState.netPay = (!isNaN(netPayInput) && netPayInput >= 0) ? netPayInput : 0;
+    pbacState.currency = pbacEl('pbac-curr').value;
+
+    var periodsPerYear = pbacGetPeriodsPerYear();
+    var freqSelectVal = pbacEl('pbac-freq').value;
+
+    // Handle Annual mode where entered income is for the entire year
+    var paycheckIncome = pbacState.netPay;
+    if (freqSelectVal === '1') {
+      paycheckIncome = pbacState.netPay; // Single check entered
+    }
+
+    // Monthly multiplier calculation
+    // Monthly Equivalent = (Paycheck * PeriodsPerYear) / 12
+    var monthlyMultiplier = periodsPerYear / 12;
+
+    var totalPct = 0;
+    pbacState.categories.forEach(function(c) {
+      totalPct += (parseFloat(c.pct) || 0);
+    });
+
+    // Round total percentage safely for float arithmetic
+    totalPct = Math.round(totalPct * 100) / 100;
+
+    var allocatedPaycheckMoney = paycheckIncome * (totalPct / 100);
+    var unallocatedPct = Math.round((100 - totalPct) * 100) / 100;
+    var unallocatedMoney = paycheckIncome * (unallocatedPct / 100);
+
+    // Update Top KPIs
+    pbacEl('pbac-kpi-paycheck').textContent = pbacFormatMoney(paycheckIncome, pbacState.currency);
+    pbacEl('pbac-kpi-pct').textContent = totalPct + '%';
+    pbacEl('pbac-kpi-monthly').textContent = pbacFormatMoney(paycheckIncome * monthlyMultiplier, pbacState.currency);
+
+    // Update Status Banner
+    var banner = pbacEl('pbac-status-banner');
+    if (Math.abs(totalPct - 100) < 0.001) {
+      banner.className = 'pbac-status-banner pbac-status-balanced';
+      banner.innerHTML = '✔ <strong>Balanced Budget:</strong> Exactly 100% of your paycheck is allocated (' + pbacFormatMoney(paycheckIncome, pbacState.currency) + ').';
+    } else if (totalPct < 100) {
+      banner.className = 'pbac-status-banner pbac-status-under';
+      banner.innerHTML = 'ℹ <strong>Under-allocated:</strong> ' + unallocatedPct + '% (' + pbacFormatMoney(unallocatedMoney, pbacState.currency) + ') is unassigned. Allocate to savings or debt.';
+    } else {
+      var overPct = Math.round((totalPct - 100) * 100) / 100;
+      var overMoney = paycheckIncome * (overPct / 100);
+      banner.className = 'pbac-status-banner pbac-status-over';
+      banner.innerHTML = '⚠ <strong>Over-budget Alert:</strong> Allocations exceed income by ' + overPct + '% (' + pbacFormatMoney(overMoney, pbacState.currency) + '). Reduce categories.';
+    }
+
+    // Render Progress Bar
+    var progBar = pbacEl('pbac-progress-bar');
+    progBar.innerHTML = '';
+    pbacState.categories.forEach(function(cat, idx) {
+      var segWidth = Math.max(0, parseFloat(cat.pct) || 0);
+      if (segWidth > 0) {
+        var seg = document.createElement('div');
+        seg.className = 'pbac-progress-seg';
+        seg.style.width = segWidth + '%';
+        seg.style.backgroundColor = pbacColors[idx % pbacColors.length];
+        seg.title = cat.name + ': ' + segWidth + '%';
+        progBar.appendChild(seg);
+      }
+    });
+
+    // Render SVG Donut Chart
+    var donutSvg = pbacEl('pbac-donut-svg');
+    donutSvg.innerHTML = '';
+    var accumulatedPct = 0;
+    pbacState.categories.forEach(function(cat, idx) {
+      var pctVal = Math.max(0, parseFloat(cat.pct) || 0);
+      if (pctVal > 0) {
+        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', '21');
+        circle.setAttribute('cy', '21');
+        circle.setAttribute('r', '15.91549430918954');
+        circle.setAttribute('fill', 'transparent');
+        circle.setAttribute('stroke', pbacColors[idx % pbacColors.length]);
+        circle.setAttribute('stroke-width', '5');
+        // Dasharray: portion, remainder
+        circle.setAttribute('stroke-dasharray', pctVal + ' ' + (100 - pctVal));
+        // Dashoffset: start position
+        circle.setAttribute('stroke-dashoffset', String(100 - accumulatedPct + 25));
+        donutSvg.appendChild(circle);
+        accumulatedPct += pctVal;
+      }
+    });
+
+    // Donut Center Text
+    var textNode = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    textNode.setAttribute('x', '21');
+    textNode.setAttribute('y', '23');
+    textNode.setAttribute('text-anchor', 'middle');
+    textNode.setAttribute('font-size', '6');
+    textNode.setAttribute('font-weight', 'bold');
+    textNode.setAttribute('fill', '#0f172a');
+    textNode.textContent = totalPct + '%';
+    donutSvg.appendChild(textNode);
+
+    // Render Summary Table Rows
+    var tbody = pbacEl('pbac-summary-tbody');
+    tbody.innerHTML = '';
+
+    pbacState.categories.forEach(function(cat) {
+      var pct = parseFloat(cat.pct) || 0;
+      var catPerCheck = paycheckIncome * (pct / 100);
+      var catMonthly = catPerCheck * monthlyMultiplier;
+      var actualVal = parseFloat(cat.actual) || 0;
+      var diff = catPerCheck - actualVal;
+
+      var diffDisplay = '-';
+      var diffStyle = 'color:var(--pbac-muted);';
+      if (actualVal > 0) {
+        diffDisplay = pbacFormatMoney(diff, pbacState.currency);
+        diffStyle = diff >= 0 ? 'color:var(--pbac-success); font-weight:600;' : 'color:var(--pbac-danger); font-weight:600;';
+      }
+
+      var tr = document.createElement('tr');
+      tr.dataset.id = cat.id;
+      tr.innerHTML = 
+        '<td><strong>' + pbacEscapeHTML(cat.name) + '</strong></td>' +
+        '<td>' + pct + '%</td>' +
+        '<td>' + pbacFormatMoney(catPerCheck, pbacState.currency) + '</td>' +
+        '<td>' + pbacFormatMoney(catMonthly, pbacState.currency) + '</td>' +
+        '<td><input type="number" class="pbac-actual-input" value="' + (actualVal > 0 ? actualVal : '') + '" placeholder="0" min="0" step="5"></td>' +
+        '<td style="' + diffStyle + '">' + diffDisplay + '</td>';
+
+      tbody.appendChild(tr);
+    });
+
+    // Unallocated row if < 100%
+    if (unallocatedPct > 0) {
+      var trUn = document.createElement('tr');
+      trUn.style.background = 'var(--pbac-bg-subtle)';
+      trUn.innerHTML = 
+        '<td style="color:var(--pbac-warning); font-weight:600;">Unallocated Balance</td>' +
+        '<td>' + unallocatedPct + '%</td>' +
+        '<td>' + pbacFormatMoney(unallocatedMoney, pbacState.currency) + '</td>' +
+        '<td>' + pbacFormatMoney(unallocatedMoney * monthlyMultiplier, pbacState.currency) + '</td>' +
+        '<td>-</td>' +
+        '<td>-</td>';
+      tbody.appendChild(trUn);
+    }
+  }
+
+  // Handle Preset Selection
+  function pbacApplyPreset(presetType) {
+    if (presetType === '50-30-20') {
+      pbacState.categories = [
+        { id: 'cat_' + Date.now() + '_1', name: 'Needs / Essential Bills', pct: 50, actual: 0 },
+        { id: 'cat_' + Date.now() + '_2', name: 'Wants / Lifestyle', pct: 30, actual: 0 },
+        { id: 'cat_' + Date.now() + '_3', name: 'Savings & Debt Repayment', pct: 20, actual: 0 }
+      ];
+    } else if (presetType === '70-20-10') {
+      pbacState.categories = [
+        { id: 'cat_' + Date.now() + '_1', name: 'Living Expenses / Essentials', pct: 70, actual: 0 },
+        { id: 'cat_' + Date.now() + '_2', name: 'Savings & Investments', pct: 20, actual: 0 },
+        { id: 'cat_' + Date.now() + '_3', name: 'Discretionary / Debt Focus', pct: 10, actual: 0 }
+      ];
+    } else if (presetType === '60-30-10') {
+      pbacState.categories = [
+        { id: 'cat_' + Date.now() + '_1', name: 'Committed Essentials', pct: 60, actual: 0 },
+        { id: 'cat_' + Date.now() + '_2', name: 'Fun & Lifestyle Choices', pct: 30, actual: 0 },
+        { id: 'cat_' + Date.now() + '_3', name: 'Future Wealth / Savings', pct: 10, actual: 0 }
+      ];
+    } else if (presetType === 'equal') {
+      var len = Math.max(1, pbacState.categories.length);
+      var equalPct = Math.floor((100 / len) * 10) / 10;
+      pbacState.categories.forEach(function(c) {
+        c.pct = equalPct;
+      });
+    }
+    pbacRenderCategories();
+    pbacUpdateCalculations();
+  }
+
+  // Event Delegations and Bindings
+  function pbacInitEvents() {
+    var tool = pbacEl('pbac-tool');
+    if (!tool) return;
+
+    // Income and dropdown listeners
+    pbacEl('pbac-net-pay').addEventListener('input', pbacUpdateCalculations);
+    pbacEl('pbac-curr').addEventListener('change', pbacUpdateCalculations);
+
+    pbacEl('pbac-freq').addEventListener('change', function() {
+      var customBox = pbacEl('pbac-custom-freq-group');
+      if (this.value === 'custom') {
+        customBox.style.display = 'block';
+      } else {
+        customBox.style.display = 'none';
+      }
+      pbacUpdateCalculations();
+    });
+
+    pbacEl('pbac-custom-periods').addEventListener('input', pbacUpdateCalculations);
+
+    // Preset buttons
+    tool.addEventListener('click', function(e) {
+      var presetBtn = e.target.closest('.pbac-btn-preset');
+      if (presetBtn) {
+        var pType = presetBtn.getAttribute('data-preset');
+        pbacApplyPreset(pType);
+      }
+    });
+
+    // Add category button
+    pbacEl('pbac-add-cat-btn').addEventListener('click', function() {
+      var newId = 'cat_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+      pbacState.categories.push({
+        id: newId,
+        name: 'New Category',
+        pct: 0,
+        actual: 0
+      });
+      pbacRenderCategories();
+      pbacUpdateCalculations();
+    });
+
+    // Category List input delegation (rename, percentage change, delete)
+    var catContainer = pbacEl('pbac-category-list');
+    catContainer.addEventListener('input', function(e) {
+      var row = e.target.closest('.pbac-cat-row');
+      if (!row) return;
+      var catId = row.dataset.id;
+      var targetCat = pbacState.categories.find(function(c) { return c.id === catId; });
+      if (!targetCat) return;
+
+      if (e.target.classList.contains('pbac-cat-name')) {
+        targetCat.name = e.target.value;
+        pbacUpdateCalculations();
+      } else if (e.target.classList.contains('pbac-cat-pct')) {
+        targetCat.pct = Math.max(0, parseFloat(e.target.value) || 0);
+        pbacUpdateCalculations();
+      }
+    });
+
+    catContainer.addEventListener('click', function(e) {
+      var delBtn = e.target.closest('.pbac-btn-del');
+      if (delBtn) {
+        var row = delBtn.closest('.pbac-cat-row');
+        if (!row) return;
+        var catId = row.dataset.id;
+        if (pbacState.categories.length <= 1) {
+          alert('You must have at least one budget category.');
+          return;
+        }
+        pbacState.categories = pbacState.categories.filter(function(c) { return c.id !== catId; });
+        pbacRenderCategories();
+        pbacUpdateCalculations();
+      }
+    });
+
+    // Summary Table: Actual spending entry delegation
+    pbacEl('pbac-summary-tbody').addEventListener('input', function(e) {
+      if (e.target.classList.contains('pbac-actual-input')) {
+        var tr = e.target.closest('tr');
+        if (!tr) return;
+        var catId = tr.dataset.id;
+        var targetCat = pbacState.categories.find(function(c) { return c.id === catId; });
+        if (targetCat) {
+          targetCat.actual = Math.max(0, parseFloat(e.target.value) || 0);
+          pbacUpdateCalculations();
+        }
+      }
+    });
+
+    // Copy Summary button
+    pbacEl('pbac-copy-btn').addEventListener('click', function() {
+      var periods = pbacGetPeriodsPerYear();
+      var monthlyMultiplier = periods / 12;
+      var text = '--- Paycheck Budget Allocation Summary ---\n' +
+        'Net Paycheck Income: ' + pbacFormatMoney(pbacState.netPay, pbacState.currency) + '\n' +
+        'Pay Periods / Year: ' + periods + '\n' +
+        'Monthly Equivalent: ' + pbacFormatMoney(pbacState.netPay * monthlyMultiplier, pbacState.currency) + '\n\n' +
+        'Category Allocations:\n';
+
+      pbacState.categories.forEach(function(c) {
+        var catMoney = pbacState.netPay * (c.pct / 100);
+        text += '- ' + c.name + ': ' + c.pct + '% = ' + pbacFormatMoney(catMoney, pbacState.currency) + ' / check (' + pbacFormatMoney(catMoney * monthlyMultiplier, pbacState.currency) + ' / mo)\n';
+      });
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          pbacFlashMsg('Summary copied to clipboard!');
+        }).catch(function() {
+          pbacFallbackCopy(text);
+        });
+      } else {
+        pbacFallbackCopy(text);
+      }
+    });
+
+    // Print button
+    pbacEl('pbac-print-btn').addEventListener('click', function() {
+      window.print();
+    });
+
+    // Download CSV with formula injection defense
+    pbacEl('pbac-csv-btn').addEventListener('click', function() {
+      var periods = pbacGetPeriodsPerYear();
+      var monthlyMultiplier = periods / 12;
+
+      function sanitizeCSV(cell) {
+        var str = String(cell);
+        // Prevent CSV Formula Injection
+        if (/^[=\+\-@\t\r]/.test(str)) {
+          str = "'" + str;
+        }
+        return '"' + str.replace(/"/g, '""') + '"';
+      }
+
+      var csvContent = [
+        [sanitizeCSV('Category'), sanitizeCSV('Percentage'), sanitizeCSV('Per Paycheck Amount'), sanitizeCSV('Monthly Equivalent'), sanitizeCSV('Actual Spent'), sanitizeCSV('Difference')].join(',')
+      ];
+
+      pbacState.categories.forEach(function(c) {
+        var catPerCheck = pbacState.netPay * (c.pct / 100);
+        var catMonthly = catPerCheck * monthlyMultiplier;
+        var actual = parseFloat(c.actual) || 0;
+        var diff = catPerCheck - actual;
+
+        csvContent.push([
+          sanitizeCSV(c.name),
+          sanitizeCSV(c.pct + '%'),
+          sanitizeCSV(catPerCheck.toFixed(2)),
+          sanitizeCSV(catMonthly.toFixed(2)),
+          sanitizeCSV(actual.toFixed(2)),
+          sanitizeCSV(diff.toFixed(2))
+        ].join(','));
+      });
+
+      var blob = new Blob([csvContent.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+      var link = document.createElement('a');
+      var url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'Paycheck_Budget_Allocation.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      pbacFlashMsg('CSV export downloaded!');
+    });
+
+    // Save to LocalStorage
+    pbacEl('pbac-save-btn').addEventListener('click', function() {
+      try {
+        var dataToSave = {
+          netPay: pbacState.netPay,
+          freq: pbacEl('pbac-freq').value,
+          customPeriods: pbacEl('pbac-custom-periods').value,
+          curr: pbacState.currency,
+          categories: pbacState.categories
+        };
+        localStorage.setItem('pbac_saved_plan', JSON.stringify(dataToSave));
+        pbacFlashMsg('Budget saved in this browser!');
+      } catch (err) {
+        pbacFlashMsg('Unable to save locally (storage blocked).');
+      }
+    });
+
+    // Reset button
+    pbacEl('pbac-reset-btn').addEventListener('click', function() {
+      if (confirm('Reset calculator to original 50/30/20 default settings?')) {
+        pbacEl('pbac-net-pay').value = '2000';
+        pbacEl('pbac-gross-pay').value = '';
+        pbacEl('pbac-freq').value = '26';
+        pbacEl('pbac-custom-freq-group').style.display = 'none';
+        pbacEl('pbac-custom-periods').value = '26';
+        pbacEl('pbac-curr').value = '$';
+        pbacApplyPreset('50-30-20');
+        pbacFlashMsg('Reset to defaults.');
+      }
+    });
+  }
+
+  function pbacFlashMsg(msg) {
+    var el = pbacEl('pbac-action-msg');
+    if (el) {
+      el.textContent = msg;
+      setTimeout(function() {
+        if (el.textContent === msg) el.textContent = '';
+      }, 3500);
+    }
+  }
+
+  function pbacFallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      pbacFlashMsg('Summary copied to clipboard!');
+    } catch (e) {
+      alert(text);
+    }
+    document.body.removeChild(ta);
+  }
+
+  // Restore from LocalStorage on load if exists
+  function pbacRestoreStorage() {
+    try {
+      var raw = localStorage.getItem('pbac_saved_plan');
+      if (raw) {
+        var saved = JSON.parse(raw);
+        if (saved && saved.categories && Array.isArray(saved.categories)) {
+          pbacState.categories = saved.categories;
+          if (saved.netPay !== undefined) pbacEl('pbac-net-pay').value = saved.netPay;
+          if (saved.freq !== undefined) {
+            pbacEl('pbac-freq').value = saved.freq;
+            if (saved.freq === 'custom') pbacEl('pbac-custom-freq-group').style.display = 'block';
+          }
+          if (saved.customPeriods !== undefined) pbacEl('pbac-custom-periods').value = saved.customPeriods;
+          if (saved.curr !== undefined) pbacEl('pbac-curr').value = saved.curr;
+        }
+      }
+    } catch (e) {
+      // Graceful fallback to initial defaults
+    }
+  }
+
+  // Self Initialization
+  pbacRestoreStorage();
+  pbacRenderCategories();
+  pbacInitEvents();
+  pbacUpdateCalculations();
+
+})();
+</script>
