@@ -1,1333 +1,927 @@
-<!-- =====================================================================
-     100Ah LITHIUM BATTERY RUNTIME CALCULATOR - COMPLETE PRODUCTION BUNDLE
-     Single-Page Architecture: Scoped CSS + HTML5 Interface + Vanilla JS
-     ===================================================================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>100Ah Lithium Battery Runtime Calculator</title>
+  <meta name="description" content="Estimate 100Ah lithium battery runtime for AC and DC appliances. Adjust voltage, battery capacity, depth of discharge, inverter efficiency, and load wattage.">
+  <link rel="canonical" href="https://my-tool-app.pages.dev/100ah-lithium-battery-runtime-calculator/">
+  <meta name="robots" content="index, follow">
 
-<style>
-/* Scoped Tool Wrapper */
-.brlc-tool {
-  --brlc-primary: #0d9488;
-  --brlc-primary-hover: #0f766e;
-  --brlc-primary-light: #f0fdfa;
-  --brlc-bg-main: #f8fafc;
-  --brlc-bg-card: #ffffff;
-  --brlc-text-title: #0f172a;
-  --brlc-text-body: #334155;
-  --brlc-text-muted: #64748b;
-  --brlc-border: #e2e8f0;
-  --brlc-border-focus: #0d9488;
-  --brlc-danger: #ef4444;
-  --brlc-danger-bg: #fef2f2;
-  --brlc-warning: #f59e0b;
-  --brlc-warning-bg: #fffbeb;
-  --brlc-radius: 8px;
-  --brlc-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="100Ah Lithium Battery Runtime Calculator">
+  <meta property="og:description" content="Calculate backup runtime for 12V and 12.8V 100Ah LiFePO4 batteries across AC and DC loads with inverter efficiency, BMS limits, and duty cycles.">
+  <meta property="og:url" content="https://my-tool-app.pages.dev/100ah-lithium-battery-runtime-calculator/">
+  <meta property="og:site_name" content="Toolbox">
 
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  color: var(--brlc-text-body);
-  background-color: var(--brlc-bg-main);
-  line-height: 1.5;
-  box-sizing: border-box;
-  padding: 1.25rem;
-  margin: 0 auto;
-  max-width: 1200px;
-}
-
-.brlc-tool *,
-.brlc-tool *::before,
-.brlc-tool *::after {
-  box-sizing: inherit;
-}
-
-.brlc-sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* Header */
-.brlc-header {
-  margin-bottom: 2rem;
-  text-align: left;
-}
-.brlc-tag {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  background-color: var(--brlc-primary-light);
-  color: var(--brlc-primary);
-  border: 1px solid #ccfbf1;
-  border-radius: 9999px;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-.brlc-title {
-  color: var(--brlc-text-title);
-  font-size: clamp(1.75rem, 3.5vw, 2.35rem);
-  font-weight: 800;
-  line-height: 1.2;
-  margin: 0 0 0.5rem 0;
-}
-.brlc-intro {
-  color: var(--brlc-text-muted);
-  font-size: 1.05rem;
-  max-width: 800px;
-  margin: 0;
-}
-
-/* Main Layout Grid */
-.brlc-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-  align-items: start;
-}
-@media (min-width: 992px) {
-  .brlc-grid {
-    grid-template-columns: 1.2fr 0.8fr;
+  <!-- Structured Data: WebApplication & FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://my-tool-app.pages.dev/100ah-lithium-battery-runtime-calculator/#app",
+        "name": "100Ah Lithium Battery Runtime Calculator",
+        "url": "https://my-tool-app.pages.dev/100ah-lithium-battery-runtime-calculator/",
+        "applicationCategory": "EngineeringApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "description": "Professional electrical sizing calculator for 100Ah LiFePO4 and lithium batteries. Accounts for inverter efficiency, idle drain, depth of discharge, and BMS discharge limits."
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://my-tool-app.pages.dev/100ah-lithium-battery-runtime-calculator/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How long will a 100Ah lithium battery run a 100W appliance?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A standard 12.8V 100Ah LiFePO4 battery contains 1,280Wh of nominal energy. At a 90% Depth of Discharge (DoD), it provides 1,152Wh of usable energy. A 100W DC appliance will run for approximately 11.5 hours. If running a 100W AC appliance through a 90% efficient inverter, battery draw is approximately 111W, yielding roughly 10.4 hours of runtime."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the difference between a 12V 100Ah and a 12.8V 100Ah battery?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A 12V nominal rating yields 1,200 Watt-hours (Wh), typical for lead-acid chemistry. A standard 4-cell Lithium Iron Phosphate (LiFePO4) battery has a nominal cell voltage of 3.2V, producing 12.8V nominal and 1,280 Watt-hours (Wh)—providing 6.7% more total energy storage."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why do DC appliances run longer than AC appliances on the same battery?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "DC appliances connect directly to battery voltage and experience zero inversion losses. AC appliances require an inverter, which loses 8% to 15% of total power as heat, plus an additional 5W to 25W of continuous idle standby power."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can a 100Ah lithium battery power a 1500W microwave or coffee maker?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "While the battery has enough total energy (1,152Wh usable), a 1500W load draws over 130A to 145A at 12V. Most 100Ah lithium batteries have a Battery Management System (BMS) restricted to a 100A continuous discharge limit. The BMS will trigger an overcurrent shutdown unless multiple batteries are wired in parallel or a high-discharge model is used."
+            }
+          }
+        ]
+      }
+    ]
   }
-}
+  </script>
 
-/* Cards */
-.brlc-card {
-  background: var(--brlc-bg-card);
-  border: 1px solid var(--brlc-border);
-  border-radius: var(--brlc-radius);
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-  box-shadow: var(--brlc-shadow);
-}
-.brlc-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-.brlc-card-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--brlc-text-title);
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-subtle: #f1f5f9;
+      --border: #cbd5e1;
+      --border-focus: #0284c7;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --warning: #b45309;
+      --warning-bg: #fef3c7;
+      --danger: #b91c1c;
+      --danger-bg: #fee2e2;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.04);
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
 
-/* Form Groups */
-.brlc-fields {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-@media (min-width: 560px) {
-  .brlc-fields {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-.brlc-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-.brlc-group label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--brlc-text-title);
-}
-.brlc-input, .brlc-select {
-  width: 100%;
-  padding: 0.55rem 0.75rem;
-  font-size: 0.95rem;
-  color: var(--brlc-text-title);
-  background-color: #ffffff;
-  border: 1px solid var(--brlc-border);
-  border-radius: 6px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-.brlc-input:focus, .brlc-select:focus {
-  outline: none;
-  border-color: var(--brlc-border-focus);
-  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
-}
-.brlc-hint {
-  font-size: 0.75rem;
-  color: var(--brlc-text-muted);
-}
-.brlc-error-msg {
-  display: none;
-  font-size: 0.75rem;
-  color: var(--brlc-danger);
-  font-weight: 600;
-}
-.brlc-group.has-error .brlc-input {
-  border-color: var(--brlc-danger);
-}
-.brlc-group.has-error .brlc-error-msg {
-  display: block;
-}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; padding: 0 1rem; }
+    .calc-container { max-width: 1080px; margin: 0 auto; padding: 2rem 0 4rem; }
 
-/* Appliance Rows */
-.brlc-appliances-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-.brlc-appliance-item {
-  background: var(--brlc-bg-main);
-  border: 1px solid var(--brlc-border);
-  border-radius: 6px;
-  padding: 0.85rem;
-}
-.brlc-app-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.65rem;
-}
-@media (min-width: 680px) {
-  .brlc-app-grid {
-    grid-template-columns: auto 1.5fr 1fr 0.8fr 1fr 0.9fr auto;
-    align-items: end;
-  }
-}
-.brlc-app-enable {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-bottom: 0.6rem;
-}
-.brlc-app-enable input {
-  width: 1.15rem;
-  height: 1.15rem;
-  cursor: pointer;
-  accent-color: var(--brlc-primary);
-}
-.brlc-app-actions {
-  display: flex;
-  gap: 0.25rem;
-  align-items: center;
-}
+    /* Nav / Breadcrumbs */
+    .calc-nav { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+    .calc-nav a { color: var(--primary); text-decoration: none; }
+    .calc-nav a:hover { text-decoration: underline; }
 
-/* Buttons */
-.brlc-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  font-family: inherit;
-  font-weight: 600;
-  font-size: 0.875rem;
-  padding: 0.55rem 1rem;
-  border-radius: 6px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-.brlc-btn-primary {
-  background: var(--brlc-primary);
-  color: #ffffff;
-}
-.brlc-btn-primary:hover {
-  background: var(--brlc-primary-hover);
-}
-.brlc-btn-secondary {
-  background: #ffffff;
-  color: var(--brlc-primary);
-  border-color: var(--brlc-primary);
-}
-.brlc-btn-secondary:hover {
-  background: var(--brlc-primary-light);
-}
-.brlc-btn-outline {
-  background: #ffffff;
-  color: var(--brlc-text-muted);
-  border-color: var(--brlc-border);
-}
-.brlc-btn-outline:hover {
-  border-color: var(--brlc-border-focus);
-  color: var(--brlc-text-title);
-}
-.brlc-btn-icon {
-  padding: 0.45rem;
-  background: #ffffff;
-  border: 1px solid var(--brlc-border);
-  border-radius: 4px;
-  cursor: pointer;
-}
-.brlc-btn-icon:hover {
-  background: var(--brlc-bg-main);
-}
-.brlc-btn-danger:hover {
-  border-color: var(--brlc-danger);
-  color: var(--brlc-danger);
-}
-.brlc-actions-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1rem;
-}
+    /* Header */
+    header.calc-header { margin-bottom: 2rem; }
+    h1.calc-title { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text); line-height: 1.2; margin-bottom: 0.5rem; }
+    .calc-subtitle { font-size: 1.1rem; color: var(--text-muted); max-width: 840px; }
 
-/* Results Column */
-.brlc-results-card {
-  border-top: 4px solid var(--brlc-primary);
-  background: #ffffff;
-  position: sticky;
-  top: 1.5rem;
-}
-.brlc-hero-display {
-  background: var(--brlc-primary-light);
-  border: 1px solid #ccfbf1;
-  border-radius: var(--brlc-radius);
-  padding: 1.25rem;
-  text-align: center;
-  margin-bottom: 1.25rem;
-}
-.brlc-hero-time {
-  font-size: clamp(2rem, 4.5vw, 2.75rem);
-  font-weight: 800;
-  color: var(--brlc-primary-hover);
-  line-height: 1.1;
-}
-.brlc-hero-human {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--brlc-text-muted);
-  margin-top: 0.35rem;
-}
+    /* Workspace Layout */
+    .calc-grid { display: grid; grid-template-columns: 1fr; gap: 1.75rem; margin-bottom: 3.5rem; }
+    @media (min-width: 980px) {
+      .calc-grid { grid-template-columns: 1.35fr 1fr; align-items: start; }
+    }
 
-/* Warnings */
-.brlc-warnings {
-  margin-bottom: 1.25rem;
-}
-.brlc-alert {
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  font-size: 0.8125rem;
-  margin-bottom: 0.5rem;
-  line-height: 1.4;
-}
-.brlc-alert-warn {
-  background-color: var(--brlc-warning-bg);
-  border: 1px solid #fde68a;
-  color: var(--brlc-warning);
-}
+    .calc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; box-shadow: var(--shadow); }
+    .calc-card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; }
 
-/* Metrics Grid */
-.brlc-metrics {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
-}
-.brlc-metric {
-  background: var(--brlc-bg-main);
-  padding: 0.75rem;
-  border-radius: 6px;
-  border: 1px solid var(--brlc-border);
-}
-.brlc-metric-label {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--brlc-text-muted);
-}
-.brlc-metric-val {
-  display: block;
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--brlc-text-title);
-  margin: 0.2rem 0;
-}
-.brlc-metric-sub {
-  display: block;
-  font-size: 0.6875rem;
-  color: var(--brlc-text-muted);
-}
+    /* Mode Switcher Tabs */
+    .mode-toggle { display: inline-flex; background: var(--surface-subtle); padding: 0.25rem; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 1.5rem; width: 100%; }
+    .mode-btn { flex: 1; padding: 0.6rem 1rem; border: none; background: transparent; font-weight: 600; font-size: 0.9rem; border-radius: var(--radius-sm); cursor: pointer; color: var(--text-muted); transition: all 0.15s ease; }
+    .mode-btn.active { background: #fff; color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
-/* Energy Allocation Bar */
-.brlc-vis {
-  margin-bottom: 1.25rem;
-}
-.brlc-vis-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--brlc-text-muted);
-  margin-bottom: 0.35rem;
-}
-.brlc-bar {
-  display: flex;
-  height: 22px;
-  width: 100%;
-  border-radius: 6px;
-  overflow: hidden;
-  background-color: var(--brlc-border);
-}
-.brlc-segment {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: #ffffff;
-  transition: width 0.3s ease;
-}
-.brlc-seg-usable { background-color: var(--brlc-primary); }
-.brlc-seg-res { background-color: var(--brlc-warning); }
-.brlc-seg-cut { background-color: #94a3b8; }
+    /* Form Fields */
+    .calc-form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+    .calc-form-group label { font-size: 0.875rem; font-weight: 600; }
+    .calc-form-group small { font-size: 0.775rem; color: var(--text-muted); }
+    .calc-input, .calc-select { width: 100%; padding: 0.65rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.95rem; font-family: inherit; background: #fff; color: var(--text); }
+    .calc-input:focus, .calc-select:focus { outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); }
 
-/* Utilities Toolbar */
-.brlc-toolbar {
-  display: flex;
-  gap: 0.5rem;
-  border-top: 1px solid var(--brlc-border);
-  padding-top: 1rem;
-}
+    .input-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 580px) { .input-row-2 { grid-template-columns: 1fr; } }
 
-/* Editorial & SEO Body */
-.brlc-content {
-  margin-top: 3rem;
-  border-top: 2px solid var(--brlc-border);
-  padding-top: 2rem;
-}
-.brlc-block {
-  margin-bottom: 2.5rem;
-}
-.brlc-block h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--brlc-text-title);
-  margin-bottom: 0.85rem;
-}
-.brlc-block h3 {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--brlc-text-title);
-  margin: 1rem 0 0.4rem 0;
-}
-.brlc-block p, .brlc-block li {
-  font-size: 0.95rem;
-  color: var(--brlc-text-body);
-  line-height: 1.6;
-}
-.brlc-block ul, .brlc-block ol {
-  padding-left: 1.25rem;
-  margin: 0;
-}
-.brlc-block li {
-  margin-bottom: 0.4rem;
-}
-.brlc-formula {
-  background: #ffffff;
-  border: 1px solid var(--brlc-border);
-  border-left: 4px solid var(--brlc-primary);
-  border-radius: 4px;
-  padding: 1rem;
-  margin: 1rem 0;
-  overflow-x: auto;
-}
-.brlc-formula code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.875rem;
-  color: var(--brlc-text-title);
-  font-weight: 600;
-}
+    /* Advanced Section Details */
+    .advanced-drawer { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; margin-top: 1rem; background: var(--surface-subtle); }
+    .advanced-drawer summary { font-weight: 700; cursor: pointer; color: var(--primary); font-size: 0.95rem; user-select: none; }
+    .advanced-content { margin-top: 1.25rem; }
 
-/* Comparison Table */
-.brlc-table-wrap {
-  overflow-x: auto;
-  margin: 1rem 0;
-}
-.brlc-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 0.9rem;
-}
-.brlc-table th, .brlc-table td {
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--brlc-border);
-}
-.brlc-table th {
-  background-color: var(--brlc-bg-main);
-  color: var(--brlc-text-title);
-  font-weight: 700;
-}
+    /* Appliances List */
+    .appliance-item { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 0.75rem; }
+    .appliance-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .appliance-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 0.65rem; }
+    @media (max-width: 640px) { .appliance-grid { grid-template-columns: 1fr 1fr; } }
 
-/* Disclaimer */
-.brlc-disclaimer {
-  background: var(--brlc-bg-main);
-  border: 1px solid var(--brlc-border);
-  border-radius: var(--brlc-radius);
-  padding: 1rem 1.25rem;
-  margin-top: 2rem;
-}
-.brlc-disclaimer h3 {
-  margin: 0 0 0.35rem 0;
-  font-size: 0.95rem;
-  color: var(--brlc-text-title);
-}
-.brlc-disclaimer p {
-  margin: 0;
-  font-size: 0.825rem;
-  color: var(--brlc-text-muted);
-}
+    /* Action Buttons */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.65rem 1.15rem; font-size: 0.9rem; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid transparent; cursor: pointer; transition: all 0.15s ease; font-family: inherit; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: #fff; border-color: var(--border); color: var(--text); }
+    .btn-secondary:hover { background: #f8fafc; border-color: #94a3b8; }
+    .btn-danger-text { background: transparent; color: var(--danger); font-size: 0.8rem; padding: 0.2rem 0.5rem; }
+    .btn-cluster { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1.25rem; }
 
-@media print {
-  .brlc-actions-bar, .brlc-toolbar, .brlc-app-actions, .brlc-content {
-    display: none !important;
-  }
-}
-</style>
+    /* Results Sticky Card */
+    .results-sticky { position: sticky; top: 1.5rem; }
+    .highlight-box { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem; text-align: center; }
+    .highlight-box .label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: #0369a1; font-weight: 700; margin-bottom: 0.25rem; }
+    .highlight-box .val { font-size: 2.5rem; font-weight: 800; color: #0c4a6e; font-family: var(--mono); line-height: 1.1; }
+    .highlight-box .sub { font-size: 0.9rem; color: #0284c7; margin-top: 0.35rem; }
 
-<div class="brlc-tool" id="brlcToolRoot">
-  <div class="brlc-sr-only" aria-live="polite" id="brlcAriaLive"></div>
+    .metric-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .metric-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border); font-size: 0.95rem; }
+    .metric-item:last-child { border-bottom: none; }
+    .metric-item span.title { color: var(--text-muted); }
+    .metric-item span.amount { font-weight: 700; font-family: var(--mono); }
 
-  <!-- Header -->
-  <header class="brlc-header">
-    <div class="brlc-tag">Off-Grid & Backup Engineering Tool</div>
-    <h1 class="brlc-title">100Ah Lithium Battery Runtime Calculator for Appliances</h1>
-    <p class="brlc-intro">Calculate how long a 100Ah lithium battery (LiFePO4 or Lithium-ion) can power your AC and DC appliances. Adjust system voltage, Depth of Discharge, and inverter efficiency for an accurate, real-world backup estimate.</p>
-  </header>
+    /* Alert Banner */
+    .alert-box { padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 1.25rem; display: none; line-height: 1.5; }
+    .alert-box.show { display: block; }
+    .alert-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid #fca5a5; }
 
-  <!-- Interactive Grid -->
-  <main class="brlc-grid">
-    
-    <!-- Left Column: Controls -->
-    <div class="brlc-inputs-col">
-      
-      <!-- 1. Battery Bank Configuration -->
-      <section class="brlc-card" aria-labelledby="brlc-head-bat">
-        <div class="brlc-card-header">
-          <h2 id="brlc-head-bat" class="brlc-card-title">1. Battery Bank Setup</h2>
-          <button type="button" class="brlc-btn brlc-btn-outline" id="brlcBtnPresetBank" style="font-size:0.75rem; padding:0.25rem 0.5rem;">Default 12.8V 100Ah</button>
+    /* Static SEO Prose & Tables */
+    .calc-prose { border-top: 1px solid var(--border); padding-top: 3rem; margin-top: 2rem; }
+    .calc-prose h2 { font-size: 1.65rem; font-weight: 800; color: var(--text); margin: 2rem 0 0.85rem; }
+    .calc-prose p { font-size: 1rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.7; }
+    .calc-prose ul, .calc-prose ol { margin: 0 0 1.25rem 1.5rem; color: var(--text-muted); }
+    .calc-prose li { margin-bottom: 0.5rem; }
+
+    .formula-box { background: var(--surface-subtle); border-left: 4px solid var(--primary); padding: 1.25rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-family: var(--mono); font-size: 0.9rem; margin: 1.25rem 0; overflow-x: auto; white-space: pre-wrap; }
+    .calc-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+    .calc-table th, .calc-table td { border: 1px solid var(--border); padding: 0.75rem 0.9rem; text-align: left; }
+    .calc-table th { background: var(--surface-subtle); font-weight: 700; }
+
+    /* FAQ */
+    .faq-card { border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 0.75rem; background: #fff; }
+    .faq-btn { width: 100%; text-align: left; background: none; border: none; padding: 1rem 1.25rem; font-size: 1.05rem; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: inherit; }
+    .faq-btn::after { content: '+'; font-size: 1.25rem; color: var(--primary); font-weight: 700; }
+    .faq-card.open .faq-btn::after { content: '−'; }
+    .faq-body { display: none; padding: 0 1.25rem 1.25rem; color: var(--text-muted); font-size: 0.95rem; line-height: 1.65; }
+    .faq-card.open .faq-body { display: block; }
+
+    .disclaimer-box { margin-top: 3rem; background: var(--surface-subtle); border-left: 4px solid #64748b; padding: 1.25rem; border-radius: var(--radius-sm); font-size: 0.85rem; color: var(--text-muted); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+  </style>
+</head>
+<body>
+
+  <div class="calc-container">
+    <nav class="calc-nav" aria-label="Breadcrumb">
+      <a href="/">Toolbox</a>
+      <span aria-hidden="true">/</span>
+      <a href="/#calculators">Calculators</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">100Ah Lithium Battery Runtime Calculator</span>
+    </nav>
+
+    <header class="calc-header">
+      <h1 class="calc-title">100Ah Lithium Battery Runtime Calculator</h1>
+      <p class="calc-subtitle">
+        Calculate precise backup runtime for 12V and 12.8V 100Ah LiFePO4 batteries across AC and DC loads with inverter efficiency, idle draw, and BMS current verification.
+      </p>
+    </header>
+
+    <main class="calc-grid" id="calculator-app">
+      <!-- Input Workspace -->
+      <section class="calc-card" aria-labelledby="inputs-heading">
+        <h2 id="inputs-heading" class="sr-only">Battery and Load Settings</h2>
+
+        <!-- Mode Toggle Tabs -->
+        <div class="mode-toggle" role="tablist" aria-label="Calculator Modes">
+          <button type="button" class="mode-btn active" id="tab-quick" role="tab" aria-selected="true" aria-controls="quick-mode-panel">Quick Calculator</button>
+          <button type="button" class="mode-btn" id="tab-advanced" role="tab" aria-selected="false" aria-controls="advanced-mode-panel">Engineering Mode</button>
         </div>
 
-        <div class="brlc-fields">
-          <div class="brlc-group">
-            <label for="brlcBatVoltSelect">Battery Nominal Voltage</label>
-            <select id="brlcBatVoltSelect" class="brlc-select">
-              <option value="12">12V (Nominal)</option>
-              <option value="12.8" selected>12.8V (LiFePO4 Standard)</option>
-              <option value="24">24V (Nominal)</option>
-              <option value="25.6">25.6V (LiFePO4 8S)</option>
-              <option value="48">48V (Nominal)</option>
-              <option value="51.2">51.2V (LiFePO4 16S)</option>
-              <option value="custom">Custom Voltage</option>
-            </select>
+        <!-- Quick Mode Controls -->
+        <div id="quick-mode-panel" role="tabpanel" aria-labelledby="tab-quick">
+          <div class="input-row-2">
+            <div class="calc-form-group">
+              <label for="cfg-voltage-preset">Battery Chemistry &amp; Nominal Voltage</label>
+              <select id="cfg-voltage-preset" class="calc-select">
+                <option value="12.8" selected>12.8V LiFePO4 (Standard 4S - 1,280 Wh)</option>
+                <option value="12.0">12.0V Generic Lithium / AGM (1,200 Wh)</option>
+                <option value="25.6">25.6V LiFePO4 (24V Bank - 2,560 Wh)</option>
+                <option value="51.2">51.2V LiFePO4 (48V Bank - 5,120 Wh)</option>
+              </select>
+            </div>
+            <div class="calc-form-group">
+              <label for="cfg-capacity">Rated Capacity (Ah)</label>
+              <input type="number" id="cfg-capacity" class="calc-input" value="100" min="1" max="5000" step="1">
+            </div>
           </div>
 
-          <div class="brlc-group" id="brlcCustomVoltGroup" style="display: none;">
-            <label for="brlcCustomVoltInput">Custom Cell/Pack Voltage (V)</label>
-            <input type="number" id="brlcCustomVoltInput" class="brlc-input" min="1" max="1000" step="0.1" value="12.8">
-            <span class="brlc-error-msg" id="brlcErrVolt">Must be &gt; 0</span>
+          <div class="input-row-2">
+            <div class="calc-form-group">
+              <label for="cfg-dod">Depth of Discharge (DoD %)</label>
+              <input type="number" id="cfg-dod" class="calc-input" value="90" min="10" max="100" step="5">
+              <small>LiFePO4 allows 80%–95%; Lead-Acid is 50%.</small>
+            </div>
+            <div class="calc-form-group">
+              <label for="cfg-inverter-eff">Inverter Efficiency (%)</label>
+              <input type="number" id="cfg-inverter-eff" class="calc-input" value="90" min="50" max="99" step="1">
+              <small>Applies strictly to AC appliances (typically 88%–93%).</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Advanced Drawer -->
+        <details class="advanced-drawer" id="advanced-drawer">
+          <summary>Advanced Bank, Inverter &amp; BMS Settings</summary>
+          <div class="advanced-content" id="advanced-mode-panel">
+            <div class="input-row-2">
+              <div class="calc-form-group">
+                <label for="cfg-series">Batteries in Series (Voltage Multiplier)</label>
+                <input type="number" id="cfg-series" class="calc-input" value="1" min="1" max="16" step="1">
+              </div>
+              <div class="calc-form-group">
+                <label for="cfg-parallel">Parallel Strings (Capacity Multiplier)</label>
+                <input type="number" id="cfg-parallel" class="calc-input" value="1" min="1" max="16" step="1">
+              </div>
+            </div>
+
+            <div class="input-row-2">
+              <div class="calc-form-group">
+                <label for="cfg-reserve">Safety Reserve Buffer (%)</label>
+                <input type="number" id="cfg-reserve" class="calc-input" value="0" min="0" max="40" step="5">
+                <small>Withheld from usable energy for emergencies.</small>
+              </div>
+              <div class="calc-form-group">
+                <label for="cfg-inv-idle">Inverter Standby / Idle Draw (Watts)</label>
+                <input type="number" id="cfg-inv-idle" class="calc-input" value="10" min="0" max="150" step="1">
+                <small>Continuous tare loss consumed whenever inverter is ON.</small>
+              </div>
+            </div>
+
+            <div class="input-row-2">
+              <div class="calc-form-group">
+                <label for="cfg-bms-limit">BMS Continuous Current Limit (Amps)</label>
+                <input type="number" id="cfg-bms-limit" class="calc-input" value="100" min="10" max="1000" step="10">
+                <small>Standard 100Ah lithium packs feature a 100A BMS.</small>
+              </div>
+              <div class="calc-form-group">
+                <label for="cfg-inv-rating">Inverter Continuous Rating (Watts)</label>
+                <input type="number" id="cfg-inv-rating" class="calc-input" value="1000" min="100" max="20000" step="100">
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- Appliances Section -->
+        <div style="margin-top: 2rem;">
+          <div class="calc-card-title">
+            <label style="font-weight: 700; font-size: 1.05rem;">Connected Electrical Loads</label>
+            <button type="button" class="btn btn-secondary" id="btn-add-appliance" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;">+ Add Appliance</button>
           </div>
 
-          <div class="brlc-group">
-            <label for="brlcCapacityInput">Single Battery Capacity (Ah)</label>
-            <input type="number" id="brlcCapacityInput" class="brlc-input" min="1" max="50000" step="1" value="100">
-            <span class="brlc-error-msg" id="brlcErrCap">Enter Ah &gt; 0</span>
-          </div>
+          <div id="appliances-container" role="region" aria-label="Appliance List"></div>
 
-          <div class="brlc-group">
-            <label for="brlcSeriesCount">Batteries in Series (Voltage &uarr;)</label>
-            <input type="number" id="brlcSeriesCount" class="brlc-input" min="1" max="48" step="1" value="1">
-            <span class="brlc-hint">1 for standard 12V/24V single pack</span>
-          </div>
-
-          <div class="brlc-group">
-            <label for="brlcParallelCount">Batteries in Parallel (Capacity &uarr;)</label>
-            <input type="number" id="brlcParallelCount" class="brlc-input" min="1" max="48" step="1" value="1">
-            <span class="brlc-hint">Increases total usable Amp-hours</span>
-          </div>
-
-          <div class="brlc-group">
-            <label for="brlcChemistry">Battery Chemistry</label>
-            <select id="brlcChemistry" class="brlc-select">
-              <option value="lifepo4" selected>LiFePO4 (90% Safe DoD)</option>
-              <option value="liion">Other Lithium-Ion (80% DoD)</option>
-              <option value="custom">Custom Parameters</option>
-            </select>
-          </div>
-
-          <div class="brlc-group">
-            <label for="brlcDodInput">Depth of Discharge - DoD (%)</label>
-            <input type="number" id="brlcDodInput" class="brlc-input" min="10" max="100" step="1" value="90">
-            <span class="brlc-hint">Recommended: 85% - 90% for long cycle life</span>
-            <span class="brlc-error-msg" id="brlcErrDod">Must be 10% - 100%</span>
-          </div>
-
-          <div class="brlc-group">
-            <label for="brlcReserveInput">Safety Reserve Buffer (%)</label>
-            <input type="number" id="brlcReserveInput" class="brlc-input" min="0" max="40" step="1" value="0">
-            <span class="brlc-hint">Energy reserved for emergencies</span>
-            <span class="brlc-error-msg" id="brlcErrRes">Must be 0% - 40%</span>
+          <div class="btn-cluster">
+            <button type="button" class="btn btn-secondary" id="btn-load-fridge">Load RV / Fridge Demo</button>
+            <button type="button" class="btn btn-secondary" id="btn-load-office">Load Home Office Demo</button>
+            <button type="button" class="btn btn-secondary" id="btn-reset">Reset Form</button>
           </div>
         </div>
       </section>
 
-      <!-- 2. Inverter & Efficiency -->
-      <section class="brlc-card" aria-labelledby="brlc-head-inv">
-        <h2 id="brlc-head-inv" class="brlc-card-title">2. Inverter & Power Conversion</h2>
+      <!-- Results Sidebar -->
+      <section class="calc-card results-sticky" aria-labelledby="results-heading">
+        <h2 id="results-heading" class="calc-card-title">Runtime &amp; System Output</h2>
 
-        <div class="brlc-fields">
-          <div class="brlc-group">
-            <label for="brlcInverterEff">Inverter Efficiency (%)</label>
-            <input type="number" id="brlcInverterEff" class="brlc-input" min="60" max="99" step="1" value="90">
-            <span class="brlc-hint">Applies only to AC loads (typically 88-93%)</span>
-            <span class="brlc-error-msg" id="brlcErrEff">Must be 60% - 99%</span>
-          </div>
+        <div id="safety-alert" class="alert-box" role="alert"></div>
 
-          <div class="brlc-group">
-            <label for="brlcIdleWatts">Inverter Idle Consumption (W)</label>
-            <input type="number" id="brlcIdleWatts" class="brlc-input" min="0" max="250" step="1" value="0">
-            <span class="brlc-hint">Quiescent draw while powered on (typically 5-25W)</span>
-          </div>
+        <div class="highlight-box">
+          <div class="label">Estimated Backup Runtime</div>
+          <div class="val" id="res-runtime">0h 00m</div>
+          <div class="sub" id="res-runtime-sub">Continuous operation</div>
+        </div>
 
-          <div class="brlc-group">
-            <label for="brlcInverterCapacity">Inverter Continuous Limit (W)</label>
-            <input type="number" id="brlcInverterCapacity" class="brlc-input" min="0" max="50000" step="50" placeholder="e.g. 1000">
-            <span class="brlc-hint">Optional: triggers overload warnings</span>
+        <div class="metric-list" role="list">
+          <div class="metric-item" role="listitem">
+            <span class="title">Bank Nominal Energy:</span>
+            <span class="amount" id="res-nominal-wh">1,280 Wh (1.28 kWh)</span>
           </div>
+          <div class="metric-item" role="listitem">
+            <span class="title">Usable Battery Energy:</span>
+            <span class="amount" id="res-usable-wh">1,152 Wh</span>
+          </div>
+          <div class="metric-item" role="listitem">
+            <span class="title">Active Load (Appliance Draw):</span>
+            <span class="amount" id="res-active-watts">100 W</span>
+          </div>
+          <div class="metric-item" role="listitem">
+            <span class="title">Battery-Side Demand (w/ Losses):</span>
+            <span class="amount" id="res-battery-watts">111.1 W</span>
+          </div>
+          <div class="metric-item" role="listitem">
+            <span class="title">Estimated Battery Current:</span>
+            <span class="amount" id="res-battery-amps">8.68 A</span>
+          </div>
+          <div class="metric-item" role="listitem">
+            <span class="title">Daily Energy Consumption:</span>
+            <span class="amount" id="res-daily-kwh">2.67 kWh / day</span>
+          </div>
+        </div>
 
-          <div class="brlc-group">
-            <label for="brlcInverterSurgeLimit">Inverter Peak Surge Limit (W)</label>
-            <input type="number" id="brlcInverterSurgeLimit" class="brlc-input" min="0" max="100000" step="50" placeholder="e.g. 2000">
-            <span class="brlc-hint">Optional: checks motor starting surges</span>
-          </div>
+        <div class="btn-cluster" style="margin-top: 1.5rem;">
+          <button type="button" class="btn btn-primary" id="btn-copy-summary" style="flex: 1;">Copy Summary</button>
+          <button type="button" class="btn btn-secondary" id="btn-print" style="flex: 1;">Print Report</button>
+        </div>
+      </section>
+    </main>
+
+    <div id="calc-aria-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- SEO / Informational Section -->
+    <article class="calc-prose">
+      <section>
+        <h2>How to Calculate 100Ah Lithium Battery Runtime</h2>
+        <p>
+          Determining how long a 100Ah lithium battery will power your devices requires evaluating <strong>usable energy</strong> rather than nameplate amp-hours alone. Because amp-hours measure electrical charge rather than work capacity, you must factor in nominal battery voltage, safe discharge limits, and electrical power path inefficiencies.
+        </p>
+        <div class="formula-box">
+1. Nominal Energy (Wh) = Nominal Voltage (V) × Rated Capacity (Ah)
+2. Usable Energy (Wh)  = Nominal Energy × (DoD% / 100) × (1 - Reserve% / 100)
+3. AC Battery Draw (W) = Appliance Watts / Inverter Efficiency
+4. DC Battery Draw (W) = Appliance Watts (Zero Inversion Loss)
+5. Estimated Runtime   = Usable Energy (Wh) / Total Battery-Side Watts (W)
         </div>
       </section>
 
-      <!-- 3. Connected Appliances -->
-      <section class="brlc-card" aria-labelledby="brlc-head-app">
-        <div class="brlc-card-header">
-          <h2 id="brlc-head-app" class="brlc-card-title">3. Connected Electrical Appliances</h2>
-          <div class="brlc-actions-bar" style="margin:0;">
-            <button type="button" class="brlc-btn brlc-btn-secondary" id="brlcBtnAddApp">+ Add Appliance</button>
-            <button type="button" class="brlc-btn brlc-btn-outline" id="brlcBtnLoadDemo">Load RV Demo</button>
-          </div>
-        </div>
-        <p class="brlc-hint" style="margin-bottom:1rem;">Add single or multiple appliances. Uncheck the box to disable an appliance without deleting it.</p>
-
-        <div id="brlcAppliancesContainer" class="brlc-appliances-list"></div>
+      <section>
+        <h2>12V vs. 12.8V: The Lithium Energy Difference</h2>
+        <p>
+          Conventional lead-acid formulas use 12.0V as the baseline multiplier (<code>12V × 100Ah = 1,200Wh</code>). However, standard <strong>Lithium Iron Phosphate (LiFePO4)</strong> batteries utilize four 3.2V prismatic or cylindrical cells wired in series (4S configuration), resulting in a true nominal voltage of <strong>12.8V</strong>.
+        </p>
+        <p>
+          This nominal voltage difference yields <strong>1,280 Watt-hours</strong>—providing 80 additional Watt-hours (a 6.7% capacity bonus) over legacy estimates. Furthermore, while lead-acid batteries suffer severe voltage sag under Peukert's law, LiFePO4 maintains a flat 12.8V–13.2V discharge plateau across 80% of its cycle life.
+        </p>
       </section>
 
-      <!-- Actions -->
-      <div class="brlc-actions-bar">
-        <button type="button" class="brlc-btn brlc-btn-primary" id="brlcBtnRecalc">Calculate Runtime</button>
-        <button type="button" class="brlc-btn brlc-btn-outline" id="brlcBtnReset">Reset to Factory Defaults</button>
-      </div>
-
-    </div>
-
-    <!-- Right Column: Results Dashboard -->
-    <div class="brlc-results-col">
-      <div class="brlc-card brlc-results-card">
-        <div class="brlc-card-header">
-          <span class="brlc-tag" style="margin:0;">Live Estimate</span>
-          <h2 class="brlc-card-title">Backup Duration</h2>
-        </div>
-
-        <div class="brlc-hero-display">
-          <div class="brlc-hero-time" id="brlcResTime">--</div>
-          <div class="brlc-hero-human" id="brlcResHuman">Add appliances to view runtime</div>
-        </div>
-
-        <div id="brlcWarningsContainer" class="brlc-warnings" style="display:none;"></div>
-
-        <div class="brlc-metrics">
-          <div class="brlc-metric">
-            <span class="brlc-metric-label">Nominal Energy</span>
-            <span class="brlc-metric-val" id="brlcResNomWh">1,280 Wh</span>
-            <span class="brlc-metric-sub">Bank rated capacity</span>
-          </div>
-          <div class="brlc-metric">
-            <span class="brlc-metric-label">Usable Energy</span>
-            <span class="brlc-metric-val" id="brlcResUseWh">1,152 Wh</span>
-            <span class="brlc-metric-sub">After DoD & Reserve</span>
-          </div>
-          <div class="brlc-metric">
-            <span class="brlc-metric-label">Appliance Load</span>
-            <span class="brlc-metric-val" id="brlcResAppWatts">0 W</span>
-            <span class="brlc-metric-sub">Total active wattage</span>
-          </div>
-          <div class="brlc-metric">
-            <span class="brlc-metric-label">Battery-Side Load</span>
-            <span class="brlc-metric-val" id="brlcResBatWatts">0 W</span>
-            <span class="brlc-metric-sub">Includes inverter losses</span>
-          </div>
-          <div class="brlc-metric">
-            <span class="brlc-metric-label">Nominal Current</span>
-            <span class="brlc-metric-val" id="brlcResCurrent">0.0 A</span>
-            <span class="brlc-metric-sub">Estimated discharge rate</span>
-          </div>
-          <div class="brlc-metric">
-            <span class="brlc-metric-label">Daily Demand</span>
-            <span class="brlc-metric-val" id="brlcResDailyWh">0 Wh/day</span>
-            <span class="brlc-metric-sub">Based on daily usage hours</span>
-          </div>
-        </div>
-
-        <!-- Energy Allocation Bar -->
-        <div class="brlc-vis">
-          <div class="brlc-vis-labels">
-            <span>Battery Energy Breakdown</span>
-            <span id="brlcVisPct">90% Usable</span>
-          </div>
-          <div class="brlc-bar">
-            <div class="brlc-segment brlc-seg-usable" id="brlcBarUsable" style="width: 90%;">Usable</div>
-            <div class="brlc-segment brlc-seg-res" id="brlcBarReserve" style="width: 0%;">Res.</div>
-            <div class="brlc-segment brlc-seg-cut" id="brlcBarCutoff" style="width: 10%;">Cutoff</div>
-          </div>
-        </div>
-
-        <div class="brlc-toolbar">
-          <button type="button" class="brlc-btn brlc-btn-outline" id="brlcBtnCopy" style="flex:1;">Copy Summary</button>
-          <button type="button" class="brlc-btn brlc-btn-outline" id="brlcBtnPrint" style="flex:1;">Print Report</button>
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- Editorial & SEO Guide Content -->
-  <article class="brlc-content">
-    
-    <section class="brlc-block">
-      <h2>About the 100Ah Lithium Battery Runtime Calculator</h2>
-      <p>A standard 100Ah lithium battery (especially Lithium Iron Phosphate, or LiFePO4) is the benchmark power source for camper vans, marine setups, RV house banks, off-grid cabins, and home emergency backups. However, calculating runtime isn't as simple as dividing capacity by device wattage. To get a realistic estimate, you must account for <strong>pack voltage, Depth of Discharge (DoD), inverter conversion loss, and intermittent duty cycles</strong>.</p>
-      <p>If you also plan on charging your battery setup with solar panels during the day, check out our companion <a href="https://my-tool-app.pages.dev/solar-battery-runtime-calculator" target="_blank" rel="noopener">Solar Battery Runtime Calculator</a> to calculate net solar generation and solar-assisted runtimes.</p>
-    </section>
-
-    <section class="brlc-block">
-      <h2>Key Features of This Calculator</h2>
-      <ul>
-        <li><strong>Multi-Voltage Support:</strong> Seamlessly switch between standard 12V, true LiFePO4 nominals (12.8V, 25.6V, 51.2V), or custom battery voltages.</li>
-        <li><strong>Series & Parallel Calculations:</strong> Calculate battery banks consisting of multiple 100Ah units wired in series (increasing voltage) or parallel (increasing capacity).</li>
-        <li><strong>Strict AC vs. DC Loss Separation:</strong> Inverter efficiency is applied exclusively to AC household appliances. Direct 12V/24V DC appliances bypass inverter losses entirely.</li>
-        <li><strong>Inverter Idle Draw Support:</strong> Factors in the continuous standby power drawn by pure sine wave inverters while switched on.</li>
-        <li><strong>Appliance Surge Warnings:</strong> Alerts you if starting motor surges exceed your inverter's continuous or surge wattage limits.</li>
-      </ul>
-    </section>
-
-    <section class="brlc-block">
-      <h2>How the Calculation Works (Mathematical Engine)</h2>
-      <p>This calculator relies on a multi-stage energy budget model:</p>
-      
-      <div class="brlc-formula">
-        <p><strong>Step 1: Calculate Nominal & Usable Battery Bank Energy</strong></p>
-        <code>Nominal Energy (Wh) = [Single Battery Voltage (V) &times; Series Count] &times; [Single Capacity (Ah) &times; Parallel Count]</code><br><br>
-        <code>Usable Energy (Wh) = Nominal Energy (Wh) &times; (DoD % / 100) &times; (1 - Safety Reserve % / 100)</code>
-      </div>
-
-      <div class="brlc-formula">
-        <p><strong>Step 2: Determine Battery-Side Power Demand (Watts)</strong></p>
-        <code>AC Appliance Battery Demand (W) = [Appliance Watts &times; Qty &times; (Duty Cycle % / 100)] / (Inverter Efficiency % / 100)</code><br><br>
-        <code>DC Appliance Battery Demand (W) = Appliance Watts &times; Qty &times; (Duty Cycle % / 100)</code><br><br>
-        <code>Total Battery Demand (W) = &sum; Demand(AC) + &sum; Demand(DC) + Inverter Idle Watts (if AC active)</code>
-      </div>
-
-      <div class="brlc-formula">
-        <p><strong>Step 3: Continuous Backup Duration</strong></p>
-        <code>Estimated Continuous Runtime (Hours) = Usable Energy (Wh) / Total Battery Demand (W)</code>
-      </div>
-    </section>
-
-    <section class="brlc-block">
-      <h2>Illustrative 100Ah (12.8V / 1,280Wh) LiFePO4 Runtime Table</h2>
-      <p><em>Assumptions: 12.8V 100Ah battery, 90% Depth of Discharge (1,152 Wh usable), 90% Inverter Efficiency on AC loads, 0% reserve buffer.</em></p>
-      <div class="brlc-table-wrap">
-        <table class="brlc-table">
+      <section>
+        <h2>100Ah Lithium Battery Runtime Reference Table</h2>
+        <p>
+          The table below illustrates realistic runtimes for common household, RV, and off-grid appliances operating on a single <strong>12.8V 100Ah LiFePO4 battery (1,152Wh usable at 90% DoD)</strong>:
+        </p>
+        <table class="calc-table">
           <thead>
             <tr>
-              <th>Appliance</th>
+              <th>Appliance Type</th>
               <th>Rated Power</th>
-              <th>Supply</th>
+              <th>Path</th>
               <th>Duty Cycle</th>
-              <th>Effective Draw</th>
+              <th>Battery Demand</th>
               <th>Estimated Runtime</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>Smart Phone Charger</td>
-              <td>15W</td>
+              <td>10 W</td>
               <td>DC</td>
               <td>100%</td>
-              <td>15W</td>
-              <td>~76 hours 48 mins</td>
+              <td>10.0 W</td>
+              <td><strong>115.2 Hours</strong></td>
             </tr>
             <tr>
-              <td>12V Wi-Fi 6 Router</td>
-              <td>20W</td>
-              <td>DC</td>
-              <td>100%</td>
-              <td>20W</td>
-              <td>~57 hours 36 mins</td>
-            </tr>
-            <tr>
-              <td>CPAP (No Heated Tube)</td>
-              <td>30W</td>
-              <td>DC</td>
-              <td>100%</td>
-              <td>30W</td>
-              <td>~38 hours 24 mins</td>
-            </tr>
-            <tr>
-              <td>12V RV Compressor Fridge</td>
-              <td>45W</td>
+              <td>12V 45L Compressor Fridge</td>
+              <td>45 W</td>
               <td>DC</td>
               <td>35%</td>
-              <td>15.75W</td>
-              <td>~73 hours 8 mins</td>
+              <td>15.8 W</td>
+              <td><strong>73.0 Hours</strong></td>
             </tr>
             <tr>
-              <td>Work Laptop (AC Charger)</td>
-              <td>65W</td>
+              <td>Wi-Fi Internet Router</td>
+              <td>15 W</td>
               <td>AC</td>
               <td>100%</td>
-              <td>72.2W (inverter)</td>
-              <td>~15 hours 57 mins</td>
+              <td>26.7 W (inc. idle)</td>
+              <td><strong>43.1 Hours</strong></td>
             </tr>
             <tr>
-              <td>50-inch LED Smart TV</td>
-              <td>80W</td>
+              <td>Medical CPAP (No Heat)</td>
+              <td>30 W</td>
+              <td>DC</td>
+              <td>100%</td>
+              <td>30.0 W</td>
+              <td><strong>38.4 Hours</strong></td>
+            </tr>
+            <tr>
+              <td>Work Laptop &amp; Monitor</td>
+              <td>65 W</td>
               <td>AC</td>
               <td>100%</td>
-              <td>88.9W (inverter)</td>
-              <td>~12 hours 57 mins</td>
+              <td>82.2 W (inc. idle)</td>
+              <td><strong>14.0 Hours</strong></td>
+            </tr>
+            <tr>
+              <td>50-inch LED Television</td>
+              <td>100 W</td>
+              <td>AC</td>
+              <td>100%</td>
+              <td>121.1 W (inc. idle)</td>
+              <td><strong>9.5 Hours</strong></td>
             </tr>
             <tr>
               <td>Household Refrigerator</td>
-              <td>150W</td>
+              <td>150 W</td>
               <td>AC</td>
-              <td>35%</td>
-              <td>58.3W (inverter)</td>
-              <td>~19 hours 45 mins</td>
+              <td>40%</td>
+              <td>76.7 W (inc. idle)</td>
+              <td><strong>15.0 Hours</strong></td>
             </tr>
             <tr>
-              <td>Microwave Oven</td>
-              <td>1,000W</td>
+              <td>1000W Microwave Oven</td>
+              <td>1,000 W</td>
               <td>AC</td>
               <td>100%</td>
-              <td>1,111W (inverter)</td>
-              <td>~1 hour 2 mins</td>
+              <td>1,121.1 W</td>
+              <td><strong>1.0 Hour (BMS Alert)</strong></td>
             </tr>
           </tbody>
         </table>
-      </div>
-    </section>
+      </section>
 
-    <section class="brlc-block">
-      <h2>Frequently Asked Questions (FAQ)</h2>
-      
-      <h3>1. How long will a 100Ah lithium battery last?</h3>
-      <p>On a 12.8V LiFePO4 battery running at 90% Depth of Discharge (1,152 usable Wh), runtime depends entirely on the connected wattage. For example, a 100W AC device using a 90% efficient inverter draws roughly 111W from the battery, yielding about 10 hours and 22 minutes of runtime.</p>
+      <section>
+        <h2>Inverter Standby Draw &amp; DC-Coupled Efficiency</h2>
+        <p>
+          A frequent cause of premature battery depletion is <strong>inverter tare loss</strong>. An inverter does not simply convert electricity; its internal transformers, cooling fans, and logic boards draw continuous standby power (typically 8W to 20W for pure sine wave units) whenever switched on.
+        </p>
+        <p>
+          When running a small 10W Wi-Fi router on an AC inverter with 15W tare loss, your battery experiences a 26W+ continuous draw—reducing runtime by more than 60%. Utilizing native 12V DC power connections bypasses both conversion losses and tare draws, maximizing total run time.
+        </p>
+      </section>
 
-      <h3>2. How long will a 100Ah LiFePO4 battery run a 12V appliance?</h3>
-      <p>Direct 12V DC loads bypass inverter losses. If your 12V appliance draws 60W (5 Amps at 12V), it will run for approximately 19 hours and 12 minutes on an 1,152Wh usable bank (1,152Wh / 60W = 19.2 hours).</p>
-
-      <h3>3. How long can a 100Ah lithium battery power a refrigerator?</h3>
-      <p>A typical 12V DC portable fridge (drawing 45W while active, cycling at a 35% duty cycle) uses an average of 15.75W. On a 100Ah lithium battery, it will run for approximately 73 hours (over 3 days). A larger 120V household refrigerator through an inverter typically runs for 18 to 22 hours.</p>
-
-      <h3>4. Can a 100Ah lithium battery run a CPAP machine all night?</h3>
-      <p>Yes, easily. A standard CPAP machine on a 12V DC adapter without heated humidification consumes 20W to 35W, running comfortably for 32 to 50 hours (several consecutive nights). With a heated humidifier running on AC via an inverter, consumption rises to 70W–100W, offering 10 to 14 hours of continuous backup.</p>
-
-      <h3>5. How many watts can a 100Ah lithium battery supply?</h3>
-      <p>Wattage delivery is determined by your battery's internal Battery Management System (BMS) continuous discharge rating. Most 12.8V 100Ah batteries have a 100A BMS, meaning they can safely supply a maximum continuous load of 1,280 Watts (12.8V &times; 100A = 1,280W).</p>
-
-      <h3>6. Does inverter efficiency affect battery runtime?</h3>
-      <p>Yes. DC-to-AC power inverters convert 12V/24V DC to 120V/230V AC with an efficiency of 85% to 94%. The remaining 6% to 15% is lost as heat. Inverters also draw a baseline idle current (quiescent power) simply staying turned on.</p>
-
-      <h3>7. Can I run multiple appliances from a 100Ah lithium battery?</h3>
-      <p>Yes. You can run multiple appliances simultaneously, provided their combined battery-side wattage does not exceed your battery's BMS discharge rate or your inverter's continuous output capacity.</p>
-
-      <h3>8. What is the difference between 100Ah and 100Wh?</h3>
-      <p>Amp-hours (Ah) measure electrical charge capacity, whereas Watt-hours (Wh) measure total energy. To calculate energy, multiply Amp-hours by voltage (Ah &times; V = Wh). A 12.8V 100Ah battery provides 1,280Wh of energy, whereas a 48V 100Ah battery holds 4,800Wh—nearly four times the energy despite having the same Ah rating.</p>
-
-      <h3>9. How much usable energy does a 100Ah LiFePO4 battery have?</h3>
-      <p>Unlike traditional lead-acid batteries (which should only be discharged to 50%), a 100Ah LiFePO4 battery can safely discharge 80% to 90% of its capacity without compromising cycle life. That equates to 1,024Wh to 1,152Wh of usable energy from a 12.8V pack.</p>
-
-      <h3>10. Can solar panels extend the runtime of a lithium battery?</h3>
-      <p>Yes. Connecting a solar array directly charges the battery while your appliances operate. If solar power matches or exceeds appliance demand, your battery won't discharge at all during peak sun hours. To model this interaction, use our <a href="https://my-tool-app.pages.dev/solar-battery-runtime-calculator" target="_blank" rel="noopener">Solar Battery Runtime Calculator</a>.</p>
-    </section>
-
-    <footer class="brlc-disclaimer">
-      <h3>Engineering Disclaimer & Usage Limits</h3>
-      <p>This calculator provides mathematical estimates based on user-supplied variables. Actual real-world runtimes may vary depending on ambient temperature, cell age, wire resistance, and inverter standby draw. Always leave a safety margin when sizing critical backup power systems.</p>
-    </footer>
-
-  </article>
-</div>
-
-<!-- =====================================================================
-     STRUCTURED DATA (WebApplication Schema)
-     ===================================================================== -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "100Ah Lithium Battery Runtime Calculator for Appliances",
-  "description": "Calculates continuous backup runtime for 100Ah lithium and LiFePO4 battery banks based on appliance power, voltage, DoD, and inverter efficiency.",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "All",
-  "browserRequirements": "Requires JavaScript. Requires HTML5 support.",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  }
-}
-</script>
-
-<!-- =====================================================================
-     VANILLA JAVASCRIPT ENGINE (Isolated Scope)
-     ===================================================================== -->
-<script>
-(() => {
-  "use strict";
-
-  const PRESETS = [
-    { label: "Custom Appliance", watts: 60, type: "AC", duty: 100, hours: 4, surge: 60 },
-    { label: "LED Light Bulbs", watts: 25, type: "AC", duty: 100, hours: 6, surge: 25 },
-    { label: "Laptop Computer", watts: 65, type: "AC", duty: 100, hours: 8, surge: 90 },
-    { label: "Wi-Fi Router (DC)", watts: 20, type: "DC", duty: 100, hours: 24, surge: 20 },
-    { label: "CPAP Machine (DC)", watts: 30, type: "DC", duty: 100, hours: 8, surge: 30 },
-    { label: "12V RV Refrigerator", watts: 45, type: "DC", duty: 35, hours: 24, surge: 80 },
-    { label: "Household Fridge (AC)", watts: 150, type: "AC", duty: 35, hours: 24, surge: 800 },
-    { label: "Starlink Standard", watts: 60, type: "AC", duty: 100, hours: 12, surge: 75 },
-    { label: "Smart TV 50-inch", watts: 80, type: "AC", duty: 100, hours: 4, surge: 100 },
-    { label: "Standing Fan", watts: 45, type: "AC", duty: 100, hours: 8, surge: 65 },
-    { label: "Sump Pump (1/3 HP)", watts: 800, type: "AC", duty: 15, hours: 2, surge: 2200 },
-    { label: "Smartphone Charger", watts: 15, type: "DC", duty: 100, hours: 3, surge: 15 }
-  ];
-
-  const root = document.getElementById("brlcToolRoot");
-  if (!root) return;
-
-  // Input Elements
-  const batVoltSelect = root.querySelector("#brlcBatVoltSelect");
-  const customVoltGroup = root.querySelector("#brlcCustomVoltGroup");
-  const customVoltInput = root.querySelector("#brlcCustomVoltInput");
-  const capacityInput = root.querySelector("#brlcCapacityInput");
-  const seriesCountInput = root.querySelector("#brlcSeriesCount");
-  const parallelCountInput = root.querySelector("#brlcParallelCount");
-  const chemistrySelect = root.querySelector("#brlcChemistry");
-  const dodInput = root.querySelector("#brlcDodInput");
-  const reserveInput = root.querySelector("#brlcReserveInput");
-
-  const inverterEffInput = root.querySelector("#brlcInverterEff");
-  const idleWattsInput = root.querySelector("#brlcIdleWatts");
-  const inverterCapInput = root.querySelector("#brlcInverterCapacity");
-  const inverterSurgeInput = root.querySelector("#brlcInverterSurgeLimit");
-
-  const appliancesContainer = root.querySelector("#brlcAppliancesContainer");
-  const btnAddApp = root.querySelector("#brlcBtnAddApp");
-  const btnLoadDemo = root.querySelector("#brlcBtnLoadDemo");
-  const btnRecalc = root.querySelector("#brlcBtnRecalc");
-  const btnReset = root.querySelector("#brlcBtnReset");
-  const btnPresetBank = root.querySelector("#brlcBtnPresetBank");
-
-  // Output Elements
-  const resTime = root.querySelector("#brlcResTime");
-  const resHuman = root.querySelector("#brlcResHuman");
-  const resNomWh = root.querySelector("#brlcResNomWh");
-  const resUseWh = root.querySelector("#brlcResUseWh");
-  const resAppWatts = root.querySelector("#brlcResAppWatts");
-  const resBatWatts = root.querySelector("#brlcResBatWatts");
-  const resCurrent = root.querySelector("#brlcResCurrent");
-  const resDailyWh = root.querySelector("#brlcResDailyWh");
-  const warningsBox = root.querySelector("#brlcWarningsContainer");
-  const ariaLive = root.querySelector("#brlcAriaLive");
-
-  const barUsable = root.querySelector("#brlcBarUsable");
-  const barReserve = root.querySelector("#brlcBarReserve");
-  const barCutoff = root.querySelector("#brlcBarCutoff");
-  const visPct = root.querySelector("#brlcVisPct");
-
-  const btnCopy = root.querySelector("#brlcBtnCopy");
-  const btnPrint = root.querySelector("#brlcBtnPrint");
-
-  let appCounter = 0;
-
-  function createApplianceRow(data = {}) {
-    appCounter++;
-    const rowId = "brlcRow_" + appCounter;
-    const name = data.name || "Custom Appliance";
-    const watts = data.watts !== undefined ? data.watts : 60;
-    const qty = data.qty !== undefined ? data.qty : 1;
-    const type = data.type || "AC";
-    const duty = data.duty !== undefined ? data.duty : 100;
-    const hours = data.hours !== undefined ? data.hours : 4;
-    const surge = data.surge !== undefined ? data.surge : watts;
-    const enabled = data.enabled !== undefined ? data.enabled : true;
-
-    const row = document.createElement("div");
-    row.className = "brlc-appliance-item";
-    row.id = rowId;
-
-    row.innerHTML = `
-      <div class="brlc-app-grid">
-        <div class="brlc-app-enable">
-          <input type="checkbox" class="brlc-app-check" ${enabled ? "checked" : ""} title="Enable or disable appliance">
+      <section>
+        <h2>BMS Limits &amp; High-Wattage Constraints</h2>
+        <p>
+          Even though a 100Ah battery stores over 1,150 usable Watt-hours, it cannot run every appliance. Standard 100Ah lithium batteries incorporate a Battery Management System (BMS) with a continuous discharge rating of <strong>100 Amps</strong>.
+        </p>
+        <p>
+          At 12V nominal, this establishes a hard continuous power ceiling:
+        </p>
+        <div class="formula-box">
+Maximum Continuous Power = 12.8V × 100A = 1,280 Watts
         </div>
-        <div class="brlc-group">
-          <label for="${rowId}_preset">Appliance</label>
-          <select id="${rowId}_preset" class="brlc-select brlc-app-preset">
-            ${PRESETS.map(p => `<option value="${p.label}" ${p.label === name ? "selected" : ""}>${p.label}</option>`).join("")}
-          </select>
+        <p>
+          Attempting to run a 1,500W space heater, hair dryer, or large induction cooktop draws over 140 Amps at the battery terminals, triggering immediate thermal or over-current shutdown. Sizing an off-grid system for high loads requires pairing batteries in parallel to multiply allowable BMS amperage.
+        </p>
+      </section>
+
+      <section>
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-card">
+          <button type="button" class="faq-btn" aria-expanded="false">How long will a 100Ah lithium battery run a 100W appliance?</button>
+          <div class="faq-body">
+            A standard 12.8V 100Ah LiFePO4 battery contains 1,280Wh of nominal energy. At a 90% Depth of Discharge (DoD), it provides 1,152Wh of usable energy. A 100W DC appliance will run for approximately 11.5 hours. If running a 100W AC appliance through a 90% efficient inverter, battery draw is approximately 111W, yielding roughly 10.4 hours of runtime.
+          </div>
         </div>
-        <div class="brlc-group">
-          <label for="${rowId}_watts">Watts (W)</label>
-          <input type="number" id="${rowId}_watts" class="brlc-input brlc-app-watts" min="0" max="100000" step="1" value="${watts}">
+
+        <div class="faq-card">
+          <button type="button" class="faq-btn" aria-expanded="false">What is the difference between a 12V 100Ah and a 12.8V 100Ah battery?</button>
+          <div class="faq-body">
+            A 12V nominal rating yields 1,200 Watt-hours (Wh), typical for lead-acid chemistry. A standard 4-cell Lithium Iron Phosphate (LiFePO4) battery has a nominal cell voltage of 3.2V, producing 12.8V nominal and 1,280 Watt-hours (Wh)—providing 6.7% more total energy storage.
+          </div>
         </div>
-        <div class="brlc-group">
-          <label for="${rowId}_qty">Qty</label>
-          <input type="number" id="${rowId}_qty" class="brlc-input brlc-app-qty" min="1" max="99" step="1" value="${qty}">
+
+        <div class="faq-card">
+          <button type="button" class="faq-btn" aria-expanded="false">Why do DC appliances run longer than AC appliances on the same battery?</button>
+          <div class="faq-body">
+            DC appliances connect directly to battery voltage and experience zero inversion losses. AC appliances require an inverter, which loses 8% to 15% of total power as heat, plus an additional 5W to 25W of continuous idle standby power.
+          </div>
         </div>
-        <div class="brlc-group">
-          <label for="${rowId}_type">Power</label>
-          <select id="${rowId}_type" class="brlc-select brlc-app-type">
-            <option value="AC" ${type === "AC" ? "selected" : ""}>AC (Inverter)</option>
-            <option value="DC" ${type === "DC" ? "selected" : ""}>DC (Direct)</option>
-          </select>
+
+        <div class="faq-card">
+          <button type="button" class="faq-btn" aria-expanded="false">Can a 100Ah lithium battery power a 1500W microwave or coffee maker?</button>
+          <div class="faq-body">
+            While the battery has enough total energy (1,152Wh usable), a 1500W load draws over 130A to 145A at 12V. Most 100Ah lithium batteries have a Battery Management System (BMS) restricted to a 100A continuous discharge limit. The BMS will trigger an overcurrent shutdown unless multiple batteries are wired in parallel or a high-discharge model is used.
+          </div>
         </div>
-        <div class="brlc-group">
-          <label for="${rowId}_duty">Duty %</label>
-          <input type="number" id="${rowId}_duty" class="brlc-input brlc-app-duty" min="1" max="100" step="1" value="${duty}">
-        </div>
-        <div class="brlc-app-actions">
-          <button type="button" class="brlc-btn-icon brlc-btn-danger brlc-app-del" title="Remove Appliance" aria-label="Remove Appliance">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
-        </div>
-      </div>
-      <input type="hidden" class="brlc-app-hours" value="${hours}">
-      <input type="hidden" class="brlc-app-surge" value="${surge}">
-    `;
+      </section>
 
-    const presetEl = row.querySelector(".brlc-app-preset");
-    presetEl.addEventListener("change", () => {
-      const match = PRESETS.find(p => p.label === presetEl.value);
-      if (match) {
-        row.querySelector(".brlc-app-watts").value = match.watts;
-        row.querySelector(".brlc-app-type").value = match.type;
-        row.querySelector(".brlc-app-duty").value = match.duty;
-        row.querySelector(".brlc-app-hours").value = match.hours;
-        row.querySelector(".brlc-app-surge").value = match.surge;
-        calculate();
-      }
-    });
+      <footer class="disclaimer-box" role="contentinfo">
+        <strong>Electrical Engineering Disclaimer:</strong> Runtime calculations provided are theoretical approximations based on user-supplied parameters. Real-world battery performance varies depending on cell temperature, state of health, Peukert effects under extreme discharge rates (&gt;1C), wiring resistance, and inverter load curves. Verify all critical emergency, medical, and marine battery systems with certified electrical engineering standards.
+      </footer>
+    </article>
+  </div>
 
-    row.querySelector(".brlc-app-del").addEventListener("click", () => {
-      if (appliancesContainer.children.length <= 1) {
-        alert("At least one appliance row is required.");
-        return;
-      }
-      row.remove();
-      calculate();
-    });
+  <!-- Interactive JavaScript Engine -->
+  <script>
+  (function () {
+    'use strict';
 
-    row.querySelectorAll("input, select").forEach(el => {
-      el.addEventListener("input", calculate);
-      el.addEventListener("change", calculate);
-    });
+    const state = {
+      nominalVolts: 12.8,
+      capacityAh: 100,
+      dodPct: 90,
+      inverterEffPct: 90,
+      series: 1,
+      parallel: 1,
+      reservePct: 0,
+      inverterIdleW: 10,
+      bmsLimitA: 100,
+      inverterRatingW: 1000,
+      appliances: [
+        { id: 1, name: 'LED Lighting', watts: 30, qty: 1, duty: 100, isAC: false },
+        { id: 2, name: 'Laptop / Workstation', watts: 65, qty: 1, duty: 100, isAC: true }
+      ]
+    };
 
-    return row;
-  }
+    let nextApplianceId = 3;
 
-  function validate(inputEl, min, max) {
-    const val = parseFloat(inputEl.value);
-    const group = inputEl.closest(".brlc-group");
-    if (isNaN(val) || val < min || val > max) {
-      if (group) group.classList.add("has-error");
-      return null;
-    }
-    if (group) group.classList.remove("has-error");
-    return val;
-  }
+    // DOM Elements
+    const voltageSelect = document.getElementById('cfg-voltage-preset');
+    const capacityInput = document.getElementById('cfg-capacity');
+    const dodInput = document.getElementById('cfg-dod');
+    const inverterEffInput = document.getElementById('cfg-inverter-eff');
+    const seriesInput = document.getElementById('cfg-series');
+    const parallelInput = document.getElementById('cfg-parallel');
+    const reserveInput = document.getElementById('cfg-reserve');
+    const inverterIdleInput = document.getElementById('cfg-inv-idle');
+    const bmsLimitInput = document.getElementById('cfg-bms-limit');
+    const inverterRatingInput = document.getElementById('cfg-inv-rating');
+    const appliancesContainer = document.getElementById('appliances-container');
+    const safetyAlert = document.getElementById('safety-alert');
+    const ariaLive = document.getElementById('calc-aria-live');
 
-  function calculate() {
-    const warnings = [];
+    // Result DOM
+    const resRuntime = document.getElementById('res-runtime');
+    const resRuntimeSub = document.getElementById('res-runtime-sub');
+    const resNominalWh = document.getElementById('res-nominal-wh');
+    const resUsableWh = document.getElementById('res-usable-wh');
+    const resActiveWatts = document.getElementById('res-active-watts');
+    const resBatteryWatts = document.getElementById('res-battery-watts');
+    const resBatteryAmps = document.getElementById('res-battery-amps');
+    const resDailyKwh = document.getElementById('res-daily-kwh');
 
-    // 1. Voltage Sizing
-    let voltBase = 12.8;
-    if (batVoltSelect.value === "custom") {
-      customVoltGroup.style.display = "flex";
-      const customV = validate(customVoltInput, 1, 1000);
-      if (customV === null) return;
-      voltBase = customV;
-    } else {
-      customVoltGroup.style.display = "none";
-      voltBase = parseFloat(batVoltSelect.value);
-    }
+    // Tab buttons
+    const tabQuick = document.getElementById('tab-quick');
+    const tabAdvanced = document.getElementById('tab-advanced');
+    const advancedDrawer = document.getElementById('advanced-drawer');
 
-    const seriesCount = validate(seriesCountInput, 1, 48) || 1;
-    const parallelCount = validate(parallelCountInput, 1, 48) || 1;
-    const capacityAh = validate(capacityInput, 1, 50000);
-    const dodPct = validate(dodInput, 10, 100);
-    const reservePct = validate(reserveInput, 0, 40);
-    const inverterEffPct = validate(inverterEffInput, 60, 99);
-    const idleWatts = parseFloat(idleWattsInput.value) || 0;
+    function calculateElectricalMetrics(s) {
+      const bankVolts = s.nominalVolts * s.series;
+      const bankAh = s.capacityAh * s.parallel;
+      const nominalWh = bankVolts * bankAh;
+      const usableWh = nominalWh * (s.dodPct / 100) * (1 - (s.reservePct / 100));
 
-    if (capacityAh === null || dodPct === null || reservePct === null || inverterEffPct === null) {
-      resTime.textContent = "--";
-      resHuman.textContent = "Please correct input validation errors";
-      return;
-    }
+      let activeWatts = 0;
+      let acDemandWatts = 0;
+      let dcDemandWatts = 0;
+      let hasActiveAC = false;
 
-    // 2. Battery Bank Totals
-    const totalBankVolt = voltBase * seriesCount;
-    const totalBankCapacity = capacityAh * parallelCount;
-    const nominalWh = totalBankVolt * totalBankCapacity;
-    const usableFraction = (dodPct / 100) * (1 - (reservePct / 100));
-    const usableWh = nominalWh * usableFraction;
-
-    // 3. Process Appliances
-    const rows = appliancesContainer.querySelectorAll(".brlc-appliance-item");
-    let totalAppWatts = 0;
-    let totalBatteryWatts = 0;
-    let totalDailyWh = 0;
-    let activeAcCount = 0;
-    let peakSurgeWatts = 0;
-    let activeAppCount = 0;
-
-    const invEffDecimal = inverterEffPct / 100;
-
-    rows.forEach(row => {
-      const isChecked = row.querySelector(".brlc-app-check").checked;
-      if (!isChecked) return;
-
-      const watts = parseFloat(row.querySelector(".brlc-app-watts").value) || 0;
-      const qty = parseInt(row.querySelector(".brlc-app-qty").value, 10) || 0;
-      const type = row.querySelector(".brlc-app-type").value;
-      const duty = parseFloat(row.querySelector(".brlc-app-duty").value) || 0;
-      const hours = parseFloat(row.querySelector(".brlc-app-hours").value) || 0;
-      const surge = parseFloat(row.querySelector(".brlc-app-surge").value) || watts;
-
-      if (watts > 0 && qty > 0 && duty > 0) {
-        activeAppCount++;
-        const effectiveWatts = watts * qty * (duty / 100);
-        totalAppWatts += effectiveWatts;
-        totalDailyWh += effectiveWatts * hours;
-
-        if (type === "AC") {
-          activeAcCount++;
-          totalBatteryWatts += effectiveWatts / invEffDecimal;
-          peakSurgeWatts += surge * qty;
+      s.appliances.forEach(app => {
+        const avgW = app.watts * app.qty * (app.duty / 100);
+        activeWatts += avgW;
+        if (app.isAC) {
+          acDemandWatts += avgW;
+          if (avgW > 0) hasActiveAC = true;
         } else {
-          totalBatteryWatts += effectiveWatts;
+          dcDemandWatts += avgW;
         }
-      }
-    });
-
-    // Add Inverter Idle Draw if AC loads are running
-    if (activeAcCount > 0 && idleWatts > 0) {
-      totalBatteryWatts += idleWatts;
-    }
-
-    // 4. Inverter Overload Warnings
-    const invLimit = parseFloat(inverterCapInput.value) || 0;
-    const invSurgeLimit = parseFloat(inverterSurgeInput.value) || 0;
-
-    if (invLimit > 0 && totalAppWatts > invLimit) {
-      warnings.push(`Continuous AC load (${Math.round(totalAppWatts)}W) exceeds your inverter's continuous rating (${invLimit}W).`);
-    }
-    if (invSurgeLimit > 0 && peakSurgeWatts > invSurgeLimit) {
-      warnings.push(`Potential starting surge (${Math.round(peakSurgeWatts)}W) exceeds your inverter surge limit (${invSurgeLimit}W).`);
-    }
-
-    // 5. Zero Load State
-    if (activeAppCount === 0 || totalBatteryWatts === 0) {
-      resTime.textContent = "0h 0m";
-      resHuman.textContent = "No appliances enabled or power is 0W";
-      resNomWh.textContent = `${Math.round(nominalWh).toLocaleString()} Wh`;
-      resUseWh.textContent = `${Math.round(usableWh).toLocaleString()} Wh`;
-      resAppWatts.textContent = "0 W";
-      resBatWatts.textContent = "0 W";
-      resCurrent.textContent = "0.0 A";
-      resDailyWh.textContent = "0 Wh/day";
-      renderWarnings(warnings);
-      return;
-    }
-
-    // 6. Runtime Calculation
-    const runtimeHoursDecimal = usableWh / totalBatteryWatts;
-    const totalMinutes = Math.round(runtimeHoursDecimal * 60);
-    const hrs = Math.floor(totalMinutes / 60);
-    const mins = totalMinutes % 60;
-    const days = Math.floor(hrs / 24);
-    const remainingHrs = hrs % 24;
-
-    const timeFormatted = days > 0 ? `${days}d ${remainingHrs}h` : `${hrs}h ${mins}m`;
-    resTime.textContent = timeFormatted;
-
-    resHuman.textContent = days > 0 
-      ? `About ${days} day${days > 1 ? "s" : ""} and ${remainingHrs} hour${remainingHrs !== 1 ? "s" : ""} of backup`
-      : `About ${hrs} hour${hrs !== 1 ? "s" : ""} and ${mins} minute${mins !== 1 ? "s" : ""} of continuous runtime`;
-
-    // 7. Update Displays
-    resNomWh.textContent = `${Math.round(nominalWh).toLocaleString()} Wh`;
-    resUseWh.textContent = `${Math.round(usableWh).toLocaleString()} Wh`;
-    resAppWatts.textContent = `${Math.round(totalAppWatts).toLocaleString()} W`;
-    resBatWatts.textContent = `${Math.round(totalBatteryWatts).toLocaleString()} W`;
-
-    const estCurrent = totalBatteryWatts / totalBankVolt;
-    resCurrent.textContent = `${estCurrent.toFixed(1)} A`;
-    resDailyWh.textContent = `${Math.round(totalDailyWh).toLocaleString()} Wh/day`;
-
-    // 8. Progress Bar Updates
-    const usablePctBar = Math.min(100, Math.max(0, (dodPct - (dodPct * (reservePct / 100)))));
-    const reservePctBar = Math.min(100, Math.max(0, dodPct * (reservePct / 100)));
-    const cutPctBar = Math.max(0, 100 - dodPct);
-
-    barUsable.style.width = `${usablePctBar}%`;
-    barUsable.textContent = `${Math.round(usablePctBar)}%`;
-    barReserve.style.width = `${reservePctBar}%`;
-    barReserve.textContent = reservePctBar > 6 ? `${Math.round(reservePctBar)}%` : "";
-    barCutoff.style.width = `${cutPctBar}%`;
-    barCutoff.textContent = cutPctBar > 6 ? `${Math.round(cutPctBar)}%` : "";
-    visPct.textContent = `${Math.round(usablePctBar)}% Usable Energy`;
-
-    renderWarnings(warnings);
-    ariaLive.textContent = `Calculated backup time: ${timeFormatted}`;
-  }
-
-  function renderWarnings(warns) {
-    if (warns.length === 0) {
-      warningsBox.style.display = "none";
-      warningsBox.innerHTML = "";
-    } else {
-      warningsBox.style.display = "block";
-      warningsBox.innerHTML = warns.map(w => `<div class="brlc-alert brlc-alert-warn">${w}</div>`).join("");
-    }
-  }
-
-  function loadDemo() {
-    appliancesContainer.innerHTML = "";
-    appliancesContainer.appendChild(createApplianceRow({ name: "12V RV Refrigerator", watts: 45, qty: 1, type: "DC", duty: 35, hours: 24, surge: 75 }));
-    appliancesContainer.appendChild(createApplianceRow({ name: "Laptop Computer", watts: 65, qty: 1, type: "AC", duty: 100, hours: 8, surge: 90 }));
-    appliancesContainer.appendChild(createApplianceRow({ name: "Wi-Fi Router (DC)", watts: 20, qty: 1, type: "DC", duty: 100, hours: 24, surge: 20 }));
-    appliancesContainer.appendChild(createApplianceRow({ name: "LED Light Bulbs", watts: 25, qty: 1, type: "AC", duty: 50, hours: 5, surge: 25 }));
-
-    batVoltSelect.value = "12.8";
-    customVoltGroup.style.display = "none";
-    capacityInput.value = "100";
-    seriesCountInput.value = "1";
-    parallelCountInput.value = "1";
-    chemistrySelect.value = "lifepo4";
-    dodInput.value = "90";
-    reserveInput.value = "0";
-    inverterEffInput.value = "90";
-    idleWattsInput.value = "10";
-    inverterCapInput.value = "1000";
-    inverterSurgeInput.value = "2000";
-
-    calculate();
-  }
-
-  function reset() {
-    appliancesContainer.innerHTML = "";
-    appliancesContainer.appendChild(createApplianceRow({ name: "Custom Appliance", watts: 100, qty: 1, type: "AC", duty: 100, hours: 4, surge: 100 }));
-
-    batVoltSelect.value = "12.8";
-    customVoltGroup.style.display = "none";
-    customVoltInput.value = "12.8";
-    capacityInput.value = "100";
-    seriesCountInput.value = "1";
-    parallelCountInput.value = "1";
-    chemistrySelect.value = "lifepo4";
-    dodInput.value = "90";
-    reserveInput.value = "0";
-    inverterEffInput.value = "90";
-    idleWattsInput.value = "0";
-    inverterCapInput.value = "";
-    inverterSurgeInput.value = "";
-
-    calculate();
-  }
-
-  // Chemistry Presets
-  chemistrySelect.addEventListener("change", () => {
-    if (chemistrySelect.value === "lifepo4") {
-      dodInput.value = "90";
-    } else if (chemistrySelect.value === "liion") {
-      dodInput.value = "80";
-    }
-    calculate();
-  });
-
-  batVoltSelect.addEventListener("change", () => {
-    if (batVoltSelect.value === "custom") {
-      customVoltGroup.style.display = "flex";
-    } else {
-      customVoltGroup.style.display = "none";
-    }
-    calculate();
-  });
-
-  btnPresetBank.addEventListener("click", () => {
-    batVoltSelect.value = "12.8";
-    customVoltGroup.style.display = "none";
-    capacityInput.value = "100";
-    seriesCountInput.value = "1";
-    parallelCountInput.value = "1";
-    calculate();
-  });
-
-  btnAddApp.addEventListener("click", () => {
-    appliancesContainer.appendChild(createApplianceRow());
-    calculate();
-  });
-
-  btnLoadDemo.addEventListener("click", loadDemo);
-  btnReset.addEventListener("click", reset);
-  btnRecalc.addEventListener("click", calculate);
-
-  // Copy Summary Clipboard
-  btnCopy.addEventListener("click", () => {
-    const text = `100Ah Lithium Battery Runtime Summary:
-- Backup Runtime: ${resTime.textContent} (${resHuman.textContent})
-- Bank Capacity: ${resNomWh.textContent} (Usable: ${resUseWh.textContent})
-- Running Load: ${resAppWatts.textContent} (Battery Demand: ${resBatWatts.textContent})
-- Estimated Current: ${resCurrent.textContent}
-Calculated via: 100Ah Lithium Battery Runtime Calculator`;
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Summary copied to clipboard!");
-      }).catch(() => {
-        prompt("Copy your calculation summary:", text);
       });
-    } else {
-      prompt("Copy your calculation summary:", text);
+
+      const invEffFraction = Math.max(s.inverterEffPct / 100, 0.5);
+      const batterySideAC = acDemandWatts / invEffFraction;
+      const appliedInverterIdle = hasActiveAC ? s.inverterIdleW : 0;
+      const totalBatteryWatts = dcDemandWatts + batterySideAC + appliedInverterIdle;
+
+      const runtimeHours = totalBatteryWatts > 0 ? (usableWh / totalBatteryWatts) : 0;
+      const batteryAmps = bankVolts > 0 ? (totalBatteryWatts / bankVolts) : 0;
+      const dailyKwh = (totalBatteryWatts * 24) / 1000;
+
+      let warning = '';
+      const totalBmsCapA = s.bmsLimitA * s.parallel;
+      if (batteryAmps > totalBmsCapA) {
+        warning = `DANGER: Battery discharge current (${batteryAmps.toFixed(1)}A) exceeds safe BMS limit (${totalBmsCapA}A). The battery management system will shut down.`;
+      } else if (acDemandWatts > s.inverterRatingW) {
+        warning = `WARNING: AC appliances demand ${acDemandWatts.toFixed(0)}W, which exceeds your inverter's continuous rating (${s.inverterRatingW}W).`;
+      }
+
+      return {
+        bankVolts,
+        bankAh,
+        nominalWh,
+        usableWh,
+        activeWatts,
+        totalBatteryWatts,
+        runtimeHours,
+        batteryAmps,
+        dailyKwh,
+        warning
+      };
     }
-  });
 
-  btnPrint.addEventListener("click", () => {
-    window.print();
-  });
+    function formatHoursMinutes(decimalHours) {
+      if (!Number.isFinite(decimalHours) || decimalHours <= 0) return '0h 00m';
+      const totalMinutes = Math.round(decimalHours * 60);
+      const days = Math.floor(totalMinutes / (24 * 60));
+      const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
+      const mins = totalMinutes % 60;
 
-  // Attach live recalculation listeners
-  [
-    capacityInput, seriesCountInput, parallelCountInput, customVoltInput,
-    dodInput, reserveInput, inverterEffInput, idleWattsInput,
-    inverterCapInput, inverterSurgeInput
-  ].forEach(input => {
-    input.addEventListener("input", calculate);
-  });
+      if (days > 0) return `${days}d ${hours}h ${mins}m`;
+      return `${hours}h ${String(mins).padStart(2, '0')}m`;
+    }
 
-  // Boot tool
-  reset();
-})();
-</script>
+    function renderAppliances() {
+      appliancesContainer.innerHTML = '';
+      state.appliances.forEach((app, index) => {
+        const item = document.createElement('div');
+        item.className = 'appliance-item';
+        item.innerHTML = `
+          <div class="appliance-top">
+            <span style="font-weight: 700; font-size: 0.9rem;">Appliance #${index + 1}</span>
+            ${state.appliances.length > 1 ? `
+              <button type="button" class="btn btn-danger-text btn-del-app" data-id="${app.id}" aria-label="Remove ${escapeAttr(app.name)}">Remove</button>
+            ` : ''}
+          </div>
+          <div class="appliance-grid">
+            <div class="calc-form-group" style="margin-bottom: 0;">
+              <label for="app-name-${app.id}">Device Name</label>
+              <input type="text" id="app-name-${app.id}" class="calc-input app-field" data-id="${app.id}" data-prop="name" value="${escapeAttr(app.name)}">
+            </div>
+            <div class="calc-form-group" style="margin-bottom: 0;">
+              <label for="app-watts-${app.id}">Watts (W)</label>
+              <input type="number" id="app-watts-${app.id}" class="calc-input app-field" data-id="${app.id}" data-prop="watts" value="${app.watts}" min="1" step="1">
+            </div>
+            <div class="calc-form-group" style="margin-bottom: 0;">
+              <label for="app-duty-${app.id}">Duty Cycle (%)</label>
+              <input type="number" id="app-duty-${app.id}" class="calc-input app-field" data-id="${app.id}" data-prop="duty" value="${app.duty}" min="1" max="100" step="5">
+            </div>
+            <div class="calc-form-group" style="margin-bottom: 0;">
+              <label for="app-path-${app.id}">Current Path</label>
+              <select id="app-path-${app.id}" class="calc-select app-field" data-id="${app.id}" data-prop="isAC">
+                <option value="true" ${app.isAC ? 'selected' : ''}>AC (Inverter)</option>
+                <option value="false" ${!app.isAC ? 'selected' : ''}>DC (Direct 12V)</option>
+              </select>
+            </div>
+          </div>
+        `;
+        appliancesContainer.appendChild(item);
+      });
+    }
+
+    function escapeAttr(str) {
+      return String(str || '').replace(/"/g, '&quot;');
+    }
+
+    function updateCalculations() {
+      const metrics = calculateElectricalMetrics(state);
+
+      resRuntime.textContent = formatHoursMinutes(metrics.runtimeHours);
+      resRuntimeSub.textContent = metrics.runtimeHours > 0 
+        ? `${metrics.runtimeHours.toFixed(2)} decimal hours`
+        : 'No load connected';
+
+      resNominalWh.textContent = `${metrics.nominalWh.toLocaleString()} Wh (${(metrics.nominalWh / 1000).toFixed(2)} kWh)`;
+      resUsableWh.textContent = `${Math.round(metrics.usableWh).toLocaleString()} Wh`;
+      resActiveWatts.textContent = `${metrics.activeWatts.toFixed(1)} W`;
+      resBatteryWatts.textContent = `${metrics.totalBatteryWatts.toFixed(1)} W`;
+      resBatteryAmps.textContent = `${metrics.batteryAmps.toFixed(2)} A`;
+      resDailyKwh.textContent = `${metrics.dailyKwh.toFixed(2)} kWh / day`;
+
+      if (metrics.warning) {
+        safetyAlert.textContent = metrics.warning;
+        safetyAlert.className = 'alert-box show alert-danger';
+      } else {
+        safetyAlert.className = 'alert-box';
+      }
+
+      ariaLive.textContent = `Calculated runtime is ${formatHoursMinutes(metrics.runtimeHours)}`;
+    }
+
+    function attachEvents() {
+      voltageSelect.addEventListener('change', e => {
+        state.nominalVolts = parseFloat(e.target.value);
+        updateCalculations();
+      });
+      capacityInput.addEventListener('input', e => {
+        state.capacityAh = Math.max(0, parseFloat(e.target.value) || 0);
+        updateCalculations();
+      });
+      dodInput.addEventListener('input', e => {
+        state.dodPct = Math.min(100, Math.max(0, parseFloat(e.target.value) || 0));
+        updateCalculations();
+      });
+      inverterEffInput.addEventListener('input', e => {
+        state.inverterEffPct = Math.min(100, Math.max(10, parseFloat(e.target.value) || 90));
+        updateCalculations();
+      });
+
+      seriesInput.addEventListener('input', e => {
+        state.series = Math.max(1, parseInt(e.target.value, 10) || 1);
+        updateCalculations();
+      });
+      parallelInput.addEventListener('input', e => {
+        state.parallel = Math.max(1, parseInt(e.target.value, 10) || 1);
+        updateCalculations();
+      });
+      reserveInput.addEventListener('input', e => {
+        state.reservePct = Math.min(50, Math.max(0, parseFloat(e.target.value) || 0));
+        updateCalculations();
+      });
+      inverterIdleInput.addEventListener('input', e => {
+        state.inverterIdleW = Math.max(0, parseFloat(e.target.value) || 0);
+        updateCalculations();
+      });
+      bmsLimitInput.addEventListener('input', e => {
+        state.bmsLimitA = Math.max(1, parseFloat(e.target.value) || 100);
+        updateCalculations();
+      });
+      inverterRatingInput.addEventListener('input', e => {
+        state.inverterRatingW = Math.max(1, parseFloat(e.target.value) || 1000);
+        updateCalculations();
+      });
+
+      appliancesContainer.addEventListener('input', e => {
+        if (!e.target.classList.contains('app-field')) return;
+        const id = parseInt(e.target.dataset.id, 10);
+        const prop = e.target.dataset.prop;
+        const app = state.appliances.find(a => a.id === id);
+        if (!app) return;
+
+        if (prop === 'name') app.name = e.target.value;
+        else if (prop === 'watts') app.watts = Math.max(0, parseFloat(e.target.value) || 0);
+        else if (prop === 'duty') app.duty = Math.min(100, Math.max(0, parseFloat(e.target.value) || 0));
+        updateCalculations();
+      });
+
+      appliancesContainer.addEventListener('change', e => {
+        if (!e.target.classList.contains('app-field')) return;
+        const id = parseInt(e.target.dataset.id, 10);
+        const prop = e.target.dataset.prop;
+        if (prop === 'isAC') {
+          const app = state.appliances.find(a => a.id === id);
+          if (app) {
+            app.isAC = e.target.value === 'true';
+            updateCalculations();
+          }
+        }
+      });
+
+      appliancesContainer.addEventListener('click', e => {
+        if (!e.target.classList.contains('btn-del-app')) return;
+        const id = parseInt(e.target.dataset.id, 10);
+        if (state.appliances.length <= 1) return;
+        state.appliances = state.appliances.filter(a => a.id !== id);
+        renderAppliances();
+        updateCalculations();
+      });
+
+      document.getElementById('btn-add-appliance').addEventListener('click', () => {
+        state.appliances.push({ id: nextApplianceId++, name: 'New Appliance', watts: 50, qty: 1, duty: 100, isAC: true });
+        renderAppliances();
+        updateCalculations();
+      });
+
+      document.getElementById('btn-load-fridge').addEventListener('click', () => {
+        state.nominalVolts = 12.8;
+        voltageSelect.value = '12.8';
+        state.appliances = [
+          { id: 1, name: '12V RV Compressor Fridge', watts: 45, qty: 1, duty: 35, isAC: false },
+          { id: 2, name: 'LED Interior Lights', watts: 15, qty: 1, duty: 50, isAC: false }
+        ];
+        renderAppliances();
+        updateCalculations();
+      });
+
+      document.getElementById('btn-load-office').addEventListener('click', () => {
+        state.nominalVolts = 12.8;
+        voltageSelect.value = '12.8';
+        state.appliances = [
+          { id: 1, name: 'Laptop Computer', watts: 65, qty: 1, duty: 100, isAC: true },
+          { id: 2, name: 'Wi-Fi Mesh Router', watts: 15, qty: 1, duty: 100, isAC: true }
+        ];
+        renderAppliances();
+        updateCalculations();
+      });
+
+      document.getElementById('btn-reset').addEventListener('click', () => {
+        state.nominalVolts = 12.8;
+        state.capacityAh = 100;
+        state.dodPct = 90;
+        state.inverterEffPct = 90;
+        state.series = 1;
+        state.parallel = 1;
+        state.reservePct = 0;
+        state.inverterIdleW = 10;
+        state.bmsLimitA = 100;
+        state.inverterRatingW = 1000;
+        state.appliances = [
+          { id: 1, name: 'Continuous Appliance', watts: 100, qty: 1, duty: 100, isAC: true }
+        ];
+        voltageSelect.value = '12.8';
+        capacityInput.value = '100';
+        dodInput.value = '90';
+        inverterEffInput.value = '90';
+        renderAppliances();
+        updateCalculations();
+      });
+
+      tabQuick.addEventListener('click', () => {
+        tabQuick.classList.add('active');
+        tabAdvanced.classList.remove('active');
+        tabQuick.setAttribute('aria-selected', 'true');
+        tabAdvanced.setAttribute('aria-selected', 'false');
+        advancedDrawer.open = false;
+      });
+
+      tabAdvanced.addEventListener('click', () => {
+        tabAdvanced.classList.add('active');
+        tabQuick.classList.remove('active');
+        tabAdvanced.setAttribute('aria-selected', 'true');
+        tabQuick.setAttribute('aria-selected', 'false');
+        advancedDrawer.open = true;
+      });
+
+      document.getElementById('btn-copy-summary').addEventListener('click', async () => {
+        const m = calculateElectricalMetrics(state);
+        const report = [
+          `--- 100Ah Lithium Battery Runtime Summary ---`,
+          `Bank Configuration: ${m.bankVolts.toFixed(1)}V, ${m.bankAh}Ah (${state.series}S x ${state.parallel}P)`,
+          `Nominal Energy: ${m.nominalWh} Wh | Usable Energy: ${Math.round(m.usableWh)} Wh`,
+          `Continuous Active Load: ${m.activeWatts.toFixed(1)} W`,
+          `Battery-Side Draw (w/ Losses): ${m.totalBatteryWatts.toFixed(1)} W (${m.batteryAmps.toFixed(2)} A)`,
+          `Estimated Backup Runtime: ${formatHoursMinutes(m.runtimeHours)} (${m.runtimeHours.toFixed(2)} hrs)`,
+          `Calculated via: https://my-tool-app.pages.dev/100ah-lithium-battery-runtime-calculator/`
+        ].join('\n');
+
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(report);
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = report;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+          }
+          alert('Calculation summary copied to clipboard!');
+        } catch (e) {
+          alert('Could not auto-copy. Please copy manually.');
+        }
+      });
+
+      document.getElementById('btn-print').addEventListener('click', () => {
+        window.print();
+      });
+
+      document.querySelectorAll('.faq-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const card = btn.parentElement;
+          const isOpen = card.classList.contains('open');
+          card.classList.toggle('open', !isOpen);
+          btn.setAttribute('aria-expanded', !isOpen);
+        });
+      });
+    }
+
+    renderAppliances();
+    attachEvents();
+    updateCalculations();
+  })();
+  </script>
+</body>
+</html>
