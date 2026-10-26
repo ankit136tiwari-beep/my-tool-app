@@ -1,7 +1,17 @@
-<!-- START: Ecommerce Product Profit Margin Calculator Container -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ecommerce Profit Margin Calculator | Shipping & Fees</title>
+  <meta name="description" content="Calculate ecommerce profit after product cost, shipping, marketplace fees, payment charges and ads. Find margins, break-even and target price.">
+  <link rel="canonical" href="https://my-tool-app.pages.dev/ecommerce-profit-margin-calculator">
+</head>
+<body style="margin:0; padding:0; background:#f8fafc;">
+
+<!-- START: ECOMMERCE PROFIT MARGIN CALCULATOR COMPLETE TOOL -->
 <div id="iqvo-ecommerce-profit-calculator">
   <style>
-    /* Scoped CSS to prevent conflicts with Blogger and external themes */
     #iqvo-ecommerce-profit-calculator {
       --iqvo-bg: #f8fafc;
       --iqvo-card-bg: #ffffff;
@@ -33,7 +43,6 @@
       box-sizing: inherit;
     }
 
-    /* Headings & Typography */
     #iqvo-ecommerce-profit-calculator h1 {
       font-size: 1.85rem;
       font-weight: 800;
@@ -44,7 +53,7 @@
     }
 
     #iqvo-ecommerce-profit-calculator h2 {
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       font-weight: 700;
       margin: 32px 0 16px 0;
       color: var(--iqvo-text-main);
@@ -53,7 +62,7 @@
     }
 
     #iqvo-ecommerce-profit-calculator h3 {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 600;
       margin: 20px 0 8px 0;
       color: var(--iqvo-text-main);
@@ -70,7 +79,6 @@
       margin-bottom: 24px;
     }
 
-    /* Layout Grid */
     #iqvo-ecommerce-profit-calculator .calc-layout {
       display: grid;
       grid-template-columns: 1fr;
@@ -84,7 +92,6 @@
       }
     }
 
-    /* Cards */
     #iqvo-ecommerce-profit-calculator .calc-card {
       background: var(--iqvo-card-bg);
       border: 1px solid var(--iqvo-border);
@@ -94,7 +101,7 @@
     }
 
     #iqvo-ecommerce-profit-calculator .section-title {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 700;
       margin: 0 0 16px 0;
       display: flex;
@@ -103,7 +110,6 @@
       color: var(--iqvo-text-main);
     }
 
-    /* Forms & Inputs */
     #iqvo-ecommerce-profit-calculator .form-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -180,12 +186,11 @@
       padding-left: 28px;
     }
 
-    /* Buttons */
     #iqvo-ecommerce-profit-calculator .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 9px 16px;
+      padding: 9px 15px;
       font-size: 0.88rem;
       font-weight: 600;
       border-radius: 6px;
@@ -226,7 +231,6 @@
       margin: 16px 0;
     }
 
-    /* Collapsible Sections */
     #iqvo-ecommerce-profit-calculator details {
       margin-top: 14px;
       border: 1px solid var(--iqvo-border);
@@ -252,7 +256,6 @@
       padding: 16px;
     }
 
-    /* Results Dashboard */
     #iqvo-ecommerce-profit-calculator .results-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -302,7 +305,6 @@
       color: var(--iqvo-danger);
     }
 
-    /* Cost Breakdown Table */
     #iqvo-ecommerce-profit-calculator .table-responsive {
       overflow-x: auto;
       margin: 16px 0;
@@ -332,7 +334,6 @@
       border-bottom: none;
     }
 
-    /* Notifications & Modals */
     #iqvo-ecommerce-profit-calculator .toast {
       padding: 10px 14px;
       border-radius: 6px;
@@ -351,7 +352,6 @@
       border: 1px solid #fecaca;
     }
 
-    /* Saved Scenarios Table */
     #iqvo-ecommerce-profit-calculator .scenario-list {
       margin-top: 14px;
       display: flex;
@@ -369,7 +369,6 @@
       font-size: 0.85rem;
     }
 
-    /* Print View */
     @media print {
       #iqvo-ecommerce-profit-calculator {
         background: #fff !important;
@@ -427,7 +426,7 @@
             <span class="input-symbol-prefix" id="iqvo-sym-price">$</span>
             <input type="number" id="iqvo-selling-price" min="0" step="0.01" value="49.99">
           </div>
-          <span class="help-text">Original price displayed to customer</span>
+          <span class="help-text">Display price charged to customer</span>
         </div>
         <div class="field-group">
           <label for="iqvo-cogs">Product Cost (COGS) <span style="color:var(--iqvo-danger)">*</span></label>
@@ -435,7 +434,7 @@
             <span class="input-symbol-prefix" id="iqvo-sym-cogs">$</span>
             <input type="number" id="iqvo-cogs" min="0" step="0.01" value="15.00">
           </div>
-          <span class="help-text">Manufacturing or wholesale cost</span>
+          <span class="help-text">Direct manufacturing or wholesale cost</span>
         </div>
       </div>
 
@@ -459,11 +458,11 @@
             <span class="input-symbol-prefix" id="iqvo-sym-bship">$</span>
             <input type="number" id="iqvo-buyer-shipping" min="0" step="0.01" value="0.00">
           </div>
-          <span class="help-text">Collected from customer</span>
+          <span class="help-text">Shipping charged to customer</span>
         </div>
       </div>
 
-      <!-- Shipping & Fulfilment -->
+      <!-- Shipping & Logistics -->
       <div class="section-title" style="margin-top:24px;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
         <span>2. Shipping, Packaging & Logistics</span>
@@ -476,7 +475,7 @@
             <span class="input-symbol-prefix" id="iqvo-sym-ship">$</span>
             <input type="number" id="iqvo-ship-cost" min="0" step="0.01" value="5.50">
           </div>
-          <span class="help-text">Courier or carrier rate paid by seller</span>
+          <span class="help-text">Carrier fee paid by seller</span>
         </div>
         <div class="field-group">
           <label for="iqvo-packaging-cost">Packaging & Box Cost</label>
@@ -484,7 +483,7 @@
             <span class="input-symbol-prefix" id="iqvo-sym-pack">$</span>
             <input type="number" id="iqvo-packaging-cost" min="0" step="0.01" value="1.20">
           </div>
-          <span class="help-text">Boxes, poly mailers, labels, inserts</span>
+          <span class="help-text">Boxes, mailers, bubble wrap, labels</span>
         </div>
       </div>
 
@@ -503,14 +502,14 @@
             <span class="input-symbol-prefix" id="iqvo-sym-log">$</span>
             <input type="number" id="iqvo-other-logistics" min="0" step="0.01" value="0.00">
           </div>
-          <span class="help-text">Fuel surcharges or regional fees</span>
+          <span class="help-text">Fuel or residential surcharges</span>
         </div>
       </div>
 
       <!-- Marketplace & Payment Fees -->
       <div class="section-title" style="margin-top:24px;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        <span>3. Marketplace & Payment Processing Fees</span>
+        <span>3. Marketplace & Payment Fees</span>
       </div>
 
       <div class="form-grid form-grid-2">
@@ -523,7 +522,7 @@
             <option value="ebay">eBay Managed Payments (~13.25% + $0.30)</option>
             <option value="etsy">Etsy (~6.5% + 3% + $0.20)</option>
           </select>
-          <span class="help-text">Editable presets; verify actual channel fees</span>
+          <span class="help-text">Presets are illustrative; verify platform rates</span>
         </div>
         <div class="field-group">
           <label for="iqvo-fee-basis">Fee Calculation Basis</label>
@@ -532,7 +531,7 @@
             <option value="total">Order Total (Price + Buyer Shipping)</option>
             <option value="original">Original Selling Price</option>
           </select>
-          <span class="help-text">Basis platforms use to apply % commission</span>
+          <span class="help-text">Amount marketplace applies % to</span>
         </div>
       </div>
 
@@ -568,11 +567,10 @@
       <details>
         <summary>Show Advanced Options (Advertising, Returns, Taxes & Overheads)</summary>
         <div class="details-body">
-          <!-- Advertising -->
           <h3 style="margin-top:0;">Advertising & Marketing (Per Order)</h3>
           <div class="form-grid form-grid-2">
             <div class="field-group">
-              <label for="iqvo-ad-mode">Ad Cost Entry Mode</label>
+              <label for="iqvo-ad-mode">Ad Spend Mode</label>
               <select id="iqvo-ad-mode">
                 <option value="fixed">Fixed Ad Spend per Order</option>
                 <option value="pct">% of Product Revenue (Target ACoS)</option>
@@ -587,16 +585,15 @@
             </div>
           </div>
 
-          <!-- Returns and RTO -->
           <h3>Returns, Refunds & RTO Estimates</h3>
-          <p class="help-text">Estimates the statistical dilution of profit across completed sales.</p>
+          <p class="help-text">Dilutes order-level margins based on statistical probability of return.</p>
           <div class="form-grid form-grid-2">
             <div class="field-group">
-              <label for="iqvo-return-rate">Return / Refund Rate (%)</label>
+              <label for="iqvo-return-rate">Return / RTO Rate (%)</label>
               <input type="number" id="iqvo-return-rate" min="0" max="100" step="0.1" value="0.0">
             </div>
             <div class="field-group">
-              <label for="iqvo-return-loss">Net Loss per Return (Shipping + Scrapped Item)</label>
+              <label for="iqvo-return-loss">Average Net Loss per Return</label>
               <div class="input-symbol-wrap">
                 <span class="input-symbol-prefix" id="iqvo-sym-ret">$</span>
                 <input type="number" id="iqvo-return-loss" min="0" step="0.01" value="0.00">
@@ -604,7 +601,6 @@
             </div>
           </div>
 
-          <!-- Taxes -->
           <h3>Tax Treatment (Estimates Only)</h3>
           <div class="form-grid form-grid-2">
             <div class="field-group">
@@ -620,7 +616,6 @@
             </div>
           </div>
 
-          <!-- Operating Overheads -->
           <h3>Allocated Operating Fixed Costs</h3>
           <div class="form-grid form-grid-2">
             <div class="field-group">
@@ -656,7 +651,7 @@
         <span>Profitability Summary</span>
       </div>
 
-      <!-- Main Profit Metrics -->
+      <!-- Main Results -->
       <div class="results-grid">
         <div class="res-card highlight" id="iqvo-card-net">
           <div class="res-card-label">Net Profit / Order</div>
@@ -687,7 +682,7 @@
         </div>
       </div>
 
-      <!-- Solvers: Break-Even and Target Pricing -->
+      <!-- Strategic Solvers -->
       <h3 style="margin-top:20px; font-size:1rem;">Strategic Price Solvers</h3>
       <div class="results-grid">
         <div class="res-card" style="background:#eff6ff; border-color:#bfdbfe;">
@@ -705,7 +700,7 @@
         </div>
       </div>
 
-      <!-- Detailed Breakdown Table -->
+      <!-- Cost Breakdown Table -->
       <h3 style="margin-top:20px; font-size:1rem;">Cost & Revenue Breakdown (Per Order)</h3>
       <div class="table-responsive">
         <table>
@@ -717,7 +712,7 @@
             </tr>
           </thead>
           <tbody id="iqvo-breakdown-body">
-            <!-- Dynamically populated via JS -->
+            <!-- Populated dynamically via JS -->
           </tbody>
         </table>
       </div>
@@ -738,7 +733,7 @@
         </button>
       </div>
 
-      <!-- Local Saved Scenarios -->
+      <!-- Saved Scenarios -->
       <div id="iqvo-scenario-container" style="display:none; margin-top:16px;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <h4 style="margin:0; font-size:0.85rem; font-weight:700;">Saved Scenarios (Max 3)</h4>
@@ -749,12 +744,11 @@
     </div>
   </div>
 
-  <!-- CALCULATION ENGINE & UI SCRIPT -->
+  <!-- CALCULATION ENGINE SCRIPT -->
   <script>
     (function () {
       "use strict";
 
-      // Currency config
       var currencySymbols = {
         USD: "$",
         INR: "₹",
@@ -764,7 +758,6 @@
         AUD: "A$"
       };
 
-      // Form Elements Selection
       var elCurr = document.getElementById("iqvo-currency");
       var elProdName = document.getElementById("iqvo-prod-name");
       var elPrice = document.getElementById("iqvo-selling-price");
@@ -799,7 +792,6 @@
       var elOtherVar = document.getElementById("iqvo-other-variable");
       var elTargetMargin = document.getElementById("iqvo-target-margin-input");
 
-      // Output Elements
       var outNet = document.getElementById("iqvo-out-net-profit");
       var outMargin = document.getElementById("iqvo-out-margin");
       var outUnit = document.getElementById("iqvo-out-unit-profit");
@@ -813,7 +805,6 @@
       var cardNet = document.getElementById("iqvo-card-net");
       var cardMargin = document.getElementById("iqvo-card-margin");
 
-      // Toast utility
       function showToast(msg, isDanger) {
         var t = document.getElementById("iqvo-toast");
         t.textContent = msg;
@@ -824,13 +815,11 @@
         }, 4000);
       }
 
-      // Safe number parser
       function parseNum(val, defaultVal) {
         var n = parseFloat(val);
         return isNaN(n) ? (defaultVal || 0) : n;
       }
 
-      // Formatting helper
       function formatMoney(amount, sym) {
         var s = sym || currencySymbols[elCurr.value] || "$";
         var isNeg = amount < 0;
@@ -838,7 +827,6 @@
         return (isNeg ? "-" : "") + s + cleanAmt;
       }
 
-      // Dynamic currency symbol updates
       function updateSymbols() {
         var sym = currencySymbols[elCurr.value] || "$";
         var prefixIds = [
@@ -853,7 +841,6 @@
         });
       }
 
-      // Marketplace presets
       elFeePreset.addEventListener("change", function () {
         var v = elFeePreset.value;
         if (v === "shopify") {
@@ -880,7 +867,6 @@
         recalculate();
       });
 
-      // Ad mode change
       elAdMode.addEventListener("change", function () {
         if (elAdMode.value === "pct") {
           elAdValLabel.textContent = "Ad Spend (% of Revenue)";
@@ -892,7 +878,6 @@
         recalculate();
       });
 
-      // CORE CALCULATION ENGINE
       function runCalculations() {
         var sym = currencySymbols[elCurr.value] || "$";
         var price = Math.max(0, parseNum(elPrice.value, 0));
@@ -923,11 +908,9 @@
         var overhead = Math.max(0, parseNum(elOverhead.value, 0));
         var otherVar = Math.max(0, parseNum(elOtherVar.value, 0));
 
-        // 1. Selling Price & Discounts
         var discountedPricePerUnit = Math.max(0, price - discPerUnit);
         var grossItemRevenue = discountedPricePerUnit * qty;
 
-        // 2. Tax Extraction (if inclusive)
         var netItemRevenue = grossItemRevenue;
         var taxDeducted = 0;
         if (taxMode === "inclusive" && taxRate > 0) {
@@ -935,16 +918,10 @@
           taxDeducted = grossItemRevenue - netItemRevenue;
         }
 
-        // Net Order Revenue recognized by seller
         var totalOrderRevenue = netItemRevenue + buyerShip;
-
-        // 3. COGS
         var totalCogs = (cogs + otherVar) * qty;
-
-        // 4. Logistics
         var totalLogistics = shipCost + packCost + fulCost + otherLog;
 
-        // 5. Fee Basis
         var feeBasisVal = grossItemRevenue;
         var basisType = elFeeBasis.value;
         if (basisType === "total") {
@@ -957,31 +934,20 @@
         var totalPayFee = (feeBasisVal * payPct) + payFix;
         var combinedPlatformFees = totalMktFee + totalPayFee;
 
-        // 6. Advertising
         var adExpense = (adMode === "pct") ? (netItemRevenue * (adVal / 100)) : adVal;
-
-        // 7. Returns / RTO Expected Loss
         var expectedReturnCost = retRate * retLoss;
 
-        // 8. Total Expenses
         var totalVariableCosts = totalCogs + totalLogistics + combinedPlatformFees + adExpense + expectedReturnCost;
         var totalCosts = totalVariableCosts + overhead;
 
-        // 9. Profit Calculations
         var grossProfit = netItemRevenue - totalCogs;
         var netProfit = totalOrderRevenue - totalCosts;
         var netProfitPerUnit = qty > 0 ? (netProfit / qty) : 0;
 
-        // Margins & Ratios
         var marginPct = totalOrderRevenue > 0 ? ((netProfit / totalOrderRevenue) * 100) : 0;
         var markupPct = totalCogs > 0 ? ((grossProfit / totalCogs) * 100) : 0;
         var roiPct = totalCosts > 0 ? ((netProfit / totalCosts) * 100) : 0;
 
-        // 10. Genuine Break-Even Selling Price Solver
-        // Formula: Net Revenue(P) - Costs(P) = 0
-        // NetRev(P) = P * Q * TaxMultiplier + BuyerShip
-        // Variable Fee on P: P * Q * (mktPct + payPct) [+ (adVal/100 if pct)]
-        // Fixed costs: Total logistics + Fixed fees + COGS + Returns + Overhead
         var taxMultiplier = (taxMode === "inclusive" && taxRate > 0) ? (1 / (1 + taxRate)) : 1;
         var varFeeRate = (mktPct + payPct);
         if (adMode === "pct") {
@@ -1004,17 +970,13 @@
           isBreakevenFeasible = false;
         }
 
-        // 11. Target Margin Selling Price Solver
-        // Margin Target: M = Profit / TotalRev => Profit = M * TotalRev
-        // Rev(P) * (1 - M) = Costs(P)
         var targetMarginPct = Math.min(99, Math.max(1, parseNum(elTargetMargin.value, 40))) / 100;
         var targetDenominator = (qty * taxMultiplier * (1 - targetMarginPct)) - (qty * varFeeRate);
         var targetPrice = 0;
         var isTargetFeasible = true;
 
         if (targetDenominator > 0) {
-          var targetNumerator = allFixedExpenses - (buyerShip * (1 - targetMarginPct));
-          targetPrice = (allFixedExpenses) / targetDenominator;
+          targetPrice = allFixedExpenses / targetDenominator;
         } else {
           isTargetFeasible = false;
         }
@@ -1058,7 +1020,6 @@
         };
       }
 
-      // UI RENDERER
       function recalculate() {
         var r = runCalculations();
 
@@ -1069,7 +1030,6 @@
         outRoi.textContent = r.totalCosts > 0 ? (r.roiPct.toFixed(2) + "%") : "N/A";
         outGross.textContent = formatMoney(r.grossProfit, r.sym);
 
-        // Highlight cards based on profitability
         if (r.netProfit >= 0) {
           cardNet.className = "res-card highlight";
           cardMargin.className = "res-card highlight";
@@ -1078,21 +1038,18 @@
           cardMargin.className = "res-card negative";
         }
 
-        // Break-even
         if (r.isBreakevenFeasible && r.breakEvenPrice >= 0) {
           outBreakeven.textContent = formatMoney(r.breakEvenPrice, r.sym);
         } else {
           outBreakeven.textContent = "Not feasible";
         }
 
-        // Target Price
         if (r.isTargetFeasible && r.targetPrice >= 0) {
           outTarget.textContent = formatMoney(r.targetPrice, r.sym);
         } else {
           outTarget.textContent = "Unattainable";
         }
 
-        // Populate Table Breakdown
         var rows = [
           { name: "Product Cost (COGS)", basis: r.qty + " units @ " + formatMoney(r.cogs, r.sym), amount: "-" + formatMoney(r.totalCogs, r.sym) },
           { name: "Shipping & Handling Expenses", basis: "Outbound, packaging & 3PL", amount: "-" + formatMoney(r.totalLogistics, r.sym) },
@@ -1124,7 +1081,6 @@
         breakdownBody.innerHTML = tbodyHtml;
       }
 
-      // Event listeners for recalculation
       var inputs = document.querySelectorAll("#iqvo-ecommerce-profit-calculator input, #iqvo-ecommerce-profit-calculator select");
       for (var i = 0; i < inputs.length; i++) {
         inputs[i].addEventListener("input", recalculate);
@@ -1136,7 +1092,6 @@
         recalculate();
       });
 
-      // Load Example Data
       document.getElementById("iqvo-btn-example").addEventListener("click", function () {
         elPrice.value = "59.99";
         elCogs.value = "18.50";
@@ -1160,7 +1115,6 @@
         showToast("Illustrative example data loaded.");
       });
 
-      // Reset All
       document.getElementById("iqvo-btn-reset").addEventListener("click", function () {
         elPrice.value = "0.00";
         elCogs.value = "0.00";
@@ -1185,7 +1139,6 @@
         showToast("Calculator reset.");
       });
 
-      // Copy Results to Clipboard
       document.getElementById("iqvo-btn-copy").addEventListener("click", function () {
         var r = runCalculations();
         var txt = "Ecommerce Profit Calculation:\n" +
@@ -1213,7 +1166,6 @@
         }
       });
 
-      // Download CSV
       document.getElementById("iqvo-btn-csv").addEventListener("click", function () {
         var r = runCalculations();
         var csvContent = "data:text/csv;charset=utf-8," +
@@ -1239,7 +1191,6 @@
         document.body.removeChild(link);
       });
 
-      // LocalStorage Scenario Manager
       var scenarioContainer = document.getElementById("iqvo-scenario-container");
       var scenarioList = document.getElementById("iqvo-scenario-list");
       var STORAGE_KEY = "iqvo_ecom_scenarios";
@@ -1313,7 +1264,6 @@
         } catch (e) {}
       });
 
-      // Initial execution
       updateSymbols();
       recalculate();
       renderScenarios();
@@ -1323,7 +1273,7 @@
   <!-- CONTENT & SEO SECTIONS -->
   <section style="margin-top:40px;">
     <h2>Understanding Ecommerce Profit Margins</h2>
-    <p>In online retail, top-line sales figures often conceal critical unit-economic realities. High gross revenues can turn into net financial losses once carrier shipping, packaging boxes, marketplace commissions, payment processing charges, and customer acquisition costs (ACoS/CAC) are subtracted.</p>
+    <p>In online retail, high gross revenues can turn into net losses once carrier shipping, packaging boxes, marketplace commissions, payment processing charges, and customer acquisition costs (ACoS/CAC) are subtracted.</p>
     <p>Using a dedicated <strong>ecommerce profit margin calculator</strong> provides digital sellers, direct-to-consumer (DTC) brands, and multichannel merchants with visibility into their bottom line before listing inventory or deploying advertising capital.</p>
 
     <h2>Key Features of This Calculator</h2>
@@ -1348,14 +1298,12 @@
     <h2>Calculation Formulas</h2>
     <p>This calculator relies on established accounting definitions:</p>
     <ul>
-      <li><strong>Net Item Revenue:</strong> $$\text{Net Revenue} = (\text{Selling Price} - \text{Discount}) \times \text{Quantity}$$ (adjusted for sales tax if entered inclusive).</li>
-      <li><strong>Gross Profit:</strong> $$\text{Gross Profit} = \text{Net Item Revenue} - \text{COGS}$$</li>
-      <li><strong>Net Profit:</strong> $$\text{Net Profit} = \text{Total Revenue} - (\text{COGS} + \text{Logistics} + \text{Marketplace Fees} + \text{Payment Fees} + \text{Ad Spend} + \text{Returns} + \text{Overhead})$$</li>
-      <li><strong>Net Profit Margin (%):</strong> $$\text{Profit Margin} = \left(\frac{\text{Net Profit}}{\text{Total Revenue}}\right) \times 100$$</li>
-      <li><strong>Markup (%):</strong> $$\text{Markup} = \left(\frac{\text{Gross Profit}}{\text{COGS}}\right) \times 100$$</li>
-      <li><strong>Break-Even Selling Price ($P_{be}$):</strong> Derived where Net Profit equals zero in the presence of linear variable commission rates ($v$):
-        $$P_{be} = \frac{\text{Fixed Order Expenses}}{\text{Quantity} \times (1 - v)}$$
-      </li>
+      <li><strong>Net Item Revenue:</strong> (Selling Price - Discount) &times; Quantity (adjusted for sales tax if entered inclusive).</li>
+      <li><strong>Gross Profit:</strong> Net Item Revenue - Product COGS</li>
+      <li><strong>Net Profit:</strong> Total Revenue - (COGS + Logistics + Marketplace Fees + Payment Fees + Ad Spend + Returns + Overhead)</li>
+      <li><strong>Net Profit Margin (%):</strong> (Net Profit &divide; Total Revenue) &times; 100</li>
+      <li><strong>Markup (%):</strong> (Gross Profit &divide; COGS) &times; 100</li>
+      <li><strong>Break-Even Selling Price:</strong> Computed by dividing total fixed order costs by (Quantity &times; [1 - Variable Fee Rate]).</li>
     </ul>
 
     <h2>Practical Worked Example</h2>
@@ -1383,7 +1331,7 @@
       <li><strong>Ad Spend Thresholds:</strong> Determine your allowable cost per acquisition (CPA) before paid campaigns become unprofitable.</li>
     </ul>
 
-    <!-- FAQ SECTION WITH H3s -->
+    <!-- FAQ SECTION WITH H3 HEADINGS -->
     <h2>Frequently Asked Questions</h2>
 
     <h3>What is an ecommerce profit margin calculator?</h3>
@@ -1540,4 +1488,7 @@
   }
   </script>
 </div>
-<!-- END: Ecommerce Product Profit Margin Calculator Container -->
+<!-- END: ECOMMERCE PROFIT MARGIN CALCULATOR COMPLETE TOOL -->
+
+</body>
+</html>
