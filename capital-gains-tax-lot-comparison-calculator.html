@@ -1,0 +1,1876 @@
+<!-- ==========================================================================
+     CAPITAL GAINS TAX LOT COMPARISON CALCULATOR (COMPLETE ALL-IN-ONE CODE)
+     Website: My Tool App | Platform: Google Blogger Compatible
+     ========================================================================== -->
+
+<!-- 1. STYLESHEET (CSS) -->
+<style>
+.cglt-app {
+  --cglt-primary: #1e3a8a;
+  --cglt-primary-hover: #172554;
+  --cglt-accent: #2563eb;
+  --cglt-accent-hover: #1d4ed8;
+  --cglt-accent-light: #eff6ff;
+  --cglt-text-main: #0f172a;
+  --cglt-text-muted: #475569;
+  --cglt-text-light: #64748b;
+  --cglt-bg-surface: #ffffff;
+  --cglt-bg-canvas: #f8fafc;
+  --cglt-border: #e2e8f0;
+  --cglt-border-focus: #3b82f6;
+  --cglt-success: #15803d;
+  --cglt-success-bg: #f0fdf4;
+  --cglt-warning: #b45309;
+  --cglt-warning-bg: #fffbeb;
+  --cglt-danger: #b91c1c;
+  --cglt-danger-bg: #fef2f2;
+  --cglt-radius-sm: 4px;
+  --cglt-radius-md: 8px;
+  --cglt-radius-lg: 12px;
+  --cglt-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --cglt-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  box-sizing: border-box;
+  font-family: var(--cglt-font-sans);
+  color: var(--cglt-text-main);
+  background-color: var(--cglt-bg-canvas);
+  line-height: 1.5;
+  font-size: 16px;
+  padding: 1.5rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.cglt-app *,
+.cglt-app *::before,
+.cglt-app *::after {
+  box-sizing: inherit;
+}
+
+.cglt-app .cglt-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.cglt-app .cglt-breadcrumb {
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: var(--cglt-text-light);
+}
+
+.cglt-app .cglt-breadcrumb ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.cglt-app .cglt-breadcrumb li {
+  display: inline-flex;
+  align-items: center;
+}
+
+.cglt-app .cglt-breadcrumb a {
+  color: var(--cglt-accent);
+  text-decoration: none;
+}
+
+.cglt-app .cglt-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.cglt-app .cglt-breadcrumb-sep {
+  margin: 0 0.5rem;
+  color: var(--cglt-border);
+}
+
+.cglt-app .cglt-header {
+  margin-bottom: 2rem;
+}
+
+.cglt-app .cglt-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cglt-primary);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.cglt-app .cglt-subtitle {
+  font-size: 1.05rem;
+  color: var(--cglt-text-muted);
+  margin: 0;
+  max-width: 880px;
+}
+
+.cglt-app .cglt-card {
+  background: var(--cglt-bg-surface);
+  border: 1px solid var(--cglt-border);
+  border-radius: var(--cglt-radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--cglt-shadow-sm);
+  margin-bottom: 1.5rem;
+}
+
+.cglt-app .cglt-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--cglt-border);
+}
+
+.cglt-app .cglt-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--cglt-primary);
+  margin: 0;
+}
+
+.cglt-app .cglt-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cglt-app .cglt-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.cglt-app .cglt-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.cglt-app .cglt-grid-4 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .cglt-app .cglt-grid-2 { grid-template-columns: 1fr 1fr; }
+  .cglt-app .cglt-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .cglt-app .cglt-grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .cglt-app .cglt-grid-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+.cglt-app .cglt-field-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.85rem;
+}
+
+.cglt-app .cglt-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--cglt-text-main);
+  margin-bottom: 0.35rem;
+}
+
+.cglt-app .cglt-required {
+  color: var(--cglt-danger);
+}
+
+.cglt-app .cglt-input,
+.cglt-app .cglt-select {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--cglt-border);
+  border-radius: var(--cglt-radius-md);
+  font-size: 0.95rem;
+  color: var(--cglt-text-main);
+  background-color: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cglt-app .cglt-input:focus,
+.cglt-app .cglt-select:focus {
+  outline: none;
+  border-color: var(--cglt-border-focus);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.cglt-app .cglt-input-invalid {
+  border-color: var(--cglt-danger) !important;
+  background-color: var(--cglt-danger-bg) !important;
+}
+
+.cglt-app .cglt-field-error {
+  font-size: 0.775rem;
+  color: var(--cglt-danger);
+  margin-top: 0.25rem;
+  min-height: 1.1rem;
+}
+
+.cglt-app .cglt-hint {
+  font-size: 0.775rem;
+  color: var(--cglt-text-muted);
+  margin-top: 0.25rem;
+}
+
+.cglt-app .cglt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.1rem;
+  border-radius: var(--cglt-radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.cglt-app .cglt-btn-primary {
+  background-color: var(--cglt-accent);
+  color: #ffffff;
+}
+
+.cglt-app .cglt-btn-primary:hover {
+  background-color: var(--cglt-accent-hover);
+}
+
+.cglt-app .cglt-btn-secondary {
+  background-color: var(--cglt-accent-light);
+  color: var(--cglt-accent);
+  border-color: #bfdbfe;
+}
+
+.cglt-app .cglt-btn-secondary:hover {
+  background-color: #dbeafe;
+}
+
+.cglt-app .cglt-btn-outline {
+  background-color: transparent;
+  color: var(--cglt-text-muted);
+  border-color: var(--cglt-border);
+}
+
+.cglt-app .cglt-btn-outline:hover {
+  background-color: var(--cglt-bg-canvas);
+  color: var(--cglt-text-main);
+}
+
+.cglt-app .cglt-btn-danger {
+  background-color: transparent;
+  color: var(--cglt-danger);
+  border-color: #fca5a5;
+}
+
+.cglt-app .cglt-btn-danger:hover {
+  background-color: var(--cglt-danger-bg);
+}
+
+.cglt-app .cglt-btn-sm {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.8rem;
+}
+
+.cglt-app .cglt-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.55rem;
+  border-radius: var(--cglt-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.cglt-app .cglt-badge-verified {
+  background-color: var(--cglt-success-bg);
+  color: var(--cglt-success);
+  border: 1px solid #bbf7d0;
+}
+
+.cglt-app .cglt-badge-manual {
+  background-color: var(--cglt-warning-bg);
+  color: var(--cglt-warning);
+  border: 1px solid #fde68a;
+}
+
+.cglt-app .cglt-metric-card {
+  background-color: var(--cglt-bg-canvas);
+  border: 1px solid var(--cglt-border);
+  border-radius: var(--cglt-radius-md);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.cglt-app .cglt-metric-highlight {
+  background-color: var(--cglt-accent-light);
+  border-color: #bfdbfe;
+}
+
+.cglt-app .cglt-metric-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--cglt-text-muted);
+  letter-spacing: 0.025em;
+  margin-bottom: 0.25rem;
+}
+
+.cglt-app .cglt-metric-val {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--cglt-primary);
+  line-height: 1.15;
+  margin-bottom: 0.25rem;
+}
+
+.cglt-app .cglt-metric-sub {
+  font-size: 0.8rem;
+  color: var(--cglt-text-light);
+}
+
+.cglt-app .cglt-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--cglt-border);
+  border-radius: var(--cglt-radius-md);
+}
+
+.cglt-app .cglt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  text-align: left;
+  min-width: 680px;
+}
+
+.cglt-app .cglt-table th,
+.cglt-app .cglt-table td {
+  padding: 0.75rem 0.65rem;
+  border-bottom: 1px solid var(--cglt-border);
+  vertical-align: middle;
+}
+
+.cglt-app .cglt-table thead th {
+  background-color: var(--cglt-bg-canvas);
+  font-weight: 600;
+  color: var(--cglt-text-muted);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.cglt-app .cglt-table tr:last-child td {
+  border-bottom: none;
+}
+
+.cglt-app .cglt-table tr:hover td {
+  background-color: #f1f5f9;
+}
+
+.cglt-app .cglt-text-right { text-align: right; }
+.cglt-app .cglt-text-center { text-align: center; }
+.cglt-app .cglt-bold { font-weight: 700; }
+.cglt-app .cglt-positive { color: var(--cglt-success); }
+.cglt-app .cglt-negative { color: var(--cglt-danger); }
+
+.cglt-app .cglt-chart-container {
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  background-color: var(--cglt-bg-canvas);
+  border: 1px solid var(--cglt-border);
+  border-radius: var(--cglt-radius-md);
+}
+
+.cglt-app .cglt-chart-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--cglt-text-main);
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cglt-app .cglt-chart-svg {
+  width: 100%;
+  height: 240px;
+  overflow: visible;
+}
+
+.cglt-app .cglt-disclaimer {
+  padding: 1rem;
+  border: 1px solid #fed7aa;
+  background-color: #fffaf5;
+  border-radius: var(--cglt-radius-md);
+  font-size: 0.825rem;
+  color: #9a3412;
+  margin-top: 1.5rem;
+}
+
+.cglt-app .cglt-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cglt-app .cglt-accordion-item {
+  border: 1px solid var(--cglt-border);
+  border-radius: var(--cglt-radius-md);
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.cglt-app .cglt-accordion-header {
+  padding: 0.9rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  background-color: var(--cglt-bg-surface);
+  user-select: none;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cglt-app .cglt-accordion-header::-webkit-details-marker { display: none; }
+
+.cglt-app .cglt-accordion-header::after {
+  content: "+";
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--cglt-text-light);
+}
+
+.cglt-app details[open] .cglt-accordion-header::after {
+  content: "\2212";
+}
+
+.cglt-app .cglt-accordion-body {
+  padding: 1rem 1.1rem;
+  font-size: 0.9rem;
+  color: var(--cglt-text-muted);
+  line-height: 1.6;
+  border-top: 1px solid var(--cglt-border);
+}
+
+.cglt-app .cglt-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.cglt-app .cglt-modal {
+  background: #ffffff;
+  border-radius: var(--cglt-radius-lg);
+  max-width: 550px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+@media print {
+  body * { visibility: hidden; }
+  .cglt-app, .cglt-app * { visibility: visible; }
+  .cglt-app {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    background: none;
+  }
+  .cglt-app .cglt-card-actions,
+  .cglt-app .cglt-btn,
+  .cglt-app .cglt-accordion,
+  .cglt-app .cglt-breadcrumb {
+    display: none !important;
+  }
+}
+</style>
+
+<!-- 2. SEMANTIC HTML LAYOUT -->
+<div class="cglt-app" id="cglt-app-root">
+
+  <div id="cglt-live-announcer" class="cglt-sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Breadcrumbs -->
+  <nav class="cglt-breadcrumb" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="https://my-tool-app.pages.dev/">Financial Calculators</a></li>
+      <li aria-hidden="true" class="cglt-breadcrumb-sep">/</li>
+      <li><span aria-current="page">Capital Gains Tax Lot Comparison Calculator</span></li>
+    </ol>
+  </nav>
+
+  <!-- Header -->
+  <header class="cglt-header">
+    <h1 class="cglt-title">Capital Gains Tax Lot Comparison Calculator</h1>
+    <p class="cglt-subtitle">
+      Evaluate multiple investment tax lots and compare selling strategies including FIFO, LIFO, HIFO, LOFO, 
+      Average Cost, and Specific Identification. Model cost basis, holding periods, realized gains, and estimated taxes.
+    </p>
+  </header>
+
+  <!-- 1. Jurisdiction & Tax Year Settings -->
+  <section class="cglt-card" aria-labelledby="cglt-jurisdiction-heading">
+    <div class="cglt-card-header">
+      <h2 id="cglt-jurisdiction-heading" class="cglt-card-title">1. Jurisdiction &amp; Tax Year Configuration</h2>
+      <span id="cglt-rule-status-badge" class="cglt-badge cglt-badge-verified">Verified Rule Set Available</span>
+    </div>
+
+    <div class="cglt-grid-4">
+      <div class="cglt-field-group">
+        <label for="cglt-country" class="cglt-label">Tax Jurisdiction</label>
+        <select id="cglt-country" class="cglt-select">
+          <option value="US" selected>United States (IRS Rules)</option>
+          <option value="UK">United Kingdom (HMRC Rules)</option>
+          <option value="CA">Canada (CRA Rules)</option>
+          <option value="AU">Australia (ATO Rules)</option>
+          <option value="IN">India (ITD Rules)</option>
+          <option value="MANUAL">Manual / Custom Tax Rules</option>
+        </select>
+      </div>
+
+      <div class="cglt-field-group">
+        <label for="cglt-tax-year" class="cglt-label">Tax Year</label>
+        <select id="cglt-tax-year" class="cglt-select">
+          <option value="2026" selected>2026</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+        </select>
+      </div>
+
+      <div class="cglt-field-group">
+        <label for="cglt-currency" class="cglt-label">Currency Symbol</label>
+        <select id="cglt-currency" class="cglt-select">
+          <option value="USD" selected>USD ($)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="CAD">CAD ($)</option>
+          <option value="AUD">AUD ($)</option>
+          <option value="INR">INR (₹)</option>
+        </select>
+      </div>
+
+      <div class="cglt-field-group">
+        <label for="cglt-asset-type" class="cglt-label">Asset Class</label>
+        <select id="cglt-asset-type" class="cglt-select">
+          <option value="stocks" selected>Public Equities / Stocks</option>
+          <option value="etf">ETFs / Mutual Funds</option>
+          <option value="crypto">Cryptocurrency / Digital Assets</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="cglt-tax-rate-container" class="cglt-grid-3" style="margin-top: 0.5rem;">
+      <div class="cglt-field-group">
+        <label for="cglt-st-rate" class="cglt-label">Estimated Short-Term Rate (%)</label>
+        <input type="number" id="cglt-st-rate" class="cglt-input" value="32.0" step="0.1" min="0" max="100" />
+        <span class="cglt-hint">Ordinary income bracket estimate</span>
+      </div>
+
+      <div class="cglt-field-group">
+        <label for="cglt-lt-rate" class="cglt-label">Estimated Long-Term Rate (%)</label>
+        <input type="number" id="cglt-lt-rate" class="cglt-input" value="15.0" step="0.1" min="0" max="100" />
+        <span class="cglt-hint">Preferential rate for holdings &gt; 1 yr</span>
+      </div>
+
+      <div class="cglt-field-group">
+        <label for="cglt-state-rate" class="cglt-label">State / Regional Tax Rate (%)</label>
+        <input type="number" id="cglt-state-rate" class="cglt-input" value="5.0" step="0.1" min="0" max="100" />
+        <span class="cglt-hint">Optional regional/state tax estimate</span>
+      </div>
+    </div>
+    <div id="cglt-jurisdiction-note" class="cglt-hint" style="margin-top: 0.5rem;">
+      US IRS rules apply: Assets held &gt; 365 days qualify for long-term capital gains tax rates.
+    </div>
+  </section>
+
+  <!-- 2. Planned Sale Transaction -->
+  <section class="cglt-card" aria-labelledby="cglt-planned-sale-heading">
+    <div class="cglt-card-header">
+      <h2 id="cglt-planned-sale-heading" class="cglt-card-title">2. Planned Sale Transaction</h2>
+      <div class="cglt-card-actions">
+        <button type="button" id="cglt-btn-sample-data" class="cglt-btn cglt-btn-secondary cglt-btn-sm">Load Sample Portfolio</button>
+        <button type="button" id="cglt-btn-reset-all" class="cglt-btn cglt-btn-outline cglt-btn-sm">Reset</button>
+      </div>
+    </div>
+
+    <div class="cglt-grid-4">
+      <div class="cglt-field-group">
+        <label for="cglt-asset-symbol" class="cglt-label">Asset Ticker / Symbol</label>
+        <input type="text" id="cglt-asset-symbol" class="cglt-input" value="AAPL" maxlength="12" />
+      </div>
+
+      <div class="cglt-field-group">
+        <label for="cglt-sale-qty" class="cglt-label">Quantity to Sell <span class="cglt-required">*</span></label>
+        <input type="number" id="cglt-sale-qty" class="cglt-input" value="150" min="0.0001" step="any" required />
+        <span class="cglt-field-error" id="err-cglt-sale-qty"></span>
+      </div>
+
+      <div class="cglt-field-group">
+        <label for="cglt-sale-price" class="cglt-label">Sale Price per Unit <span class="cglt-required">*</span></label>
+        <input type="number" id="cglt-sale-price" class="cglt-input" value="230.00" min="0.0001" step="0.01" required />
+        <span class="cglt-field-error" id="err-cglt-sale-price"></span>
+      </div>
+
+      <div class="cglt-field-group">
+        <label for="cglt-sale-date" class="cglt-label">Execution / Sale Date <span class="cglt-required">*</span></label>
+        <input type="date" id="cglt-sale-date" class="cglt-input" value="2026-10-26" required />
+        <span class="cglt-field-error" id="err-cglt-sale-date"></span>
+      </div>
+    </div>
+
+    <div class="cglt-grid-2">
+      <div class="cglt-field-group">
+        <label for="cglt-selling-fees" class="cglt-label">Total Selling Fees / Commissions ($)</label>
+        <input type="number" id="cglt-selling-fees" class="cglt-input" value="15.00" min="0" step="0.01" />
+        <span class="cglt-hint">Deductible transaction costs allocated proportionally to sold units</span>
+      </div>
+      <div class="cglt-field-group">
+        <label for="cglt-baseline-strategy" class="cglt-label">Comparison Baseline Strategy</label>
+        <select id="cglt-baseline-strategy" class="cglt-select">
+          <option value="FIFO" selected>FIFO (First-In, First-Out)</option>
+          <option value="HIFO">HIFO (Highest-In, First-Out)</option>
+          <option value="LIFO">LIFO (Last-In, First-Out)</option>
+          <option value="LOFO">LOFO (Lowest-In, First-Out)</option>
+          <option value="AVG">Average Cost Basis</option>
+        </select>
+        <span class="cglt-hint">Benchmark used to calculate tax savings delta</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Tax Lot Inventory Manager -->
+  <section class="cglt-card" aria-labelledby="cglt-lots-heading">
+    <div class="cglt-card-header">
+      <h2 id="cglt-lots-heading" class="cglt-card-title">3. Investment Tax Lot Inventory</h2>
+      <div class="cglt-card-actions">
+        <button type="button" id="cglt-btn-add-lot" class="cglt-btn cglt-btn-primary cglt-btn-sm">+ Add Lot</button>
+        <button type="button" id="cglt-btn-import-csv" class="cglt-btn cglt-btn-outline cglt-btn-sm">Import CSV</button>
+        <button type="button" id="cglt-btn-export-lots" class="cglt-btn cglt-btn-outline cglt-btn-sm">Export Lots CSV</button>
+        <input type="file" id="cglt-file-input" accept=".csv" style="display: none;" />
+      </div>
+    </div>
+
+    <div class="cglt-table-responsive">
+      <table class="cglt-table" id="cglt-lots-table" aria-label="Tax Lot Holdings Inventory">
+        <thead>
+          <tr>
+            <th scope="col">Lot ID</th>
+            <th scope="col">Acquisition Date</th>
+            <th scope="col" class="cglt-text-right">Available Qty</th>
+            <th scope="col" class="cglt-text-right">Unit Price</th>
+            <th scope="col" class="cglt-text-right">Acq. Costs</th>
+            <th scope="col" class="cglt-text-right">Adjusted Basis/Unit</th>
+            <th scope="col" class="cglt-text-right">Total Basis</th>
+            <th scope="col">Holding Term</th>
+            <th scope="col" class="cglt-text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="cglt-lots-tbody"></tbody>
+        <tfoot>
+          <tr style="background: var(--cglt-bg-canvas); font-weight: 600;">
+            <td colspan="2">Inventory Totals</td>
+            <td class="cglt-text-right" id="cglt-inv-total-qty">0</td>
+            <td colspan="3"></td>
+            <td class="cglt-text-right" id="cglt-inv-total-basis">$0.00</td>
+            <td colspan="2"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Specific Identification Allocator Sub-Section -->
+    <div id="cglt-specific-id-panel" style="margin-top: 1rem; padding: 1rem; background: var(--cglt-bg-canvas); border: 1px dashed var(--cglt-border); border-radius: var(--cglt-radius-md);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
+        <h3 style="font-size: 0.95rem; font-weight: 600; margin:0; color: var(--cglt-primary);">Specific Identification Allocator</h3>
+        <span id="cglt-spec-alloc-status" class="cglt-badge cglt-badge-manual">0 / 0 Allocated</span>
+      </div>
+      <p class="cglt-hint" style="margin-bottom: 0.75rem;">
+        Assign the exact number of shares/units to sell from each specific tax lot. The sum must exactly match your planned sale quantity.
+      </p>
+      <div id="cglt-spec-id-inputs-grid" class="cglt-grid-3"></div>
+    </div>
+  </section>
+
+  <!-- 4. Comparison Dashboard & Results -->
+  <section class="cglt-card" aria-labelledby="cglt-results-heading">
+    <div class="cglt-card-header">
+      <h2 id="cglt-results-heading" class="cglt-card-title">4. Strategy Comparison Results</h2>
+      <div class="cglt-card-actions">
+        <button type="button" id="cglt-btn-export-comparison" class="cglt-btn cglt-btn-outline cglt-btn-sm">Export Strategy CSV</button>
+        <button type="button" id="cglt-btn-print" class="cglt-btn cglt-btn-secondary cglt-btn-sm">Print / Save PDF</button>
+      </div>
+    </div>
+
+    <div class="cglt-grid-4" id="cglt-summary-hero">
+      <div class="cglt-metric-card cglt-metric-highlight">
+        <span class="cglt-metric-title">Optimal Strategy (Lowest Tax)</span>
+        <span class="cglt-metric-val" id="res-optimal-strategy">--</span>
+        <span class="cglt-metric-sub" id="res-optimal-desc">Based on current inputs</span>
+      </div>
+      <div class="cglt-metric-card">
+        <span class="cglt-metric-title">Estimated Tax (Optimal)</span>
+        <span class="cglt-metric-val" id="res-optimal-tax">$0.00</span>
+        <span class="cglt-metric-sub" id="res-optimal-tax-diff">-- vs baseline</span>
+      </div>
+      <div class="cglt-metric-card">
+        <span class="cglt-metric-title">Net Realized Gain/Loss</span>
+        <span class="cglt-metric-val" id="res-optimal-gain">$0.00</span>
+        <span class="cglt-metric-sub" id="res-optimal-gain-char">-- Short / -- Long</span>
+      </div>
+      <div class="cglt-metric-card">
+        <span class="cglt-metric-title">Estimated Net Proceeds</span>
+        <span class="cglt-metric-val" id="res-optimal-proceeds">$0.00</span>
+        <span class="cglt-metric-sub">After estimated tax &amp; fees</span>
+      </div>
+    </div>
+
+    <div class="cglt-chart-container">
+      <div class="cglt-chart-title">
+        <span>Estimated Tax Liability by Lot-Selection Strategy</span>
+        <span style="font-size:0.8rem; color:var(--cglt-text-muted);">Lower is more tax-efficient today</span>
+      </div>
+      <svg id="cglt-comparison-svg" class="cglt-chart-svg" aria-label="Bar chart showing tax liability by strategy" role="img"></svg>
+    </div>
+
+    <div class="cglt-table-responsive">
+      <table class="cglt-table" id="cglt-comparison-table" aria-label="Strategy Side-by-Side Comparison">
+        <thead>
+          <tr>
+            <th scope="col">Strategy</th>
+            <th scope="col" class="cglt-text-right">Gross Proceeds</th>
+            <th scope="col" class="cglt-text-right">Cost Basis Sold</th>
+            <th scope="col" class="cglt-text-right">Short-Term Gain</th>
+            <th scope="col" class="cglt-text-right">Long-Term Gain</th>
+            <th scope="col" class="cglt-text-right">Net Realized Gain</th>
+            <th scope="col" class="cglt-text-right">Estimated Tax</th>
+            <th scope="col" class="cglt-text-right">After-Tax Proceeds</th>
+            <th scope="col" class="cglt-text-right">Tax vs Baseline</th>
+          </tr>
+        </thead>
+        <tbody id="cglt-comparison-tbody"></tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size: 1.05rem; font-weight: 600; color: var(--cglt-primary); margin: 1.5rem 0 0.5rem 0;">
+      Remaining Portfolio Holdings Post-Sale
+    </h3>
+    <div class="cglt-table-responsive">
+      <table class="cglt-table" id="cglt-remaining-table" aria-label="Remaining Portfolio Metrics">
+        <thead>
+          <tr>
+            <th scope="col">Strategy</th>
+            <th scope="col" class="cglt-text-right">Remaining Units</th>
+            <th scope="col" class="cglt-text-right">Remaining Cost Basis</th>
+            <th scope="col" class="cglt-text-right">Avg Basis / Unit</th>
+            <th scope="col" class="cglt-text-right">Unrealized Gain / (Loss)</th>
+          </tr>
+        </thead>
+        <tbody id="cglt-remaining-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="cglt-disclaimer" role="note">
+      <strong>Important Tax Disclaimer:</strong> This calculator provides estimates for educational and informational 
+      purposes only. It does not provide personalized tax, legal, or investment advice. Results depend on the accuracy 
+      of your inputs, the selected jurisdiction, applicable tax-year rules, and individual circumstances. The calculator 
+      may not include every exemption, deduction, adjustment, surtax (such as the US Net Investment Income Tax / NIIT), 
+      wash sale restriction under IRC § 1091, or state-specific nuances. Verify your situation using official tax 
+      guidance or consult a qualified CPA or tax attorney before executing transactions.
+    </div>
+  </section>
+
+  <!-- 5. Edit/Add Lot Modal Dialog -->
+  <div id="cglt-lot-modal" class="cglt-modal-backdrop" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="cglt-modal-title">
+    <div class="cglt-modal">
+      <h3 id="cglt-modal-title" style="margin-top:0; color:var(--cglt-primary);">Add Investment Tax Lot</h3>
+      <form id="cglt-lot-form" novalidate>
+        <input type="hidden" id="cglt-modal-lot-index" value="-1" />
+        
+        <div class="cglt-field-group">
+          <label for="cglt-modal-lot-id" class="cglt-label">Lot Identifier</label>
+          <input type="text" id="cglt-modal-lot-id" class="cglt-input" required />
+        </div>
+
+        <div class="cglt-field-group">
+          <label for="cglt-modal-acq-date" class="cglt-label">Acquisition Date <span class="cglt-required">*</span></label>
+          <input type="date" id="cglt-modal-acq-date" class="cglt-input" required />
+          <span class="cglt-field-error" id="err-modal-date"></span>
+        </div>
+
+        <div class="cglt-field-group">
+          <label for="cglt-modal-qty" class="cglt-label">Quantity Acquired <span class="cglt-required">*</span></label>
+          <input type="number" id="cglt-modal-qty" class="cglt-input" min="0.0001" step="any" required />
+          <span class="cglt-field-error" id="err-modal-qty"></span>
+        </div>
+
+        <div class="cglt-field-group">
+          <label for="cglt-modal-price" class="cglt-label">Purchase Price per Unit <span class="cglt-required">*</span></label>
+          <input type="number" id="cglt-modal-price" class="cglt-input" min="0.0001" step="0.01" required />
+          <span class="cglt-field-error" id="err-modal-price"></span>
+        </div>
+
+        <div class="cglt-field-group">
+          <label for="cglt-modal-costs" class="cglt-label">Acquisition Costs / Commissions ($)</label>
+          <input type="number" id="cglt-modal-costs" class="cglt-input" min="0" step="0.01" value="0.00" />
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1.5rem;">
+          <button type="button" id="cglt-btn-modal-cancel" class="cglt-btn cglt-btn-outline">Cancel</button>
+          <button type="submit" id="cglt-btn-modal-save" class="cglt-btn cglt-btn-primary">Save Lot</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. In-Depth Informational SEO Content -->
+  <section class="cglt-card" style="margin-top:2rem;">
+    <h2>Understanding Capital Gains Tax Lots and Disposition Strategies</h2>
+    <p>
+      When an investor purchases shares of a company, exchange-traded fund (ETF), or cryptocurrency across multiple dates, 
+      each transaction creates a distinct <strong>tax lot</strong> with its own cost basis and purchase date. When deciding 
+      to liquidate a partial holding, selecting which specific lots to dispose of dramatically influences the net realized 
+      gain or loss, holding period characterization, and resulting tax liability.
+    </p>
+
+    <h3>Key Lot Selection Strategies Compared</h3>
+    <ul>
+      <li><strong>FIFO (First-In, First-Out):</strong> Sells the oldest acquired shares first. In rising markets, FIFO usually triggers larger capital gains because earlier purchase prices are often lower.</li>
+      <li><strong>LIFO (Last-In, First-Out):</strong> Disposes of the most recently acquired units first. This frequently generates short-term capital gains, which are taxed at higher ordinary income rates in the US.</li>
+      <li><strong>HIFO (Highest-In, First-Out):</strong> Sells units with the highest adjusted cost basis first, maximizing immediate capital losses or minimizing taxable gains.</li>
+      <li><strong>LOFO (Lowest-In, First-Out):</strong> Sells lots with the lowest cost basis first. Useful when an investor wants to accelerate taxable gains (e.g., during low-income tax years).</li>
+      <li><strong>Average Cost Basis:</strong> Divides total cumulative basis across all units. Primarily permitted for mutual funds and dividend reinvestment plans (DRIPs) under US IRC Treas. Reg. § 1.1012-1(e).</li>
+      <li><strong>Specific Identification:</strong> Allows the taxpayer to instruct their broker exactly which designated certificates or lots to sell prior to settlement.</li>
+    </ul>
+
+    <h3>Holding Period: Short-Term vs. Long-Term</h3>
+    <p>
+      Under US tax law (IRS Publication 550), assets held for <strong>one year or less</strong> (365 days or fewer) generate short-term capital gains, 
+      taxed at marginal ordinary income rates up to 37%. Assets held for <strong>more than one year</strong> (at least 366 days) qualify for preferential 
+      long-term capital gains rates (0%, 15%, or 20%), plus an applicable 3.8% Net Investment Income Tax (NIIT) for higher earners.
+    </p>
+
+    <h2>How to Use This Tax Lot Calculator</h2>
+    <ol>
+      <li><strong>Configure Rules:</strong> Select your tax jurisdiction and review estimated short-term and long-term tax rates.</li>
+      <li><strong>Input Planned Sale:</strong> Enter the number of shares you plan to liquidate, target execution price, and transaction date.</li>
+      <li><strong>Manage Holdings:</strong> Add existing tax lots manually or upload a standard broker CSV export.</li>
+      <li><strong>Review Results:</strong> Examine the strategy comparison table to determine which method delivers the lowest current tax drag or best fits your long-term wealth strategy.</li>
+      <li><strong>Save &amp; Execute:</strong> Export a detailed CSV report or print a copy to discuss with your certified tax professional or financial advisor.</li>
+    </ol>
+  </section>
+
+  <!-- 7. 15 Comprehensive FAQs -->
+  <section class="cglt-card" aria-labelledby="cglt-faq-heading">
+    <h2 id="cglt-faq-heading">Frequently Asked Questions</h2>
+    <div class="cglt-accordion">
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">What is a capital gains tax lot comparison calculator?</summary>
+        <div class="cglt-accordion-body">
+          It is an analytical financial tool that calculates realized gains, losses, and estimated taxes across different accounting methodologies (such as FIFO, LIFO, and HIFO) when selling securities acquired at different dates and prices.
+        </div>
+      </details>
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">How does FIFO affect capital gains?</summary>
+        <div class="cglt-accordion-body">
+          First-In, First-Out sells your oldest acquired shares first. If the asset has appreciated over time, FIFO usually results in higher realized capital gains, though those gains are more likely to qualify for lower long-term tax rates.
+        </div>
+      </details>
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">What is specific identification of tax lots?</summary>
+        <div class="cglt-accordion-body">
+          Specific identification is an IRS-recognized method where an investor specifies to their broker the exact lot (by purchase date and cost) to be sold prior to transaction settlement, providing maximum control over tax outcomes.
+        </div>
+      </details>
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">How do I compare FIFO with specific-lot selection?</summary>
+        <div class="cglt-accordion-body">
+          By modeling both side by side in this calculator. FIFO sells chronologically, whereas specific identification allows you to selectively sell lots with the highest cost basis (HIFO) to reduce current tax liability.
+        </div>
+      </details>
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">What is adjusted cost basis?</summary>
+        <div class="cglt-accordion-body">
+          Adjusted cost basis is the net original purchase price of an asset plus eligible acquisition commissions, purchase fees, and reinvested dividends, adjusted for corporate actions such as stock splits or returns of capital.
+        </div>
+      </details>
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">How are realized capital gains calculated?</summary>
+        <div class="cglt-accordion-body">
+          Realized capital gain equals the Net Sale Proceeds (Gross Sale Price minus selling costs) minus the Allocated Adjusted Cost Basis of the specific shares sold.
+        </div>
+      </details>
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">What is the difference between realized and unrealized gains?</summary>
+        <div class="cglt-accordion-body">
+          An unrealized ("paper") gain reflects the increase in value of an asset you still hold. A realized gain occurs when you execute an actual sale, closing the position and generating a taxable event.
+        </div>
+      </details>
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">How does the holding period affect capital gains tax?</summary>
+        <div class="cglt-accordion-body">
+          In the United States, assets held for 365 days or less are classified as short-term and taxed at higher ordinary income rates. Holdings held for more than 365 days receive preferential long-term tax treatment.
+        </div>
+      </details>
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">Can I compare short-term and long-term capital gains?</summary>
+        <div class="cglt-accordion-body">
+          Yes. The comparison table automatically splits realized gains into short-term and long-term buckets for each strategy, applying the appropriate tax rate to each category.
+        </div>
+      </details>
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">Does the lowest-tax strategy always provide the best financial outcome?</summary>
+        <div class="cglt-accordion-body">
+          Not always. While HIFO minimizes immediate taxes today, it leaves your remaining portfolio with a lower average cost basis, potentially creating higher taxable gains in future sales.
+        </div>
+      </details>
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">Can this calculator compare cryptocurrency tax lots?</summary>
+        <div class="cglt-accordion-body">
+          Yes. You can switch the asset class selector to Cryptocurrency. The tool handles fractional decimal units and evaluates cost basis strategies for digital assets under IRS Notice 2014-21 guidance.
+        </div>
+      </details>
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">Can I use the calculator for different countries?</summary>
+        <div class="cglt-accordion-body">
+          Yes. You can select the UK, Canada, Australia, India, or Manual mode. When non-US jurisdictions are selected, the tool switches to a transparent manual rate estimation structure.
+        </div>
+      </details>
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">Does the calculator replace professional tax advice?</summary>
+        <div class="cglt-accordion-body">
+          No. This calculator is strictly for educational and scenario planning purposes. Individual tax returns require considering carryover losses, alternative minimum tax (AMT), and wash sales with a licensed CPA.
+        </div>
+      </details>
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">Can I export my tax-lot comparison?</summary>
+        <div class="cglt-accordion-body">
+          Yes. You can export your current lot inventory as a CSV file, download the strategy comparison metrics as a CSV, or use the Print button to generate a clean PDF summary.
+        </div>
+      </details>
+
+      <details class="cglt-accordion-item">
+        <summary class="cglt-accordion-header">Does this calculator upload my financial data?</summary>
+        <div class="cglt-accordion-body">
+          No. All calculations, data parsing, and CSV processing occur client-side inside your browser. No financial amounts or lot records are transmitted to any server.
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- 8. Regulatory Guidance & Citations -->
+  <section class="cglt-card">
+    <h2>Official Regulatory and Tax Guidance</h2>
+    <p>For official statutory guidelines regarding cost basis reporting, Schedule D reconciliations, and capital gains tax brackets, review these resources:</p>
+    <ul>
+      <li><a href="https://www.irs.gov/taxtopics/tc409" target="_self">IRS Topic No. 409: Capital Gains and Losses</a> — Federal rules governing capital asset dispositions.</li>
+      <li><a href="https://www.irs.gov/forms-pubs/about-publication-550" target="_self">IRS Publication 550: Investment Income and Expenses</a> — In-depth guidelines on cost basis identification and holding periods.</li>
+      <li><a href="https://www.irs.gov/forms-pubs/about-schedule-d-form-1040" target="_self">IRS Schedule D (Form 1040)</a> — Instructions for reporting capital gains and losses on federal tax returns.</li>
+    </ul>
+  </section>
+
+  <!-- 9. Internal Linking & Footer -->
+  <footer class="cglt-card" style="border-top: 2px solid var(--cglt-border);">
+    <h3>Related Financial Calculators</h3>
+    <p>Explore additional analytical tools from My Tool App to plan your investments and borrowing structures:</p>
+    <ul>
+      <li>
+        <a href="https://my-tool-app.pages.dev/">Explore Free Online Financial Calculators</a> — Browse our primary directory of consumer finance and investment applications.
+      </li>
+      <li>
+        <a href="https://my-tool-app.pages.dev/loan-origination-fee-apr-calculator">Loan Origination Fee and APR Calculator</a> — Calculate the true borrowing cost, net proceeds, and actuarial APR on personal and business loans.
+      </li>
+    </ul>
+    <p style="font-size:0.8rem; color:var(--cglt-text-light); margin-top:1rem;">
+      &copy; My Tool App. Client-side capital gains analysis application.
+    </p>
+  </footer>
+
+</div>
+
+<!-- 3. JAVASCRIPT CALCULATION ENGINE -->
+<script>
+(function() {
+  'use strict';
+
+  const cgltState = {
+    currency: 'USD',
+    country: 'US',
+    taxYear: '2026',
+    assetType: 'stocks',
+    saleQty: 150,
+    salePrice: 230.00,
+    saleDate: '2026-10-26',
+    sellingFees: 15.00,
+    baselineStrategy: 'FIFO',
+    rates: {
+      st: 32.0,
+      lt: 15.0,
+      state: 5.0
+    },
+    lots: [],
+    specificAllocations: {}
+  };
+
+  const cgltDefaultLots = [
+    { id: 'LOT-101', date: '2024-03-15', qty: 50, price: 145.00, costs: 5.00 },
+    { id: 'LOT-102', date: '2025-01-10', qty: 100, price: 180.00, costs: 10.00 },
+    { id: 'LOT-103', date: '2025-11-20', qty: 75, price: 215.00, costs: 5.00 },
+    { id: 'LOT-104', date: '2026-06-05', qty: 50, price: 195.00, costs: 5.00 }
+  ];
+
+  function cgltFormatCurrency(val, currency = cgltState.currency) {
+    if (isNaN(val) || !isFinite(val)) return '$0.00';
+    try {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(val);
+    } catch (e) {
+      return '$' + Number(val).toFixed(2);
+    }
+  }
+
+  function cgltFormatQty(val) {
+    if (isNaN(val) || !isFinite(val)) return '0';
+    return Number(val).toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 4
+    });
+  }
+
+  function cgltAnnounce(message) {
+    const el = document.getElementById('cglt-live-announcer');
+    if (el) el.textContent = message;
+  }
+
+  function cgltSanitizeCSV(str) {
+    const s = String(str);
+    if (/^[=+@-]$/.test(s.charAt(0))) {
+      return `"\t${s.replace(/"/g, '""')}"`;
+    }
+    return `"${s.replace(/"/g, '""')}"`;
+  }
+
+  function cgltGetHoldingTerm(acqDateStr, saleDateStr) {
+    const acq = new Date(acqDateStr);
+    const sale = new Date(saleDateStr);
+    const diffTime = sale.getTime() - acq.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const isLongTerm = diffDays > 365;
+    return {
+      days: Math.max(0, diffDays),
+      isLongTerm: isLongTerm,
+      label: isLongTerm ? `Long-Term (${diffDays}d)` : `Short-Term (${diffDays}d)`
+    };
+  }
+
+  function cgltGetAdjustedBasisPerUnit(lot) {
+    const qty = parseFloat(lot.qty) || 0;
+    if (qty <= 0) return 0;
+    const price = parseFloat(lot.price) || 0;
+    const costs = parseFloat(lot.costs) || 0;
+    return (price * qty + costs) / qty;
+  }
+
+  function cgltExecuteStrategies() {
+    const totalInventoryQty = cgltState.lots.reduce((acc, l) => acc + (parseFloat(l.qty) || 0), 0);
+    const saleQty = parseFloat(cgltState.saleQty) || 0;
+    const salePrice = parseFloat(cgltState.salePrice) || 0;
+    const sellingFees = parseFloat(cgltState.sellingFees) || 0;
+    const saleDate = cgltState.saleDate;
+
+    if (saleQty <= 0 || saleQty > totalInventoryQty || cgltState.lots.length === 0) {
+      return null;
+    }
+
+    const strategies = ['FIFO', 'LIFO', 'HIFO', 'LOFO', 'AVG', 'SPECIFIC'];
+    const results = {};
+
+    strategies.forEach(strat => {
+      let allocatedLots = [];
+      
+      if (strat === 'AVG') {
+        const totalCostBasis = cgltState.lots.reduce((acc, l) => acc + (cgltGetAdjustedBasisPerUnit(l) * l.qty), 0);
+        const avgBasisPerUnit = totalCostBasis / totalInventoryQty;
+        
+        let longTermUnits = 0;
+        cgltState.lots.forEach(l => {
+          const term = cgltGetHoldingTerm(l.date, saleDate);
+          if (term.isLongTerm) longTermUnits += l.qty;
+        });
+
+        const ltFraction = longTermUnits / totalInventoryQty;
+        const soldLT = saleQty * ltFraction;
+        const soldST = saleQty * (1 - ltFraction);
+
+        allocatedLots = [
+          { qtySold: soldST, basisSold: soldST * avgBasisPerUnit, isLongTerm: false },
+          { qtySold: soldLT, basisSold: soldLT * avgBasisPerUnit, isLongTerm: true }
+        ];
+
+      } else if (strat === 'SPECIFIC') {
+        let specAssigned = 0;
+        cgltState.lots.forEach(lot => {
+          const allocQty = parseFloat(cgltState.specificAllocations[lot.id]) || 0;
+          if (allocQty > 0) {
+            const actualAlloc = Math.min(allocQty, lot.qty);
+            const unitBasis = cgltGetAdjustedBasisPerUnit(lot);
+            const term = cgltGetHoldingTerm(lot.date, saleDate);
+            allocatedLots.push({
+              lot: lot,
+              qtySold: actualAlloc,
+              basisSold: actualAlloc * unitBasis,
+              isLongTerm: term.isLongTerm
+            });
+            specAssigned += actualAlloc;
+          }
+        });
+        
+        if (Math.abs(specAssigned - saleQty) > 0.0001) {
+          results[strat] = { error: 'Allocation mismatch' };
+          return;
+        }
+
+      } else {
+        let sortedLots = [...cgltState.lots];
+        if (strat === 'FIFO') {
+          sortedLots.sort((a, b) => new Date(a.date) - new Date(b.date));
+        } else if (strat === 'LIFO') {
+          sortedLots.sort((a, b) => new Date(b.date) - new Date(a.date));
+        } else if (strat === 'HIFO') {
+          sortedLots.sort((a, b) => cgltGetAdjustedBasisPerUnit(b) - cgltGetAdjustedBasisPerUnit(a));
+        } else if (strat === 'LOFO') {
+          sortedLots.sort((a, b) => cgltGetAdjustedBasisPerUnit(a) - cgltGetAdjustedBasisPerUnit(b));
+        }
+
+        let needed = saleQty;
+        for (let i = 0; i < sortedLots.length && needed > 0; i++) {
+          const currentLot = sortedLots[i];
+          const take = Math.min(currentLot.qty, needed);
+          const unitBasis = cgltGetAdjustedBasisPerUnit(currentLot);
+          const term = cgltGetHoldingTerm(currentLot.date, saleDate);
+
+          allocatedLots.push({
+            lot: currentLot,
+            qtySold: take,
+            basisSold: take * unitBasis,
+            isLongTerm: term.isLongTerm
+          });
+          needed -= take;
+        }
+      }
+
+      const grossProceeds = saleQty * salePrice;
+      const netProceeds = Math.max(0, grossProceeds - sellingFees);
+
+      let totalBasisSold = 0;
+      let shortTermGain = 0;
+      let longTermGain = 0;
+
+      allocatedLots.forEach(alloc => {
+        totalBasisSold += alloc.basisSold;
+        const lotProceedsFraction = alloc.qtySold / saleQty;
+        const lotSellingCosts = sellingFees * lotProceedsFraction;
+        const lotNetProceeds = (alloc.qtySold * salePrice) - lotSellingCosts;
+        const lotGain = lotNetProceeds - alloc.basisSold;
+
+        if (alloc.isLongTerm) {
+          longTermGain += lotGain;
+        } else {
+          shortTermGain += lotGain;
+        }
+      });
+
+      const netRealizedGain = shortTermGain + longTermGain;
+
+      const stRate = (parseFloat(cgltState.rates.st) || 0) / 100;
+      const ltRate = (parseFloat(cgltState.rates.lt) || 0) / 100;
+      const stateRate = (parseFloat(cgltState.rates.state) || 0) / 100;
+
+      let taxableST = shortTermGain;
+      let taxableLT = longTermGain;
+
+      if (taxableST < 0 && taxableLT > 0) {
+        taxableLT = Math.max(0, taxableLT + taxableST);
+        taxableST = 0;
+      } else if (taxableLT < 0 && taxableST > 0) {
+        taxableST = Math.max(0, taxableST + taxableLT);
+        taxableLT = 0;
+      }
+
+      const federalTaxST = Math.max(0, taxableST) * stRate;
+      const federalTaxLT = Math.max(0, taxableLT) * ltRate;
+      const stateTax = Math.max(0, netRealizedGain) * stateRate;
+      const totalEstimatedTax = federalTaxST + federalTaxLT + stateTax;
+      const afterTaxProceeds = netProceeds - totalEstimatedTax;
+
+      const remainingUnits = Math.max(0, totalInventoryQty - saleQty);
+      const totalInventoryBasis = cgltState.lots.reduce((acc, l) => acc + (cgltGetAdjustedBasisPerUnit(l) * l.qty), 0);
+      const remainingBasis = Math.max(0, totalInventoryBasis - totalBasisSold);
+      const remainingAvgBasis = remainingUnits > 0 ? (remainingBasis / remainingUnits) : 0;
+      const remainingUnrealizedGain = (remainingUnits * salePrice) - remainingBasis;
+
+      results[strat] = {
+        name: strat,
+        grossProceeds,
+        netProceeds,
+        totalBasisSold,
+        shortTermGain,
+        longTermGain,
+        netRealizedGain,
+        totalEstimatedTax,
+        afterTaxProceeds,
+        remainingUnits,
+        remainingBasis,
+        remainingAvgBasis,
+        remainingUnrealizedGain
+      };
+    });
+
+    return results;
+  }
+
+  function cgltRenderLotsTable() {
+    const tbody = document.getElementById('cglt-lots-tbody');
+    tbody.innerHTML = '';
+
+    let totalQty = 0;
+    let totalBasis = 0;
+    const saleDate = cgltState.saleDate;
+
+    cgltState.lots.forEach((lot, idx) => {
+      const qty = parseFloat(lot.qty) || 0;
+      const unitBasis = cgltGetAdjustedBasisPerUnit(lot);
+      const lotTotalBasis = unitBasis * qty;
+      const term = cgltGetHoldingTerm(lot.date, saleDate);
+
+      totalQty += qty;
+      totalBasis += lotTotalBasis;
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="cglt-bold">${lot.id}</td>
+        <td>${lot.date}</td>
+        <td class="cglt-text-right">${cgltFormatQty(qty)}</td>
+        <td class="cglt-text-right">${cgltFormatCurrency(lot.price)}</td>
+        <td class="cglt-text-right">${cgltFormatCurrency(lot.costs)}</td>
+        <td class="cglt-text-right">${cgltFormatCurrency(unitBasis)}</td>
+        <td class="cglt-text-right">${cgltFormatCurrency(lotTotalBasis)}</td>
+        <td><span class="cglt-badge ${term.isLongTerm ? 'cglt-badge-verified' : 'cglt-badge-manual'}">${term.label}</span></td>
+        <td class="cglt-text-center">
+          <button type="button" class="cglt-btn cglt-btn-outline cglt-btn-sm" data-action="edit" data-idx="${idx}" title="Edit Lot">Edit</button>
+          <button type="button" class="cglt-btn cglt-btn-danger cglt-btn-sm" data-action="delete" data-idx="${idx}" title="Delete Lot">×</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById('cglt-inv-total-qty').textContent = cgltFormatQty(totalQty);
+    document.getElementById('cglt-inv-total-basis').textContent = cgltFormatCurrency(totalBasis);
+
+    cgltRenderSpecificIdInputs();
+  }
+
+  function cgltRenderSpecificIdInputs() {
+    const container = document.getElementById('cglt-spec-id-inputs-grid');
+    container.innerHTML = '';
+
+    let assigned = 0;
+    cgltState.lots.forEach(lot => {
+      const currentAlloc = cgltState.specificAllocations[lot.id] || 0;
+      assigned += parseFloat(currentAlloc) || 0;
+
+      const div = document.createElement('div');
+      div.className = 'cglt-field-group';
+      div.innerHTML = `
+        <label for="spec-alloc-${lot.id}" class="cglt-label">${lot.id} (${lot.date}) — Avail: ${cgltFormatQty(lot.qty)}</label>
+        <input type="number" id="spec-alloc-${lot.id}" class="cglt-input cglt-spec-input" data-lot-id="${lot.id}" 
+               value="${currentAlloc}" min="0" max="${lot.qty}" step="any" />
+      `;
+      container.appendChild(div);
+    });
+
+    const target = parseFloat(cgltState.saleQty) || 0;
+    const badge = document.getElementById('cglt-spec-alloc-status');
+    badge.textContent = `${cgltFormatQty(assigned)} / ${cgltFormatQty(target)} Allocated`;
+    if (Math.abs(assigned - target) < 0.0001 && target > 0) {
+      badge.className = 'cglt-badge cglt-badge-verified';
+    } else {
+      badge.className = 'cglt-badge cglt-badge-manual';
+    }
+  }
+
+  function cgltRenderComparison(results) {
+    const tbody = document.getElementById('cglt-comparison-tbody');
+    const remTbody = document.getElementById('cglt-remaining-tbody');
+    tbody.innerHTML = '';
+    remTbody.innerHTML = '';
+
+    if (!results) {
+      tbody.innerHTML = `<tr><td colspan="9" class="cglt-text-center">Enter a valid sale quantity (not exceeding total available holdings) to compare strategies.</td></tr>`;
+      remTbody.innerHTML = `<tr><td colspan="5" class="cglt-text-center">No active calculation available.</td></tr>`;
+      return;
+    }
+
+    const baselineKey = cgltState.baselineStrategy;
+    const baseline = results[baselineKey] && !results[baselineKey].error ? results[baselineKey] : results['FIFO'];
+
+    let lowestTax = Infinity;
+    let optimalStrategy = 'FIFO';
+
+    Object.keys(results).forEach(key => {
+      const item = results[key];
+      if (item.error) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="cglt-bold">${key}</td><td colspan="8" class="cglt-text-center cglt-negative">Allocation does not equal target quantity.</td>`;
+        tbody.appendChild(tr);
+        return;
+      }
+
+      if (item.totalEstimatedTax < lowestTax) {
+        lowestTax = item.totalEstimatedTax;
+        optimalStrategy = key;
+      }
+
+      const diffVsBaseline = item.totalEstimatedTax - baseline.totalEstimatedTax;
+      let diffHtml = '<span class="cglt-text-muted">$0.00</span>';
+      if (diffVsBaseline < -0.01) {
+        diffHtml = `<span class="cglt-positive">-${cgltFormatCurrency(Math.abs(diffVsBaseline))} (Save)</span>`;
+      } else if (diffVsBaseline > 0.01) {
+        diffHtml = `<span class="cglt-negative">+${cgltFormatCurrency(diffVsBaseline)}</span>`;
+      }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="cglt-bold">${item.name}</td>
+        <td class="cglt-text-right">${cgltFormatCurrency(item.grossProceeds)}</td>
+        <td class="cglt-text-right">${cgltFormatCurrency(item.totalBasisSold)}</td>
+        <td class="cglt-text-right ${item.shortTermGain >= 0 ? 'cglt-positive' : 'cglt-negative'}">${cgltFormatCurrency(item.shortTermGain)}</td>
+        <td class="cglt-text-right ${item.longTermGain >= 0 ? 'cglt-positive' : 'cglt-negative'}">${cgltFormatCurrency(item.longTermGain)}</td>
+        <td class="cglt-text-right cglt-bold ${item.netRealizedGain >= 0 ? 'cglt-positive' : 'cglt-negative'}">${cgltFormatCurrency(item.netRealizedGain)}</td>
+        <td class="cglt-text-right cglt-bold">${cgltFormatCurrency(item.totalEstimatedTax)}</td>
+        <td class="cglt-text-right">${cgltFormatCurrency(item.afterTaxProceeds)}</td>
+        <td class="cglt-text-right">${diffHtml}</td>
+      `;
+      tbody.appendChild(tr);
+
+      const remTr = document.createElement('tr');
+      remTr.innerHTML = `
+        <td class="cglt-bold">${item.name}</td>
+        <td class="cglt-text-right">${cgltFormatQty(item.remainingUnits)}</td>
+        <td class="cglt-text-right">${cgltFormatCurrency(item.remainingBasis)}</td>
+        <td class="cglt-text-right">${cgltFormatCurrency(item.remainingAvgBasis)}</td>
+        <td class="cglt-text-right cglt-bold ${item.remainingUnrealizedGain >= 0 ? 'cglt-positive' : 'cglt-negative'}">
+          ${cgltFormatCurrency(item.remainingUnrealizedGain)}
+        </td>
+      `;
+      remTbody.appendChild(remTr);
+    });
+
+    const opt = results[optimalStrategy];
+    if (opt && !opt.error) {
+      document.getElementById('res-optimal-strategy').textContent = optimalStrategy;
+      document.getElementById('res-optimal-tax').textContent = cgltFormatCurrency(opt.totalEstimatedTax);
+      const optDiff = opt.totalEstimatedTax - baseline.totalEstimatedTax;
+      document.getElementById('res-optimal-tax-diff').textContent = 
+        optDiff < 0 ? `${cgltFormatCurrency(Math.abs(optDiff))} less than ${baselineKey}` : `Baseline equivalent`;
+      document.getElementById('res-optimal-gain').textContent = cgltFormatCurrency(opt.netRealizedGain);
+      document.getElementById('res-optimal-gain-char').textContent = 
+        `ST: ${cgltFormatCurrency(opt.shortTermGain)} | LT: ${cgltFormatCurrency(opt.longTermGain)}`;
+      document.getElementById('res-optimal-proceeds').textContent = cgltFormatCurrency(opt.afterTaxProceeds);
+    }
+
+    cgltRenderChart(results);
+    cgltAnnounce('Tax lot strategy calculations updated successfully.');
+  }
+
+  function cgltRenderChart(results) {
+    const svg = document.getElementById('cglt-comparison-svg');
+    svg.innerHTML = '';
+    if (!results) return;
+
+    const validKeys = Object.keys(results).filter(k => !results[k].error);
+    if (validKeys.length === 0) return;
+
+    const maxTax = Math.max(...validKeys.map(k => results[k].totalEstimatedTax), 100);
+    const svgWidth = svg.clientWidth || 600;
+    const barWidth = Math.min(60, (svgWidth - 80) / validKeys.length - 20);
+
+    validKeys.forEach((key, i) => {
+      const item = results[key];
+      const barHeight = (item.totalEstimatedTax / maxTax) * 140;
+      const x = 50 + i * ((svgWidth - 80) / validKeys.length) + 10;
+      const y = 170 - barHeight;
+
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', x);
+      rect.setAttribute('y', y);
+      rect.setAttribute('width', barWidth);
+      rect.setAttribute('height', Math.max(2, barHeight));
+      rect.setAttribute('fill', key === 'HIFO' ? '#15803d' : '#2563eb');
+      rect.setAttribute('rx', '4');
+      svg.appendChild(rect);
+
+      const textVal = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      textVal.setAttribute('x', x + barWidth / 2);
+      textVal.setAttribute('y', y - 6);
+      textVal.setAttribute('text-anchor', 'middle');
+      textVal.setAttribute('font-size', '11');
+      textVal.setAttribute('font-weight', '600');
+      textVal.setAttribute('fill', '#0f172a');
+      textVal.textContent = cgltFormatCurrency(item.totalEstimatedTax);
+      svg.appendChild(textVal);
+
+      const textLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      textLabel.setAttribute('x', x + barWidth / 2);
+      textLabel.setAttribute('y', 195);
+      textLabel.setAttribute('text-anchor', 'middle');
+      textLabel.setAttribute('font-size', '12');
+      textLabel.setAttribute('font-weight', 'bold');
+      textLabel.setAttribute('fill', '#475569');
+      textLabel.textContent = key;
+      svg.appendChild(textLabel);
+    });
+  }
+
+  function cgltRecalculate() {
+    cgltState.saleQty = parseFloat(document.getElementById('cglt-sale-qty').value) || 0;
+    cgltState.salePrice = parseFloat(document.getElementById('cglt-sale-price').value) || 0;
+    cgltState.saleDate = document.getElementById('cglt-sale-date').value || '2026-10-26';
+    cgltState.sellingFees = parseFloat(document.getElementById('cglt-selling-fees').value) || 0;
+    cgltState.baselineStrategy = document.getElementById('cglt-baseline-strategy').value;
+
+    cgltState.rates.st = parseFloat(document.getElementById('cglt-st-rate').value) || 0;
+    cgltState.rates.lt = parseFloat(document.getElementById('cglt-lt-rate').value) || 0;
+    cgltState.rates.state = parseFloat(document.getElementById('cglt-state-rate').value) || 0;
+
+    const totalInventoryQty = cgltState.lots.reduce((acc, l) => acc + (parseFloat(l.qty) || 0), 0);
+    const errQty = document.getElementById('err-cglt-sale-qty');
+    const inputQty = document.getElementById('cglt-sale-qty');
+
+    if (cgltState.saleQty > totalInventoryQty) {
+      errQty.textContent = `Sale quantity exceeds available holdings (${cgltFormatQty(totalInventoryQty)}).`;
+      inputQty.classList.add('cglt-input-invalid');
+      cgltRenderComparison(null);
+      return;
+    } else {
+      errQty.textContent = '';
+      inputQty.classList.remove('cglt-input-invalid');
+    }
+
+    const results = cgltExecuteStrategies();
+    cgltRenderComparison(results);
+  }
+
+  function cgltOpenModal(editIdx = -1) {
+    const modal = document.getElementById('cglt-lot-modal');
+    const form = document.getElementById('cglt-lot-form');
+    form.reset();
+    document.querySelectorAll('.cglt-field-error').forEach(el => el.textContent = '');
+
+    if (editIdx >= 0) {
+      const lot = cgltState.lots[editIdx];
+      document.getElementById('cglt-modal-title').textContent = 'Edit Investment Tax Lot';
+      document.getElementById('cglt-modal-lot-index').value = editIdx;
+      document.getElementById('cglt-modal-lot-id').value = lot.id;
+      document.getElementById('cglt-modal-acq-date').value = lot.date;
+      document.getElementById('cglt-modal-qty').value = lot.qty;
+      document.getElementById('cglt-modal-price').value = lot.price;
+      document.getElementById('cglt-modal-costs').value = lot.costs;
+    } else {
+      document.getElementById('cglt-modal-title').textContent = 'Add Investment Tax Lot';
+      document.getElementById('cglt-modal-lot-index').value = -1;
+      document.getElementById('cglt-modal-lot-id').value = `LOT-${Math.floor(100 + Math.random() * 900)}`;
+      document.getElementById('cglt-modal-acq-date').value = '2025-06-01';
+      document.getElementById('cglt-modal-qty').value = '100';
+      document.getElementById('cglt-modal-price').value = '150.00';
+      document.getElementById('cglt-modal-costs').value = '0.00';
+    }
+    modal.style.display = 'flex';
+  }
+
+  function cgltCloseModal() {
+    document.getElementById('cglt-lot-modal').style.display = 'none';
+  }
+
+  function cgltSaveModal(e) {
+    e.preventDefault();
+    const idx = parseInt(document.getElementById('cglt-modal-lot-index').value, 10);
+    const id = document.getElementById('cglt-modal-lot-id').value.trim() || `LOT-${Date.now()}`;
+    const date = document.getElementById('cglt-modal-acq-date').value;
+    const qty = parseFloat(document.getElementById('cglt-modal-qty').value);
+    const price = parseFloat(document.getElementById('cglt-modal-price').value);
+    const costs = parseFloat(document.getElementById('cglt-modal-costs').value) || 0;
+
+    let valid = true;
+    if (!date) {
+      document.getElementById('err-modal-date').textContent = 'Acquisition date is required.';
+      valid = false;
+    }
+    if (isNaN(qty) || qty <= 0) {
+      document.getElementById('err-modal-qty').textContent = 'Quantity must be > 0.';
+      valid = false;
+    }
+    if (isNaN(price) || price <= 0) {
+      document.getElementById('err-modal-price').textContent = 'Price must be > 0.';
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    const lotData = { id, date, qty, price, costs };
+    if (idx >= 0) {
+      cgltState.lots[idx] = lotData;
+    } else {
+      cgltState.lots.push(lotData);
+    }
+
+    cgltCloseModal();
+    cgltRenderLotsTable();
+    cgltRecalculate();
+  }
+
+  function cgltExportLotsCSV() {
+    const headers = ['lot_id', 'acquisition_date', 'quantity', 'purchase_price', 'acquisition_costs'];
+    const rows = cgltState.lots.map(l => [
+      cgltSanitizeCSV(l.id),
+      cgltSanitizeCSV(l.date),
+      l.qty,
+      l.price,
+      l.costs
+    ]);
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const link = document.createElement('a');
+    link.href = encodeURI(csvContent);
+    link.download = `tax_lots_inventory_${Date.now()}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function cgltExportComparisonCSV() {
+    const results = cgltExecuteStrategies();
+    if (!results) return;
+
+    const headers = ['strategy', 'gross_proceeds', 'cost_basis_sold', 'short_term_gain', 'long_term_gain', 'net_gain', 'estimated_tax', 'after_tax_proceeds'];
+    const rows = Object.keys(results).filter(k => !results[k].error).map(k => {
+      const r = results[k];
+      return [
+        cgltSanitizeCSV(r.name),
+        r.grossProceeds.toFixed(2),
+        r.totalBasisSold.toFixed(2),
+        r.shortTermGain.toFixed(2),
+        r.longTermGain.toFixed(2),
+        r.netRealizedGain.toFixed(2),
+        r.totalEstimatedTax.toFixed(2),
+        r.afterTaxProceeds.toFixed(2)
+      ];
+    });
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const link = document.createElement('a');
+    link.href = encodeURI(csvContent);
+    link.download = `strategy_comparison_${Date.now()}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function cgltImportCSV(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const text = e.target.result;
+      const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
+      if (lines.length < 2) {
+        alert('Invalid CSV: File must contain header and at least one data row.');
+        return;
+      }
+
+      const imported = [];
+      for (let i = 1; i < lines.length; i++) {
+        const parts = lines[i].split(',').map(s => s.trim().replace(/^["']|["']$/g, ''));
+        if (parts.length >= 4) {
+          const id = parts[0] || `LOT-IMP-${i}`;
+          const date = parts[1];
+          const qty = parseFloat(parts[2]);
+          const price = parseFloat(parts[3]);
+          const costs = parseFloat(parts[4]) || 0;
+          if (date && !isNaN(qty) && !isNaN(price)) {
+            imported.push({ id, date, qty, price, costs });
+          }
+        }
+      }
+
+      if (imported.length > 0) {
+        cgltState.lots = imported;
+        cgltRenderLotsTable();
+        cgltRecalculate();
+        alert(`Successfully imported ${imported.length} tax lots.`);
+      } else {
+        alert('Could not parse any valid tax lot records from this CSV.');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function cgltInit() {
+    cgltState.lots = [...cgltDefaultLots];
+
+    const liveInputIds = [
+      'cglt-sale-qty', 'cglt-sale-price', 'cglt-sale-date', 'cglt-selling-fees',
+      'cglt-baseline-strategy', 'cglt-st-rate', 'cglt-lt-rate', 'cglt-state-rate'
+    ];
+    liveInputIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', cgltRecalculate);
+    });
+
+    document.getElementById('cglt-country').addEventListener('change', function(e) {
+      const country = e.target.value;
+      const badge = document.getElementById('cglt-rule-status-badge');
+      const note = document.getElementById('cglt-jurisdiction-note');
+      if (country === 'US') {
+        badge.className = 'cglt-badge cglt-badge-verified';
+        badge.textContent = 'Verified Rule Set Available';
+        note.textContent = 'US IRS rules apply: Assets held > 365 days qualify for preferential long-term capital gains tax rates.';
+        document.getElementById('cglt-st-rate').value = '32.0';
+        document.getElementById('cglt-lt-rate').value = '15.0';
+      } else {
+        badge.className = 'cglt-badge cglt-badge-manual';
+        badge.textContent = 'Manual Tax Configuration Required';
+        note.textContent = `Using manual tax rate estimation structure for ${e.target.options[e.target.selectedIndex].text}.`;
+      }
+      cgltRecalculate();
+    });
+
+    document.getElementById('cglt-currency').addEventListener('change', function(e) {
+      cgltState.currency = e.target.value;
+      cgltRenderLotsTable();
+      cgltRecalculate();
+    });
+
+    document.getElementById('cglt-lots-tbody').addEventListener('click', function(e) {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      const action = btn.getAttribute('data-action');
+      if (action === 'edit') {
+        cgltOpenModal(idx);
+      } else if (action === 'delete') {
+        if (confirm(`Remove ${cgltState.lots[idx].id} from inventory?`)) {
+          cgltState.lots.splice(idx, 1);
+          cgltRenderLotsTable();
+          cgltRecalculate();
+        }
+      }
+    });
+
+    document.getElementById('cglt-spec-id-inputs-grid').addEventListener('input', function(e) {
+      if (e.target.classList.contains('cglt-spec-input')) {
+        const lotId = e.target.getAttribute('data-lot-id');
+        cgltState.specificAllocations[lotId] = parseFloat(e.target.value) || 0;
+        
+        let assigned = 0;
+        Object.values(cgltState.specificAllocations).forEach(v => assigned += v);
+        const target = parseFloat(cgltState.saleQty) || 0;
+        const badge = document.getElementById('cglt-spec-alloc-status');
+        badge.textContent = `${cgltFormatQty(assigned)} / ${cgltFormatQty(target)} Allocated`;
+        if (Math.abs(assigned - target) < 0.0001 && target > 0) {
+          badge.className = 'cglt-badge cglt-badge-verified';
+        } else {
+          badge.className = 'cglt-badge cglt-badge-manual';
+        }
+        cgltRecalculate();
+      }
+    });
+
+    document.getElementById('cglt-btn-add-lot').addEventListener('click', () => cgltOpenModal(-1));
+    document.getElementById('cglt-btn-modal-cancel').addEventListener('click', cgltCloseModal);
+    document.getElementById('cglt-lot-form').addEventListener('submit', cgltSaveModal);
+
+    document.getElementById('cglt-btn-export-lots').addEventListener('click', cgltExportLotsCSV);
+    document.getElementById('cglt-btn-export-comparison').addEventListener('click', cgltExportComparisonCSV);
+    document.getElementById('cglt-btn-import-csv').addEventListener('click', () => {
+      document.getElementById('cglt-file-input').click();
+    });
+    document.getElementById('cglt-file-input').addEventListener('change', function(e) {
+      cgltImportCSV(e.target.files[0]);
+    });
+
+    document.getElementById('cglt-btn-sample-data').addEventListener('click', () => {
+      cgltState.lots = [...cgltDefaultLots];
+      document.getElementById('cglt-sale-qty').value = '150';
+      document.getElementById('cglt-sale-price').value = '230.00';
+      cgltRenderLotsTable();
+      cgltRecalculate();
+    });
+
+    document.getElementById('cglt-btn-reset-all').addEventListener('click', () => {
+      if (confirm('Reset all transaction parameters and lot holdings?')) {
+        cgltState.lots = [];
+        cgltRenderLotsTable();
+        cgltRecalculate();
+      }
+    });
+
+    document.getElementById('cglt-btn-print').addEventListener('click', () => window.print());
+
+    cgltRenderLotsTable();
+    cgltRecalculate();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', cgltInit);
+  } else {
+    cgltInit();
+  }
+})();
+</script>
+
+<!-- 4. STRUCTURED DATA / SCHEMA MARKUP (JSON-LD) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://my-tool-app.pages.dev/capital-gains-tax-lot-comparison-calculator#webapp",
+      "url": "https://my-tool-app.pages.dev/capital-gains-tax-lot-comparison-calculator",
+      "name": "Capital Gains Tax Lot Comparison Calculator",
+      "description": "Interactive tax lot optimizer and cost basis comparison tool to evaluate FIFO, LIFO, HIFO, and Specific Identification strategies.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All modern web browsers",
+      "browserRequirements": "Requires JavaScript. Requires HTML5 support.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://my-tool-app.pages.dev/capital-gains-tax-lot-comparison-calculator#webpage",
+      "url": "https://my-tool-app.pages.dev/capital-gains-tax-lot-comparison-calculator",
+      "name": "Capital Gains Tax Lot Comparison Calculator",
+      "description": "Compare investment tax lots, FIFO and specific-lot strategies. Estimate capital gains, cost basis and taxes with a free online calculator.",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://my-tool-app.pages.dev/#website",
+        "url": "https://my-tool-app.pages.dev/",
+        "name": "My Tool App"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://my-tool-app.pages.dev/capital-gains-tax-lot-comparison-calculator#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Financial Calculators",
+          "item": "https://my-tool-app.pages.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Capital Gains Tax Lot Comparison Calculator",
+          "item": "https://my-tool-app.pages.dev/capital-gains-tax-lot-comparison-calculator"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://my-tool-app.pages.dev/capital-gains-tax-lot-comparison-calculator#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a capital gains tax lot comparison calculator?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is an analytical financial tool that calculates realized gains, losses, and estimated taxes across different accounting methodologies (such as FIFO, LIFO, and HIFO) when selling securities acquired at different dates and prices."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does FIFO affect capital gains?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "First-In, First-Out sells your oldest acquired shares first. If the asset has appreciated over time, FIFO usually results in higher realized capital gains, though those gains are more likely to qualify for lower long-term tax rates."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is specific identification of tax lots?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Specific identification is an IRS-recognized method where an investor specifies to their broker the exact lot (by purchase date and cost) to be sold prior to transaction settlement, providing maximum control over tax outcomes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is adjusted cost basis?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Adjusted cost basis is the net original purchase price of an asset plus eligible acquisition commissions, purchase fees, and reinvested dividends, adjusted for corporate actions such as stock splits or returns of capital."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this calculator upload my financial data?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. All calculations, data parsing, and CSV processing occur client-side inside your browser. No financial amounts or lot records are transmitted to any server."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
