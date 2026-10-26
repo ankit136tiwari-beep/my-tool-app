@@ -1,0 +1,1391 @@
+<!-- ================================================================= -->
+<!-- INFLATION-ADJUSTED SAVINGS GOAL CALCULATOR FOR GOOGLE BLOGGER     -->
+<!-- Fully self-contained: HTML5, Scoped CSS, Vanilla JS & Schema.org  -->
+<!-- ================================================================= -->
+
+<!-- SEO Schema Structured Data (JSON-LD) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://my-tool-app.pages.dev/#webapp",
+      "name": "Inflation-Adjusted Savings Goal Calculator",
+      "url": "https://my-tool-app.pages.dev/inflation-adjusted-savings-goal-calculator",
+      "description": "Plan future savings with inflation, estimate monthly contributions, project investment growth and compare savings goals using this free calculator.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All modern browsers (Chrome, Safari, Firefox, Edge)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://my-tool-app.pages.dev/inflation-adjusted-savings-goal-calculator#webpage",
+      "name": "Inflation-Adjusted Savings Goal Calculator",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://my-tool-app.pages.dev/#website",
+        "name": "My Tool App"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is an inflation-adjusted savings goal calculator?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is an interactive financial planning tool that projects how future price inflation increases the cost of your future targets and computes the exact monthly savings and investment compounding required to reach that goal in real purchasing power."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does inflation affect savings goals?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Inflation erodes the purchasing power of money over time. A goal costing $50,000 today at 5% annual inflation will cost approximately $81,445 in 10 years, meaning you must save toward the higher future nominal cost."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between real return and nominal return?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nominal return is the raw annual percentage growth of your portfolio, while real return accounts for inflation using Fisher's exact equation: (1 + nominal)/(1 + inflation) - 1."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<!-- Scoped Application Styles -->
+<style>
+/* CSS Reset and Variables scoped strictly within .iasgc-app */
+.iasgc-app {
+  --iasgc-primary: #1e3a8a;
+  --iasgc-primary-light: #3b82f6;
+  --iasgc-primary-dark: #172554;
+  --iasgc-secondary: #0d9488;
+  --iasgc-success: #16a34a;
+  --iasgc-warning: #d97706;
+  --iasgc-danger: #dc2626;
+  --iasgc-bg-card: #ffffff;
+  --iasgc-bg-subtle: #f8fafc;
+  --iasgc-border: #e2e8f0;
+  --iasgc-text-main: #0f172a;
+  --iasgc-text-muted: #64748b;
+  --iasgc-radius: 12px;
+  --iasgc-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --iasgc-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  color: var(--iasgc-text-main);
+  line-height: 1.6;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px 15px 40px;
+  box-sizing: border-box;
+}
+
+.iasgc-app *, .iasgc-app *::before, .iasgc-app *::after {
+  box-sizing: inherit;
+}
+
+/* Header */
+.iasgc-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.iasgc-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--iasgc-primary-dark);
+  margin: 0 0 8px 0;
+  line-height: 1.25;
+}
+.iasgc-header p {
+  font-size: 1.05rem;
+  color: var(--iasgc-text-muted);
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* Main Layout Grid */
+.iasgc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 900px) {
+  .iasgc-grid {
+    grid-template-columns: 460px 1fr;
+  }
+}
+
+/* Cards & Containers */
+.iasgc-card {
+  background: var(--iasgc-bg-card);
+  border: 1px solid var(--iasgc-border);
+  border-radius: var(--iasgc-radius);
+  padding: 20px;
+  box-shadow: var(--iasgc-shadow);
+  margin-bottom: 20px;
+}
+.iasgc-card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--iasgc-primary);
+  margin-top: 0;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--iasgc-border);
+  padding-bottom: 10px;
+}
+
+/* Form Controls */
+.iasgc-form-group {
+  margin-bottom: 14px;
+}
+.iasgc-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--iasgc-text-main);
+  margin-bottom: 5px;
+}
+.iasgc-label span.iasgc-hint {
+  font-weight: 400;
+  color: var(--iasgc-text-muted);
+}
+.iasgc-input, .iasgc-select {
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 0.95rem;
+  color: var(--iasgc-text-main);
+  background-color: var(--iasgc-bg-subtle);
+  border: 1px solid var(--iasgc-border);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+.iasgc-input:focus, .iasgc-select:focus {
+  outline: none;
+  border-color: var(--iasgc-primary-light);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+.iasgc-input-group {
+  display: flex;
+  gap: 8px;
+}
+
+/* Pill / Button Presets */
+.iasgc-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.iasgc-pill {
+  border: 1px solid var(--iasgc-border);
+  background: var(--iasgc-bg-subtle);
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-weight: 500;
+}
+.iasgc-pill:hover, .iasgc-pill.active {
+  background: var(--iasgc-primary);
+  color: #ffffff;
+  border-color: var(--iasgc-primary);
+}
+
+/* Toggle Switches */
+.iasgc-toggle-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--iasgc-bg-subtle);
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+.iasgc-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.iasgc-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.iasgc-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #cbd5e1;
+  transition: .3s;
+  border-radius: 24px;
+}
+.iasgc-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+input:checked + .iasgc-slider {
+  background-color: var(--iasgc-primary);
+}
+input:checked + .iasgc-slider:before {
+  transform: translateX(20px);
+}
+
+/* KPI Summary Cards Grid */
+.iasgc-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.iasgc-kpi-card {
+  background: var(--iasgc-bg-card);
+  border: 1px solid var(--iasgc-border);
+  border-radius: var(--iasgc-radius);
+  padding: 16px;
+  box-shadow: var(--iasgc-shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.iasgc-kpi-card.highlight {
+  background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+  border-color: #bfdbfe;
+}
+.iasgc-kpi-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--iasgc-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.iasgc-kpi-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--iasgc-primary-dark);
+}
+.iasgc-kpi-sub {
+  font-size: 0.8rem;
+  color: var(--iasgc-text-muted);
+  margin-top: 4px;
+}
+
+/* Status Banner */
+.iasgc-status-banner {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.iasgc-status-success {
+  background-color: #dcfce7;
+  color: #14532d;
+  border: 1px solid #86efac;
+}
+.iasgc-status-warning {
+  background-color: #fef3c7;
+  color: #78350f;
+  border: 1px solid #fde68a;
+}
+.iasgc-status-danger {
+  background-color: #fee2e2;
+  color: #7f1d1d;
+  border: 1px solid #fca5a5;
+}
+
+/* Visual Chart Area */
+.iasgc-chart-container {
+  width: 100%;
+  height: 250px;
+  margin: 15px 0 20px;
+  position: relative;
+}
+.iasgc-chart-container svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Tables */
+.iasgc-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--iasgc-border);
+  border-radius: 8px;
+  margin-top: 15px;
+}
+.iasgc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  text-align: right;
+}
+.iasgc-table th, .iasgc-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--iasgc-border);
+}
+.iasgc-table th {
+  background: var(--iasgc-bg-subtle);
+  color: var(--iasgc-text-muted);
+  font-weight: 600;
+}
+.iasgc-table th:first-child, .iasgc-table td:first-child {
+  text-align: left;
+}
+.iasgc-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Action Buttons */
+.iasgc-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.iasgc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.iasgc-btn-primary {
+  background: var(--iasgc-primary);
+  color: #fff;
+}
+.iasgc-btn-primary:hover {
+  background: var(--iasgc-primary-dark);
+}
+.iasgc-btn-outline {
+  background: #fff;
+  border-color: var(--iasgc-border);
+  color: var(--iasgc-text-main);
+}
+.iasgc-btn-outline:hover {
+  background: var(--iasgc-bg-subtle);
+  border-color: #cbd5e1;
+}
+
+/* Privacy & Disclaimer Notice */
+.iasgc-disclaimer {
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #92400e;
+  margin-top: 20px;
+}
+
+/* Content SEO Sections */
+.iasgc-seo-section {
+  margin-top: 40px;
+  border-top: 2px solid var(--iasgc-border);
+  padding-top: 30px;
+}
+.iasgc-seo-section h2 {
+  font-size: 1.5rem;
+  color: var(--iasgc-primary-dark);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+.iasgc-seo-section h3 {
+  font-size: 1.2rem;
+  color: var(--iasgc-primary);
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+.iasgc-seo-section p, .iasgc-seo-section li {
+  font-size: 0.98rem;
+  color: #334155;
+  line-height: 1.7;
+}
+.iasgc-seo-section ul, .iasgc-seo-section ol {
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+.iasgc-faq-item {
+  border: 1px solid var(--iasgc-border);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  background: var(--iasgc-bg-card);
+}
+.iasgc-faq-item h4 {
+  margin: 0 0 6px 0;
+  font-size: 1.05rem;
+  color: var(--iasgc-primary-dark);
+}
+.iasgc-faq-item p {
+  margin: 0;
+  font-size: 0.92rem;
+}
+.iasgc-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 4px;
+  background: #e2e8f0;
+  color: #475569;
+}
+.iasgc-badge-success { background: #dcfce7; color: #166534; }
+.iasgc-badge-danger { background: #fee2e2; color: #991b1b; }
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .iasgc-header h1 { font-size: 1.6rem; }
+  .iasgc-kpi-value { font-size: 1.35rem; }
+  .iasgc-actions-row { flex-direction: column; }
+  .iasgc-btn { width: 100%; }
+}
+</style>
+
+<!-- Main Tool HTML Component -->
+<div class="iasgc-app" id="iasgcApp">
+  <!-- Header with single H1 -->
+  <header class="iasgc-header">
+    <h1>Inflation-Adjusted Savings Goal Calculator</h1>
+    <p>Determine exactly how much your future targets will cost in future nominal currency, quantify purchasing power erosion, and calculate the precise monthly contribution needed to reach your financial milestones.</p>
+  </header>
+
+  <!-- Interactive Calculator Engine -->
+  <div class="iasgc-grid">
+    <!-- Left Column: User Inputs Panel -->
+    <div class="iasgc-inputs-col">
+      <!-- Section 1: Goal Setup -->
+      <div class="iasgc-card">
+        <h2 class="iasgc-card-title">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          1. Savings Target & Timeline
+        </h2>
+
+        <div class="iasgc-form-group">
+          <label class="iasgc-label" for="iasgcGoalName">Goal Name</label>
+          <input type="text" id="iasgcGoalName" class="iasgc-input" value="Home Down Payment" placeholder="e.g., Retirement, Education, House">
+        </div>
+
+        <div class="iasgc-form-group">
+          <label class="iasgc-label" for="iasgcGoalCategory">Category</label>
+          <select id="iasgcGoalCategory" class="iasgc-select">
+            <option value="Home Purchase" selected>Home Purchase</option>
+            <option value="Retirement">Retirement Planning</option>
+            <option value="Education">Child Education Fund</option>
+            <option value="Emergency Fund">Emergency Reserve</option>
+            <option value="Vehicle Purchase">Vehicle Purchase</option>
+            <option value="Wedding">Wedding & Celebrations</option>
+            <option value="Travel">Vacation / Travel</option>
+            <option value="Other">Other Custom Goal</option>
+          </select>
+        </div>
+
+        <div class="iasgc-input-group">
+          <div class="iasgc-form-group" style="flex: 2;">
+            <label class="iasgc-label" for="iasgcGoalAmount">
+              Target Cost <span class="iasgc-hint" id="iasgcGoalModeHint">(Today's Money)</span>
+            </label>
+            <input type="number" id="iasgcGoalAmount" class="iasgc-input" value="100000" min="1" step="1000">
+          </div>
+          <div class="iasgc-form-group" style="flex: 1;">
+            <label class="iasgc-label" for="iasgcCurrency">Currency</label>
+            <select id="iasgcCurrency" class="iasgc-select">
+              <option value="$" selected>USD ($)</option>
+              <option value="₹">INR (₹)</option>
+              <option value="£">GBP (£)</option>
+              <option value="€">EUR (€)</option>
+              <option value="C$">CAD (C$)</option>
+              <option value="A$">AUD (A$)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="iasgc-toggle-group">
+          <span>This target is already a fixed future amount</span>
+          <label class="iasgc-switch">
+            <input type="checkbox" id="iasgcIsAlreadyFuture">
+            <span class="iasgc-slider"></span>
+          </label>
+        </div>
+
+        <div class="iasgc-input-group">
+          <div class="iasgc-form-group" style="flex: 1;">
+            <label class="iasgc-label" for="iasgcYears">Duration (Years)</label>
+            <input type="number" id="iasgcYears" class="iasgc-input" value="10" min="1" max="50">
+          </div>
+          <div class="iasgc-form-group" style="flex: 1;">
+            <label class="iasgc-label" for="iasgcMonths">Extra Months</label>
+            <input type="number" id="iasgcMonths" class="iasgc-input" value="0" min="0" max="11">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Current Balances & Contributions -->
+      <div class="iasgc-card">
+        <h2 class="iasgc-card-title">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          2. Savings & Contributions
+        </h2>
+
+        <div class="iasgc-form-group">
+          <label class="iasgc-label" for="iasgcCurrentSavings">Current Savings / Investment Balance</label>
+          <input type="number" id="iasgcCurrentSavings" class="iasgc-input" value="15000" min="0" step="500">
+        </div>
+
+        <div class="iasgc-form-group">
+          <label class="iasgc-label" for="iasgcCurrentMonthly">Currently Planned Monthly Savings</label>
+          <input type="number" id="iasgcCurrentMonthly" class="iasgc-input" value="500" min="0" step="50">
+        </div>
+
+        <div class="iasgc-form-group">
+          <label class="iasgc-label" for="iasgcStepUp">
+            Annual Contribution Step-Up (%) <span class="iasgc-hint">(Optional salary hike)</span>
+          </label>
+          <input type="number" id="iasgcStepUp" class="iasgc-input" value="5" min="0" max="50" step="0.5">
+          <div class="iasgc-pills">
+            <button type="button" class="iasgc-pill" onclick="iasgcSetVal('iasgcStepUp', 0)">0% (Flat)</button>
+            <button type="button" class="iasgc-pill" onclick="iasgcSetVal('iasgcStepUp', 5)">5% Annually</button>
+            <button type="button" class="iasgc-pill" onclick="iasgcSetVal('iasgcStepUp', 10)">10% Annually</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Inflation & Return Assumptions -->
+      <div class="iasgc-card">
+        <h2 class="iasgc-card-title">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+          3. Economic Assumptions
+        </h2>
+
+        <div class="iasgc-form-group">
+          <label class="iasgc-label" for="iasgcInflation">
+            Expected Annual Inflation (%)
+            <span class="iasgc-hint" id="iasgcInflationPresetLabel">Moderate</span>
+          </label>
+          <input type="number" id="iasgcInflation" class="iasgc-input" value="5.0" min="0" max="30" step="0.1">
+          <div class="iasgc-pills">
+            <button type="button" class="iasgc-pill" onclick="iasgcSetVal('iasgcInflation', 2.5)">Low (2.5%)</button>
+            <button type="button" class="iasgc-pill" onclick="iasgcSetVal('iasgcInflation', 5.0)">Mod (5.0%)</button>
+            <button type="button" class="iasgc-pill" onclick="iasgcSetVal('iasgcInflation', 7.0)">High (7.0%)</button>
+          </div>
+        </div>
+
+        <div class="iasgc-form-group">
+          <label class="iasgc-label" for="iasgcReturn">
+            Expected Nominal Annual Return (%)
+            <span class="iasgc-hint" id="iasgcReturnPresetLabel">Balanced</span>
+          </label>
+          <input type="number" id="iasgcReturn" class="iasgc-input" value="8.0" min="0" max="40" step="0.1">
+          <div class="iasgc-pills">
+            <button type="button" class="iasgc-pill" onclick="iasgcSetVal('iasgcReturn', 5.0)">Conservative (5%)</button>
+            <button type="button" class="iasgc-pill" onclick="iasgcSetVal('iasgcReturn', 8.0)">Balanced (8%)</button>
+            <button type="button" class="iasgc-pill" onclick="iasgcSetVal('iasgcReturn', 11.0)">Aggressive (11%)</button>
+          </div>
+        </div>
+
+        <!-- Collapsible Advanced Settings -->
+        <details style="margin-top: 15px; font-size: 0.88rem; color: var(--iasgc-text-muted);">
+          <summary style="cursor: pointer; font-weight: 600; color: var(--iasgc-primary);">Advanced Compounding & Fee Controls</summary>
+          <div style="padding-top: 12px;">
+            <div class="iasgc-form-group">
+              <label class="iasgc-label" for="iasgcContributionTiming">Deposit Timing</label>
+              <select id="iasgcContributionTiming" class="iasgc-select">
+                <option value="end" selected>End of month (Ordinary Annuity)</option>
+                <option value="beginning">Beginning of month (Annuity Due)</option>
+              </select>
+            </div>
+            <div class="iasgc-form-group">
+              <label class="iasgc-label" for="iasgcInvestmentFee">Annual Expense / Investment Fee (%)</label>
+              <input type="number" id="iasgcInvestmentFee" class="iasgc-input" value="0.25" min="0" max="5" step="0.05">
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- Right Column: Results Dashboard, SVG Visualizer & Tables -->
+    <div class="iasgc-results-col">
+      <!-- Status Card -->
+      <div id="iasgcStatusBox" class="iasgc-status-banner iasgc-status-warning">
+        Calculating projected trajectory...
+      </div>
+
+      <!-- KPI Summary Tiles -->
+      <div class="iasgc-kpi-grid">
+        <div class="iasgc-kpi-card highlight">
+          <span class="iasgc-kpi-label">Inflation-Adjusted Target</span>
+          <span class="iasgc-kpi-value" id="iasgcKpiFutureTarget">$0</span>
+          <span class="iasgc-kpi-sub" id="iasgcKpiInflationCost">+0% inflation drag</span>
+        </div>
+        <div class="iasgc-kpi-card highlight">
+          <span class="iasgc-kpi-label">Required Monthly Savings</span>
+          <span class="iasgc-kpi-value" id="iasgcKpiRequiredMonthly">$0</span>
+          <span class="iasgc-kpi-sub" id="iasgcKpiMonthlyStatus">vs planned monthly</span>
+        </div>
+        <div class="iasgc-kpi-card">
+          <span class="iasgc-kpi-label">Projected Future Balance</span>
+          <span class="iasgc-kpi-value" id="iasgcKpiProjectedBalance">$0</span>
+          <span class="iasgc-kpi-sub" id="iasgcKpiGapStatus">Surplus / Shortfall</span>
+        </div>
+        <div class="iasgc-kpi-card">
+          <span class="iasgc-kpi-label">Net Real Annual Return</span>
+          <span class="iasgc-kpi-value" id="iasgcKpiRealReturn">0.0%</span>
+          <span class="iasgc-kpi-sub">Fisher adjusted (after fees)</span>
+        </div>
+      </div>
+
+      <!-- Growth Chart Card -->
+      <div class="iasgc-card">
+        <h2 class="iasgc-card-title">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          Savings Growth vs. Target Trajectory
+        </h2>
+        <div class="iasgc-chart-container">
+          <svg id="iasgcSvgChart" viewBox="0 0 500 220" preserveAspectRatio="none" role="img" aria-label="Savings growth chart over time"></svg>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 16px; font-size: 0.82rem; font-weight: 600;">
+          <span style="color: #3b82f6;">● Projected Portfolio Balance</span>
+          <span style="color: #dc2626;">--- Target Goal (Inflation Drag)</span>
+          <span style="color: #94a3b8;">▪ Total Principal Invested</span>
+        </div>
+      </div>
+
+      <!-- Purchasing Power Card -->
+      <div class="iasgc-card">
+        <h2 class="iasgc-card-title">Purchasing Power & Real Value Analysis</h2>
+        <p style="font-size: 0.88rem; color: var(--iasgc-text-muted); margin: 0 0 10px 0;">
+          Without investing, cash in a zero-interest locker loses purchasing capability at current inflation rates:
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background: var(--iasgc-bg-subtle); padding: 12px; border-radius: 8px;">
+            <div style="font-size: 0.78rem; color: var(--iasgc-text-muted);">Future Portfolio in Today's Dollars</div>
+            <div style="font-size: 1.25rem; font-weight: 700; color: var(--iasgc-primary);" id="iasgcPurchasingPowerValue">$0</div>
+          </div>
+          <div style="background: var(--iasgc-bg-subtle); padding: 12px; border-radius: 8px;">
+            <div style="font-size: 0.78rem; color: var(--iasgc-text-muted);">Purchasing Power Loss If Uninvested</div>
+            <div style="font-size: 1.25rem; font-weight: 700; color: var(--iasgc-danger);" id="iasgcErosionPct">-0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sensitivity & Scenario Analysis Panel -->
+      <div class="iasgc-card">
+        <h2 class="iasgc-card-title">Scenario Sensitivity Analysis</h2>
+        <div class="iasgc-table-wrap">
+          <table class="iasgc-table" id="iasgcScenarioTable">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Inflation</th>
+                <th>Return</th>
+                <th>Future Target</th>
+                <th>Required / Mo</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="iasgcScenarioBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="iasgc-actions-row">
+        <button type="button" class="iasgc-btn iasgc-btn-primary" onclick="iasgcCopySummary()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+          Copy Summary
+        </button>
+        <button type="button" class="iasgc-btn iasgc-btn-outline" onclick="iasgcDownloadCSV()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Export CSV Schedule
+        </button>
+        <button type="button" class="iasgc-btn iasgc-btn-outline" onclick="window.print()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          Print Report
+        </button>
+        <button type="button" class="iasgc-btn iasgc-btn-outline" onclick="iasgcResetDefaults()">Reset</button>
+      </div>
+
+      <!-- Milestone Timeline Breakdown Table -->
+      <div class="iasgc-card" style="margin-top: 20px;">
+        <h2 class="iasgc-card-title">Year-by-Year Milestone Breakdown</h2>
+        <div class="iasgc-table-wrap">
+          <table class="iasgc-table" id="iasgcMilestoneTable">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Starting</th>
+                <th>Annual Deposit</th>
+                <th>Growth (Interest)</th>
+                <th>Ending Balance</th>
+                <th>Purchasing Power</th>
+              </tr>
+            </thead>
+            <tbody id="iasgcMilestoneBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Multiple Goals Manager Comparison Panel -->
+      <div class="iasgc-card">
+        <h2 class="iasgc-card-title">Multiple Goal Comparison Portfolio</h2>
+        <p style="font-size: 0.85rem; color: var(--iasgc-text-muted);">
+          Compare different milestones (e.g. Higher Education, Home Down Payment, Emergency Fund) simultaneously.
+        </p>
+        <button type="button" class="iasgc-btn iasgc-btn-outline" onclick="iasgcSaveCurrentAsGoal()">+ Add Current Target To Comparison</button>
+        <div class="iasgc-table-wrap" style="margin-top: 12px;">
+          <table class="iasgc-table">
+            <thead>
+              <tr>
+                <th>Goal</th>
+                <th>Duration</th>
+                <th>Today's Cost</th>
+                <th>Future Target</th>
+                <th>Req. Monthly</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="iasgcMultiGoalsBody">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--iasgc-text-muted);">No additional goals saved yet. Click above to save this simulation.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Local Privacy Guarantee -->
+      <div style="font-size: 0.82rem; color: var(--iasgc-text-muted); text-align: center; margin-top: 15px;">
+        🔒 <strong>Client-Side Execution:</strong> Your savings calculations are performed locally in your browser. This calculator does not require your bank login or password and never transmits financial inputs remotely.
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational SEO Long-Form Content Section -->
+  <section class="iasgc-seo-section">
+    <h2>About the Inflation-Adjusted Savings Goal Calculator</h2>
+    <p>
+      Planning for a major financial target without factoring in annual inflation is among the most frequent reasons financial blueprints fall short. An <strong>inflation-adjusted savings goal calculator</strong> solves this challenge by dynamically elevating present-day purchase estimates into their realistic future nominal costs while mathematically simulating how your current savings and disciplined monthly deposits compound over time.
+    </p>
+
+    <h2>Key Calculator Features</h2>
+    <ul>
+      <li><strong>Inflation-Adjusted Target Cost:</strong> Translates present-day money value into true future nominal obligations.</li>
+      <li><strong>Required Monthly Savings Solver:</strong> Computes the exact monthly savings needed to reach a goal considering annual compounding and deposit timing.</li>
+      <li><strong>Annual Step-Up Support:</strong> Models annual percentage contribution increases as your income grows over your horizon.</li>
+      <li><strong>Real vs. Nominal Returns:</strong> Incorporates Irving Fisher's formula to quantify net real asset growth after asset fees.</li>
+      <li><strong>Savings Shortfall / Surplus Analysis:</strong> Real-time feedback alerts you whether planned contributions leave a deficit or produce a safe surplus.</li>
+      <li><strong>Scenario Stress-Testing:</strong> Directly compares conservative, base, and optimistic investment paths side by side.</li>
+      <li><strong>Multi-Goal Comparison Portfolio:</strong> Track home purchase, education, and retirement targets within one workspace.</li>
+      <li><strong>Portable Reporting:</strong> One-click copy, clean print formatting, and full CSV milestone export.</li>
+    </ul>
+
+    <h2>How to Use This Savings Goal Planning Calculator</h2>
+    <ol>
+      <li><strong>Input Current Target Cost:</strong> Specify what your goal costs if purchased today in your local currency.</li>
+      <li><strong>Select Investment Horizon:</strong> Set the duration in years and additional months until your target date.</li>
+      <li><strong>Specify Current Capital:</strong> Enter any lump sum already invested plus your current monthly savings.</li>
+      <li><strong>Calibrate Assumptions:</strong> Choose an expected inflation rate and realistic annualized investment return.</li>
+      <li><strong>Analyze Required Monthly Savings:</strong> Review whether your current planned deposits leave a shortfall or reach the required target.</li>
+      <li><strong>Simulate Step-Ups & Scenarios:</strong> Use the 5% or 10% annual step-up preset to observe how progressive salary increases lower early monthly stress.</li>
+    </ol>
+
+    <h2>Financial Calculation Methodology</h2>
+    <p>
+      The core mathematical framework uses standard non-linear time-value-of-money equations:
+    </p>
+    <div style="background: var(--iasgc-bg-subtle); padding: 14px; border-radius: 8px; font-family: monospace; font-size: 0.9rem; margin-bottom: 15px;">
+      1. Future Nominal Target: FV_goal = PV_goal × (1 + i)^n<br>
+      2. Lump-Sum Compounding: FV_lump = PV_savings × (1 + r)^n<br>
+      3. Real Rate of Return: r_real = ((1 + r_nominal) / (1 + i)) - 1<br>
+      4. Purchasing Power of Balance: PV_balance = Projected_Balance / (1 + i)^n
+    </div>
+    <p>
+      Where <code>i</code> represents effective annual inflation, <code>r</code> denotes the annualized investment return net of fees, and <code>n</code> represents the duration in years. For continuous monthly contributions, equivalent monthly periodic rates are applied to calculate the terminal value of an ordinary annuity or annuity due.
+    </p>
+
+    <h2>Frequently Asked Questions (FAQ)</h2>
+    <div class="iasgc-faq-item">
+      <h4>1. What is an inflation-adjusted savings goal calculator?</h4>
+      <p>It is an interactive planning tool that projects how prices for real estate, tuition, or retirement will climb in the future, calculating the exact monthly investment required to keep pace with that inflation.</p>
+    </div>
+    <div class="iasgc-faq-item">
+      <h4>2. How do I calculate a future savings goal with inflation?</h4>
+      <p>Multiply today's price by <code>(1 + annual inflation rate)^years</code>. For example, a $100,000 house down payment in 10 years at 5% inflation will cost $100,000 × (1.05)^10 = $162,889.</p>
+    </div>
+    <div class="iasgc-faq-item">
+      <h4>3. How much should I save monthly to reach my goal?</h4>
+      <p>Your required monthly savings depends on your investment return, current savings, and time horizon. This calculator dynamically solves for the exact monthly contribution so your accumulated capital precisely matches the inflation-adjusted target.</p>
+    </div>
+    <div class="iasgc-faq-item">
+      <h4>4. How does inflation affect savings goals?</h4>
+      <p>Inflation silently diminishes what each unit of currency buys. A fixed lump sum kept in non-yielding cash accounts loses significant real purchasing power every single year.</p>
+    </div>
+    <div class="iasgc-faq-item">
+      <h4>5. What is the difference between inflation and investment returns?</h4>
+      <p>Inflation is the rate at which costs escalate across goods and services. Investment return is the percentage growth generated by your assets. To grow wealth, your nominal return must exceed inflation.</p>
+    </div>
+    <div class="iasgc-faq-item">
+      <h4>6. How do I calculate the future value of my savings?</h4>
+      <p>Compounded future value is calculated by adding the future growth of your existing balance plus the accumulated compound value of each monthly contribution made over the duration.</p>
+    </div>
+    <div class="iasgc-faq-item">
+      <h4>7. What is the real rate of return?</h4>
+      <p>The real rate of return measures wealth creation after eliminating inflation. While often approximated as <code>nominal return − inflation</code>, the exact formula is <code>((1 + nominal) / (1 + inflation)) − 1</code>.</p>
+    </div>
+    <div class="iasgc-faq-item">
+      <h4>8. How can I calculate the purchasing power of future savings?</h4>
+      <p>Divide the projected future nominal balance by <code>(1 + inflation rate)^years</code>. This shows what that accumulated balance would feel like in today's grocery, rent, and utility prices.</p>
+    </div>
+    <div class="iasgc-faq-item">
+      <h4>9. Can I include my current savings balance?</h4>
+      <p>Yes. Enter your existing portfolio under Current Savings, and the calculator will compound it over your entire horizon before computing any remaining balance needed from monthly deposits.</p>
+    </div>
+    <div class="iasgc-faq-item">
+      <h4>10. Can I increase my monthly contribution every year?</h4>
+      <p>Yes. Use the Annual Contribution Step-Up field to simulate increasing your monthly contributions (e.g., 5% or 10% annually) as your career compensation rises.</p>
+    </div>
+    <div class="iasgc-faq-item">
+      <h4>11. How can I calculate a savings shortfall?</h4>
+      <p>A shortfall occurs whenever your projected accumulated balance at the target date is less than the inflation-adjusted target. The shortfall equals <code>Future Target − Projected Balance</code>.</p>
+    </div>
+    <div class="iasgc-faq-item">
+      <h4>12. Can I compare conservative and optimistic scenarios?</h4>
+      <p>Yes. The built-in Scenario Sensitivity Analysis table automatically simulates optimistic (lower inflation, higher returns) and conservative (higher inflation, lower returns) cases simultaneously.</p>
+    </div>
+    <div class="iasgc-faq-item">
+      <h4>13. Can I use this tool for retirement or education planning?</h4>
+      <p>Yes. The calculator includes pre-configured categories for Higher Education, Retirement, Emergency Reserves, Home Purchases, and Weddings.</p>
+    </div>
+    <div class="iasgc-faq-item">
+      <h4>14. Does the calculator guarantee that I will reach my goal?</h4>
+      <p>No. The outputs are mathematical projections based on assumed average rates. Real market returns, tax liabilities, and inflation fluctuate unpredictably year to year.</p>
+    </div>
+    <div class="iasgc-faq-item">
+      <h4>15. Does the calculator require my bank details?</h4>
+      <p>Never. This calculator is 100% browser-based. No account registration, passwords, or personal banking credentials are ever requested or stored.</p>
+    </div>
+
+    <!-- Related Financial Tools Section -->
+    <h2>Related Planning Tools & External References</h2>
+    <p>Explore other specialized calculators across our suite:</p>
+    <ul>
+      <li><a href="https://my-tool-app.pages.dev/" target="_blank" rel="noopener">Explore More Financial Calculators</a> — Access the primary suite of free financial and analytical utilities.</li>
+      <li><a href="https://my-tool-app.pages.dev/solar-battery-runtime-calculator" target="_blank" rel="noopener">Solar Battery Runtime Calculator</a> — Estimate off-grid battery discharge durations and renewable energy storage capacity.</li>
+    </ul>
+
+    <p>For verified economic statistics and historical consumer inflation indices, consult official regulatory institutions:</p>
+    <ul>
+      <li><a href="https://www.bls.gov/cpi/" target="_blank" rel="nofollow noopener">U.S. Bureau of Labor Statistics (CPI)</a></li>
+      <li><a href="https://fred.stlouisfed.org/" target="_blank" rel="nofollow noopener">Federal Reserve Bank of St. Louis (FRED Economic Data)</a></li>
+      <li><a href="https://www.rbi.org.in/" target="_blank" rel="nofollow noopener">Reserve Bank of India (RBI Reference Rates)</a></li>
+      <li><a href="https://data.worldbank.org/indicator/FP.CPI.TOTL.ZG" target="_blank" rel="nofollow noopener">World Bank Global Inflation Indicators</a></li>
+    </ul>
+
+    <!-- Regulatory Financial Disclaimer -->
+    <div class="iasgc-disclaimer">
+      <strong>Important Financial Disclaimer:</strong> This calculator provides illustrative financial estimates for educational and planning purposes only. Inflation rates and investment returns are assumptions, not guarantees. Actual future prices, investment performance, fees, taxes, and personal circumstances may differ substantially. This tool does not provide personalized financial, tax, or investment advice. Consider your individual circumstances and consult a qualified fiduciary financial advisor before making major asset allocation decisions.
+    </div>
+  </section>
+</div>
+
+<!-- Scoped Calculation & Interaction Engine -->
+<script>
+(function() {
+  'use strict';
+
+  // Multi-goal storage state
+  var iasgcSavedGoals = [];
+
+  // Helper formatting functions
+  function iasgcFormatMoney(val, curr) {
+    if (isNaN(val) || !isFinite(val)) return curr + '0';
+    return curr + Number(Math.round(val)).toLocaleString();
+  }
+
+  function iasgcGetNum(id, fallback) {
+    var el = document.getElementById(id);
+    if (!el) return fallback || 0;
+    var v = parseFloat(el.value);
+    return isNaN(v) ? (fallback || 0) : v;
+  }
+
+  // Quick preset helper
+  window.iasgcSetVal = function(id, val) {
+    var el = document.getElementById(id);
+    if (el) {
+      el.value = val;
+      iasgcRecalculate();
+    }
+  };
+
+  // Main calculation runner
+  function iasgcRecalculate() {
+    var goalName = document.getElementById('iasgcGoalName').value || 'Savings Goal';
+    var goalAmt = Math.max(0, iasgcGetNum('iasgcGoalAmount', 100000));
+    var curr = document.getElementById('iasgcCurrency').value || '$';
+    var isFixedFuture = document.getElementById('iasgcIsAlreadyFuture').checked;
+    
+    var years = Math.max(0, iasgcGetNum('iasgcYears', 10));
+    var months = Math.max(0, Math.min(11, iasgcGetNum('iasgcMonths', 0)));
+    var totalMonths = (years * 12) + months;
+    if (totalMonths <= 0) totalMonths = 1;
+    var totalYears = totalMonths / 12;
+
+    var curSavings = Math.max(0, iasgcGetNum('iasgcCurrentSavings', 0));
+    var plannedMonthly = Math.max(0, iasgcGetNum('iasgcCurrentMonthly', 0));
+    var stepUpPct = Math.max(0, iasgcGetNum('iasgcStepUp', 0)) / 100;
+
+    var inflPct = Math.max(0, iasgcGetNum('iasgcInflation', 5)) / 100;
+    var rawReturnPct = Math.max(0, iasgcGetNum('iasgcReturn', 8)) / 100;
+    var feePct = Math.max(0, iasgcGetNum('iasgcInvestmentFee', 0.25)) / 100;
+    
+    // Net nominal return after advisory / fund expenses
+    var netReturnPct = Math.max(0, rawReturnPct - feePct);
+    var timing = document.getElementById('iasgcContributionTiming').value;
+
+    // 1. Calculate Future Target
+    var futureTarget = goalAmt;
+    var inflationFactor = Math.pow(1 + inflPct, totalYears);
+    if (!isFixedFuture) {
+      futureTarget = goalAmt * inflationFactor;
+      document.getElementById('iasgcGoalModeHint').textContent = "(Today's Money)";
+    } else {
+      document.getElementById('iasgcGoalModeHint').textContent = "(Fixed Future Target)";
+    }
+    var inflationDragPct = isFixedFuture ? 0 : Math.round((inflationFactor - 1) * 100);
+
+    // 2. Real Rate of Return (Fisher Equation)
+    var realReturn = ((1 + netReturnPct) / (1 + inflPct)) - 1;
+
+    // 3. Simulation Engine: monthly compounding with step-up
+    var monthlyNetRate = Math.pow(1 + netReturnPct, 1 / 12) - 1;
+
+    // Simulate planned trajectory
+    function runSimulation(initBalance, baseMonthly, stepPct) {
+      var balance = initBalance;
+      var totalDeposited = initBalance;
+      var currentDeposit = baseMonthly;
+      var yearlyHistory = [];
+
+      for (var m = 1; m <= totalMonths; m++) {
+        // Step-up contribution every 12 months
+        if (m > 1 && (m - 1) % 12 === 0) {
+          currentDeposit = currentDeposit * (1 + stepPct);
+        }
+
+        if (timing === 'beginning') {
+          balance += currentDeposit;
+          totalDeposited += currentDeposit;
+          balance += balance * monthlyNetRate;
+        } else {
+          balance += balance * monthlyNetRate;
+          balance += currentDeposit;
+          totalDeposited += currentDeposit;
+        }
+
+        // Record yearly milestones
+        if (m % 12 === 0 || m === totalMonths) {
+          var yIndex = Math.ceil(m / 12);
+          yearlyHistory.push({
+            year: yIndex,
+            month: m,
+            balance: balance,
+            totalDeposited: totalDeposited,
+            purchasingPower: balance / Math.pow(1 + inflPct, m / 12)
+          });
+        }
+      }
+      return { finalBalance: balance, totalDeposited: totalDeposited, history: yearlyHistory };
+    }
+
+    var plannedResult = runSimulation(curSavings, plannedMonthly, stepUpPct);
+    var projectedBalance = plannedResult.finalBalance;
+
+    // 4. Solve Required Base Monthly Contribution
+    // Using binary search solver to support custom step-up and deposit timing flawlessly
+    var low = 0;
+    var high = Math.max(futureTarget, 10000000);
+    var requiredMonthly = 0;
+
+    // If existing savings alone cover the target
+    var lumpOnlySim = runSimulation(curSavings, 0, 0);
+    if (lumpOnlySim.finalBalance >= futureTarget) {
+      requiredMonthly = 0;
+    } else {
+      for (var iter = 0; iter < 45; iter++) {
+        var mid = (low + high) / 2;
+        var sim = runSimulation(curSavings, mid, stepUpPct);
+        if (sim.finalBalance >= futureTarget) {
+          high = mid;
+          requiredMonthly = mid;
+        } else {
+          low = mid;
+        }
+      }
+    }
+
+    // 5. Update KPI Cards & Status Banner
+    document.getElementById('iasgcKpiFutureTarget').textContent = iasgcFormatMoney(futureTarget, curr);
+    document.getElementById('iasgcKpiInflationCost').textContent = isFixedFuture ? 'Fixed Target' : ('+' + inflationDragPct + '% inflation cost');
+
+    document.getElementById('iasgcKpiRequiredMonthly').textContent = iasgcFormatMoney(requiredMonthly, curr) + '/mo';
+    var monthlyDiff = plannedMonthly - requiredMonthly;
+    var statusMonthlySub = document.getElementById('iasgcKpiMonthlyStatus');
+    if (monthlyDiff >= 0) {
+      statusMonthlySub.textContent = '+' + iasgcFormatMoney(monthlyDiff, curr) + ' above needed';
+      statusMonthlySub.style.color = 'var(--iasgc-success)';
+    } else {
+      statusMonthlySub.textContent = iasgcFormatMoney(Math.abs(monthlyDiff), curr) + ' shortfall/mo';
+      statusMonthlySub.style.color = 'var(--iasgc-danger)';
+    }
+
+    document.getElementById('iasgcKpiProjectedBalance').textContent = iasgcFormatMoney(projectedBalance, curr);
+    var surplusShortfall = projectedBalance - futureTarget;
+    var gapStatus = document.getElementById('iasgcKpiGapStatus');
+    var statusBox = document.getElementById('iasgcStatusBox');
+
+    if (surplusShortfall >= 0) {
+      gapStatus.textContent = 'Surplus: ' + iasgcFormatMoney(surplusShortfall, curr);
+      gapStatus.style.color = 'var(--iasgc-success)';
+      statusBox.className = 'iasgc-status-banner iasgc-status-success';
+      statusBox.innerHTML = '✔ <strong>Target Achieved:</strong> Your current planned contributions exceed your inflation-adjusted milestone by ' + iasgcFormatMoney(surplusShortfall, curr) + '.';
+    } else {
+      var deficit = Math.abs(surplusShortfall);
+      gapStatus.textContent = 'Shortfall: -' + iasgcFormatMoney(deficit, curr);
+      gapStatus.style.color = 'var(--iasgc-danger)';
+      statusBox.className = 'iasgc-status-banner iasgc-status-danger';
+      statusBox.innerHTML = '⚠ <strong>Savings Shortfall:</strong> Projected balance falls short by ' + iasgcFormatMoney(deficit, curr) + '. Increase monthly savings to ' + iasgcFormatMoney(requiredMonthly, curr) + ' to stay on target.';
+    }
+
+    document.getElementById('iasgcKpiRealReturn').textContent = (realReturn * 100).toFixed(2) + '%';
+
+    // 6. Purchasing Power Analytics
+    var projectedInTodayMoney = projectedBalance / inflationFactor;
+    document.getElementById('iasgcPurchasingPowerValue').textContent = iasgcFormatMoney(projectedInTodayMoney, curr);
+    var erosionPct = Math.round((1 - (1 / inflationFactor)) * 100);
+    document.getElementById('iasgcErosionPct').textContent = '-' + erosionPct + '% Purchasing Power';
+
+    // 7. Render Milestone Table
+    var milestoneBody = document.getElementById('iasgcMilestoneBody');
+    milestoneBody.innerHTML = '';
+    var hist = plannedResult.history;
+    var prevBal = curSavings;
+    for (var h = 0; h < hist.length; h++) {
+      var item = hist[h];
+      var annualContrib = item.totalDeposited - (h === 0 ? curSavings : hist[h - 1].totalDeposited);
+      var growth = (item.balance - prevBal) - annualContrib;
+      if (growth < 0) growth = 0;
+
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>Year ' + item.year + '</td>' +
+                     '<td>' + iasgcFormatMoney(prevBal, curr) + '</td>' +
+                     '<td>' + iasgcFormatMoney(annualContrib, curr) + '</td>' +
+                     '<td style="color:var(--iasgc-success);">+' + iasgcFormatMoney(growth, curr) + '</td>' +
+                     '<td style="font-weight:700;">' + iasgcFormatMoney(item.balance, curr) + '</td>' +
+                     '<td style="color:var(--iasgc-text-muted);">' + iasgcFormatMoney(item.purchasingPower, curr) + '</td>';
+      milestoneBody.appendChild(tr);
+      prevBal = item.balance;
+    }
+
+    // 8. Render Visual SVG Chart
+    iasgcRenderChart(hist, futureTarget, curSavings);
+
+    // 9. Update Scenario Matrix
+    iasgcRenderScenarios(goalAmt, totalYears, curSavings, stepUpPct, curr, isFixedFuture);
+  }
+
+  // Visual SVG Multi-Line Chart
+  function iasgcRenderChart(history, targetAmt, initialSavings) {
+    var svg = document.getElementById('iasgcSvgChart');
+    if (!svg || history.length === 0) return;
+    svg.innerHTML = '';
+
+    var width = 500;
+    var height = 220;
+    var padLeft = 40;
+    var padRight = 20;
+    var padTop = 20;
+    var padBottom = 30;
+
+    var maxVal = Math.max(targetAmt, history[history.length - 1].balance, initialSavings) * 1.15;
+    if (maxVal <= 0) maxVal = 1;
+
+    function getX(idx, total) {
+      return padLeft + (idx / Math.max(1, total - 1)) * (width - padLeft - padRight);
+    }
+    function getY(val) {
+      return height - padBottom - (val / maxVal) * (height - padTop - padBottom);
+    }
+
+    // Draw grid lines
+    for (var g = 0; g <= 4; g++) {
+      var yCoord = padTop + g * ((height - padTop - padBottom) / 4);
+      var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', padLeft);
+      line.setAttribute('y1', yCoord);
+      line.setAttribute('x2', width - padRight);
+      line.setAttribute('y2', yCoord);
+      line.setAttribute('stroke', '#e2e8f0');
+      line.setAttribute('stroke-dasharray', '3 3');
+      svg.appendChild(line);
+    }
+
+    // Target Line (Red dashed line)
+    var targetY = getY(targetAmt);
+    var tLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    tLine.setAttribute('x1', padLeft);
+    tLine.setAttribute('y1', targetY);
+    tLine.setAttribute('x2', width - padRight);
+    tLine.setAttribute('y2', targetY);
+    tLine.setAttribute('stroke', '#dc2626');
+    tLine.setAttribute('stroke-width', '2');
+    tLine.setAttribute('stroke-dasharray', '5 4');
+    svg.appendChild(tLine);
+
+    // Build Balance Curve & Deposits Curve
+    var balPts = [];
+    var depPts = [];
+    balPts.push(getX(0, history.length + 1) + ',' + getY(initialSavings));
+    depPts.push(getX(0, history.length + 1) + ',' + getY(initialSavings));
+
+    for (var i = 0; i < history.length; i++) {
+      var x = getX(i + 1, history.length + 1);
+      balPts.push(x + ',' + getY(history[i].balance));
+      depPts.push(x + ',' + getY(history[i].totalDeposited));
+    }
+
+    // Total Deposited Polyline (Gray)
+    var dPoly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    dPoly.setAttribute('fill', 'none');
+    dPoly.setAttribute('stroke', '#94a3b8');
+    dPoly.setAttribute('stroke-width', '2');
+    dPoly.setAttribute('points', depPts.join(' '));
+    svg.appendChild(dPoly);
+
+    // Projected Portfolio Polyline (Primary Blue)
+    var bPoly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    bPoly.setAttribute('fill', 'none');
+    bPoly.setAttribute('stroke', '#3b82f6');
+    bPoly.setAttribute('stroke-width', '3');
+    bPoly.setAttribute('points', balPts.join(' '));
+    svg.appendChild(bPoly);
+
+    // Chart circles
+    for (var c = 0; c < history.length; c++) {
+      var cx = getX(c + 1, history.length + 1);
+      var cy = getY(history[c].balance);
+      var circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circ.setAttribute('cx', cx);
+      circ.setAttribute('cy', cy);
+      circ.setAttribute('r', '4');
+      circ.setAttribute('fill', '#1e3a8a');
+      svg.appendChild(circ);
+    }
+  }
+
+  // Scenario Matrix Helper
+  function iasgcRenderScenarios(baseGoal, years, curSav, stepUp, curr, isFixed) {
+    var scenarios = [
+      { name: 'Optimistic', infl: 0.03, ret: 0.10 },
+      { name: 'Base Model', infl: iasgcGetNum('iasgcInflation', 5) / 100, ret: iasgcGetNum('iasgcReturn', 8) / 100 },
+      { name: 'Conservative', infl: 0.07, ret: 0.05 }
+    ];
+
+    var tbody = document.getElementById('iasgcScenarioBody');
+    tbody.innerHTML = '';
+
+    scenarios.forEach(function(sc) {
+      var tAmt = isFixed ? baseGoal : (baseGoal * Math.pow(1 + sc.infl, years));
+      var mRate = Math.pow(1 + sc.ret, 1 / 12) - 1;
+      var totM = Math.max(1, Math.round(years * 12));
+
+      // Quick reverse solve
+      var lo = 0; var hi = Math.max(tAmt, 5000000); var req = 0;
+      for (var k = 0; k < 30; k++) {
+        var mid = (lo + hi) / 2;
+        var b = curSav;
+        var dep = mid;
+        for (var m = 1; m <= totM; m++) {
+          if (m > 1 && (m - 1) % 12 === 0) dep *= (1 + stepUp);
+          b += b * mRate + dep;
+        }
+        if (b >= tAmt) { hi = mid; req = mid; } else { lo = mid; }
+      }
+
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td><strong>' + sc.name + '</strong></td>' +
+                     '<td>' + (sc.infl * 100).toFixed(1) + '%</td>' +
+                     '<td>' + (sc.ret * 100).toFixed(1) + '%</td>' +
+                     '<td>' + iasgcFormatMoney(tAmt, curr) + '</td>' +
+                     '<td style="font-weight:700;">' + iasgcFormatMoney(req, curr) + '</td>' +
+                     '<td><span class="iasgc-badge ' + (sc.name === 'Conservative' ? 'iasgc-badge-danger' : 'iasgc-badge-success') + '">' + sc.name + '</span></td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Multiple Goal Comparison Logic
+  window.iasgcSaveCurrentAsGoal = function() {
+    var name = document.getElementById('iasgcGoalName').value || 'Milestone';
+    var cat = document.getElementById('iasgcGoalCategory').value;
+    var amt = iasgcGetNum('iasgcGoalAmount', 100000);
+    var y = iasgcGetNum('iasgcYears', 10);
+    var curr = document.getElementById('iasgcCurrency').value || '$';
+    var fut = document.getElementById('iasgcKpiFutureTarget').textContent;
+    var req = document.getElementById('iasgcKpiRequiredMonthly').textContent;
+
+    iasgcSavedGoals.push({ name: name, category: cat, cost: amt, years: y, curr: curr, fut: fut, req: req });
+    iasgcRenderMultiGoals();
+  };
+
+  function iasgcRenderMultiGoals() {
+    var tbody = document.getElementById('iasgcMultiGoalsBody');
+    if (iasgcSavedGoals.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--iasgc-text-muted);">No additional goals saved yet.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = '';
+    iasgcSavedGoals.forEach(function(g, idx) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td><strong>' + g.name + '</strong><br><small style="color:var(--iasgc-text-muted);">' + g.category + '</small></td>' +
+                     '<td>' + g.years + ' Years</td>' +
+                     '<td>' + iasgcFormatMoney(g.cost, g.curr) + '</td>' +
+                     '<td>' + g.fut + '</td>' +
+                     '<td style="font-weight:700; color:var(--iasgc-primary);">' + g.req + '</td>' +
+                     '<td><button type="button" class="iasgc-pill" onclick="iasgcRemoveGoal(' + idx + ')">Remove</button></td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  window.iasgcRemoveGoal = function(idx) {
+    iasgcSavedGoals.splice(idx, 1);
+    iasgcRenderMultiGoals();
+  };
+
+  // Export CSV Data
+  window.iasgcDownloadCSV = function() {
+    var rows = [
+      ["Inflation-Adjusted Savings Goal Plan Report"],
+      ["Generated", new Date().toLocaleDateString()],
+      ["Goal Name", document.getElementById('iasgcGoalName').value],
+      ["Inflation-Adjusted Target", document.getElementById('iasgcKpiFutureTarget').textContent],
+      ["Required Monthly Contribution", document.getElementById('iasgcKpiRequiredMonthly').textContent],
+      ["Projected Future Balance", document.getElementById('iasgcKpiProjectedBalance').textContent],
+      [],
+      ["Year", "Starting Balance", "Annual Contributions", "Investment Growth", "Ending Balance", "Purchasing Power Equivalent"]
+    ];
+
+    var tableRows = document.querySelectorAll('#iasgcMilestoneBody tr');
+    tableRows.forEach(function(tr) {
+      var cols = [];
+      tr.querySelectorAll('td').forEach(function(td) {
+        cols.push('"' + td.innerText.replace(/"/g, '""') + '"');
+      });
+      rows.push(cols);
+    });
+
+    var csvContent = "data:text/csv;charset=utf-8," + rows.map(function(e) { return e.join(","); }).join("\n");
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "Inflation_Savings_Plan.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Copy Summary text to Clipboard
+  window.iasgcCopySummary = function() {
+    var txt = "--- Inflation-Adjusted Savings Goal Plan ---\n" +
+              "Target: " + document.getElementById('iasgcGoalName').value + "\n" +
+              "Future Target Cost: " + document.getElementById('iasgcKpiFutureTarget').textContent + "\n" +
+              "Required Monthly Savings: " + document.getElementById('iasgcKpiRequiredMonthly').textContent + "\n" +
+              "Projected Final Balance: " + document.getElementById('iasgcKpiProjectedBalance').textContent + "\n" +
+              "Calculated at: " + window.location.href;
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function() {
+        alert("Summary copied to clipboard!");
+      });
+    } else {
+      alert("Summary:\n\n" + txt);
+    }
+  };
+
+  // Reset defaults
+  window.iasgcResetDefaults = function() {
+    document.getElementById('iasgcGoalName').value = "Home Down Payment";
+    document.getElementById('iasgcGoalAmount').value = "100000";
+    document.getElementById('iasgcYears').value = "10";
+    document.getElementById('iasgcMonths').value = "0";
+    document.getElementById('iasgcCurrentSavings').value = "15000";
+    document.getElementById('iasgcCurrentMonthly').value = "500";
+    document.getElementById('iasgcStepUp').value = "5";
+    document.getElementById('iasgcInflation').value = "5.0";
+    document.getElementById('iasgcReturn').value = "8.0";
+    document.getElementById('iasgcIsAlreadyFuture').checked = false;
+    iasgcRecalculate();
+  };
+
+  // Attach live calculation listeners
+  var inputIds = [
+    'iasgcGoalName', 'iasgcGoalCategory', 'iasgcGoalAmount', 'iasgcCurrency',
+    'iasgcIsAlreadyFuture', 'iasgcYears', 'iasgcMonths', 'iasgcCurrentSavings',
+    'iasgcCurrentMonthly', 'iasgcStepUp', 'iasgcInflation', 'iasgcReturn',
+    'iasgcContributionTiming', 'iasgcInvestmentFee'
+  ];
+
+  inputIds.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', iasgcRecalculate);
+      el.addEventListener('change', iasgcRecalculate);
+    }
+  });
+
+  // Initial execution on page load
+  iasgcRecalculate();
+})();
+</script>
