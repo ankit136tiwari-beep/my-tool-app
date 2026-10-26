@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Amazon FBA Fee Profit Estimator – Manual Fee Calculator</title>
+  <meta name="description" content="Free Amazon FBA fee profit estimator. Enter your own referral, FBA, storage & PPC fees to see net profit, margin, ROI and break-even ACOS.">
+  <link rel="canonical" href="https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator">
+  <meta property="og:title" content="Amazon FBA Fee Profit Estimator – Manual Fee Calculator">
+  <meta property="og:description" content="Calculate real Amazon net profit, margin, ROI and break-even ACOS using your exact Seller Central fee rates.">
+  <meta property="og:url" content="https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator">
+  <meta property="og:type" content="website">
+</head>
+<body>
+
+<div id="fbae-root">
+<style>
+/* CSS Reset & Namespace Scope - Theme Safe */
+#fbae-root {
+  --fbae-primary: #ff9900;
+  --fbae-primary-hover: #e88b00;
+  --fbae-dark: #131921;
+  --fbae-navy: #232f3e;
+  --fbae-bg: #f8f9fa;
+  --fbae-card-bg: #ffffff;
+  --fbae-border: #d5dbdb;
+  --fbae-text: #0f1111;
+  --fbae-text-muted: #565959;
+  --fbae-success: #067d62;
+  --fbae-warning: #b12704;
+  --fbae-danger: #c40000;
+  --fbae-radius: 8px;
+  --fbae-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  color: var(--fbae-text);
+  background-color: var(--fbae-bg);
+  line-height: 1.5;
+  padding: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+#fbae-root *, #fbae-root *::before, #fbae-root *::after {
+  box-sizing: inherit;
+}
+
+@media (prefers-color-scheme: dark) {
+  #fbae-root {
+    --fbae-bg: #0f141c;
+    --fbae-card-bg: #1a222d;
+    --fbae-border: #2c3848;
+    --fbae-text: #e6ebf1;
+    --fbae-text-muted: #9aa4b2;
+    --fbae-navy: #131921;
+    --fbae-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+}
+
+.fbae-title { font-size: 26px; font-weight: 700; margin: 0 0 8px 0; color: var(--fbae-text); }
+.fbae-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 992px) {
+  .fbae-grid { grid-template-columns: 1.25fr 1fr; align-items: start; }
+}
+
+/* Card Boxes */
+.fbae-card { 
+  background: var(--fbae-card-bg); 
+  border: 1px solid var(--fbae-border); 
+  border-radius: var(--fbae-radius); 
+  padding: 16px; 
+  margin-bottom: 16px; 
+  box-shadow: var(--fbae-shadow); 
+}
+
+.fbae-section-title { 
+  font-size: 15px; 
+  font-weight: 700; 
+  margin: 0 0 12px 0; 
+  padding-bottom: 6px; 
+  border-bottom: 2px solid var(--fbae-border); 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  cursor: pointer; 
+  user-select: none; 
+}
+.fbae-section-title:hover { border-color: var(--fbae-primary); }
+
+/* Form Fields */
+.fbae-row { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 12px; }
+@media (min-width: 480px) {
+  .fbae-row-2 { grid-template-columns: 1fr 1fr; }
+  .fbae-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+}
+.fbae-field { display: flex; flex-direction: column; }
+.fbae-field label { font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--fbae-text); }
+.fbae-field input, .fbae-field select {
+  height: 40px;
+  padding: 8px 10px;
+  border: 1px solid var(--fbae-border);
+  border-radius: 6px;
+  background: var(--fbae-card-bg);
+  color: var(--fbae-text);
+  font-size: 14px;
+  outline: none;
+}
+.fbae-field input:focus, .fbae-field select:focus { 
+  border-color: var(--fbae-primary); 
+  box-shadow: 0 0 0 2px rgba(255,153,0,0.25); 
+}
+.fbae-hint { font-size: 11px; color: var(--fbae-text-muted); margin-top: 3px; }
+
+/* Toggles */
+.fbae-toggle-group { display: flex; border: 1px solid var(--fbae-border); border-radius: 6px; overflow: hidden; height: 38px; }
+.fbae-toggle-btn { flex: 1; border: none; background: transparent; color: var(--fbae-text); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.fbae-toggle-btn.active { background: var(--fbae-navy); color: #fff; }
+
+/* Sticky Mobile Bar */
+.fbae-mobile-bar {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  background: var(--fbae-navy);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: var(--fbae-radius);
+  margin-bottom: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+@media (min-width: 992px) { .fbae-mobile-bar { display: none; } }
+.fbae-mobile-bar-inner { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+.fbae-mobile-bar-val { font-size: 16px; font-weight: 700; color: var(--fbae-primary); }
+
+/* KPI Cards */
+.fbae-kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+@media (min-width: 600px) { .fbae-kpis { grid-template-columns: repeat(3, 1fr); } }
+.fbae-kpi-card { background: var(--fbae-card-bg); border: 1px solid var(--fbae-border); border-radius: var(--fbae-radius); padding: 12px; text-align: center; }
+.fbae-kpi-label { font-size: 11px; text-transform: uppercase; color: var(--fbae-text-muted); font-weight: 600; margin-bottom: 4px; }
+.fbae-kpi-val { font-size: 18px; font-weight: 700; color: var(--fbae-text); }
+.fbae-kpi-status { font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px; }
+.fbae-status-healthy { background: rgba(6,125,98,0.15); color: var(--fbae-success); }
+.fbae-status-thin { background: rgba(177,39,4,0.15); color: var(--fbae-warning); }
+.fbae-status-loss { background: rgba(196,0,0,0.15); color: var(--fbae-danger); }
+
+/* Waterfall Bar */
+.fbae-bar-wrap { margin: 16px 0; }
+.fbae-bar-track { display: flex; height: 24px; border-radius: 6px; overflow: hidden; background: #e0e0e0; }
+.fbae-bar-seg { height: 100%; transition: width 0.3s; }
+.fbae-legend { display: flex; flex-wrap: wrap; gap: 8px 12px; font-size: 11px; margin-top: 8px; }
+.fbae-legend-item { display: flex; align-items: center; gap: 4px; }
+.fbae-legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+/* Tables */
+.fbae-table-wrap { overflow-x: auto; margin-top: 10px; }
+.fbae-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+.fbae-table th, .fbae-table td { padding: 8px 10px; border-bottom: 1px solid var(--fbae-border); }
+.fbae-table th { background: rgba(0,0,0,0.03); color: var(--fbae-text); font-weight: 600; }
+.fbae-text-right { text-align: right; }
+
+/* Buttons & Toolbar */
+.fbae-btn-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.fbae-btn {
+  height: 38px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid var(--fbae-border);
+  background: var(--fbae-card-bg);
+  color: var(--fbae-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.fbae-btn:hover { background: rgba(0,0,0,0.05); }
+.fbae-btn-primary { background: var(--fbae-primary); border-color: var(--fbae-primary); color: #111; }
+.fbae-btn-primary:hover { background: var(--fbae-primary-hover); }
+
+/* Toast */
+.fbae-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--fbae-navy);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 13px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  display: none;
+  z-index: 1000;
+}
+
+/* Collapsible Animation */
+.fbae-collapsible-content { display: block; }
+.fbae-collapsed .fbae-collapsible-content { display: none; }
+.fbae-chevron { transition: transform 0.2s; width: 16px; height: 16px; }
+.fbae-collapsed .fbae-chevron { transform: rotate(-90deg); }
+
+/* Informational Content */
+.fbae-content { margin-top: 30px; border-top: 2px solid var(--fbae-border); padding-top: 20px; }
+.fbae-content h2 { font-size: 18px; font-weight: 700; margin: 20px 0 10px 0; color: var(--fbae-text); }
+.fbae-content h3 { font-size: 15px; font-weight: 600; margin: 16px 0 6px 0; color: var(--fbae-text); }
+.fbae-content p { font-size: 13px; line-height: 1.6; color: var(--fbae-text); margin: 0 0 10px 0; }
+.fbae-content ul, .fbae-content ol { padding-left: 20px; margin: 0 0 14px 0; }
+.fbae-content li { font-size: 13px; line-height: 1.6; margin-bottom: 5px; }
+
+@media print {
+  #fbae-root { background: #fff !important; color: #000 !important; max-width: 100% !important; padding: 0 !important; }
+  .fbae-btn-toolbar, .fbae-mobile-bar, .fbae-hint, .fbae-toggle-group, .fbae-content { display: none !important; }
+}
+</style>
+
+<!-- STICKY MINI RESULT BAR FOR MOBILE -->
+<div class="fbae-mobile-bar" id="fbae-mobile-bar">
+  <div class="fbae-mobile-bar-inner">
+    <div><span>Net Profit:</span> <strong class="fbae-mobile-bar-val" id="fbae-m-profit">$8.84</strong></div>
+    <div><span>Margin:</span> <strong class="fbae-mobile-bar-val" id="fbae-m-margin">22.1%</strong></div>
+    <div><span>BE ACOS:</span> <strong class="fbae-mobile-bar-val" id="fbae-m-acos">32.1%</strong></div>
+  </div>
+</div>
+
+<div class="fbae-grid">
+  <!-- ==================== LEFT COLUMN: INPUTS ==================== -->
+  <div class="fbae-col-inputs">
+
+    <!-- Group 1: Setup -->
+    <div class="fbae-card" id="fbae-sec-setup">
+      <div class="fbae-section-title" onclick="FBAE.toggleSec('fbae-sec-setup')">
+        <span>1. Marketplace & Fulfillment Setup</span>
+        <svg class="fbae-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+      <div class="fbae-collapsible-content">
+        <div class="fbae-row fbae-row-2">
+          <div class="fbae-field">
+            <label for="fbae-curr">Currency</label>
+            <select id="fbae-curr" onchange="FBAE.onCurrencyChange()">
+              <option value="$|USD">USD - United States ($)</option>
+              <option value="£|GBP">GBP - United Kingdom (£)</option>
+              <option value="€|EUR">EUR - Germany / EU (€)</option>
+              <option value="₹|INR">INR - India Marketplace (₹)</option>
+              <option value="CA$|CAD">CAD - Canada (CA$)</option>
+              <option value="A$|AUD">AUD - Australia (A$)</option>
+              <option value="AED|AED">AED - United Arab Emirates</option>
+            </select>
+          </div>
+          <div class="fbae-field">
+            <label>Mode</label>
+            <div class="fbae-toggle-group">
+              <button type="button" class="fbae-toggle-btn active" id="fbae-mode-fba" onclick="FBAE.setMode('FBA')">FBA</button>
+              <button type="button" class="fbae-toggle-btn" id="fbae-mode-fbm" onclick="FBAE.setMode('FBM')">FBM</button>
+              <button type="button" class="fbae-toggle-btn" id="fbae-mode-both" onclick="FBAE.setMode('COMPARE')">Compare Both</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="fbae-row fbae-row-3">
+          <div class="fbae-field">
+            <label for="fbae-price">Selling Price (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-price" inputmode="decimal" step="0.01" value="39.99" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Customer retail price</span>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-units">Monthly Units</label>
+            <input type="number" id="fbae-units" inputmode="numeric" step="1" value="800" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Sales velocity</span>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-tax-rate">Tax/GST on Price (%)</label>
+            <input type="number" id="fbae-tax-rate" inputmode="decimal" step="0.1" value="0" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">e.g. 18% GST (deducted from price)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 2: Landed Sourcing Costs -->
+    <div class="fbae-card" id="fbae-sec-cogs">
+      <div class="fbae-section-title" onclick="FBAE.toggleSec('fbae-sec-cogs')">
+        <span>2. Landed Product Costs</span>
+        <svg class="fbae-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+      <div class="fbae-collapsible-content">
+        <div class="fbae-row fbae-row-2">
+          <div class="fbae-field">
+            <label for="fbae-cogs">COGS / Unit (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-cogs" inputmode="decimal" step="0.01" value="12.00" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Manufacturer item price</span>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-inbound">Inbound Freight / Unit (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-inbound" inputmode="decimal" step="0.01" value="1.50" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Shipping to Amazon warehouse</span>
+          </div>
+        </div>
+        <div class="fbae-row fbae-row-2">
+          <div class="fbae-field">
+            <label for="fbae-prep">Prep & Labeling (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-prep" inputmode="decimal" step="0.01" value="0.00" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Polybagging, barcode label</span>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-other-cost">Other Unit Cost (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-other-cost" inputmode="decimal" step="0.01" value="0.00" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Customs, royalties, inspection</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 3: Amazon Selling Fees -->
+    <div class="fbae-card" id="fbae-sec-fees">
+      <div class="fbae-section-title" onclick="FBAE.toggleSec('fbae-sec-fees')">
+        <span>3. Amazon Selling & FBA Fees (Type Manually)</span>
+        <svg class="fbae-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+      <div class="fbae-collapsible-content">
+        <div class="fbae-row fbae-row-3">
+          <div class="fbae-field">
+            <label for="fbae-ref-pct">Referral Fee (%)</label>
+            <input type="number" id="fbae-ref-pct" inputmode="decimal" step="0.1" value="15.0" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Category rate (8% - 15%)</span>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-min-ref">Min Referral Floor (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-min-ref" inputmode="decimal" step="0.01" value="0.00" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Default $0.00 or $0.30</span>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-closing">Closing Fee (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-closing" inputmode="decimal" step="0.01" value="0.00" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Fixed closing fee (if any)</span>
+          </div>
+        </div>
+        <div class="fbae-row fbae-row-3">
+          <div class="fbae-field">
+            <label for="fbae-fba-fee">FBA Fulfillment Fee (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-fba-fee" inputmode="decimal" step="0.01" value="5.50" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">From Seller Central &gt; Fee Preview</span>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-placement">Inbound Placement (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-placement" inputmode="decimal" step="0.01" value="0.00" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Split placement fee per unit</span>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-fee-tax">Tax on Amazon Fees (%)</label>
+            <input type="number" id="fbae-fee-tax" inputmode="decimal" step="0.1" value="0.0" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">18% GST (India) or DST (EU)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 4: Storage Fees -->
+    <div class="fbae-card" id="fbae-sec-storage">
+      <div class="fbae-section-title" onclick="FBAE.toggleSec('fbae-sec-storage')">
+        <span>4. Storage Fees & Surcharges</span>
+        <svg class="fbae-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+      <div class="fbae-collapsible-content">
+        <div class="fbae-row fbae-row-3">
+          <div class="fbae-field">
+            <label for="fbae-storage-mode">Storage Mode</label>
+            <select id="fbae-storage-mode" onchange="FBAE.debounceCalc()">
+              <option value="TOTAL">Total Monthly Bill ($)</option>
+              <option value="UNIT">Per Unit Cost ($)</option>
+            </select>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-storage-amt">Storage Amount (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-storage-amt" inputmode="decimal" step="0.01" value="120.00" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Warehouse bill allocated</span>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-storage-months">Months Stored</label>
+            <input type="number" id="fbae-storage-months" inputmode="decimal" step="0.5" value="1.0" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Average hold time</span>
+          </div>
+        </div>
+        <div class="fbae-row fbae-row-2">
+          <div class="fbae-field">
+            <label for="fbae-aged-fee">Aged Storage Surcharge (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-aged-fee" inputmode="decimal" step="0.01" value="0.00" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Long term storage fee</span>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-low-inv-fee">Low Inventory Surcharge (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-low-inv-fee" inputmode="decimal" step="0.01" value="0.00" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Fee if inventory &lt; 28 days</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 5: Returns -->
+    <div class="fbae-card" id="fbae-sec-returns">
+      <div class="fbae-section-title" onclick="FBAE.toggleSec('fbae-sec-returns')">
+        <span>5. Customer Return Costs</span>
+        <svg class="fbae-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+      <div class="fbae-collapsible-content">
+        <div class="fbae-row fbae-row-2">
+          <div class="fbae-field">
+            <label for="fbae-return-pct">Return Rate (%)</label>
+            <input type="number" id="fbae-return-pct" inputmode="decimal" step="0.1" value="5.0" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">e.g. 5% of all orders returned</span>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-return-model">Return Loss Model</label>
+            <select id="fbae-return-model" onchange="FBAE.onReturnModelChange()">
+              <option value="SIMPLE">Simple (Flat % of Price)</option>
+              <option value="DETAILED">Detailed (Unsellable scrap)</option>
+            </select>
+          </div>
+        </div>
+        <div class="fbae-row fbae-row-3" id="fbae-ret-detail-row" style="display:none;">
+          <div class="fbae-field">
+            <label for="fbae-ret-proc">Return Proc (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-ret-proc" inputmode="decimal" step="0.01" value="0.00" oninput="FBAE.debounceCalc()">
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-ret-admin">Admin Fee (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-ret-admin" inputmode="decimal" step="0.01" value="0.30" oninput="FBAE.debounceCalc()">
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-ret-unsellable">Scrap Unsellable (%)</label>
+            <input type="number" id="fbae-ret-unsellable" inputmode="decimal" step="1" value="20" oninput="FBAE.debounceCalc()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 6: Advertising (PPC) -->
+    <div class="fbae-card" id="fbae-sec-ads">
+      <div class="fbae-section-title" onclick="FBAE.toggleSec('fbae-sec-ads')">
+        <span>6. Advertising & PPC Spend</span>
+        <svg class="fbae-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+      <div class="fbae-collapsible-content">
+        <div class="fbae-row fbae-row-2">
+          <div class="fbae-field">
+            <label for="fbae-ad-mode">Ad Budget Mode</label>
+            <select id="fbae-ad-mode" onchange="FBAE.onAdModeChange()">
+              <option value="PPC">Fixed PPC / Unit ($)</option>
+              <option value="ACOS">Target ACOS (% of Price)</option>
+            </select>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-ad-val" id="fbae-ad-val-label">PPC Cost / Unit (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-ad-val" inputmode="decimal" step="0.01" value="4.00" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Direct ad budget per unit</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 7: FBM Logistics (Visible only in FBM/Compare Mode) -->
+    <div class="fbae-card" id="fbae-sec-fbm" style="display:none;">
+      <div class="fbae-section-title" onclick="FBAE.toggleSec('fbae-sec-fbm')">
+        <span>7. Merchant Fulfilled (FBM) Logistics</span>
+        <svg class="fbae-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+      <div class="fbae-collapsible-content">
+        <div class="fbae-row fbae-row-3">
+          <div class="fbae-field">
+            <label for="fbae-fbm-ship">Customer Shipping (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-fbm-ship" inputmode="decimal" step="0.01" value="6.50" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Postage / carrier rate</span>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-fbm-box">Packaging Box (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-fbm-box" inputmode="decimal" step="0.01" value="0.80" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Carton, tape, mailer</span>
+          </div>
+          <div class="fbae-field">
+            <label for="fbae-fbm-labor">Labor Cost (<span class="fbae-c-sym">$</span>)</label>
+            <input type="number" id="fbae-fbm-labor" inputmode="decimal" step="0.01" value="1.00" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Pick & pack labor</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 8: Targets -->
+    <div class="fbae-card" id="fbae-sec-goals">
+      <div class="fbae-section-title" onclick="FBAE.toggleSec('fbae-sec-goals')">
+        <span>8. Target Goals & Profit Solver</span>
+        <svg class="fbae-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+      <div class="fbae-collapsible-content">
+        <div class="fbae-row fbae-row-2">
+          <div class="fbae-field">
+            <label for="fbae-target-margin">Target Net Margin (%)</label>
+            <input type="number" id="fbae-target-margin" inputmode="decimal" step="1" value="25.0" oninput="FBAE.debounceCalc()">
+            <span class="fbae-hint">Desired margin to solve price</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /left col -->
+
+  <!-- ==================== RIGHT COLUMN: OUTPUTS ==================== -->
+  <div class="fbae-col-results">
+
+    <!-- KPI Dashboard Cards -->
+    <div class="fbae-kpis">
+      <div class="fbae-kpi-card">
+        <div class="fbae-kpi-label">Net Profit / Unit</div>
+        <div class="fbae-kpi-val" id="fbae-kpi-profit">$8.84</div>
+        <div class="fbae-kpi-status fbae-status-healthy" id="fbae-kpi-profit-sub">Healthy</div>
+      </div>
+      <div class="fbae-kpi-card">
+        <div class="fbae-kpi-label">Net Margin</div>
+        <div class="fbae-kpi-val" id="fbae-kpi-margin">22.1%</div>
+        <div class="fbae-kpi-status fbae-status-healthy" id="fbae-kpi-margin-sub">Above 15%</div>
+      </div>
+      <div class="fbae-kpi-card">
+        <div class="fbae-kpi-label">ROI</div>
+        <div class="fbae-kpi-val" id="fbae-kpi-roi">65.5%</div>
+        <div class="fbae-hint">Markup: <span id="fbae-kpi-markup">73.7%</span></div>
+      </div>
+      <div class="fbae-kpi-card">
+        <div class="fbae-kpi-label">Break-Even Price</div>
+        <div class="fbae-kpi-val" id="fbae-kpi-beprice">$29.59</div>
+        <div class="fbae-hint">Zero profit threshold</div>
+      </div>
+      <div class="fbae-kpi-card">
+        <div class="fbae-kpi-label">Target Margin Price</div>
+        <div class="fbae-kpi-val" id="fbae-kpi-targetprice">$42.86</div>
+        <div class="fbae-hint">For <span id="fbae-kpi-target-label">25%</span> margin</div>
+      </div>
+      <div class="fbae-kpi-card">
+        <div class="fbae-kpi-label">Break-Even ACOS</div>
+        <div class="fbae-kpi-val" id="fbae-kpi-beacos">32.1%</div>
+        <div class="fbae-hint">Max PPC ACOS ceiling</div>
+      </div>
+    </div>
+
+    <!-- Volume Rollup & Amazon Cut -->
+    <div class="fbae-card">
+      <div class="fbae-row fbae-row-3" style="margin-bottom:0;">
+        <div class="fbae-field">
+          <label>Monthly Net Profit</label>
+          <div style="font-size:16px; font-weight:700; color:var(--fbae-success);" id="fbae-kpi-monthly">$7,073.60</div>
+        </div>
+        <div class="fbae-field">
+          <label>Annual Net Profit</label>
+          <div style="font-size:16px; font-weight:700; color:var(--fbae-text);" id="fbae-kpi-annual">$84,883.20</div>
+        </div>
+        <div class="fbae-field">
+          <label>Amazon Take Cut (%)</label>
+          <div style="font-size:16px; font-weight:700; color:var(--fbae-warning);" id="fbae-kpi-take">29.1%</div>
+        </div>
+      </div>
+      <div class="fbae-hint" style="margin-top:8px;">PPC Ad Headroom at target margin: <strong id="fbae-kpi-headroom">$2.84 / unit</strong></div>
+    </div>
+
+    <!-- Compare Badge -->
+    <div class="fbae-card" id="fbae-compare-card" style="display:none; background:rgba(255,153,0,0.08); border-color:var(--fbae-primary);">
+      <h4 style="margin:0 0 6px 0; font-size:13px;">FBA vs FBM Direct Comparison</h4>
+      <div style="font-size:12px;" id="fbae-compare-text">Calculating comparison...</div>
+    </div>
+
+    <!-- Revenue Waterfall Bar -->
+    <div class="fbae-card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:13px; font-weight:700;">Revenue Waterfall Breakdown</span>
+        <span style="font-size:12px; color:var(--fbae-text-muted);">Price: <strong id="fbae-waterfall-price">$39.99</strong></span>
+      </div>
+      <div class="fbae-bar-wrap">
+        <div class="fbae-bar-track">
+          <div class="fbae-bar-seg" id="fbae-seg-cogs" style="width:33.7%; background:#3498db;" title="Landed Sourcing"></div>
+          <div class="fbae-bar-seg" id="fbae-seg-amazon" style="width:29.1%; background:#e67e22;" title="Amazon Fees"></div>
+          <div class="fbae-bar-seg" id="fbae-seg-ads" style="width:10.0%; background:#9b59b6;" title="PPC Advertising"></div>
+          <div class="fbae-bar-seg" id="fbae-seg-ret" style="width:5.0%; background:#e74c3c;" title="Return Costs"></div>
+          <div class="fbae-bar-seg" id="fbae-seg-profit" style="width:22.1%; background:#2ecc71;" title="Net Profit"></div>
+        </div>
+        <div class="fbae-legend">
+          <div class="fbae-legend-item"><div class="fbae-legend-dot" style="background:#3498db;"></div> Landed Cost</div>
+          <div class="fbae-legend-item"><div class="fbae-legend-dot" style="background:#e67e22;"></div> Amazon Fees</div>
+          <div class="fbae-legend-item"><div class="fbae-legend-dot" style="background:#9b59b6;"></div> PPC Ads</div>
+          <div class="fbae-legend-item"><div class="fbae-legend-dot" style="background:#e74c3c;"></div> Returns</div>
+          <div class="fbae-legend-item"><div class="fbae-legend-dot" style="background:#2ecc71;"></div> Net Profit</div>
+        </div>
+      </div>
+
+      <!-- Breakdown Table -->
+      <div class="fbae-table-wrap">
+        <table class="fbae-table" aria-label="Cost Breakdown">
+          <thead>
+            <tr><th>Fee Item</th><th class="fbae-text-right">Per Unit</th><th class="fbae-text-right">% of Price</th></tr>
+          </thead>
+          <tbody id="fbae-breakdown-body">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Sensitivity Table -->
+    <div class="fbae-card">
+      <span style="font-size:13px; font-weight:700;">Price Sensitivity Stress-Test</span>
+      <div class="fbae-table-wrap">
+        <table class="fbae-table" aria-label="Sensitivity Table">
+          <thead>
+            <tr><th>Scenario</th><th>Price</th><th class="fbae-text-right">Profit</th><th class="fbae-text-right">Margin</th><th class="fbae-text-right">ROI</th></tr>
+          </thead>
+          <tbody id="fbae-sensitivity-body">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Compare Stash -->
+    <div class="fbae-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:13px; font-weight:700;">Saved Scenarios (A / B / C)</span>
+        <button type="button" class="fbae-btn" style="height:26px; padding:0 8px; font-size:11px;" onclick="FBAE.saveScenario()">+ Save Current</button>
+      </div>
+      <div id="fbae-scenarios-box" style="font-size:11px; color:var(--fbae-text-muted);">No saved scenarios yet. Modify inputs and click "Save Current".</div>
+    </div>
+
+    <!-- Action Toolbar -->
+    <div class="fbae-btn-toolbar">
+      <button type="button" class="fbae-btn fbae-btn-primary" onclick="FBAE.copySummary()">Copy Summary</button>
+      <button type="button" class="fbae-btn" onclick="FBAE.copyShareLink()">Copy Share Link</button>
+      <button type="button" class="fbae-btn" onclick="FBAE.exportCSV()">Export CSV</button>
+      <button type="button" class="fbae-btn" onclick="window.print()">Print / PDF</button>
+      <button type="button" class="fbae-btn" onclick="FBAE.resetDefaults()">Reset</button>
+    </div>
+
+    <!-- Trust Notes -->
+    <div style="font-size:11px; color:var(--fbae-text-muted); margin-top:12px; line-height:1.4;">
+      <div><strong>Last updated:</strong> October 2026. Standard e-commerce accounting formulas.</div>
+      <div><strong>Disclaimer:</strong> Estimates only. This tool is not affiliated with or endorsed by Amazon.com, Inc. Check exact tier rules in Seller Central before buying inventory.</div>
+      <div style="margin-top:3px;"><strong>Data Privacy:</strong> 100% Client-Side. Sourcing costs and data never leave your browser.</div>
+    </div>
+
+  </div><!-- /right col -->
+</div>
+
+<!-- ==================== SEO ARTICLES, USE CASES & FAQS ==================== -->
+<div class="fbae-content">
+
+  <p>The <strong>Amazon FBA fee profit estimator</strong> is a professional manual financial modeling tool built for e-commerce entrepreneurs who demand absolute control over their product unit economics. Unlike automated scrapers that pull generalized estimates, this utility allows sellers to manually key in exact referral percentages, FBA fulfillment rates, inbound placement allocations, aged storage surcharges, and direct PPC ad expenses. Whether you are vetting pre-launch private label concepts or calculating the financial viability of an existing catalog, this system delivers transparent profit margins, ROI metrics, and ad spending limits in real time.</p>
+
+  <h2>Professional Amazon FBA Profit Calculator Capabilities</h2>
+  <ul>
+    <li><strong>100% Manual Fee Precision:</strong> Override any fee tier without being locked into auto-scraped ASIN assumptions.</li>
+    <li><strong>Dual Fulfillment Comparison:</strong> Evaluate FBA versus Merchant Fulfilled (FBM) side-by-side to protect bottom-line profits.</li>
+    <li><strong>2026 Fee Surcharge Ready:</strong> Granular inputs for Amazon's Inbound Placement Fees and Low-Inventory-Level surcharges.</li>
+    <li><strong>Break-Even ACOS Solver:</strong> Instantly discover your advertising safety ceiling before running Sponsored Products.</li>
+    <li><strong>Dynamic Target Price Solver:</strong> Enter your target net margin to reverse-engineer the required retail listing price.</li>
+    <li><strong>Price Sensitivity Stress-Testing:</strong> Visual matrix testing unit margins across -20% to +20% price fluctuations.</li>
+    <li><strong>Multi-Marketplace Presets:</strong> Preconfigured support for US Dollar, British Pound, Euro, Canadian Dollar, Australian Dollar, UAE Dirham, and Indian Rupee (with GST handling).</li>
+    <li><strong>No-Database URL Sharing:</strong> Save your entire financial state directly into a shareable link hash without registering an account.</li>
+    <li><strong>Zero Server Data Storage:</strong> Sourcing costs and secret supplier margins remain strictly private within your browser session.</li>
+  </ul>
+
+  <h2>Practical Applications for Amazon Sellers</h2>
+  <ul>
+    <li><strong>Pre-Sourcing Manufacturer Evaluation:</strong> Test supplier quotations against shipping dimensions to verify profitability before placing mass inventory deposits.</li>
+    <li><strong>Packaging Dimension Optimization:</strong> Measure how shaving 0.3 inches off product packaging shifts size tiers and preserves net margins.</li>
+    <li><strong>PPC Campaign Budgeting:</strong> Use the <strong>break-even acos calculator</strong> engine to set non-negotiable target limits on automated bid rules.</li>
+    <li><strong>Q4 Peak Season Modeling:</strong> Simulate higher holiday storage surcharges to evaluate clearance promotions versus long-term hold costs.</li>
+    <li><strong>Online Arbitrage & Wholesale Due Diligence:</strong> Quickly test batch wholesale price lists using custom prep center and shipping fees.</li>
+  </ul>
+
+  <h2>How to Use This Amazon FBA Manual Fee Calculator</h2>
+  <ol>
+    <li><strong>Select Marketplace & Mode:</strong> Choose your operating currency and select FBA, FBM, or Compare Both mode.</li>
+    <li><strong>Input Landed Sourcing Costs:</strong> Enter your item manufacturing price (COGS), freight forwarding shipping cost, and preparation fees.</li>
+    <li><strong>Input Amazon Fees from Seller Central:</strong> Copy the exact referral fee percentage and fulfillment fee from your Fee Preview report.</li>
+    <li><strong>Model Returns & Advertising:</strong> Select your historical return rate percentage and enter your target PPC ad spend per unit.</li>
+    <li><strong>Review Net Profit & Break-Even Targets:</strong> Examine your net unit margin, break-even retail price, and maximum allowable ad spend.</li>
+  </ol>
+
+  <h2>Frequently Asked Questions</h2>
+
+  <h3>What is the formula for calculating Amazon FBA net profit?</h3>
+  <p>Amazon FBA net profit is calculated by taking the net selling price (retail price minus any sales tax/GST) and subtracting landed costs (COGS, inbound freight, prep), Amazon selling fees (referral fee, variable closing fee), fulfillment costs (FBA pick and pack, inbound placement, storage fees), advertising spend, and return loss reserves.</p>
+
+  <h3>Why should I use a manual fee calculator instead of an automated ASIN tool?</h3>
+  <p>Automated ASIN scrapers cannot predict future packaging redesigns, negotiated supplier discounts, customs tariffs, or your specific inbound placement choices. The <strong>amazon fba fee calculator</strong> with manual inputs allows private label founders to model hypothetical products before purchasing inventory or creating an Amazon listing.</p>
+
+  <h3>How is break-even ACOS calculated for Amazon PPC campaigns?</h3>
+  <p>Break-even ACOS equals your pre-advertising profit margin percentage. Calculated as (Profit Before Ads ÷ Net Selling Price) × 100, this metric defines the exact Advertising Cost of Sales percentage where your PPC advertising neither makes nor loses money.</p>
+
+  <h3>How do Amazon Inbound Placement Fees affect product margins?</h3>
+  <p>Amazon Inbound Placement Fees charge sellers a per-unit fee when inventory is shipped to minimal distribution locations rather than distributed across multiple fulfillment centers. Factoring this fee into your <strong>amazon seller profit margin calculator</strong> ensures you do not underestimate total landed fulfillment expenses.</p>
+
+  <h3>What is a healthy net profit margin for an Amazon FBA business?</h3>
+  <p>A healthy Amazon FBA net margin typically ranges between 15% and 25% after all landed manufacturing, fulfillment, storage, and advertising costs are deducted. Margins below 10% leave little cushion for unexpected return spikes or aggressive pay-per-click bidding wars.</p>
+
+  <h3>What is the difference between markup and profit margin?</h3>
+  <p>Profit margin measures the percentage of final selling price that remains as earnings, whereas markup represents the percentage added on top of your product's landed manufacturing cost. For example, a $10 cost sold at $20 represents a 100% markup but a 50% profit margin.</p>
+
+  <h3>How does the Low-Inventory-Level Surcharge impact FBA calculations?</h3>
+  <p>The Low-Inventory-Level Surcharge applies to standard-sized products when historical inventory levels relative to customer demand drop below 28 days of supply. Accounting for this per-unit fee prevents margin deterioration during unexpected stockout periods.</p>
+
+  <h3>How do holiday peak storage fees differ from standard storage rates?</h3>
+  <p>From October through December, Amazon significantly increases monthly cubic-foot storage rates compared to the January through September non-peak window. Sellers must adjust monthly storage cost inputs when modeling holiday Q4 inventory runs.</p>
+
+  <h3>Can this tool calculate FBM (Merchant Fulfilled) profit margins?</h3>
+  <p>Yes, switching the tool to FBM mode replaces FBA pick, pack, and storage fees with your custom carrier postage, packaging mailer, and warehouse labor costs, enabling a direct operational comparison between fulfillment methods.</p>
+
+  <h3>How does customer return rate affect Amazon seller profitability?</h3>
+  <p>Customer returns diminish profits through non-refundable Amazon referral administrative charges, return processing fees in specific categories, and unsellable damaged inventory. Modeling return rates ensures your pricing absorbs return processing overhead.</p>
+
+  <h3>How does sales tax or GST affect net Amazon payout?</h3>
+  <p>When selling in marketplaces where prices include tax (such as GST in India or VAT in Europe), the gross selling price must be divided by (1 + Tax Rate) to isolate true net revenue before deducting Amazon commissions and logistics costs.</p>
+
+  <h3>What is ad headroom and how does it assist PPC budgeting?</h3>
+  <p>Ad headroom represents the maximum dollar amount you can invest in pay-per-click advertising per sold unit while still achieving your desired target profit margin. It is calculated by subtracting your target profit dollar threshold from profit before advertising.</p>
+
+  <!-- Linking Blocks -->
+  <div class="fbae-card" style="margin-top:20px;">
+    <h3 style="margin-top:0;">Related Financial Calculators</h3>
+    <ul style="margin-bottom:0;">
+      <li><a href="https://my-tool-app.pages.dev/">Home</a> – Free e-commerce business calculators.</li>
+      <li><a href="https://my-tool-app.pages.dev/invoice-late-payment-interest-calculator">Invoice Late Payment Interest Calculator</a> – Calculate interest fees on overdue invoices.</li>
+      <li><a href="https://my-tool-app.pages.dev/ecommerce-profit-margin-calculator">Ecommerce Profit Margin Calculator</a> – General online store profit tool.</li>
+    </ul>
+  </div>
+
+  <div class="fbae-card">
+    <h3 style="margin-top:0;">Official Amazon Seller Central Resources</h3>
+    <ul style="margin-bottom:0;">
+      <li><a href="https://sellercentral.amazon.com/revcal" target="_blank" rel="noopener noreferrer">Amazon Seller Central Revenue Calculator</a> – Official automated revenue and fulfillment estimator.</li>
+      <li><a href="https://sellercentral.amazon.com/help/hub/reference/external/GPDC3KPYAGDTVDJP" target="_blank" rel="noopener noreferrer">Amazon Fee Preview Help Guide</a> – How to inspect estimated fulfillment fees per SKU.</li>
+      <li><a href="https://sellercentral.amazon.com/help/hub/reference/fee-LBHDCHB5MWGXGRRE" target="_blank" rel="noopener noreferrer">FBA Monthly & Aged Storage Fees Reference</a> – Current cubic-foot standard and peak storage rate cards.</li>
+    </ul>
+  </div>
+
+</div><!-- /fbae-content -->
+
+<!-- TOAST ALERT -->
+<div class="fbae-toast" id="fbae-toast">Copied to clipboard!</div>
+
+</div><!-- /fbae-root -->
+
+<!-- ==========================================================================
+  JSON-LD STRUCTURED DATA (Static Schema Graph Architecture)
+========================================================================== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator#webpage",
+      "url": "https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator",
+      "name": "Amazon FBA Fee Profit Estimator – Manual Fee Calculator",
+      "description": "Free Amazon FBA fee profit estimator. Enter your own referral, FBA, storage & PPC fees to see net profit, margin, ROI and break-even ACOS.",
+      "dateModified": "2026-10-26",
+      "inLanguage": "en",
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://my-tool-app.pages.dev/" },
+          { "@type": "ListItem", "position": 2, "name": "Amazon Seller Tools", "item": "https://my-tool-app.pages.dev/" },
+          { "@type": "ListItem", "position": 3, "name": "Amazon FBA Fee Profit Estimator", "item": "https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator" }
+        ]
+      }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator#webapp",
+      "name": "Amazon FBA Fee Profit Estimator",
+      "url": "https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "100% manual fee overrides without ASIN scraping",
+        "Inbound placement fee and low-inventory surcharge modeling",
+        "FBA vs FBM dual fulfillment cost comparison",
+        "Break-even ACOS and ad headroom calculation",
+        "Target net margin reverse retail price solver",
+        "Multi-marketplace currency presets including INR with GST",
+        "Sensitivity analysis table from -20% to +20%",
+        "Client-side execution with shareable state links"
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator#howto",
+      "name": "How to Calculate Amazon FBA Profit Using Manual Fee Inputs",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Select Marketplace & Mode",
+          "text": "Choose your operating currency and select FBA, FBM, or Compare Both mode."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Input Landed Sourcing Costs",
+          "text": "Enter your item manufacturing price (COGS), freight forwarding shipping cost, and preparation fees."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Input Amazon Fees from Seller Central",
+          "text": "Copy the exact referral fee percentage and fulfillment fee from your Fee Preview report."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "name": "Model Returns & Advertising",
+          "text": "Select your historical return rate percentage and enter your target PPC ad spend per unit."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 5,
+          "name": "Review Net Profit & Break-Even Targets",
+          "text": "Examine your net unit margin, break-even retail price, and maximum allowable ad spend."
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the formula for calculating Amazon FBA net profit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Amazon FBA net profit is calculated by taking the net selling price (retail price minus any sales tax/GST) and subtracting landed costs (COGS, inbound freight, prep), Amazon selling fees (referral fee, variable closing fee), fulfillment costs (FBA pick and pack, inbound placement, storage fees), advertising spend, and return loss reserves."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why should I use a manual fee calculator instead of an automated ASIN tool?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Automated ASIN scrapers cannot predict future packaging redesigns, negotiated supplier discounts, customs tariffs, or your specific inbound placement choices. The amazon fba fee calculator with manual inputs allows private label founders to model hypothetical products before purchasing inventory or creating an Amazon listing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is break-even ACOS calculated for Amazon PPC campaigns?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Break-even ACOS equals your pre-advertising profit margin percentage. Calculated as (Profit Before Ads ÷ Net Selling Price) × 100, this metric defines the exact Advertising Cost of Sales percentage where your PPC advertising neither makes nor loses money."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do Amazon Inbound Placement Fees affect product margins?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Amazon Inbound Placement Fees charge sellers a per-unit fee when inventory is shipped to minimal distribution locations rather than distributed across multiple fulfillment centers. Factoring this fee into your amazon seller profit margin calculator ensures you do not underestimate total landed fulfillment expenses."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a healthy net profit margin for an Amazon FBA business?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A healthy Amazon FBA net margin typically ranges between 15% and 25% after all landed manufacturing, fulfillment, storage, and advertising costs are deducted. Margins below 10% leave little cushion for unexpected return spikes or aggressive pay-per-click bidding wars."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between markup and profit margin?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Profit margin measures the percentage of final selling price that remains as earnings, whereas markup represents the percentage added on top of your product's landed manufacturing cost. For example, a $10 cost sold at $20 represents a 100% markup but a 50% profit margin."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the Low-Inventory-Level Surcharge impact FBA calculations?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Low-Inventory-Level Surcharge applies to standard-sized products when historical inventory levels relative to customer demand drop below 28 days of supply. Accounting for this per-unit fee prevents margin deterioration during unexpected stockout periods."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do holiday peak storage fees differ from standard storage rates?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "From October through December, Amazon significantly increases monthly cubic-foot storage rates compared to the January through September non-peak window. Sellers must adjust monthly storage cost inputs when modeling holiday Q4 inventory runs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can this tool calculate FBM (Merchant Fulfilled) profit margins?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, switching the tool to FBM mode replaces FBA pick, pack, and storage fees with your custom carrier postage, packaging mailer, and warehouse labor costs, enabling a direct operational comparison between fulfillment methods."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does customer return rate affect Amazon seller profitability?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Customer returns diminish profits through non-refundable Amazon referral administrative charges, return processing fees in specific categories, and unsellable damaged inventory. Modeling return rates ensures your pricing absorbs return processing overhead."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does sales tax or GST affect net Amazon payout?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "When selling in marketplaces where prices include tax (such as GST in India or VAT in Europe), the gross selling price must be divided by (1 + Tax Rate) to isolate true net revenue before deducting Amazon commissions and logistics costs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is ad headroom and how does it assist PPC budgeting?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ad headroom represents the maximum dollar amount you can invest in pay-per-click advertising per sold unit while still achieving your desired target profit margin. It is calculated by subtracting your target profit dollar threshold from profit before advertising."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<!-- ==========================================================================
+  TOOL JAVASCRIPT LOGIC (Vanilla JS, Zero Dependencies, Safe & Clean)
+========================================================================== -->
+<script>
+/* <![CDATA[ */
+var FBAE = (function () {
+  'use strict';
+
+  var BASE_URL = 'https://my-tool-app.pages.dev/';
+  var SLUG = 'amazon-fba-fee-profit-estimator';
+  var PAGE_URL = BASE_URL + SLUG;
+  var LAST_UPDATED = '2026-10-26';
+
+  var currentMode = 'FBA';
+  var currencySymbol = '$';
+  var calcTimer = null;
+  var savedScenarios = [];
+
+  function isLess(a, b) { return a < b; }
+  function isGreater(a, b) { return a > b; }
+
+  function parseVal(id) {
+    var el = document.getElementById(id);
+    if (!el) return 0;
+    var v = parseFloat(el.value);
+    return isNaN(v) ? 0 : v;
+  }
+
+  function setTxt(id, txt) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = txt;
+  }
+
+  function formatMoney(amount) {
+    if (isNaN(amount) || !isFinite(amount)) return '-';
+    return currencySymbol + amount.toFixed(2);
+  }
+
+  function formatPct(amount) {
+    if (isNaN(amount) || !isFinite(amount)) return '-';
+    return amount.toFixed(1) + '%';
+  }
+
+  function toggleSec(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.classList.contains('fbae-collapsed')) {
+      el.classList.remove('fbae-collapsed');
+    } else {
+      el.classList.add('fbae-collapsed');
+    }
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    document.getElementById('fbae-mode-fba').classList.remove('active');
+    document.getElementById('fbae-mode-fbm').classList.remove('active');
+    document.getElementById('fbae-mode-both').classList.remove('active');
+
+    if (mode === 'FBA') document.getElementById('fbae-mode-fba').classList.add('active');
+    if (mode === 'FBM') document.getElementById('fbae-mode-fbm').classList.add('active');
+    if (mode === 'COMPARE') document.getElementById('fbae-mode-both').classList.add('active');
+
+    var fbmSec = document.getElementById('fbae-sec-fbm');
+    var compCard = document.getElementById('fbae-compare-card');
+    if (mode === 'FBM' || mode === 'COMPARE') {
+      fbmSec.style.display = 'block';
+    } else {
+      fbmSec.style.display = 'none';
+    }
+    if (mode === 'COMPARE') {
+      compCard.style.display = 'block';
+    } else {
+      compCard.style.display = 'none';
+    }
+    debounceCalc();
+  }
+
+  function onCurrencyChange() {
+    var sel = document.getElementById('fbae-curr').value;
+    var parts = sel.split('|');
+    currencySymbol = parts[0];
+    var symEls = document.querySelectorAll('.fbae-c-sym');
+    for (var i = 0; i < symEls.length; i++) {
+      symEls[i].textContent = currencySymbol;
+    }
+    debounceCalc();
+  }
+
+  function onReturnModelChange() {
+    var model = document.getElementById('fbae-return-model').value;
+    var detailRow = document.getElementById('fbae-ret-detail-row');
+    if (model === 'DETAILED') {
+      detailRow.style.display = 'grid';
+    } else {
+      detailRow.style.display = 'none';
+    }
+    debounceCalc();
+  }
+
+  function onAdModeChange() {
+    var mode = document.getElementById('fbae-ad-mode').value;
+    var lbl = document.getElementById('fbae-ad-val-label');
+    if (mode === 'PPC') {
+      lbl.innerHTML = 'PPC Cost / Unit (<span class="fbae-c-sym">' + currencySymbol + '</span>)';
+    } else {
+      lbl.textContent = 'Target ACOS (% of Price)';
+    }
+    debounceCalc();
+  }
+
+  function debounceCalc() {
+    clearTimeout(calcTimer);
+    calcTimer = setTimeout(calculate, 120);
+  }
+
+  function evaluateEconomics(p, customMode) {
+    var mode = customMode || currentMode;
+    var taxRate = parseVal('fbae-tax-rate') / 100;
+    var netPrice = isGreater(taxRate, 0) ? (p / (1 + taxRate)) : p;
+
+    var cogs = parseVal('fbae-cogs');
+    var inbound = parseVal('fbae-inbound');
+    var prep = parseVal('fbae-prep');
+    var other = parseVal('fbae-other-cost');
+    var landedCost = cogs + inbound + prep + other;
+
+    var refPct = parseVal('fbae-ref-pct') / 100;
+    var minRef = parseVal('fbae-min-ref');
+    var referral = netPrice * refPct;
+    if (isLess(referral, minRef)) referral = minRef;
+    var closing = parseVal('fbae-closing');
+
+    var fbaFee = 0;
+    var placement = 0;
+    var storagePerUnit = 0;
+    var fbmShipping = 0;
+
+    if (mode === 'FBA' || mode === 'COMPARE') {
+      fbaFee = parseVal('fbae-fba-fee');
+      placement = parseVal('fbae-placement');
+      var stMode = document.getElementById('fbae-storage-mode').value;
+      var stAmt = parseVal('fbae-storage-amt');
+      var stMonths = parseVal('fbae-storage-months');
+      var aged = parseVal('fbae-aged-fee');
+      var lowInv = parseVal('fbae-low-inv-fee');
+      var units = parseVal('fbae-units');
+      if (isLess(units, 1)) units = 1;
+
+      if (stMode === 'UNIT') {
+        storagePerUnit = (stAmt * stMonths) + aged + lowInv;
+      } else {
+        storagePerUnit = ((stAmt * stMonths) + aged) / units + lowInv;
+      }
+    }
+
+    if (mode === 'FBM') {
+      fbmShipping = parseVal('fbae-fbm-ship') + parseVal('fbae-fbm-box') + parseVal('fbae-fbm-labor');
+    }
+
+    var feeTaxPct = parseVal('fbae-fee-tax') / 100;
+    var feeTax = feeTaxPct * (referral + closing + fbaFee + placement + storagePerUnit);
+
+    var adMode = document.getElementById('fbae-ad-mode').value;
+    var adVal = parseVal('fbae-ad-val');
+    var adPerUnit = 0;
+    if (adMode === 'PPC') {
+      adPerUnit = adVal;
+    } else {
+      adPerUnit = netPrice * (adVal / 100);
+    }
+
+    var retPct = parseVal('fbae-return-pct') / 100;
+    var retModel = document.getElementById('fbae-return-model').value;
+    var retCost = 0;
+    if (retModel === 'SIMPLE') {
+      retCost = netPrice * retPct;
+    } else {
+      var retProc = parseVal('fbae-ret-proc');
+      var retAdmin = parseVal('fbae-ret-admin');
+      var unsellablePct = parseVal('fbae-ret-unsellable') / 100;
+      retCost = retPct * (retProc + retAdmin + (unsellablePct * landedCost) + fbaFee);
+    }
+
+    var amazonFees = referral + closing + fbaFee + placement + storagePerUnit + feeTax;
+    var totalCost = landedCost + amazonFees + fbmShipping + adPerUnit + retCost;
+    var profit = netPrice - totalCost;
+
+    return {
+      netPrice: netPrice,
+      landedCost: landedCost,
+      cogs: cogs,
+      referral: referral,
+      closing: closing,
+      fbaFee: fbaFee,
+      placement: placement,
+      storagePerUnit: storagePerUnit,
+      fbmShipping: fbmShipping,
+      feeTax: feeTax,
+      amazonFees: amazonFees,
+      adPerUnit: adPerUnit,
+      retCost: retCost,
+      totalCost: totalCost,
+      profit: profit,
+      margin: isGreater(netPrice, 0) ? (profit / netPrice) * 100 : 0,
+      roi: isGreater(landedCost, 0) ? (profit / landedCost) * 100 : 0,
+      markup: isGreater(cogs, 0) ? (profit / cogs) * 100 : 0
+    };
+  }
+
+  function solvePrice(targetMarginPct) {
+    var low = 0.5;
+    var high = 5000.0;
+    var ans = high;
+    for (var iter = 0; iter < 45; iter++) {
+      var mid = (low + high) / 2;
+      var res = evaluateEconomics(mid, 'FBA');
+      var achievedMargin = res.margin;
+      if (isLess(achievedMargin, targetMarginPct)) {
+        low = mid;
+      } else {
+        ans = mid;
+        high = mid;
+      }
+    }
+    return ans;
+  }
+
+  function calculate() {
+    var price = parseVal('fbae-price');
+    var units = parseVal('fbae-units');
+    var targetMarginInput = parseVal('fbae-target-margin');
+
+    var cur = evaluateEconomics(price, currentMode);
+
+    setTxt('fbae-kpi-profit', formatMoney(cur.profit));
+    setTxt('fbae-m-profit', formatMoney(cur.profit));
+
+    setTxt('fbae-kpi-margin', formatPct(cur.margin));
+    setTxt('fbae-m-margin', formatPct(cur.margin));
+
+    setTxt('fbae-kpi-roi', formatPct(cur.roi));
+    setTxt('fbae-kpi-markup', formatPct(cur.markup));
+
+    var bePrice = solvePrice(0);
+    setTxt('fbae-kpi-beprice', formatMoney(bePrice));
+
+    var targetPrice = solvePrice(targetMarginInput);
+    setTxt('fbae-kpi-targetprice', formatMoney(targetPrice));
+    setTxt('fbae-kpi-target-label', targetMarginInput.toFixed(0) + '%');
+
+    var profitBeforeAds = cur.profit + cur.adPerUnit;
+    var beAcos = isGreater(cur.netPrice, 0) ? (profitBeforeAds / cur.netPrice) * 100 : 0;
+    setTxt('fbae-kpi-beacos', formatPct(beAcos));
+    setTxt('fbae-m-acos', formatPct(beAcos));
+
+    var monthlyProfit = cur.profit * units;
+    setTxt('fbae-kpi-monthly', formatMoney(monthlyProfit));
+    setTxt('fbae-kpi-annual', formatMoney(monthlyProfit * 12));
+
+    var takeCut = isGreater(cur.netPrice, 0) ? (cur.amazonFees / cur.netPrice) * 100 : 0;
+    setTxt('fbae-kpi-take', formatPct(takeCut));
+
+    var targetDollarMargin = (targetMarginInput / 100) * cur.netPrice;
+    var headroom = profitBeforeAds - targetDollarMargin;
+    setTxt('fbae-kpi-headroom', formatMoney(headroom) + ' / unit');
+
+    var profitCardStatus = document.getElementById('fbae-kpi-profit-sub');
+    var marginCardStatus = document.getElementById('fbae-kpi-margin-sub');
+    profitCardStatus.className = 'fbae-kpi-status';
+    marginCardStatus.className = 'fbae-kpi-status';
+
+    if (isLess(cur.profit, 0)) {
+      profitCardStatus.classList.add('fbae-status-loss');
+      profitCardStatus.textContent = 'Net Loss';
+      marginCardStatus.classList.add('fbae-status-loss');
+      marginCardStatus.textContent = 'Negative Margin';
+    } else {
+      if (isLess(cur.margin, 15)) {
+        profitCardStatus.classList.add('fbae-status-thin');
+        profitCardStatus.textContent = 'Thin Margin';
+        marginCardStatus.classList.add('fbae-status-thin');
+        marginCardStatus.textContent = 'Below 15%';
+      } else {
+        profitCardStatus.classList.add('fbae-status-healthy');
+        profitCardStatus.textContent = 'Healthy';
+        marginCardStatus.classList.add('fbae-status-healthy');
+        marginCardStatus.textContent = 'Above 15%';
+      }
+    }
+
+    setTxt('fbae-waterfall-price', formatMoney(price));
+    if (isGreater(cur.netPrice, 0)) {
+      var pCogs = Math.max(0, (cur.landedCost / cur.netPrice) * 100);
+      var pAmazon = Math.max(0, (cur.amazonFees / cur.netPrice) * 100);
+      var pAds = Math.max(0, (cur.adPerUnit / cur.netPrice) * 100);
+      var pRet = Math.max(0, (cur.retCost / cur.netPrice) * 100);
+      var pProf = Math.max(0, (cur.profit / cur.netPrice) * 100);
+
+      document.getElementById('fbae-seg-cogs').style.width = pCogs.toFixed(1) + '%';
+      document.getElementById('fbae-seg-amazon').style.width = pAmazon.toFixed(1) + '%';
+      document.getElementById('fbae-seg-ads').style.width = pAds.toFixed(1) + '%';
+      document.getElementById('fbae-seg-ret').style.width = pRet.toFixed(1) + '%';
+      document.getElementById('fbae-seg-profit').style.width = pProf.toFixed(1) + '%';
+    }
+
+    var tableBody = document.getElementById('fbae-breakdown-body');
+    var rows = [
+      ['Gross Sourcing (COGS)', cur.cogs],
+      ['Inbound Freight + Prep', cur.landedCost - cur.cogs],
+      ['Amazon Referral Commission', cur.referral],
+      ['Amazon Closing Fee', cur.closing]
+    ];
+    if (currentMode === 'FBA' || currentMode === 'COMPARE') {
+      rows.push(['FBA Pick & Pack Fee', cur.fbaFee]);
+      rows.push(['Inbound Placement Service', cur.placement]);
+      rows.push(['Allocated Storage Surcharges', cur.storagePerUnit]);
+    }
+    if (currentMode === 'FBM') {
+      rows.push(['FBM Shipping, Packaging & Labor', cur.fbmShipping]);
+    }
+    if (isGreater(cur.feeTax, 0)) {
+      rows.push(['Tax / GST on Seller Fees', cur.feeTax]);
+    }
+    rows.push(['Advertising (PPC / ACOS)', cur.adPerUnit]);
+    rows.push(['Return Reserves & Losses', cur.retCost]);
+
+    var htmlRows = '';
+    for (var r = 0; r < rows.length; r++) {
+      var itemCost = rows[r][1];
+      var itemPct = isGreater(cur.netPrice, 0) ? (itemCost / cur.netPrice) * 100 : 0;
+      htmlRows += '<tr><td>' + rows[r][0] + '</td><td class="fbae-text-right">' + formatMoney(itemCost) + '</td><td class="fbae-text-right">' + itemPct.toFixed(1) + '%</td></tr>';
+    }
+    tableBody.innerHTML = htmlRows;
+
+    var sensBody = document.getElementById('fbae-sensitivity-body');
+    var steps = [-0.20, -0.10, 0.0, 0.10, 0.20];
+    var sensHtml = '';
+    for (var s = 0; s < steps.length; s++) {
+      var stepRatio = steps[s];
+      var stepPrice = price * (1 + stepRatio);
+      var sim = evaluateEconomics(stepPrice, currentMode);
+      var label = (stepRatio === 0) ? 'Current' : ((stepRatio > 0 ? '+' : '') + (stepRatio * 100).toFixed(0) + '%');
+      sensHtml += '<tr><td>' + label + '</td><td>' + formatMoney(stepPrice) + '</td><td class="fbae-text-right">' + formatMoney(sim.profit) + '</td><td class="fbae-text-right">' + formatPct(sim.margin) + '</td><td class="fbae-text-right">' + formatPct(sim.roi) + '</td></tr>';
+    }
+    sensBody.innerHTML = sensHtml;
+
+    if (currentMode === 'COMPARE') {
+      var fbaEco = evaluateEconomics(price, 'FBA');
+      var fbmEco = evaluateEconomics(price, 'FBM');
+      var diff = fbaEco.profit - fbmEco.profit;
+      var compEl = document.getElementById('fbae-compare-text');
+      if (isGreater(diff, 0)) {
+        compEl.innerHTML = '<strong>FBA is more profitable</strong> by ' + formatMoney(diff) + ' per unit (FBA Margin: ' + formatPct(fbaEco.margin) + ' vs FBM Margin: ' + formatPct(fbmEco.margin) + ').';
+      } else {
+        compEl.innerHTML = '<strong>FBM is more profitable</strong> by ' + formatMoney(Math.abs(diff)) + ' per unit (FBM Margin: ' + formatPct(fbmEco.margin) + ' vs FBA Margin: ' + formatPct(fbaEco.margin) + ').';
+      }
+    }
+  }
+
+  function saveScenario() {
+    var p = parseVal('fbae-price');
+    var cur = evaluateEconomics(p, currentMode);
+    if (isGreater(savedScenarios.length, 2)) savedScenarios.shift();
+    savedScenarios.push({
+      price: p,
+      profit: cur.profit,
+      margin: cur.margin,
+      roi: cur.roi,
+      mode: currentMode
+    });
+    renderScenarios();
+    showToast('Scenario saved!');
+  }
+
+  function renderScenarios() {
+    var box = document.getElementById('fbae-scenarios-box');
+    if (savedScenarios.length === 0) {
+      box.textContent = 'No saved scenarios yet.';
+      return;
+    }
+    var h = '<div style="display:grid; grid-template-columns:repeat(' + savedScenarios.length + ', 1fr); gap:8px;">';
+    for (var i = 0; i < savedScenarios.length; i++) {
+      var sc = savedScenarios[i];
+      var name = String.fromCharCode(65 + i);
+      h += '<div style="border:1px solid var(--fbae-border); border-radius:6px; padding:6px; background:var(--fbae-bg);">' +
+           '<strong>Plan ' + name + ' (' + sc.mode + ')</strong><br>' +
+           'Price: ' + formatMoney(sc.price) + '<br>' +
+           'Profit: ' + formatMoney(sc.profit) + '<br>' +
+           'Margin: ' + formatPct(sc.margin) +
+           '</div>';
+    }
+    h += '</div>';
+    box.innerHTML = h;
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('fbae-toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(function () { t.style.display = 'none'; }, 2400);
+  }
+
+  function copySummary() {
+    var p = parseVal('fbae-price');
+    var cur = evaluateEconomics(p, currentMode);
+    var txt = '=== Amazon FBA Fee Profit Estimator Summary ===\n' +
+              'Selling Price: ' + formatMoney(p) + '\n' +
+              'Net Profit: ' + formatMoney(cur.profit) + ' / unit\n' +
+              'Net Margin: ' + formatPct(cur.margin) + '\n' +
+              'ROI: ' + formatPct(cur.roi) + '\n' +
+              'Break-Even Price: ' + document.getElementById('fbae-kpi-beprice').textContent + '\n' +
+              'Break-Even ACOS: ' + document.getElementById('fbae-kpi-beacos').textContent + '\n' +
+              'Calculated at: ' + PAGE_URL;
+    navigator.clipboard.writeText(txt).then(function () {
+      showToast('Summary copied to clipboard!');
+    });
+  }
+
+  function copyShareLink() {
+    var state = {
+      p: parseVal('fbae-price'),
+      u: parseVal('fbae-units'),
+      cg: parseVal('fbae-cogs'),
+      in: parseVal('fbae-inbound'),
+      fb: parseVal('fbae-fba-fee'),
+      rf: parseVal('fbae-ref-pct'),
+      ad: parseVal('fbae-ad-val'),
+      m: currentMode
+    };
+    var hash = '#fba=' + encodeURIComponent(JSON.stringify(state));
+    var fullUrl = window.location.origin + window.location.pathname + hash;
+    navigator.clipboard.writeText(fullUrl).then(function () {
+      showToast('Shareable link copied to clipboard!');
+    });
+  }
+
+  function checkHash() {
+    try {
+      if (window.location.hash.indexOf('#fba=') === 0) {
+        var jsonStr = decodeURIComponent(window.location.hash.substring(5));
+        var obj = JSON.parse(jsonStr);
+        if (obj.p) document.getElementById('fbae-price').value = obj.p;
+        if (obj.u) document.getElementById('fbae-units').value = obj.u;
+        if (obj.cg) document.getElementById('fbae-cogs').value = obj.cg;
+        if (obj.in) document.getElementById('fbae-inbound').value = obj.in;
+        if (obj.fb) document.getElementById('fbae-fba-fee').value = obj.fb;
+        if (obj.rf) document.getElementById('fbae-ref-pct').value = obj.rf;
+        if (obj.ad) document.getElementById('fbae-ad-val').value = obj.ad;
+        if (obj.m) setMode(obj.m);
+      }
+    } catch (e) {}
+  }
+
+  function exportCSV() {
+    var p = parseVal('fbae-price');
+    var cur = evaluateEconomics(p, currentMode);
+    var csvContent = 'data:text/csv;charset=utf-8,' +
+      'Metric,Value\n' +
+      'Selling Price,' + p.toFixed(2) + '\n' +
+      'Landed Cost,' + cur.landedCost.toFixed(2) + '\n' +
+      'Amazon Selling Fees,' + cur.amazonFees.toFixed(2) + '\n' +
+      'Advertising Spend,' + cur.adPerUnit.toFixed(2) + '\n' +
+      'Return Costs,' + cur.retCost.toFixed(2) + '\n' +
+      'Net Profit,' + cur.profit.toFixed(2) + '\n' +
+      'Net Margin %,' + cur.margin.toFixed(2) + '\n' +
+      'ROI %,' + cur.roi.toFixed(2) + '\n';
+
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'Amazon_FBA_Profit_Audit.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function resetDefaults() {
+    document.getElementById('fbae-price').value = '39.99';
+    document.getElementById('fbae-units').value = '800';
+    document.getElementById('fbae-cogs').value = '12.00';
+    document.getElementById('fbae-inbound').value = '1.50';
+    document.getElementById('fbae-prep').value = '0.00';
+    document.getElementById('fbae-other-cost').value = '0.00';
+    document.getElementById('fbae-ref-pct').value = '15.0';
+    document.getElementById('fbae-min-ref').value = '0.00';
+    document.getElementById('fbae-closing').value = '0.00';
+    document.getElementById('fbae-fba-fee').value = '5.50';
+    document.getElementById('fbae-placement').value = '0.00';
+    document.getElementById('fbae-fee-tax').value = '0.0';
+    document.getElementById('fbae-storage-amt').value = '120.00';
+    document.getElementById('fbae-storage-months').value = '1.0';
+    document.getElementById('fbae-aged-fee').value = '0.00';
+    document.getElementById('fbae-low-inv-fee').value = '0.00';
+    document.getElementById('fbae-return-pct').value = '5.0';
+    document.getElementById('fbae-ad-val').value = '4.00';
+    document.getElementById('fbae-target-margin').value = '25.0';
+    setMode('FBA');
+    calculate();
+    showToast('Reset to default values');
+  }
+
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') calculate();
+  });
+
+  checkHash();
+  calculate();
+
+  return {
+    toggleSec: toggleSec,
+    setMode: setMode,
+    onCurrencyChange: onCurrencyChange,
+    onReturnModelChange: onReturnModelChange,
+    onAdModeChange: onAdModeChange,
+    debounceCalc: debounceCalc,
+    saveScenario: saveScenario,
+    copySummary: copySummary,
+    copyShareLink: copyShareLink,
+    exportCSV: exportCSV,
+    resetDefaults: resetDefaults
+  };
+})();
+/* ]]> */
+</script>
+
+</body>
+</html>
