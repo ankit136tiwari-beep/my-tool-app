@@ -1,0 +1,1623 @@
+<!-- ==========================================================================
+     PROJECT: Complete Etsy Seller Profit Analysis Tool
+     WEBSITE: https://my-tool-app.pages.dev/
+     COMPATIBILITY: Google Blogger (Zero Dependencies, 100% Client-Side)
+     ========================================================================== -->
+
+<!-- JSON-LD Structured Data Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Etsy Seller Profit Calculator",
+      "operatingSystem": "All modern web browsers",
+      "applicationCategory": "BusinessApplication",
+      "url": "https://my-tool-app.pages.dev/etsy-seller-profit-calculator",
+      "description": "Comprehensive client-side financial calculator for Etsy shop owners to calculate listing fees, 6.5% transaction fees, payment processing costs, Offsite Ads, net profit, margin, and break-even selling prices.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://my-tool-app.pages.dev/etsy-seller-profit-calculator",
+      "url": "https://my-tool-app.pages.dev/etsy-seller-profit-calculator",
+      "name": "Etsy Seller Profit Calculator & Fee Estimator",
+      "description": "Calculate Etsy listing, transaction, payment processing, shipping fees and product profit with this free Etsy seller calculator."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://my-tool-app.pages.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Etsy Seller Profit Calculator",
+          "item": "https://my-tool-app.pages.dev/etsy-seller-profit-calculator"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is an Etsy Seller Profit Calculator?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An Etsy Seller Profit Calculator is an ecommerce financial tool designed to calculate your exact take-home profit by deducting listing fees ($0.20), marketplace transaction fees (6.5%), payment processing charges, shipping costs, material expenses, and advertising from your total order revenue."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate Etsy listing fees?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Etsy charges a standard $0.20 listing fee when you publish an item, valid for 4 months or until sold. If multiple quantities are listed and sold, an additional $0.20 auto-renewal fee applies per unit sold."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the Etsy transaction fee work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Etsy assesses a 6.5% transaction fee on the total order value paid by the buyer, which includes the item selling price, shipping charged to the buyer, and any optional gift wrapping."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between transaction fees and payment processing fees?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The transaction fee (6.5%) is Etsy's marketplace commission for facilitating the sale. Payment processing fees (e.g., 3% + $0.25 in the US) cover bank handling, merchant processing, and credit card gateway charges, varying based on your registered bank account country."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does this tool calculate the break-even selling price?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The break-even selling price is calculated by taking all fixed unit costs (material, labor, packaging, shipping cost deficit, fixed listing, and fixed payment processing fees) and dividing them by 1 minus the sum of all percentage-based fee rates (transaction fee, payment processing percentage, and applicable Offsite Ads)."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+/* Main Tool Scoped Styles */
+#etsy-profit-estimator {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1e293b;
+  line-height: 1.6;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+#etsy-profit-estimator * {
+  box-sizing: border-box;
+}
+
+/* Header & Typography */
+.etsy-header {
+  margin-bottom: 24px;
+}
+.etsy-h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+  line-height: 1.25;
+}
+.etsy-subtitle {
+  font-size: 1rem;
+  color: #64748b;
+  margin: 0 0 16px 0;
+}
+.etsy-badge-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.etsy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: #475569;
+}
+.etsy-badge-privacy {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+/* Control & Utility Bar */
+.etsy-control-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  margin-bottom: 24px;
+}
+.etsy-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.etsy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+.etsy-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+.etsy-mode-toggle {
+  display: flex;
+  background: #e2e8f0;
+  padding: 3px;
+  border-radius: 8px;
+}
+.etsy-mode-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.etsy-mode-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+
+/* Two-Column Responsive Grid */
+.etsy-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+@media (min-width: 992px) {
+  .etsy-grid {
+    grid-template-columns: 1.15fr 0.85fr;
+  }
+}
+
+/* Cards & Form Controls */
+.etsy-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.etsy-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 8px;
+}
+.etsy-card-title span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.etsy-input-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 576px) {
+  .etsy-input-grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  .etsy-input-grid-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.etsy-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.etsy-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.etsy-help {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+.etsy-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.etsy-input-prefix,
+.etsy-input-suffix {
+  position: absolute;
+  font-size: 0.85rem;
+  color: #64748b;
+  pointer-events: none;
+}
+.etsy-input-prefix { left: 10px; }
+.etsy-input-suffix { right: 10px; }
+
+.etsy-input, .etsy-select {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #0f172a;
+  transition: border-color 0.15s ease-in-out;
+}
+.etsy-input.has-prefix { padding-left: 26px; }
+.etsy-input.has-suffix { padding-right: 28px; }
+.etsy-input:focus, .etsy-select:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
+}
+
+/* Visibility Control for Advanced Mode */
+.etsy-advanced-section {
+  display: none;
+}
+.etsy-mode-advanced .etsy-advanced-section {
+  display: block;
+}
+
+/* Dashboard / Summary Card */
+.etsy-dashboard-sticky {
+  position: sticky;
+  top: 16px;
+}
+.etsy-status-banner {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.etsy-status-banner.profitable { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+.etsy-status-banner.low-margin { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
+.etsy-status-banner.loss { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+
+.etsy-kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.etsy-kpi-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+}
+.etsy-kpi-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.etsy-kpi-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-top: 4px;
+  color: #0f172a;
+}
+.etsy-kpi-value.green { color: #16a34a; }
+.etsy-kpi-value.red { color: #dc2626; }
+.etsy-kpi-value.amber { color: #d97706; }
+
+.etsy-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin-top: 8px;
+}
+.etsy-table tr {
+  border-bottom: 1px solid #f1f5f9;
+}
+.etsy-table td {
+  padding: 6px 0;
+  color: #475569;
+}
+.etsy-table td:last-child {
+  text-align: right;
+  font-weight: 600;
+  color: #0f172a;
+}
+.etsy-table tr.etsy-total-row td {
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-top: 2px solid #e2e8f0;
+  padding-top: 8px;
+}
+
+/* Feature Tabs */
+.etsy-tabs-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 14px;
+}
+.etsy-tab-link {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+.etsy-tab-link.active {
+  color: #ea580c;
+  border-bottom-color: #ea580c;
+}
+.etsy-tab-content {
+  display: none;
+}
+.etsy-tab-content.active {
+  display: block;
+}
+
+/* Content & Editorial Section */
+.etsy-editorial {
+  margin-top: 40px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 24px;
+  color: #334155;
+}
+.etsy-editorial h2 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 28px 0 12px 0;
+}
+.etsy-editorial h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 20px 0 8px 0;
+}
+.etsy-editorial p, .etsy-editorial li {
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.etsy-editorial ul, .etsy-editorial ol {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+.etsy-editorial blockquote {
+  background: #fff7ed;
+  border-left: 4px solid #ea580c;
+  margin: 16px 0;
+  padding: 12px 16px;
+  font-style: italic;
+  color: #9a3412;
+}
+.etsy-editorial a {
+  color: #ea580c;
+  text-decoration: underline;
+}
+.etsy-editorial a:hover {
+  color: #c2410c;
+}
+
+/* FAQ Box */
+.etsy-faq-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  background: #ffffff;
+}
+.etsy-faq-q {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #0f172a;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.etsy-faq-a {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* Footer Nav */
+.etsy-footer-nav {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #64748b;
+  gap: 12px;
+}
+.etsy-footer-links {
+  display: flex;
+  gap: 16px;
+}
+
+/* Print Rules */
+@media print {
+  .etsy-control-bar, .etsy-btn, .etsy-editorial, .etsy-footer-nav, .etsy-tabs-nav {
+    display: none !important;
+  }
+  #etsy-profit-estimator {
+    padding: 0;
+  }
+  .etsy-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<div id="etsy-profit-estimator" class="etsy-mode-beginner">
+  <!-- 1. H1 Page Header -->
+  <header class="etsy-header">
+    <h1 class="etsy-h1">Etsy Seller Profit Calculator – Calculate Fees & Profit</h1>
+    <p class="etsy-subtitle">
+      Accurately calculate Etsy listing fees, 6.5% transaction fees, payment processing, shipping profit/loss, Offsite Ads, and break-even selling price.
+    </p>
+    <div class="etsy-badge-bar">
+      <span class="etsy-badge etsy-badge-privacy">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        100% Client-Side Privacy (Zero Server Logs)
+      </span>
+      <span class="etsy-badge">Standard 6.5% Transaction Fee Base</span>
+      <span class="etsy-badge">Multi-Country Payment Gateways</span>
+    </div>
+  </header>
+
+  <!-- 2. Interactive Tool Section -->
+  <!-- Control Bar -->
+  <div class="etsy-control-bar">
+    <div class="etsy-mode-toggle" role="group" aria-label="Calculator Mode">
+      <button type="button" class="etsy-mode-btn active" id="etsy-btn-beginner">Beginner Mode</button>
+      <button type="button" class="etsy-mode-btn" id="etsy-btn-advanced">Advanced Mode</button>
+    </div>
+    <div class="etsy-btn-group">
+      <button type="button" class="etsy-btn" id="etsy-btn-load-sample" title="Load sample handmade product data">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Sample Data
+      </button>
+      <button type="button" class="etsy-btn" id="etsy-btn-reset" title="Reset all input fields">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset
+      </button>
+      <button type="button" class="etsy-btn" id="etsy-btn-copy" title="Copy profit summary to clipboard">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy Summary
+      </button>
+      <button type="button" class="etsy-btn" id="etsy-btn-csv" title="Download spreadsheet report">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Export CSV
+      </button>
+      <button type="button" class="etsy-btn" id="etsy-btn-print" title="Print calculation report">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print
+      </button>
+    </div>
+  </div>
+
+  <div class="etsy-grid">
+    <!-- Left Column: Input Sections -->
+    <div class="etsy-inputs-col">
+      <!-- 1. Country & Currency Settings -->
+      <div class="etsy-card">
+        <div class="etsy-card-title">
+          <span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Seller Location & Currency
+          </span>
+        </div>
+        <div class="etsy-input-grid etsy-input-grid-2">
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-country">Seller Payment Country</label>
+            <select id="etsy-country" class="etsy-select">
+              <option value="US" data-curr="$" data-proc-pct="3.0" data-proc-fix="0.25" selected>United States (USD $)</option>
+              <option value="UK" data-curr="£" data-proc-pct="4.0" data-proc-fix="0.20">United Kingdom (GBP £)</option>
+              <option value="IN" data-curr="₹" data-proc-pct="3.0" data-proc-fix="0.00">India (INR ₹ / Payment Gateway)</option>
+              <option value="CA" data-curr="CA$" data-proc-pct="3.0" data-proc-fix="0.25">Canada (CAD CA$)</option>
+              <option value="AU" data-curr="A$" data-proc-pct="3.0" data-proc-fix="0.25">Australia (AUD A$)</option>
+              <option value="EU" data-curr="€" data-proc-pct="4.0" data-proc-fix="0.30">Germany / France / EU (EUR €)</option>
+              <option value="CUSTOM" data-curr="$" data-proc-pct="3.5" data-proc-fix="0.30">Other / Custom Country</option>
+            </select>
+            <span class="etsy-help">Updates baseline payment processing fees automatically.</span>
+          </div>
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-currency">Display Currency Symbol</label>
+            <input type="text" id="etsy-currency" class="etsy-input" value="$" maxlength="4">
+            <span class="etsy-help">Editable symbol used across financial results.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Core Revenue & Product Costs (Beginner + Advanced) -->
+      <div class="etsy-card">
+        <div class="etsy-card-title">
+          <span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4"/><line x1="18" y1="12" x2="18.01" y2="12"/></svg>
+            Product Pricing & Direct Sourcing
+          </span>
+        </div>
+        <div class="etsy-input-grid etsy-input-grid-2">
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-selling-price">Selling Price Per Item *</label>
+            <div class="etsy-input-wrapper">
+              <span class="etsy-input-prefix etsy-curr-symbol">$</span>
+              <input type="number" id="etsy-selling-price" class="etsy-input has-prefix" value="38.00" min="0" step="0.01">
+            </div>
+            <span class="etsy-help">Retail price charged to customer for the item.</span>
+          </div>
+
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-material-cost">Material / Purchase Cost *</label>
+            <div class="etsy-input-wrapper">
+              <span class="etsy-input-prefix etsy-curr-symbol">$</span>
+              <input type="number" id="etsy-material-cost" class="etsy-input has-prefix" value="8.50" min="0" step="0.01">
+            </div>
+            <span class="etsy-help">Direct cost of supplies, blank items, or raw materials.</span>
+          </div>
+
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-shipping-charged">Shipping Charged to Buyer</label>
+            <div class="etsy-input-wrapper">
+              <span class="etsy-input-prefix etsy-curr-symbol">$</span>
+              <input type="number" id="etsy-shipping-charged" class="etsy-input has-prefix" value="4.50" min="0" step="0.01">
+            </div>
+            <span class="etsy-help">Postage amount collected from customer ($0 if free shipping).</span>
+          </div>
+
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-actual-shipping">Actual Shipping Expense</label>
+            <div class="etsy-input-wrapper">
+              <span class="etsy-input-prefix etsy-curr-symbol">$</span>
+              <input type="number" id="etsy-actual-shipping" class="etsy-input has-prefix" value="4.20" min="0" step="0.01">
+            </div>
+            <span class="etsy-help">Your real out-of-pocket cost for postage/shipping labels.</span>
+          </div>
+
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-monthly-orders">Expected Monthly Orders</label>
+            <div class="etsy-input-wrapper">
+              <input type="number" id="etsy-monthly-orders" class="etsy-input" value="120" min="1" step="1">
+            </div>
+            <span class="etsy-help">Estimated sales volume per month.</span>
+          </div>
+
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-gift-wrap">Gift Wrapping Charged</label>
+            <div class="etsy-input-wrapper">
+              <span class="etsy-input-prefix etsy-curr-symbol">$</span>
+              <input type="number" id="etsy-gift-wrap" class="etsy-input has-prefix" value="0.00" min="0" step="0.01">
+            </div>
+            <span class="etsy-help">Optional fee paid by customer for gift packaging.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Etsy Marketplace Fee Breakdown (Listing, Transaction, Payment) -->
+      <div class="etsy-card">
+        <div class="etsy-card-title">
+          <span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/></svg>
+            Etsy Marketplace Fees
+          </span>
+        </div>
+        <div class="etsy-input-grid etsy-input-grid-3">
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-listing-fee">Listing Fee Per Unit</label>
+            <div class="etsy-input-wrapper">
+              <span class="etsy-input-prefix etsy-curr-symbol">$</span>
+              <input type="number" id="etsy-listing-fee" class="etsy-input has-prefix" value="0.20" min="0" step="0.01">
+            </div>
+            <span class="etsy-help">Standard $0.20 per item listing/renewal.</span>
+          </div>
+
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-transaction-fee-pct">Transaction Fee (%)</label>
+            <div class="etsy-input-wrapper">
+              <input type="number" id="etsy-transaction-fee-pct" class="etsy-input has-suffix" value="6.5" min="0" max="100" step="0.1">
+              <span class="etsy-input-suffix">%</span>
+            </div>
+            <span class="etsy-help">Official 6.5% on item price + buyer shipping.</span>
+          </div>
+
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-processing-pct">Payment Proc. Fee (%)</label>
+            <div class="etsy-input-wrapper">
+              <input type="number" id="etsy-processing-pct" class="etsy-input has-suffix" value="3.0" min="0" max="100" step="0.1">
+              <span class="etsy-input-suffix">%</span>
+            </div>
+            <span class="etsy-help">Percentage rate for your country.</span>
+          </div>
+        </div>
+
+        <div class="etsy-input-grid etsy-input-grid-2" style="margin-top: 12px;">
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-processing-fixed">Payment Proc. Fixed Fee</label>
+            <div class="etsy-input-wrapper">
+              <span class="etsy-input-prefix etsy-curr-symbol">$</span>
+              <input type="number" id="etsy-processing-fixed" class="etsy-input has-prefix" value="0.25" min="0" step="0.01">
+            </div>
+            <span class="etsy-help">Fixed order transaction fee (e.g., $0.25 in US, £0.20 in UK).</span>
+          </div>
+
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-ad-cost-unit">Etsy Onsite Ads / Unit</label>
+            <div class="etsy-input-wrapper">
+              <span class="etsy-input-prefix etsy-curr-symbol">$</span>
+              <input type="number" id="etsy-ad-cost-unit" class="etsy-input has-prefix" value="1.50" min="0" step="0.01">
+            </div>
+            <span class="etsy-help">Allocated Etsy Promoted Listings cost per sale.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Advanced Operational Overhead (Advanced Mode Only) -->
+      <div class="etsy-card etsy-advanced-section">
+        <div class="etsy-card-title">
+          <span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Offsite Ads & Operational Overhead
+          </span>
+        </div>
+        <div class="etsy-input-grid etsy-input-grid-2">
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-offsite-enabled">Order Attributed to Offsite Ads?</label>
+            <select id="etsy-offsite-enabled" class="etsy-select">
+              <option value="no" selected>No (Standard 0% Fee)</option>
+              <option value="yes-15">Yes - 15% Rate (Under $10k annual sales)</option>
+              <option value="yes-12">Yes - 12% Rate (Over $10k annual sales)</option>
+            </select>
+            <span class="etsy-help">Offsite Ads fees only apply to attributed sales (max $100/order).</span>
+          </div>
+
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-labor-cost">Handmade Labor Cost / Unit</label>
+            <div class="etsy-input-wrapper">
+              <span class="etsy-input-prefix etsy-curr-symbol">$</span>
+              <input type="number" id="etsy-labor-cost" class="etsy-input has-prefix" value="4.00" min="0" step="0.01">
+            </div>
+            <span class="etsy-help">Valuation of your craft production time per item.</span>
+          </div>
+
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-packaging-cost">Packaging & Bubble Mailer</label>
+            <div class="etsy-input-wrapper">
+              <span class="etsy-input-prefix etsy-curr-symbol">$</span>
+              <input type="number" id="etsy-packaging-cost" class="etsy-input has-prefix" value="0.75" min="0" step="0.01">
+            </div>
+            <span class="etsy-help">Boxes, tissue wrap, thank-you cards, stickers.</span>
+          </div>
+
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-regulatory-pct">Regulatory Operating Fee (%)</label>
+            <div class="etsy-input-wrapper">
+              <input type="number" id="etsy-regulatory-pct" class="etsy-input has-suffix" value="0.0" min="0" max="10" step="0.05">
+              <span class="etsy-input-suffix">%</span>
+            </div>
+            <span class="etsy-help">Applicable in select regions (UK 0.32%, France 0.47%, Spain 0.4%, etc.).</span>
+          </div>
+
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-return-rate">Estimated Return Rate (%)</label>
+            <div class="etsy-input-wrapper">
+              <input type="number" id="etsy-return-rate" class="etsy-input has-suffix" value="2.5" min="0" max="100" step="0.1">
+              <span class="etsy-input-suffix">%</span>
+            </div>
+            <span class="etsy-help">Damage or buyer return percentage.</span>
+          </div>
+
+          <div class="etsy-form-group">
+            <label class="etsy-label" for="etsy-return-loss">Net Loss Per Return</label>
+            <div class="etsy-input-wrapper">
+              <span class="etsy-input-prefix etsy-curr-symbol">$</span>
+              <input type="number" id="etsy-return-loss" class="etsy-input has-prefix" value="8.00" min="0" step="0.01">
+            </div>
+            <span class="etsy-help">Average unrecoverable return shipping / restock cost.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Advanced Business Decision Planners (Advanced Mode Only) -->
+      <div class="etsy-card etsy-advanced-section">
+        <div class="etsy-card-title">
+          <span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
+            Interactive Decision Planners
+          </span>
+        </div>
+
+        <div class="etsy-tabs-nav" role="tablist">
+          <button type="button" class="etsy-tab-link active" data-tab="tab-target">Target Margin Planner</button>
+          <button type="button" class="etsy-tab-link" data-tab="tab-inventory">Batch Production Planner</button>
+          <button type="button" class="etsy-tab-link" data-tab="tab-scenario">Scenario A vs B</button>
+        </div>
+
+        <!-- Tab 1: Target Margin Planner -->
+        <div id="tab-target" class="etsy-tab-content active">
+          <p class="etsy-help" style="margin-bottom: 10px;">
+            Calculate the exact retail price required to lock in your desired net profit margin percentage.
+          </p>
+          <div class="etsy-input-grid etsy-input-grid-2">
+            <div class="etsy-form-group">
+              <label class="etsy-label" for="etsy-target-margin-input">Desired Net Margin (%)</label>
+              <div class="etsy-input-wrapper">
+                <input type="number" id="etsy-target-margin-input" class="etsy-input has-suffix" value="30" min="1" max="80" step="1">
+                <span class="etsy-input-suffix">%</span>
+              </div>
+            </div>
+            <div class="etsy-form-group">
+              <label class="etsy-label">Required Selling Price</label>
+              <div class="etsy-kpi-value green" id="etsy-target-price-output" style="font-size: 1.15rem; margin-top: 6px;">$0.00</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Batch Inventory Planner -->
+        <div id="tab-inventory" class="etsy-tab-content">
+          <div class="etsy-input-grid etsy-input-grid-2">
+            <div class="etsy-form-group">
+              <label class="etsy-label" for="etsy-batch-units">Craft Batch Quantity (Units)</label>
+              <input type="number" id="etsy-batch-units" class="etsy-input" value="250" min="10" step="25">
+            </div>
+            <div class="etsy-form-group">
+              <label class="etsy-label">Upfront Production Capital</label>
+              <div class="etsy-kpi-value amber" id="etsy-batch-capital" style="font-size: 1.15rem; margin-top: 6px;">$0.00</div>
+            </div>
+          </div>
+          <p class="etsy-help" style="margin-top: 8px;">
+            Projected total profit once batch is sold: <strong id="etsy-batch-profit" style="color:#16a34a;">$0.00</strong>
+          </p>
+        </div>
+
+        <!-- Tab 3: Scenario Comparison (A vs B) -->
+        <div id="tab-scenario" class="etsy-tab-content">
+          <p class="etsy-help" style="margin-bottom: 8px;">Compare current parameters (Scenario A) with a higher-price or free-shipping strategy (Scenario B):</p>
+          <div class="etsy-input-grid etsy-input-grid-2">
+            <div class="etsy-form-group">
+              <label class="etsy-label" for="etsy-scen-b-price">Scenario B Selling Price</label>
+              <div class="etsy-input-wrapper">
+                <span class="etsy-input-prefix etsy-curr-symbol">$</span>
+                <input type="number" id="etsy-scen-b-price" class="etsy-input has-prefix" value="44.00" step="0.50">
+              </div>
+            </div>
+            <div class="etsy-form-group">
+              <label class="etsy-label" for="etsy-scen-b-shipping">Scenario B Buyer Shipping</label>
+              <div class="etsy-input-wrapper">
+                <span class="etsy-input-prefix etsy-curr-symbol">$</span>
+                <input type="number" id="etsy-scen-b-shipping" class="etsy-input has-prefix" value="0.00" step="0.50">
+              </div>
+            </div>
+          </div>
+          <table class="etsy-table" style="margin-top: 10px;">
+            <thead>
+              <tr style="border-bottom: 2px solid #e2e8f0; font-weight:700;">
+                <td style="color:#0f172a;">Financial Metric</td>
+                <td style="color:#0f172a;">Scenario A</td>
+                <td style="color:#0f172a;">Scenario B</td>
+                <td style="color:#0f172a;">Difference</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Net Profit / Order</td>
+                <td id="etsy-scen-a-profit">$0.00</td>
+                <td id="etsy-scen-b-profit">$0.00</td>
+                <td id="etsy-scen-diff-profit">$0.00</td>
+              </tr>
+              <tr>
+                <td>Profit Margin</td>
+                <td id="etsy-scen-a-margin">0.0%</td>
+                <td id="etsy-scen-b-margin">0.0%</td>
+                <td id="etsy-scen-diff-margin">0.0%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Live Financial Summary & Dashboard -->
+    <div class="etsy-results-col">
+      <div class="etsy-dashboard-sticky">
+        <!-- Viability Status Banner -->
+        <div id="etsy-status-box" class="etsy-status-banner profitable">
+          <span id="etsy-status-text">Product is Profitable</span>
+          <span id="etsy-status-sub">Healthy Operating Margin</span>
+        </div>
+
+        <!-- High Level KPIs -->
+        <div class="etsy-kpi-grid">
+          <div class="etsy-kpi-card">
+            <div class="etsy-kpi-title">Net Profit / Order</div>
+            <div class="etsy-kpi-value green" id="etsy-kpi-profit-unit">$0.00</div>
+          </div>
+          <div class="etsy-kpi-card">
+            <div class="etsy-kpi-title">Net Profit Margin</div>
+            <div class="etsy-kpi-value green" id="etsy-kpi-margin">0.0%</div>
+          </div>
+          <div class="etsy-kpi-card">
+            <div class="etsy-kpi-title">Product ROI</div>
+            <div class="etsy-kpi-value" id="etsy-kpi-roi">0.0%</div>
+          </div>
+          <div class="etsy-kpi-card">
+            <div class="etsy-kpi-title">Break-Even Selling Price</div>
+            <div class="etsy-kpi-value" id="etsy-kpi-breakeven">$0.00</div>
+          </div>
+        </div>
+
+        <!-- Comprehensive Fee Breakdown Card -->
+        <div class="etsy-card">
+          <div class="etsy-card-title">
+            <span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Complete Financial Breakdown
+            </span>
+          </div>
+
+          <table class="etsy-table">
+            <tbody>
+              <tr>
+                <td>Total Order Revenue (Price + Buyer Shipping)</td>
+                <td id="etsy-row-revenue">$0.00</td>
+              </tr>
+              <tr>
+                <td>Etsy Listing Fee</td>
+                <td id="etsy-row-listing" style="color: #dc2626;">-$0.00</td>
+              </tr>
+              <tr>
+                <td>Etsy Transaction Fee (<span id="etsy-row-trans-pct">6.5%</span>)</td>
+                <td id="etsy-row-trans" style="color: #dc2626;">-$0.00</td>
+              </tr>
+              <tr>
+                <td>Payment Processing Fee</td>
+                <td id="etsy-row-processing" style="color: #dc2626;">-$0.00</td>
+              </tr>
+              <tr>
+                <td>Offsite Ads Fee</td>
+                <td id="etsy-row-offsite" style="color: #dc2626;">-$0.00</td>
+              </tr>
+              <tr>
+                <td>Etsy Onsite Ads (PPC)</td>
+                <td id="etsy-row-ads" style="color: #dc2626;">-$0.00</td>
+              </tr>
+              <tr>
+                <td>Total Etsy Marketplace Fees</td>
+                <td id="etsy-row-total-fees" style="color: #dc2626; font-weight:700;">-$0.00</td>
+              </tr>
+              <tr>
+                <td>Product Costs (Materials + Labor + Packaging)</td>
+                <td id="etsy-row-product-cost" style="color: #dc2626;">-$0.00</td>
+              </tr>
+              <tr>
+                <td>Shipping Margin (Buyer Paid vs Actual Postage)</td>
+                <td id="etsy-row-shipping-margin">$0.00</td>
+              </tr>
+              <tr>
+                <td>Expected Return & Damage Allowance</td>
+                <td id="etsy-row-returns" style="color: #dc2626;">-$0.00</td>
+              </tr>
+              <tr class="etsy-total-row">
+                <td>Total Expenses Per Order</td>
+                <td id="etsy-row-total-expenses">$0.00</td>
+              </tr>
+              <tr class="etsy-total-row" style="background:#f8fafc;">
+                <td>Estimated Net Profit</td>
+                <td id="etsy-row-net-profit" style="color: #16a34a;">$0.00</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="margin-top: 16px; padding-top: 12px; border-top: 1px dashed #cbd5e1;">
+            <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom: 4px;">
+              <span>Monthly Projected Revenue (<span id="etsy-disp-orders">120</span> orders):</span>
+              <strong id="etsy-disp-monthly-rev">$0.00</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.9rem; font-weight:700;">
+              <span>Monthly Projected Net Profit:</span>
+              <strong id="etsy-disp-monthly-profit" style="color:#16a34a;">$0.00</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Short Introduction -->
+  <section class="etsy-editorial">
+    <h2>Etsy Seller Profit Calculator – Comprehensive Financial Analysis</h2>
+    <p>
+      Managing an Etsy shop is an exciting venture for craftspeople, vintage curators, and digital creators. However, turning a creative passion into a sustainable business requires precise control over marketplace expenses. This <strong>Etsy Seller Profit Calculator</strong> serves as a complete ecommerce financial simulator, combining an <strong>Etsy Fee Calculator</strong>, an <strong>Etsy Listing Fee Calculator</strong>, an <strong>Etsy Transaction Fee Calculator</strong>, and an <strong>Etsy Profit Margin Calculator</strong> into a unified, client-side dashboard.
+    </p>
+
+    <blockquote>
+      <strong>Crucial Seller Insight:</strong> Gross sales volume can easily mask negative cash flow. Because Etsy assesses its 6.5% transaction fee and variable payment processing fees against both the item price and buyer-paid shipping, sellers who do not account for full fulfillment friction often underprice their catalog.
+    </blockquote>
+
+    <!-- 4. How to Use -->
+    <h2>How to Use This Etsy Fee and Profit Calculator</h2>
+    <ol>
+      <li><strong>Select Seller Country & Currency:</strong> Choose where your bank account is located to load standard payment processing rates (e.g., US 3% + $0.25, UK 4% + £0.20), and customize your currency symbol.</li>
+      <li><strong>Enter Retail Price & Buyer Shipping:</strong> Input what the customer pays for the listing and any separate shipping charges you collect.</li>
+      <li><strong>Input Direct Material Costs:</strong> Enter your wholesale purchasing or raw materials expenses.</li>
+      <li><strong>Add Postage Expenses:</strong> Enter your actual out-of-pocket shipping label and postage cost to identify your exact shipping margin.</li>
+      <li><strong>Configure Listing & Transaction Fees:</strong> Verify standard baseline fees ($0.20 listing fee and 6.5% transaction commission).</li>
+      <li><strong>Toggle Advanced Mode:</strong> Access Offsite Ads attribution, labor valuation, packaging expenses, return provisions, target margin pricing, and scenario testing.</li>
+      <li><strong>Export & Review:</strong> Copy the summary, export a CSV spreadsheet, or print your financial statement for shop budgeting.</li>
+    </ol>
+
+    <!-- 5. Features -->
+    <h2>Key Capabilities of This Etsy Business Calculator</h2>
+    <ul>
+      <li><strong>Independent 100% Client-Side Privacy:</strong> Your proprietary supplier costs, pricing structures, and sales volumes are computed entirely in your browser—never sent to an external server.</li>
+      <li><strong>Granular Multi-Tier Fee Separation:</strong> Distinctly calculates the $0.20 listing fee, the 6.5% transaction fee, payment processing gateways, and optional Offsite Ads without confusing overlap.</li>
+      <li><strong>Dynamic Break-Even Engine:</strong> Accurately computes the exact minimum selling price needed to prevent operating losses.</li>
+      <li><strong>Target Margin Pricing Planner:</strong> Tells you precisely what retail price you must charge to achieve a 20%, 30%, or 50% net profit margin.</li>
+      <li><strong>Side-by-Side Scenario Modeling:</strong> Test "Free Shipping with Higher Base Price" against "Lower Base Price with Buyer-Paid Shipping" to evaluate profit impacts before updating your live listings.</li>
+      <li><strong>Batch Production Planner:</strong> Estimates upfront production capital and total return on investment (ROI) across entire inventory production runs.</li>
+    </ul>
+
+    <!-- 6. Examples / Calculation Formulas -->
+    <h2>Formulas & Real-World Pricing Case Study</h2>
+    <p>Our calculation engine applies transparent, verified accounting equations:</p>
+    <ul>
+      <li><strong>Total Order Revenue:</strong> <code>Item Price + Buyer-Paid Shipping + Gift Wrapping</code></li>
+      <li><strong>Etsy Transaction Fee:</strong> <code>Total Order Revenue × 6.5%</code></li>
+      <li><strong>Payment Processing Fee:</strong> <code>(Total Order Revenue × Processing %) + Fixed Fee</code></li>
+      <li><strong>Net Profit Per Order:</strong> <code>Total Order Revenue - (All Etsy Fees + Sourcing Cost + Labor + Packaging + Actual Shipping + Returns)</code></li>
+      <li><strong>Net Profit Margin:</strong> <code>(Net Profit / Total Order Revenue) × 100</code></li>
+      <li><strong>Break-Even Selling Price:</strong> <code>Total Fixed Unit Costs / (1 - Sum of Percentage-Based Fees) - Buyer Shipping</code></li>
+    </ul>
+
+    <h3>Handmade Craft Example Breakdown</h3>
+    <p>Consider an artisan selling a custom handmade ceramic mug in the United States:</p>
+    <ul>
+      <li><strong>Item Price:</strong> $38.00 | <strong>Buyer Shipping:</strong> $4.50 (Total Revenue: $42.50)</li>
+      <li><strong>Clay, Glaze & Firing Materials:</strong> $8.50 | <strong>Labor Time:</strong> $4.00 | <strong>Mailer Box & Packaging:</strong> $0.75</li>
+      <li><strong>Actual Shipping Label:</strong> $4.20 (Shipping Profit: +$0.30)</li>
+      <li><strong>Etsy Listing Fee:</strong> $0.20</li>
+      <li><strong>Etsy Transaction Fee (6.5% of $42.50):</strong> $2.76</li>
+      <li><strong>US Payment Processing (3.0% + $0.25):</strong> $1.53</li>
+      <li><strong>Etsy Onsite PPC Ads:</strong> $1.50</li>
+    </ul>
+    <p>
+      Total Etsy marketplace fees equal <strong>$5.99</strong>. Total manufacturing and fulfillment expenses equal <strong>$17.45</strong>. The resulting estimated net profit is <strong>$19.06 per order</strong>, delivering a healthy <strong>44.85% net margin</strong> and a <strong>143.8% product ROI</strong>.
+    </p>
+
+    <!-- 7. Use Cases -->
+    <h2>Practical Etsy Seller Use Cases</h2>
+    <ul>
+      <li><strong>Handmade Artisans:</strong> Factor production time and labor rates into your product economics so you never undercharge for craftsmanship.</li>
+      <li><strong>Digital Download Sellers:</strong> With zero physical shipping and zero raw materials, model high-volume listing fee renewals to calculate true passive margins.</li>
+      <li><strong>Vintage Item Curators:</strong> Assess one-of-a-kind vintage acquisitions against packaging, insurance, and fragile shipping expenses.</li>
+      <li><strong>Print-on-Demand (POD) Shops:</strong> Model production partner fulfillment invoices and shipping surcharges to protect net profits.</li>
+      <li><strong>Sellers Optimizing for Free Shipping:</strong> Run Scenario A vs B to identify whether absorbing postage into listing prices raises or lowers your take-home cash flow.</li>
+    </ul>
+
+    <!-- 8. Frequently Asked Questions (FAQ) -->
+    <h2>Frequently Asked Questions (FAQ)</h2>
+    
+    <div class="etsy-faq-item">
+      <div class="etsy-faq-q">
+        What is an Etsy Seller Profit Calculator?
+        <span>+</span>
+      </div>
+      <div class="etsy-faq-a">
+        An Etsy Seller Profit Calculator is a financial analysis tool designed for ecommerce shop owners to determine their exact net profit, margin percentage, and break-even thresholds after deducting all marketplace listing fees, transaction percentages, payment processor fees, material costs, labor, and postage.
+      </div>
+    </div>
+
+    <div class="etsy-faq-item">
+      <div class="etsy-faq-q">
+        How do I calculate Etsy listing fees?
+        <span>+</span>
+      </div>
+      <div class="etsy-faq-a">
+        Etsy charges a standard $0.20 fee to list an item for four months. When a multi-quantity listing sells, Etsy charges an automatic $0.20 renewal fee for each subsequent item sold from that listing.
+      </div>
+    </div>
+
+    <div class="etsy-faq-item">
+      <div class="etsy-faq-q">
+        How does the Etsy transaction fee work?
+        <span>+</span>
+      </div>
+      <div class="etsy-faq-a">
+        Etsy charges a 6.5% transaction fee on the full order amount paid by the customer, which includes the item retail price, any shipping you charge the buyer, and gift wrapping charges.
+      </div>
+    </div>
+
+    <div class="etsy-faq-item">
+      <div class="etsy-faq-q">
+        What is the difference between Etsy transaction fees and payment processing fees?
+        <span>+</span>
+      </div>
+      <div class="etsy-faq-a">
+        The transaction fee (6.5%) is Etsy's sales commission for listing on their platform. Payment processing fees (typically 3% to 4% plus a fixed flat fee per transaction depending on your country) cover credit card and banking gateway handling.
+      </div>
+    </div>
+
+    <div class="etsy-faq-item">
+      <div class="etsy-faq-q">
+        How do Etsy Offsite Ads fees affect profit?
+        <span>+</span>
+      </div>
+      <div class="etsy-faq-a">
+        If an order is attributed to an external Offsite Ad (Google, Facebook, Pinterest), Etsy charges either 15% (for shops with under $10,000 in trailing 12-month sales) or 12% (for shops with over $10,000 in sales, which is mandatory), capped at $100 per eligible order.
+      </div>
+    </div>
+
+    <div class="etsy-faq-item">
+      <div class="etsy-faq-q">
+        Can I calculate Etsy fees for sellers based in India?
+        <span>+</span>
+      </div>
+      <div class="etsy-faq-a">
+        Yes. You can select India from the country dropdown to configure local payment gateway charges and adjust currency symbols to INR (₹) for accurate domestic or export calculations.
+      </div>
+    </div>
+
+    <div class="etsy-faq-item">
+      <div class="etsy-faq-q">
+        Does this calculator automatically retrieve Etsy's latest fees?
+        <span>+</span>
+      </div>
+      <div class="etsy-faq-a">
+        No. This tool operates as an independent, private manual-input calculator to ensure your financial data is never logged. While default presets reflect standard published rates, you can freely edit any percentage or fee field to match your shop's tier.
+      </div>
+    </div>
+
+    <!-- 9. Related Tools -->
+    <h2>Related Ecommerce Financial Tools</h2>
+    <p>
+      Evaluating multichannel ecommerce strategies across platforms? Explore our complementary analysis tool:
+    </p>
+    <ul>
+      <li>
+        <a href="https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator" title="Amazon FBA Fee Profit Estimator">Amazon FBA Fee Profit Estimator</a>:
+        Estimate Amazon FBA fulfillment charges, referral fees, landed manufacturing costs, storage fees, and product net margins.
+      </li>
+    </ul>
+
+    <!-- External Verified Etsy Documentation -->
+    <h3>Official Etsy Documentation & Policy Resources</h3>
+    <ul>
+      <li>
+        <a href="https://help.etsy.com/hc/en-us/articles/115014483627-What-are-the-Fees-and-Taxes-for-Selling-on-Etsy" target="_blank" rel="noopener noreferrer">What are the Fees and Taxes for Selling on Etsy?</a> – Official breakdown of listing, transaction, and auto-renewal fees.
+      </li>
+      <li>
+        <a href="https://help.etsy.com/hc/en-us/articles/115015628847-What-are-Payment-Processing-Fees-for-Selling-on-Etsy" target="_blank" rel="noopener noreferrer">What are Payment Processing Fees on Etsy?</a> – Official country-by-country gateway processing schedule.
+      </li>
+      <li>
+        <a href="https://help.etsy.com/hc/en-us/articles/360000344668-Currency-Conversion-Fees" target="_blank" rel="noopener noreferrer">Etsy Currency Conversion Guidelines</a> – Explains conversion charges when listing currency differs from bank payout currency.
+      </li>
+      <li>
+        <a href="https://help.etsy.com/hc/en-in/articles/6742925359255-How-to-Accept-Payments-as-a-Seller-in-India" target="_blank" rel="noopener noreferrer">How to Accept Payments as a Seller in India</a> – Specific onboarding and payment gateway rules for Indian sellers.
+      </li>
+    </ul>
+  </section>
+
+  <!-- 10. Footer Navigation -->
+  <footer class="etsy-footer-nav">
+    <div>
+      © 2026 Etsy Seller Profit Calculator. Independent financial planning tool. Not affiliated with or endorsed by Etsy, Inc.
+    </div>
+    <div class="etsy-footer-links">
+      <a href="https://my-tool-app.pages.dev/">Home</a>
+      <a href="https://my-tool-app.pages.dev/p/about.html">About</a>
+      <a href="https://my-tool-app.pages.dev/p/contact.html">Contact</a>
+      <a href="https://my-tool-app.pages.dev/p/privacy-policy.html">Privacy Policy</a>
+    </div>
+  </footer>
+</div>
+
+<!-- Pure Vanilla JavaScript Implementation -->
+<script>
+(function() {
+  'use strict';
+
+  // Helper selector
+  const $ = function(id) { return document.getElementById(id); };
+
+  // DOM Elements: Settings
+  const elCountry = $('etsy-country');
+  const elCurrency = $('etsy-currency');
+
+  // DOM Elements: Inputs
+  const elSellingPrice = $('etsy-selling-price');
+  const elMaterialCost = $('etsy-material-cost');
+  const elShippingCharged = $('etsy-shipping-charged');
+  const elActualShipping = $('etsy-actual-shipping');
+  const elMonthlyOrders = $('etsy-monthly-orders');
+  const elGiftWrap = $('etsy-gift-wrap');
+
+  // Marketplace Fees
+  const elListingFee = $('etsy-listing-fee');
+  const elTransactionFeePct = $('etsy-transaction-fee-pct');
+  const elProcessingPct = $('etsy-processing-pct');
+  const elProcessingFixed = $('etsy-processing-fixed');
+  const elAdCostUnit = $('etsy-ad-cost-unit');
+
+  // Advanced Overhead
+  const elOffsiteEnabled = $('etsy-offsite-enabled');
+  const elLaborCost = $('etsy-labor-cost');
+  const elPackagingCost = $('etsy-packaging-cost');
+  const elRegulatoryPct = $('etsy-regulatory-pct');
+  const elReturnRate = $('etsy-return-rate');
+  const elReturnLoss = $('etsy-return-loss');
+
+  // Decision Planners
+  const elTargetMarginInput = $('etsy-target-margin-input');
+  const elBatchUnits = $('etsy-batch-units');
+  const elScenBPrice = $('etsy-scen-b-price');
+  const elScenBShipping = $('etsy-scen-b-shipping');
+
+  // Buttons & Root Container
+  const root = $('etsy-profit-estimator');
+  const btnBeginner = $('etsy-btn-beginner');
+  const btnAdvanced = $('etsy-btn-advanced');
+  const btnLoadSample = $('etsy-btn-load-sample');
+  const btnReset = $('etsy-btn-reset');
+  const btnCopy = $('etsy-btn-copy');
+  const btnCsv = $('etsy-btn-csv');
+  const btnPrint = $('etsy-btn-print');
+
+  // Safe float parser
+  function parseVal(el, defaultVal) {
+    if (!el) return defaultVal || 0;
+    const v = parseFloat(el.value);
+    return isNaN(v) ? (defaultVal || 0) : v;
+  }
+
+  // Format currency helper
+  function formatMoney(amount, curr) {
+    if (isNaN(amount) || !isFinite(amount)) return (curr || '$') + '0.00';
+    return (curr || '$') + amount.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  // Central Calculation Engine
+  function calculateEtsyProfits() {
+    const curr = elCurrency.value.trim() || '$';
+
+    // Update all currency labels dynamically
+    document.querySelectorAll('.etsy-curr-symbol').forEach(function(span) {
+      span.textContent = curr;
+    });
+
+    // 1. Read Raw Values
+    const price = Math.max(0, parseVal(elSellingPrice, 0));
+    const materialCost = Math.max(0, parseVal(elMaterialCost, 0));
+    const shippingCharged = Math.max(0, parseVal(elShippingCharged, 0));
+    const actualShipping = Math.max(0, parseVal(elActualShipping, 0));
+    const monthlyOrders = Math.max(1, parseVal(elMonthlyOrders, 1));
+    const giftWrap = Math.max(0, parseVal(elGiftWrap, 0));
+
+    // Fees
+    const listingFee = Math.max(0, parseVal(elListingFee, 0.20));
+    const transPct = Math.max(0, parseVal(elTransactionFeePct, 6.5));
+    const procPct = Math.max(0, parseVal(elProcessingPct, 3.0));
+    const procFixed = Math.max(0, parseVal(elProcessingFixed, 0.25));
+    const onsiteAdUnit = Math.max(0, parseVal(elAdCostUnit, 0));
+
+    // Advanced Overhead
+    const labor = Math.max(0, parseVal(elLaborCost, 0));
+    const packaging = Math.max(0, parseVal(elPackagingCost, 0));
+    const regulatoryPct = Math.max(0, parseVal(elRegulatoryPct, 0));
+    const returnRatePct = Math.max(0, parseVal(elReturnRate, 0));
+    const returnLossUnit = Math.max(0, parseVal(elReturnLoss, 0));
+
+    // Offsite Ads rate
+    let offsiteRate = 0;
+    if (elOffsiteEnabled.value === 'yes-15') offsiteRate = 15;
+    else if (elOffsiteEnabled.value === 'yes-12') offsiteRate = 12;
+
+    // 2. Revenue Calculations
+    // Etsy fee base = Item Price + Buyer Shipping + Gift Wrap
+    const totalOrderRevenue = price + shippingCharged + giftWrap;
+
+    // 3. Fee Computations
+    const transactionFee = totalOrderRevenue * (transPct / 100);
+    const paymentProcessingFee = (totalOrderRevenue * (procPct / 100)) + procFixed;
+    
+    // Offsite ads fee (capped at $100 per eligible order)
+    let offsiteAdsFee = totalOrderRevenue * (offsiteRate / 100);
+    if (offsiteAdsFee > 100) offsiteAdsFee = 100;
+
+    const regulatoryFee = totalOrderRevenue * (regulatoryPct / 100);
+    const totalEtsyFees = listingFee + transactionFee + paymentProcessingFee + offsiteAdsFee + onsiteAdUnit + regulatoryFee;
+
+    // 4. Operational Costs
+    const totalProductCost = materialCost + labor + packaging;
+    const shippingDeficit = actualShipping - shippingCharged; // Positive if shipping cost seller more than charged
+    const expectedReturnCost = (returnRatePct / 100) * returnLossUnit;
+
+    const totalOrderExpenses = totalEtsyFees + totalProductCost + actualShipping + expectedReturnCost;
+
+    // 5. Net Profit & Margin
+    const netProfitOrder = totalOrderRevenue - totalOrderExpenses;
+    const profitMargin = totalOrderRevenue > 0 ? (netProfitOrder / totalOrderRevenue) * 100 : 0;
+    const totalProductInvestment = totalProductCost + actualShipping;
+    const roi = totalProductInvestment > 0 ? (netProfitOrder / totalProductInvestment) * 100 : 0;
+
+    // 6. Break-Even Selling Price Calculation
+    // TotalRev = Price + ShippingCharged + GiftWrap
+    // Fees = FixedFees + %Fees * TotalRev
+    // Break-even occurs when TotalRev = TotalExpenses
+    // Let R_pct = (transPct + procPct + offsiteRate + regulatoryPct) / 100
+    // TotalRev = FixedCosts + R_pct * TotalRev => TotalRev = FixedCosts / (1 - R_pct)
+    // Price_BE = TotalRev - ShippingCharged - GiftWrap
+    const fixedUnitExpenses = listingFee + procFixed + onsiteAdUnit + totalProductCost + actualShipping + expectedReturnCost;
+    const totalPercentageRate = (transPct + procPct + offsiteRate + regulatoryPct) / 100;
+    let breakEvenPrice = 0;
+    if (totalPercentageRate < 1) {
+      const breakEvenRevenue = fixedUnitExpenses / (1 - totalPercentageRate);
+      breakEvenPrice = Math.max(0, breakEvenRevenue - shippingCharged - giftWrap);
+    }
+
+    // 7. Render KPIs to DOM
+    $('etsy-kpi-profit-unit').textContent = formatMoney(netProfitOrder, curr);
+    $('etsy-kpi-margin').textContent = profitMargin.toFixed(2) + '%';
+    $('etsy-kpi-roi').textContent = roi.toFixed(1) + '%';
+    $('etsy-kpi-breakeven').textContent = formatMoney(breakEvenPrice, curr);
+
+    // Status Banner Styling
+    const statusBox = $('etsy-status-box');
+    const statusText = $('etsy-status-text');
+    const statusSub = $('etsy-status-sub');
+    const kpiProfit = $('etsy-kpi-profit-unit');
+    const kpiMargin = $('etsy-kpi-margin');
+
+    if (netProfitOrder > 0) {
+      if (profitMargin >= 25) {
+        statusBox.className = 'etsy-status-banner profitable';
+        statusText.textContent = 'Healthy Modeled Profit';
+        statusSub.textContent = 'Margin > 25% (Sustainable for Ads & Growth)';
+        kpiProfit.className = 'etsy-kpi-value green';
+        kpiMargin.className = 'etsy-kpi-value green';
+      } else {
+        statusBox.className = 'etsy-status-banner low-margin';
+        statusText.textContent = 'Low Margin Product';
+        statusSub.textContent = 'Margin < 25% (Vulnerable to PPC & Return costs)';
+        kpiProfit.className = 'etsy-kpi-value amber';
+        kpiMargin.className = 'etsy-kpi-value amber';
+      }
+    } else {
+      statusBox.className = 'etsy-status-banner loss';
+      statusText.textContent = 'Operating at a Financial Loss';
+      statusSub.textContent = 'Selling price fails to cover fees and materials';
+      kpiProfit.className = 'etsy-kpi-value red';
+      kpiMargin.className = 'etsy-kpi-value red';
+    }
+
+    // Render Table Breakdown Rows
+    $('etsy-row-revenue').textContent = formatMoney(totalOrderRevenue, curr);
+    $('etsy-row-listing').textContent = '-' + formatMoney(listingFee, curr);
+    $('etsy-row-trans-pct').textContent = transPct + '%';
+    $('etsy-row-trans').textContent = '-' + formatMoney(transactionFee, curr);
+    $('etsy-row-processing').textContent = '-' + formatMoney(paymentProcessingFee, curr);
+    $('etsy-row-offsite').textContent = '-' + formatMoney(offsiteAdsFee, curr);
+    $('etsy-row-ads').textContent = '-' + formatMoney(onsiteAdUnit, curr);
+    $('etsy-row-total-fees').textContent = '-' + formatMoney(totalEtsyFees, curr);
+    $('etsy-row-product-cost').textContent = '-' + formatMoney(totalProductCost, curr);
+
+    const shippingMargin = shippingCharged - actualShipping;
+    const shippingMarginEl = $('etsy-row-shipping-margin');
+    shippingMarginEl.textContent = (shippingMargin >= 0 ? '+' : '') + formatMoney(shippingMargin, curr);
+    shippingMarginEl.style.color = shippingMargin >= 0 ? '#16a34a' : '#dc2626';
+
+    $('etsy-row-returns').textContent = '-' + formatMoney(expectedReturnCost, curr);
+    $('etsy-row-total-expenses').textContent = formatMoney(totalOrderExpenses, curr);
+
+    const netRowEl = $('etsy-row-net-profit');
+    netRowEl.textContent = formatMoney(netProfitOrder, curr);
+    netRowEl.style.color = netProfitOrder >= 0 ? '#16a34a' : '#dc2626';
+
+    // Monthly Projections
+    const monthlyRev = totalOrderRevenue * monthlyOrders;
+    const monthlyProfit = netProfitOrder * monthlyOrders;
+    $('etsy-disp-orders').textContent = monthlyOrders.toLocaleString();
+    $('etsy-disp-monthly-rev').textContent = formatMoney(monthlyRev, curr);
+    const monthlyProfitEl = $('etsy-disp-monthly-profit');
+    monthlyProfitEl.textContent = formatMoney(monthlyProfit, curr);
+    monthlyProfitEl.style.color = monthlyProfit >= 0 ? '#16a34a' : '#dc2626';
+
+    // 8. Planners
+    // A. Target Margin Planner:
+    // Margin M = (TotalRev - TotalExpenses) / TotalRev = 1 - (FixedCosts/TotalRev) - R_pct
+    // FixedCosts/TotalRev = 1 - R_pct - M => TotalRev = FixedCosts / (1 - R_pct - M)
+    const targetMarginVal = Math.max(1, Math.min(85, parseVal(elTargetMarginInput, 30)));
+    const targetMarginDec = targetMarginVal / 100;
+    const targetDenominator = 1 - totalPercentageRate - targetMarginDec;
+    let targetPrice = 0;
+    if (targetDenominator > 0) {
+      const requiredRev = fixedUnitExpenses / targetDenominator;
+      targetPrice = Math.max(0, requiredRev - shippingCharged - giftWrap);
+    }
+    $('etsy-target-price-output').textContent = targetPrice > 0 ? formatMoney(targetPrice, curr) : 'N/A';
+
+    // B. Batch Production Planner
+    const batchUnits = Math.max(1, parseVal(elBatchUnits, 250));
+    const totalBatchCapital = totalProductCost * batchUnits;
+    const totalBatchProfit = netProfitOrder * batchUnits;
+    $('etsy-batch-capital').textContent = formatMoney(totalBatchCapital, curr);
+    const batchProfitEl = $('etsy-batch-profit');
+    batchProfitEl.textContent = formatMoney(totalBatchProfit, curr);
+    batchProfitEl.style.color = totalBatchProfit >= 0 ? '#16a34a' : '#dc2626';
+
+    // C. Scenario B Comparison
+    const scenBPrice = Math.max(0, parseVal(elScenBPrice, price));
+    const scenBShip = Math.max(0, parseVal(elScenBShipping, 0));
+    const scenBRev = scenBPrice + scenBShip + giftWrap;
+    const scenBTrans = scenBRev * (transPct / 100);
+    const scenBProc = (scenBRev * (procPct / 100)) + procFixed;
+    let scenBOffsite = scenBRev * (offsiteRate / 100);
+    if (scenBOffsite > 100) scenBOffsite = 100;
+    const scenBReg = scenBRev * (regulatoryPct / 100);
+    const scenBTotalFees = listingFee + scenBTrans + scenBProc + scenBOffsite + onsiteAdUnit + scenBReg;
+    const scenBExpenses = scenBTotalFees + totalProductCost + actualShipping + expectedReturnCost;
+    const scenBProfit = scenBRev - scenBExpenses;
+    const scenBMargin = scenBRev > 0 ? (scenBProfit / scenBRev) * 100 : 0;
+
+    $('etsy-scen-a-profit').textContent = formatMoney(netProfitOrder, curr);
+    $('etsy-scen-b-profit').textContent = formatMoney(scenBProfit, curr);
+    const diffProfit = scenBProfit - netProfitOrder;
+    const diffProfitEl = $('etsy-scen-diff-profit');
+    diffProfitEl.textContent = (diffProfit >= 0 ? '+' : '') + formatMoney(diffProfit, curr);
+    diffProfitEl.style.color = diffProfit >= 0 ? '#16a34a' : '#dc2626';
+
+    $('etsy-scen-a-margin').textContent = profitMargin.toFixed(1) + '%';
+    $('etsy-scen-b-margin').textContent = scenBMargin.toFixed(1) + '%';
+    const diffMargin = scenBMargin - profitMargin;
+    const diffMarginEl = $('etsy-scen-diff-margin');
+    diffMarginEl.textContent = (diffMargin >= 0 ? '+' : '') + diffMargin.toFixed(1) + '%';
+    diffMarginEl.style.color = diffMargin >= 0 ? '#16a34a' : '#dc2626';
+  }
+
+  // Bind Listeners
+  const allInputs = root.querySelectorAll('input, select');
+  allInputs.forEach(function(inp) {
+    inp.addEventListener('input', calculateEtsyProfits);
+    inp.addEventListener('change', calculateEtsyProfits);
+  });
+
+  // Country Selection Preset Handler
+  elCountry.addEventListener('change', function() {
+    const opt = elCountry.options[elCountry.selectedIndex];
+    const curr = opt.getAttribute('data-curr') || '$';
+    const procPct = opt.getAttribute('data-proc-pct') || '3.0';
+    const procFix = opt.getAttribute('data-proc-fix') || '0.25';
+
+    elCurrency.value = curr;
+    elProcessingPct.value = procPct;
+    elProcessingFixed.value = procFix;
+    calculateEtsyProfits();
+  });
+
+  // Mode Switcher (Beginner vs Advanced)
+  btnBeginner.addEventListener('click', function() {
+    root.classList.remove('etsy-mode-advanced');
+    root.classList.add('etsy-mode-beginner');
+    btnBeginner.classList.add('active');
+    btnAdvanced.classList.remove('active');
+  });
+
+  btnAdvanced.addEventListener('click', function() {
+    root.classList.remove('etsy-mode-beginner');
+    root.classList.add('etsy-mode-advanced');
+    btnAdvanced.classList.add('active');
+    btnBeginner.classList.remove('active');
+  });
+
+  // Tabs Navigator
+  const tabLinks = root.querySelectorAll('.etsy-tab-link');
+  tabLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      tabLinks.forEach(function(t) { t.classList.remove('active'); });
+      link.classList.add('active');
+      const targetId = link.getAttribute('data-tab');
+      root.querySelectorAll('.etsy-tab-content').forEach(function(content) {
+        content.classList.remove('active');
+      });
+      const targetContent = $(targetId);
+      if (targetContent) targetContent.classList.add('active');
+    });
+  });
+
+  // Sample Data Loader
+  btnLoadSample.addEventListener('click', function() {
+    elSellingPrice.value = "45.00";
+    elMaterialCost.value = "9.50";
+    elShippingCharged.value = "5.00";
+    elActualShipping.value = "4.60";
+    elMonthlyOrders.value = "150";
+    elGiftWrap.value = "0.00";
+    elListingFee.value = "0.20";
+    elTransactionFeePct.value = "6.5";
+    elProcessingPct.value = "3.0";
+    elProcessingFixed.value = "0.25";
+    elAdCostUnit.value = "2.00";
+    elLaborCost.value = "5.00";
+    elPackagingCost.value = "0.85";
+    elReturnRate.value = "2.0";
+    elReturnLoss.value = "9.00";
+    elScenBPrice.value = "50.00";
+    elScenBShipping.value = "0.00";
+    calculateEtsyProfits();
+  });
+
+  // Reset Button
+  btnReset.addEventListener('click', function() {
+    elSellingPrice.value = "38.00";
+    elMaterialCost.value = "8.50";
+    elShippingCharged.value = "4.50";
+    elActualShipping.value = "4.20";
+    elMonthlyOrders.value = "120";
+    elGiftWrap.value = "0.00";
+    elListingFee.value = "0.20";
+    elTransactionFeePct.value = "6.5";
+    elProcessingPct.value = "3.0";
+    elProcessingFixed.value = "0.25";
+    elAdCostUnit.value = "1.50";
+    elLaborCost.value = "4.00";
+    elPackagingCost.value = "0.75";
+    elRegulatoryPct.value = "0.0";
+    elReturnRate.value = "2.5";
+    elReturnLoss.value = "8.00";
+    elOffsiteEnabled.value = "no";
+    calculateEtsyProfits();
+  });
+
+  // Copy Summary
+  btnCopy.addEventListener('click', function() {
+    const curr = elCurrency.value.trim() || '$';
+    const text = [
+      "--- Etsy Seller Profit Analysis Summary ---",
+      "Retail Price: " + curr + elSellingPrice.value,
+      "Buyer Shipping: " + curr + elShippingCharged.value,
+      "Net Profit / Order: " + $('etsy-kpi-profit-unit').textContent,
+      "Profit Margin: " + $('etsy-kpi-margin').textContent,
+      "Product ROI: " + $('etsy-kpi-roi').textContent,
+      "Break-Even Price: " + $('etsy-kpi-breakeven').textContent,
+      "Monthly Net Profit: " + $('etsy-disp-monthly-profit').textContent,
+      "Calculated via: https://my-tool-app.pages.dev/etsy-seller-profit-calculator"
+    ].join('\n');
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function() {
+        alert("Etsy profit summary copied to clipboard!");
+      }).catch(function() {
+        prompt("Copy your summary:", text);
+      });
+    } else {
+      prompt("Copy your summary:", text);
+    }
+  });
+
+  // CSV Exporter
+  btnCsv.addEventListener('click', function() {
+    const curr = elCurrency.value.trim() || '$';
+    const csvContent = [
+      ["Metric", "Value", "Currency"],
+      ["Item Selling Price", elSellingPrice.value, curr],
+      ["Buyer Shipping Charged", elShippingCharged.value, curr],
+      ["Direct Material Cost", elMaterialCost.value, curr],
+      ["Actual Postage Paid", elActualShipping.value, curr],
+      ["Etsy Listing Fee", elListingFee.value, curr],
+      ["Etsy Transaction Fee %", elTransactionFeePct.value + "%", ""],
+      ["Net Profit / Order", $('etsy-kpi-profit-unit').textContent.replace(curr, ''), curr],
+      ["Net Margin", $('etsy-kpi-margin').textContent, ""],
+      ["Product ROI", $('etsy-kpi-roi').textContent, ""],
+      ["Break-Even Price", $('etsy-kpi-breakeven').textContent.replace(curr, ''), curr],
+      ["Monthly Orders", elMonthlyOrders.value, "Orders"],
+      ["Monthly Net Profit", $('etsy-disp-monthly-profit').textContent.replace(curr, ''), curr]
+    ].map(function(r) { return r.map(function(v) { return '"' + v + '"'; }).join(','); }).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "etsy_profit_analysis.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+
+  // Print
+  btnPrint.addEventListener('click', function() {
+    window.print();
+  });
+
+  // FAQ Accordion Handler
+  const faqItems = root.querySelectorAll('.etsy-faq-item');
+  faqItems.forEach(function(item) {
+    const q = item.querySelector('.etsy-faq-q');
+    const a = item.querySelector('.etsy-faq-a');
+    if (q && a) {
+      a.style.display = 'none';
+      q.addEventListener('click', function() {
+        const isOpen = a.style.display === 'block';
+        a.style.display = isOpen ? 'none' : 'block';
+        const span = q.querySelector('span');
+        if (span) span.textContent = isOpen ? '+' : '−';
+      });
+    }
+  });
+
+  // Initial Calculation Run
+  calculateEtsyProfits();
+})();
+</script>
