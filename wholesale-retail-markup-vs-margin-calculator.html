@@ -1,0 +1,2218 @@
+
+<!-- ==========================================================================
+     WHOLESALE RETAIL MARKUP VS MARGIN CALCULATOR - PRODUCTION READY IMPLEMENTATION
+     Target: Google Blogger | Self-Contained HTML, CSS & Vanilla JS (IIFE)
+     Wrapper ID: #wrrm-calculator | All Classes Prefixed with wrrm-
+     ========================================================================== -->
+
+<div id="wrrm-calculator" class="wrrm-wrapper" itemscope itemtype="https://schema.org/WebApplication">
+
+  <!-- ==================== STYLES ==================== -->
+  <style>
+    /* Scope styles strictly inside #wrrm-calculator */
+    #wrrm-calculator {
+      --wrrm-primary: #1e40af;
+      --wrrm-primary-hover: #1d4ed8;
+      --wrrm-primary-light: #eff6ff;
+      --wrrm-accent: #0284c7;
+      --wrrm-success: #15803d;
+      --wrrm-success-bg: #f0fdf4;
+      --wrrm-danger: #b91c1c;
+      --wrrm-danger-bg: #fef2f2;
+      --wrrm-warning: #b45309;
+      --wrrm-warning-bg: #fffbeb;
+      --wrrm-gray-50: #f8fafc;
+      --wrrm-gray-100: #f1f5f9;
+      --wrrm-gray-200: #e2e8f0;
+      --wrrm-gray-300: #cbd5e1;
+      --wrrm-gray-600: #475569;
+      --wrrm-gray-700: #334155;
+      --wrrm-gray-900: #0f172a;
+      --wrrm-border-radius: 10px;
+      --wrrm-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+      --wrrm-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+      --wrrm-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: var(--wrrm-font);
+      color: var(--wrrm-gray-900);
+      line-height: 1.6;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 12px;
+      box-sizing: border-box;
+    }
+
+    #wrrm-calculator *, #wrrm-calculator *::before, #wrrm-calculator *::after {
+      box-sizing: border-box;
+    }
+
+    /* Headings */
+    #wrrm-calculator h1.wrrm-main-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--wrrm-gray-900);
+      margin: 0 0 8px 0;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+    }
+
+    #wrrm-calculator .wrrm-subtitle {
+      font-size: 1.05rem;
+      color: var(--wrrm-gray-600);
+      margin: 0 0 24px 0;
+    }
+
+    #wrrm-calculator h2.wrrm-section-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--wrrm-gray-900);
+      margin: 36px 0 16px 0;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--wrrm-gray-200);
+    }
+
+    #wrrm-calculator h3.wrrm-card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--wrrm-gray-900);
+      margin: 0 0 14px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Top Utility Bar */
+    .wrrm-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--wrrm-gray-50);
+      border: 1px solid var(--wrrm-gray-200);
+      border-radius: var(--wrrm-border-radius);
+      padding: 12px 16px;
+      margin-bottom: 20px;
+    }
+
+    .wrrm-toolbar-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* Buttons */
+    .wrrm-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+      text-decoration: none;
+      line-height: 1.25;
+      font-family: inherit;
+    }
+
+    .wrrm-btn:focus-visible {
+      outline: 2px solid var(--wrrm-primary);
+      outline-offset: 2px;
+    }
+
+    .wrrm-btn-primary { background: var(--wrrm-primary); color: #fff; }
+    .wrrm-btn-primary:hover { background: var(--wrrm-primary-hover); }
+
+    .wrrm-btn-outline {
+      background: #fff;
+      color: var(--wrrm-gray-700);
+      border-color: var(--wrrm-gray-300);
+    }
+    .wrrm-btn-outline:hover {
+      background: var(--wrrm-gray-100);
+      color: var(--wrrm-gray-900);
+    }
+
+    .wrrm-btn-sm { padding: 4px 10px; font-size: 0.8rem; }
+    .wrrm-btn-danger { background: #fff; color: var(--wrrm-danger); border-color: var(--wrrm-gray-300); }
+    .wrrm-btn-danger:hover { background: var(--wrrm-danger-bg); border-color: var(--wrrm-danger); }
+
+    /* Dashboard Grid */
+    .wrrm-dashboard {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    @media (min-width: 992px) {
+      .wrrm-dashboard {
+        grid-template-columns: 1.25fr 1fr;
+        align-items: start;
+      }
+    }
+
+    .wrrm-panel-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Cards */
+    .wrrm-card {
+      background: #fff;
+      border: 1px solid var(--wrrm-gray-200);
+      border-radius: var(--wrrm-border-radius);
+      padding: 20px;
+      box-shadow: var(--wrrm-shadow);
+    }
+
+    /* Forms & Inputs */
+    .wrrm-form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 540px) {
+      .wrrm-form-grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .wrrm-form-grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .wrrm-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .wrrm-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--wrrm-gray-700);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .wrrm-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .wrrm-prefix, .wrrm-suffix {
+      position: absolute;
+      font-size: 0.85rem;
+      color: var(--wrrm-gray-600);
+      pointer-events: none;
+      padding: 0 10px;
+      font-weight: 500;
+    }
+
+    .wrrm-prefix { left: 0; }
+    .wrrm-suffix { right: 0; }
+
+    .wrrm-input, .wrrm-select {
+      width: 100%;
+      height: 40px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--wrrm-gray-900);
+      background-color: #fff;
+      border: 1px solid var(--wrrm-gray-300);
+      border-radius: 6px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .wrrm-input:focus, .wrrm-select:focus {
+      outline: none;
+      border-color: var(--wrrm-primary);
+      box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.15);
+    }
+
+    .wrrm-input.wrrm-has-prefix { padding-left: 32px; }
+    .wrrm-input.wrrm-has-suffix { padding-right: 32px; }
+
+    .wrrm-hint {
+      font-size: 0.75rem;
+      color: var(--wrrm-gray-600);
+      margin-top: 2px;
+    }
+
+    /* Tabs */
+    .wrrm-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--wrrm-gray-200);
+      gap: 4px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+    }
+
+    .wrrm-tab-btn {
+      padding: 8px 16px;
+      border: none;
+      background: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--wrrm-gray-600);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+
+    .wrrm-tab-btn:hover { color: var(--wrrm-primary); }
+    .wrrm-tab-btn.wrrm-active {
+      color: var(--wrrm-primary);
+      border-bottom-color: var(--wrrm-primary);
+    }
+
+    /* Summary Dashboard Cards */
+    .wrrm-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .wrrm-metric-card {
+      background: var(--wrrm-gray-50);
+      border: 1px solid var(--wrrm-gray-200);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .wrrm-metric-card.wrrm-highlight {
+      background: var(--wrrm-primary-light);
+      border-color: #bfdbfe;
+    }
+
+    .wrrm-metric-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--wrrm-gray-600);
+    }
+
+    .wrrm-metric-value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--wrrm-gray-900);
+      word-break: break-all;
+    }
+
+    .wrrm-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      width: fit-content;
+    }
+    .wrrm-badge-success { background: var(--wrrm-success-bg); color: var(--wrrm-success); }
+    .wrrm-badge-danger { background: var(--wrrm-danger-bg); color: var(--wrrm-danger); }
+    .wrrm-badge-warning { background: var(--wrrm-warning-bg); color: var(--wrrm-warning); }
+
+    /* Visual Comparison Bars */
+    .wrrm-bar-container {
+      margin: 12px 0;
+    }
+
+    .wrrm-bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .wrrm-progress-track {
+      height: 14px;
+      background: var(--wrrm-gray-200);
+      border-radius: 7px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .wrrm-progress-fill {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    .wrrm-fill-primary { background: var(--wrrm-primary); }
+    .wrrm-fill-accent { background: var(--wrrm-accent); }
+    .wrrm-fill-success { background: var(--wrrm-success); }
+    .wrrm-fill-warning { background: var(--wrrm-warning); }
+
+    /* Tables */
+    .wrrm-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      margin: 14px 0;
+      border: 1px solid var(--wrrm-gray-200);
+      border-radius: 8px;
+    }
+
+    .wrrm-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      text-align: left;
+    }
+
+    .wrrm-table th {
+      background: var(--wrrm-gray-100);
+      color: var(--wrrm-gray-700);
+      padding: 10px 12px;
+      font-weight: 700;
+      border-bottom: 1px solid var(--wrrm-gray-200);
+    }
+
+    .wrrm-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--wrrm-gray-200);
+      color: var(--wrrm-gray-900);
+    }
+
+    .wrrm-table tr:last-child td { border-bottom: none; }
+    .wrrm-table tr:hover td { background: var(--wrrm-gray-50); }
+
+    /* Collapsible / Details */
+    details.wrrm-details {
+      background: var(--wrrm-gray-50);
+      border: 1px solid var(--wrrm-gray-200);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 12px 0;
+    }
+
+    details.wrrm-details summary {
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--wrrm-gray-700);
+      user-select: none;
+    }
+
+    details.wrrm-details summary:hover { color: var(--wrrm-primary); }
+
+    .wrrm-details-content {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--wrrm-gray-300);
+      font-size: 0.875rem;
+    }
+
+    /* Preset Chips */
+    .wrrm-chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .wrrm-chip {
+      background: var(--wrrm-gray-100);
+      border: 1px solid var(--wrrm-gray-300);
+      border-radius: 14px;
+      padding: 3px 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--wrrm-gray-700);
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+
+    .wrrm-chip:hover {
+      background: var(--wrrm-primary-light);
+      border-color: var(--wrrm-primary);
+      color: var(--wrrm-primary);
+    }
+
+    /* Alerts */
+    .wrrm-alert {
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-top: 10px;
+      display: none;
+    }
+    .wrrm-alert-warning {
+      display: block;
+      background: var(--wrrm-warning-bg);
+      border: 1px solid #fde68a;
+      color: var(--wrrm-warning);
+    }
+    .wrrm-alert-danger {
+      display: block;
+      background: var(--wrrm-danger-bg);
+      border: 1px solid #fecaca;
+      color: var(--wrrm-danger);
+    }
+
+    /* Content Area Styles */
+    .wrrm-content-section {
+      background: #fff;
+      border: 1px solid var(--wrrm-gray-200);
+      border-radius: var(--wrrm-border-radius);
+      padding: 24px;
+      margin-top: 24px;
+      box-shadow: var(--wrrm-shadow);
+    }
+
+    .wrrm-content-section h2 {
+      font-size: 1.35rem;
+      color: var(--wrrm-gray-900);
+      margin-top: 24px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--wrrm-gray-200);
+      padding-bottom: 6px;
+    }
+
+    .wrrm-content-section h2:first-child { margin-top: 0; }
+    .wrrm-content-section h3 { font-size: 1.1rem; color: var(--wrrm-gray-900); margin: 18px 0 8px; }
+    .wrrm-content-section p { margin: 0 0 12px; color: var(--wrrm-gray-700); }
+    .wrrm-content-section ul, .wrrm-content-section ol { padding-left: 20px; margin: 0 0 14px; }
+    .wrrm-content-section li { margin-bottom: 6px; color: var(--wrrm-gray-700); }
+    .wrrm-formula-box {
+      background: var(--wrrm-gray-50);
+      border-left: 4px solid var(--wrrm-primary);
+      padding: 10px 14px;
+      margin: 10px 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.875rem;
+      color: var(--wrrm-gray-900);
+      overflow-x: auto;
+    }
+
+    /* Print styles */
+    @media print {
+      body * { visibility: hidden; }
+      #wrrm-calculator, #wrrm-calculator * { visibility: visible; }
+      #wrrm-calculator { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; padding: 0; }
+      .wrrm-toolbar, .wrrm-chip-group, .wrrm-btn, .wrrm-tabs { display: none !important; }
+      .wrrm-content-section { page-break-before: always; }
+    }
+  </style>
+
+  <!-- ==================== HEADER (H1 ONLY) ==================== -->
+  <header>
+    <h1 class="wrrm-main-title">Wholesale Retail Markup vs Margin Calculator</h1>
+    <p class="wrrm-subtitle">
+      A financial pricing system to calculate wholesale and retail selling prices, gross margins, markups, quantity tier discounts, target profit pricing, and break-even sales volume.
+    </p>
+  </header>
+
+  <!-- ==================== TOP TOOLBAR ==================== -->
+  <div class="wrrm-toolbar" role="region" aria-label="Calculator Control Toolbar">
+    <div class="wrrm-toolbar-group">
+      <label for="wrrm-currency-select" class="wrrm-label" style="margin:0;">Currency:</label>
+      <select id="wrrm-currency-select" class="wrrm-select" style="width: auto; height: 36px; padding: 4px 10px;">
+        <option value="USD">USD ($)</option>
+        <option value="INR">INR (₹)</option>
+        <option value="GBP">GBP (£)</option>
+        <option value="EUR">EUR (€)</option>
+        <option value="CAD">CAD (C$)</option>
+        <option value="AUD">AUD (A$)</option>
+        <option value="AED">AED (د.إ)</option>
+        <option value="CUSTOM">Custom (¤)</option>
+      </select>
+      <button type="button" id="wrrm-btn-sample" class="wrrm-btn wrrm-btn-outline wrrm-btn-sm" title="Populate calculator with verified sample data">
+        📥 Load Sample Data
+      </button>
+      <button type="button" id="wrrm-btn-reset" class="wrrm-btn wrrm-btn-outline wrrm-btn-sm" title="Clear all inputs to zero">
+        🔄 Reset
+      </button>
+    </div>
+
+    <div class="wrrm-toolbar-group">
+      <button type="button" id="wrrm-btn-copy" class="wrrm-btn wrrm-btn-outline wrrm-btn-sm" title="Copy primary pricing results to clipboard">
+        📋 Copy Results
+      </button>
+      <button type="button" id="wrrm-btn-csv" class="wrrm-btn wrrm-btn-outline wrrm-btn-sm" title="Export pricing summary to CSV">
+        📊 Download CSV
+      </button>
+      <button type="button" id="wrrm-btn-print" class="wrrm-btn wrrm-btn-outline wrrm-btn-sm" title="Print this pricing analysis report">
+        🖨️ Print Report
+      </button>
+    </div>
+  </div>
+
+  <!-- Scenario Storage Notification Bar -->
+  <div id="wrrm-status-message" class="wrrm-alert" role="status" aria-live="polite"></div>
+
+  <!-- ==================== MAIN CALCULATOR INTERFACE ==================== -->
+  <main class="wrrm-dashboard">
+
+    <!-- LEFT COLUMN: INPUT PANELS -->
+    <div class="wrrm-panel-stack">
+
+      <!-- SECTION A: Product Information & Cost Breakdown -->
+      <section class="wrrm-card" aria-labelledby="wrrm-cost-title">
+        <h3 id="wrrm-cost-title" class="wrrm-card-title">📦 1. Product Unit Cost Breakdown</h3>
+        <p class="wrrm-hint" style="margin-top:-8px; margin-bottom:14px;">
+          Enter direct inventory costs. These build your true cost basis per unit.
+        </p>
+
+        <div class="wrrm-form-grid wrrm-form-grid-2">
+          <div class="wrrm-field">
+            <label for="wrrm-input-product-name" class="wrrm-label">Product Name / SKU (Optional)</label>
+            <input type="text" id="wrrm-input-product-name" class="wrrm-input" placeholder="e.g. Leather Wallet (SKU-101)" maxlength="60">
+          </div>
+          <div class="wrrm-field">
+            <label for="wrrm-cost-base" class="wrrm-label">Purchase / Base Cost <span style="color:var(--wrrm-danger)">*</span></label>
+            <div class="wrrm-input-wrap">
+              <span class="wrrm-prefix wrrm-curr-sym">$</span>
+              <input type="number" id="wrrm-cost-base" class="wrrm-input wrrm-has-prefix" min="0" step="0.01" value="40.00" required>
+            </div>
+          </div>
+        </div>
+
+        <details class="wrrm-details" style="margin-top:12px;">
+          <summary>➕ Additional Direct Costs (Packaging, Manufacturing, Freight)</summary>
+          <div class="wrrm-details-content wrrm-form-grid wrrm-form-grid-2">
+            <div class="wrrm-field">
+              <label for="wrrm-cost-packaging" class="wrrm-label">Packaging Cost Per Unit</label>
+              <div class="wrrm-input-wrap">
+                <span class="wrrm-prefix wrrm-curr-sym">$</span>
+                <input type="number" id="wrrm-cost-packaging" class="wrrm-input wrrm-has-prefix" min="0" step="0.01" value="2.00">
+              </div>
+            </div>
+            <div class="wrrm-field">
+              <label for="wrrm-cost-mfg" class="wrrm-label">Manufacturing / Assembly Cost</label>
+              <div class="wrrm-input-wrap">
+                <span class="wrrm-prefix wrrm-curr-sym">$</span>
+                <input type="number" id="wrrm-cost-mfg" class="wrrm-input wrrm-has-prefix" min="0" step="0.01" value="0.00">
+              </div>
+            </div>
+            <div class="wrrm-field">
+              <label for="wrrm-cost-procure" class="wrrm-label">Procurement / Inbound Freight</label>
+              <div class="wrrm-input-wrap">
+                <span class="wrrm-prefix wrrm-curr-sym">$</span>
+                <input type="number" id="wrrm-cost-procure" class="wrrm-input wrrm-has-prefix" min="0" step="0.01" value="3.00">
+              </div>
+            </div>
+            <div class="wrrm-field">
+              <label for="wrrm-cost-other" class="wrrm-label">Other Direct Unit Costs</label>
+              <div class="wrrm-input-wrap">
+                <span class="wrrm-prefix wrrm-curr-sym">$</span>
+                <input type="number" id="wrrm-cost-other" class="wrrm-input wrrm-has-prefix" min="0" step="0.01" value="0.00">
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <div style="margin-top: 12px; padding: 10px 14px; background: var(--wrrm-gray-100); border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 700; font-size: 0.95rem;">Total Unit Cost Basis:</span>
+          <span id="wrrm-display-total-cost" style="font-size: 1.25rem; font-weight: 800; color: var(--wrrm-primary);">$45.00</span>
+        </div>
+      </section>
+
+      <!-- SECTION B & C: Markup & Margin Pricing Controls -->
+      <section class="wrrm-card" aria-labelledby="wrrm-pricing-engine-title">
+        <h3 id="wrrm-pricing-engine-title" class="wrrm-card-title">🏷️ 2. Markup & Margin Strategy Setup</h3>
+
+        <!-- Tab selector for pricing calculation method -->
+        <div class="wrrm-tabs" role="tablist">
+          <button type="button" class="wrrm-tab-btn wrrm-active" data-tab="wrrm-tab-wholesale" role="tab" aria-selected="true">Wholesale Channel</button>
+          <button type="button" class="wrrm-tab-btn" data-tab="wrrm-tab-retail" role="tab" aria-selected="false">Retail Channel</button>
+          <button type="button" class="wrrm-tab-btn" data-tab="wrrm-tab-converter" role="tab" aria-selected="false">Converter Tool</button>
+        </div>
+
+        <!-- Wholesale Tab Panel -->
+        <div id="wrrm-tab-wholesale" class="wrrm-tab-pane">
+          <div class="wrrm-field" style="margin-bottom: 12px;">
+            <label for="wrrm-ws-calc-mode" class="wrrm-label">Wholesale Pricing Basis</label>
+            <select id="wrrm-ws-calc-mode" class="wrrm-select">
+              <option value="markup" selected>Set Price via Wholesale Markup %</option>
+              <option value="margin">Set Price via Target Wholesale Margin %</option>
+              <option value="manual">Enter Manual Wholesale Selling Price</option>
+            </select>
+          </div>
+
+          <div class="wrrm-form-grid wrrm-form-grid-2">
+            <div class="wrrm-field" id="wrrm-field-ws-markup">
+              <label for="wrrm-ws-markup" class="wrrm-label">Wholesale Markup</label>
+              <div class="wrrm-input-wrap">
+                <input type="number" id="wrrm-ws-markup" class="wrrm-input wrrm-has-suffix" min="0" step="0.1" value="40">
+                <span class="wrrm-suffix">%</span>
+              </div>
+            </div>
+
+            <div class="wrrm-field" id="wrrm-field-ws-margin" style="display:none;">
+              <label for="wrrm-ws-margin" class="wrrm-label">Target Wholesale Margin</label>
+              <div class="wrrm-input-wrap">
+                <input type="number" id="wrrm-ws-margin" class="wrrm-input wrrm-has-suffix" min="0" max="99.9" step="0.1" value="28.57">
+                <span class="wrrm-suffix">%</span>
+              </div>
+            </div>
+
+            <div class="wrrm-field" id="wrrm-field-ws-manual" style="display:none;">
+              <label for="wrrm-ws-manual-price" class="wrrm-label">Manual Wholesale Price</label>
+              <div class="wrrm-input-wrap">
+                <span class="wrrm-prefix wrrm-curr-sym">$</span>
+                <input type="number" id="wrrm-ws-manual-price" class="wrrm-input wrrm-has-prefix" min="0" step="0.01" value="63.00">
+              </div>
+            </div>
+
+            <div class="wrrm-field">
+              <label for="wrrm-ws-quantity" class="wrrm-label">Order Quantity (Units)</label>
+              <input type="number" id="wrrm-ws-quantity" class="wrrm-input" min="1" step="1" value="100">
+            </div>
+          </div>
+
+          <details class="wrrm-details" style="margin-top:12px;">
+            <summary>Wholesale Order Level Adjustments & Handling</summary>
+            <div class="wrrm-details-content wrrm-form-grid wrrm-form-grid-2">
+              <div class="wrrm-field">
+                <label for="wrrm-ws-discount" class="wrrm-label">Order Discount</label>
+                <div class="wrrm-input-wrap">
+                  <input type="number" id="wrrm-ws-discount" class="wrrm-input wrrm-has-suffix" min="0" max="100" step="0.1" value="0">
+                  <span class="wrrm-suffix">%</span>
+                </div>
+              </div>
+              <div class="wrrm-field">
+                <label for="wrrm-ws-handling" class="wrrm-label">Order Handling / Freight (Per Unit)</label>
+                <div class="wrrm-input-wrap">
+                  <span class="wrrm-prefix wrrm-curr-sym">$</span>
+                  <input type="number" id="wrrm-ws-handling" class="wrrm-input wrrm-has-prefix" min="0" step="0.01" value="0.00">
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Retail Tab Panel -->
+        <div id="wrrm-tab-retail" class="wrrm-tab-pane" style="display:none;">
+          <div class="wrrm-field" style="margin-bottom: 12px;">
+            <label for="wrrm-rt-calc-mode" class="wrrm-label">Retail Pricing Basis</label>
+            <select id="wrrm-rt-calc-mode" class="wrrm-select">
+              <option value="markup" selected>Set Price via Retail Markup %</option>
+              <option value="margin">Set Price via Target Retail Margin %</option>
+              <option value="manual">Enter Manual Retail Price (MSRP)</option>
+            </select>
+          </div>
+
+          <div class="wrrm-form-grid wrrm-form-grid-2">
+            <div class="wrrm-field" id="wrrm-field-rt-markup">
+              <label for="wrrm-rt-markup" class="wrrm-label">Retail Markup</label>
+              <div class="wrrm-input-wrap">
+                <input type="number" id="wrrm-rt-markup" class="wrrm-input wrrm-has-suffix" min="0" step="0.1" value="100">
+                <span class="wrrm-suffix">%</span>
+              </div>
+            </div>
+
+            <div class="wrrm-field" id="wrrm-field-rt-margin" style="display:none;">
+              <label for="wrrm-rt-margin" class="wrrm-label">Target Retail Margin</label>
+              <div class="wrrm-input-wrap">
+                <input type="number" id="wrrm-rt-margin" class="wrrm-input wrrm-has-suffix" min="0" max="99.9" step="0.1" value="50">
+                <span class="wrrm-suffix">%</span>
+              </div>
+            </div>
+
+            <div class="wrrm-field" id="wrrm-field-rt-manual" style="display:none;">
+              <label for="wrrm-rt-manual-price" class="wrrm-label">Manual Retail Price</label>
+              <div class="wrrm-input-wrap">
+                <span class="wrrm-prefix wrrm-curr-sym">$</span>
+                <input type="number" id="wrrm-rt-manual-price" class="wrrm-input wrrm-has-prefix" min="0" step="0.01" value="90.00">
+              </div>
+            </div>
+
+            <div class="wrrm-field">
+              <label for="wrrm-rt-quantity" class="wrrm-label">Expected Sales Volume (Units)</label>
+              <input type="number" id="wrrm-rt-quantity" class="wrrm-input" min="1" step="1" value="20">
+            </div>
+          </div>
+
+          <details class="wrrm-details" style="margin-top:12px;">
+            <summary>Fulfillment, Merchant Fees & Discounts</summary>
+            <div class="wrrm-details-content wrrm-form-grid wrrm-form-grid-2">
+              <div class="wrrm-field">
+                <label for="wrrm-rt-discount" class="wrrm-label">Promotional Discount</label>
+                <div class="wrrm-input-wrap">
+                  <input type="number" id="wrrm-rt-discount" class="wrrm-input wrrm-has-suffix" min="0" max="100" step="0.1" value="0">
+                  <span class="wrrm-suffix">%</span>
+                </div>
+              </div>
+              <div class="wrrm-field">
+                <label for="wrrm-rt-fee-pct" class="wrrm-label">Payment Processing Fee</label>
+                <div class="wrrm-input-wrap">
+                  <input type="number" id="wrrm-rt-fee-pct" class="wrrm-input wrrm-has-suffix" min="0" max="20" step="0.01" value="2.9">
+                  <span class="wrrm-suffix">%</span>
+                </div>
+              </div>
+              <div class="wrrm-field">
+                <label for="wrrm-rt-fee-fixed" class="wrrm-label">Fixed Transaction Fee</label>
+                <div class="wrrm-input-wrap">
+                  <span class="wrrm-prefix wrrm-curr-sym">$</span>
+                  <input type="number" id="wrrm-rt-fee-fixed" class="wrrm-input wrrm-has-prefix" min="0" step="0.01" value="0.30">
+                </div>
+              </div>
+              <div class="wrrm-field">
+                <label for="wrrm-rt-shipping-unit" class="wrrm-label">Fulfillment/Outbound Shipping</label>
+                <div class="wrrm-input-wrap">
+                  <span class="wrrm-prefix wrrm-curr-sym">$</span>
+                  <input type="number" id="wrrm-rt-shipping-unit" class="wrrm-input wrrm-has-prefix" min="0" step="0.01" value="0.00">
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Converter Tool Panel -->
+        <div id="wrrm-tab-converter" class="wrrm-tab-pane" style="display:none;">
+          <p class="wrrm-hint" style="margin-bottom:12px;">
+            Markup is calculated from <strong>cost</strong>; profit margin is calculated from <strong>selling price</strong>. Use this quick calculator to translate between the two instantly.
+          </p>
+          <div class="wrrm-form-grid wrrm-form-grid-2">
+            <div class="wrrm-field">
+              <label for="wrrm-conv-markup" class="wrrm-label">Markup % ➔ Margin %</label>
+              <div class="wrrm-input-wrap">
+                <input type="number" id="wrrm-conv-markup" class="wrrm-input wrrm-has-suffix" min="0" step="0.1" value="50">
+                <span class="wrrm-suffix">%</span>
+              </div>
+              <div class="wrrm-hint" id="wrrm-conv-res-margin" style="font-weight:700; color:var(--wrrm-primary); margin-top:6px;">
+                = 33.33% Margin
+              </div>
+            </div>
+
+            <div class="wrrm-field">
+              <label for="wrrm-conv-margin" class="wrrm-label">Margin % ➔ Markup %</label>
+              <div class="wrrm-input-wrap">
+                <input type="number" id="wrrm-conv-margin" class="wrrm-input wrrm-has-suffix" min="0" max="99.9" step="0.1" value="40">
+                <span class="wrrm-suffix">%</span>
+              </div>
+              <div class="wrrm-hint" id="wrrm-conv-res-markup" style="font-weight:700; color:var(--wrrm-accent); margin-top:6px;">
+                = 66.67% Markup
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION D: Bulk Pricing & Quantity Discount Tiers -->
+      <section class="wrrm-card" aria-labelledby="wrrm-bulk-title">
+        <h3 id="wrrm-bulk-title" class="wrrm-card-title">📈 3. Volume Tier Pricing (Wholesale / Bulk)</h3>
+        <p class="wrrm-hint" style="margin-top:-8px; margin-bottom:12px;">
+          Set tiered volume discounts based on the base wholesale price.
+        </p>
+
+        <div class="wrrm-table-wrapper">
+          <table class="wrrm-table" id="wrrm-bulk-table">
+            <thead>
+              <tr>
+                <th scope="col">Tier</th>
+                <th scope="col">Min Units</th>
+                <th scope="col">Discount %</th>
+                <th scope="col">Unit Price</th>
+                <th scope="col">Unit Margin</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Tier 1</td>
+                <td><input type="number" class="wrrm-input wrrm-tier-min" style="height:32px; padding:2px 6px; width:70px;" value="1" min="1"></td>
+                <td><input type="number" class="wrrm-input wrrm-tier-disc" style="height:32px; padding:2px 6px; width:65px;" value="0" min="0" max="99"></td>
+                <td class="wrrm-tier-price">$63.00</td>
+                <td class="wrrm-tier-margin">28.57%</td>
+              </tr>
+              <tr>
+                <td>Tier 2</td>
+                <td><input type="number" class="wrrm-input wrrm-tier-min" style="height:32px; padding:2px 6px; width:70px;" value="25" min="1"></td>
+                <td><input type="number" class="wrrm-input wrrm-tier-disc" style="height:32px; padding:2px 6px; width:65px;" value="5" min="0" max="99"></td>
+                <td class="wrrm-tier-price">$59.85</td>
+                <td class="wrrm-tier-margin">24.81%</td>
+              </tr>
+              <tr>
+                <td>Tier 3</td>
+                <td><input type="number" class="wrrm-input wrrm-tier-min" style="height:32px; padding:2px 6px; width:70px;" value="50" min="1"></td>
+                <td><input type="number" class="wrrm-input wrrm-tier-disc" style="height:32px; padding:2px 6px; width:65px;" value="10" min="0" max="99"></td>
+                <td class="wrrm-tier-price">$56.70</td>
+                <td class="wrrm-tier-margin">20.63%</td>
+              </tr>
+              <tr>
+                <td>Tier 4</td>
+                <td><input type="number" class="wrrm-input wrrm-tier-min" style="height:32px; padding:2px 6px; width:70px;" value="100" min="1"></td>
+                <td><input type="number" class="wrrm-input wrrm-tier-disc" style="height:32px; padding:2px 6px; width:65px;" value="15" min="0" max="99"></td>
+                <td class="wrrm-tier-price">$53.55</td>
+                <td class="wrrm-tier-margin">15.97%</td>
+              </tr>
+              <tr>
+                <td>Tier 5</td>
+                <td><input type="number" class="wrrm-input wrrm-tier-min" style="height:32px; padding:2px 6px; width:70px;" value="250" min="1"></td>
+                <td><input type="number" class="wrrm-input wrrm-tier-disc" style="height:32px; padding:2px 6px; width:65px;" value="20" min="0" max="99"></td>
+                <td class="wrrm-tier-price">$50.40</td>
+                <td class="wrrm-tier-margin">10.71%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION E: Target Pricing & Break-Even Analysis -->
+      <section class="wrrm-card" aria-labelledby="wrrm-target-be-title">
+        <h3 id="wrrm-target-be-title" class="wrrm-card-title">🎯 4. Target Pricing & Break-Even Simulator</h3>
+
+        <div class="wrrm-form-grid wrrm-form-grid-2">
+          <div class="wrrm-field">
+            <label for="wrrm-target-mode" class="wrrm-label">Target Goal Objective</label>
+            <select id="wrrm-target-mode" class="wrrm-select">
+              <option value="margin">Target Profit Margin %</option>
+              <option value="amount">Target Profit Amount ($ / unit)</option>
+              <option value="markup">Target Markup %</option>
+            </select>
+          </div>
+          <div class="wrrm-field">
+            <label for="wrrm-target-value" class="wrrm-label">Target Goal Value</label>
+            <input type="number" id="wrrm-target-value" class="wrrm-input" min="0" step="0.1" value="45.0">
+          </div>
+        </div>
+
+        <div style="margin: 12px 0; padding: 10px 14px; background: var(--wrrm-gray-50); border: 1px solid var(--wrrm-gray-200); border-radius: 6px;">
+          <div class="wrrm-label" style="margin-bottom:4px;">Calculated Target Selling Price:</div>
+          <div id="wrrm-display-target-price" style="font-size: 1.35rem; font-weight: 800; color: var(--wrrm-primary);">$81.82</div>
+          <div class="wrrm-hint" id="wrrm-target-explanation">Selling at this price yields exactly 45.0% gross margin on your $45.00 cost basis.</div>
+        </div>
+
+        <details class="wrrm-details" style="margin-top:12px;">
+          <summary>⚖️ Fixed Cost Break-Even Calculator</summary>
+          <div class="wrrm-details-content wrrm-form-grid wrrm-form-grid-2">
+            <div class="wrrm-field">
+              <label for="wrrm-be-fixed-costs" class="wrrm-label">Monthly Fixed Overhead</label>
+              <div class="wrrm-input-wrap">
+                <span class="wrrm-prefix wrrm-curr-sym">$</span>
+                <input type="number" id="wrrm-be-fixed-costs" class="wrrm-input wrrm-has-prefix" min="0" step="10" value="2500">
+              </div>
+              <span class="wrrm-hint">Rent, software, admin salaries</span>
+            </div>
+            <div class="wrrm-field">
+              <label for="wrrm-be-channel-select" class="wrrm-label">Channel to Test</label>
+              <select id="wrrm-be-channel-select" class="wrrm-select">
+                <option value="wholesale">Wholesale Channel</option>
+                <option value="retail" selected>Retail Channel</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top:10px; font-size:0.875rem;">
+            <strong>Break-Even Units Required:</strong> <span id="wrrm-be-units" style="font-weight:700; color:var(--wrrm-primary);">56 Units / mo</span><br>
+            <strong>Break-Even Revenue:</strong> <span id="wrrm-be-revenue" style="font-weight:700; color:var(--wrrm-primary);">$5,040.00</span>
+          </div>
+        </details>
+      </section>
+
+      <!-- Local Scenario Management -->
+      <section class="wrrm-card">
+        <h3 class="wrrm-card-title">💾 Saved Scenarios (Browser LocalStorage)</h3>
+        <p class="wrrm-hint" style="margin-top:-6px; margin-bottom:10px;">
+          Save your current product pricing setup securely on your device.
+        </p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <input type="text" id="wrrm-scenario-name" class="wrrm-input" placeholder="Scenario name (e.g. Q3 Summer Drop)" style="flex:1; min-width:180px;">
+          <button type="button" id="wrrm-btn-save-scenario" class="wrrm-btn wrrm-btn-primary wrrm-btn-sm">Save</button>
+        </div>
+        <div id="wrrm-saved-list" style="margin-top:12px; display:flex; flex-direction:column; gap:6px;"></div>
+      </section>
+
+    </div>
+
+    <!-- RIGHT COLUMN: LIVE OUTPUT DASHBOARD & COMPARISON -->
+    <div class="wrrm-panel-stack">
+
+      <!-- Executive Financial Summary Cards -->
+      <section class="wrrm-card" style="border-top: 4px solid var(--wrrm-primary);" aria-labelledby="wrrm-dashboard-title">
+        <h3 id="wrrm-dashboard-title" class="wrrm-card-title">📊 Executive Pricing Dashboard</h3>
+
+        <div class="wrrm-metrics-grid">
+          <div class="wrrm-metric-card wrrm-highlight">
+            <span class="wrrm-metric-label">Wholesale Price</span>
+            <span class="wrrm-metric-value" id="wrrm-res-ws-price">$63.00</span>
+            <span class="wrrm-badge wrrm-badge-success" id="wrrm-badge-ws-margin">28.57% Margin</span>
+          </div>
+
+          <div class="wrrm-metric-card wrrm-highlight">
+            <span class="wrrm-metric-label">Retail Price (MSRP)</span>
+            <span class="wrrm-metric-value" id="wrrm-res-rt-price">$90.00</span>
+            <span class="wrrm-badge wrrm-badge-success" id="wrrm-badge-rt-margin">50.00% Margin</span>
+          </div>
+
+          <div class="wrrm-metric-card">
+            <span class="wrrm-metric-label">Wholesale Markup</span>
+            <span class="wrrm-metric-value" id="wrrm-res-ws-markup">40.00%</span>
+            <span class="wrrm-hint" id="wrrm-sub-ws-profit">+$18.00 / unit</span>
+          </div>
+
+          <div class="wrrm-metric-card">
+            <span class="wrrm-metric-label">Retail Markup</span>
+            <span class="wrrm-metric-value" id="wrrm-res-rt-markup">100.00%</span>
+            <span class="wrrm-hint" id="wrrm-sub-rt-profit">+$45.00 / unit</span>
+          </div>
+        </div>
+
+        <!-- Profit Ratio Bar -->
+        <div class="wrrm-bar-container">
+          <div class="wrrm-bar-labels">
+            <span>Wholesale Margin: <strong id="wrrm-bar-label-ws">28.6%</strong></span>
+            <span>Retail Margin: <strong id="wrrm-bar-label-rt">50.0%</strong></span>
+          </div>
+          <div class="wrrm-progress-track">
+            <div id="wrrm-bar-ws" class="wrrm-progress-fill wrrm-fill-primary" style="width: 28.6%;"></div>
+            <div id="wrrm-bar-rt" class="wrrm-progress-fill wrrm-fill-accent" style="width: 50.0%;"></div>
+          </div>
+        </div>
+
+        <!-- Step-by-Step Mathematical Cost Breakdown -->
+        <details class="wrrm-details" open>
+          <summary>🔍 Cost & Profit Unit Breakdown (Audit Trail)</summary>
+          <div class="wrrm-details-content">
+            <table class="wrrm-table" style="font-size:0.825rem;">
+              <tbody>
+                <tr>
+                  <td>Total Unit Cost:</td>
+                  <td style="text-align:right; font-weight:700;" id="wrrm-tbl-cost">$45.00</td>
+                </tr>
+                <tr>
+                  <td>Wholesale Unit Profit:</td>
+                  <td style="text-align:right; font-weight:700; color:var(--wrrm-success);" id="wrrm-tbl-ws-unit-profit">+$18.00</td>
+                </tr>
+                <tr>
+                  <td>Retail Unit Profit (Before Fees):</td>
+                  <td style="text-align:right; font-weight:700; color:var(--wrrm-success);" id="wrrm-tbl-rt-unit-profit">+$45.00</td>
+                </tr>
+                <tr>
+                  <td>Retail Net Profit (After Gateway Fees):</td>
+                  <td style="text-align:right; font-weight:700; color:var(--wrrm-primary);" id="wrrm-tbl-rt-net-profit">+$42.09</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <!-- Side-by-Side Wholesale vs Retail Channel Comparison -->
+      <section class="wrrm-card" aria-labelledby="wrrm-comparison-title">
+        <h3 id="wrrm-comparison-title" class="wrrm-card-title">⚖️ Wholesale vs Retail Strategy Comparison</h3>
+        <p class="wrrm-hint" style="margin-top:-6px; margin-bottom:12px;">
+          Comparing full batch financial performance for your selected order volumes.
+        </p>
+
+        <div class="wrrm-table-wrapper">
+          <table class="wrrm-table">
+            <thead>
+              <tr>
+                <th scope="col">Financial Metric</th>
+                <th scope="col">Wholesale (<span id="wrrm-cmp-qty-ws">100</span> units)</th>
+                <th scope="col">Retail (<span id="wrrm-cmp-qty-rt">20</span> units)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Gross Revenue</strong></td>
+                <td id="wrrm-cmp-rev-ws" style="font-weight:700;">$6,300.00</td>
+                <td id="wrrm-cmp-rev-rt" style="font-weight:700;">$1,800.00</td>
+              </tr>
+              <tr>
+                <td><strong>Total Cost of Goods</strong></td>
+                <td id="wrrm-cmp-cogs-ws">$4,500.00</td>
+                <td id="wrrm-cmp-cogs-rt">$900.00</td>
+              </tr>
+              <tr>
+                <td><strong>Order Fees & Shipping</strong></td>
+                <td id="wrrm-cmp-fees-ws">$0.00</td>
+                <td id="wrrm-cmp-fees-rt">$58.20</td>
+              </tr>
+              <tr style="background:var(--wrrm-gray-50);">
+                <td><strong>Net Total Channel Profit</strong></td>
+                <td id="wrrm-cmp-profit-ws" style="font-weight:800; color:var(--wrrm-success);">$1,800.00</td>
+                <td id="wrrm-cmp-profit-rt" style="font-weight:800; color:var(--wrrm-primary);">$841.80</td>
+              </tr>
+              <tr>
+                <td><strong>Gross Margin %</strong></td>
+                <td id="wrrm-cmp-margin-ws" style="font-weight:700;">28.57%</td>
+                <td id="wrrm-cmp-margin-rt" style="font-weight:700;">46.77%</td>
+              </tr>
+              <tr>
+                <td><strong>Markup % on Cost</strong></td>
+                <td id="wrrm-cmp-markup-ws">40.00%</td>
+                <td id="wrrm-cmp-markup-rt">93.53%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="wrrm-alert wrrm-alert-warning" id="wrrm-comparison-insight" style="display:block;">
+          💡 <strong>Channel Strategy Insight:</strong> Wholesale delivers <strong>$958.20 higher total net profit</strong> due to bulk order quantity (100 vs 20 units), even though Retail yields a higher margin percentage (46.77% vs 28.57%).
+        </div>
+      </section>
+
+      <!-- SECTION F: Promotional Discount Impact Analyzer -->
+      <section class="wrrm-card" aria-labelledby="wrrm-discount-impact-title">
+        <h3 id="wrrm-discount-impact-title" class="wrrm-card-title">🏷️ Retail Discount Impact Analyzer</h3>
+        <p class="wrrm-hint" style="margin-top:-6px; margin-bottom:10px;">
+          See how running sales promotions or promo codes erodes your net retail profit margin.
+        </p>
+
+        <div class="wrrm-chip-group" role="group" aria-label="Discount Presets">
+          <button type="button" class="wrrm-chip" data-disc="5">5% Off</button>
+          <button type="button" class="wrrm-chip" data-disc="10">10% Off</button>
+          <button type="button" class="wrrm-chip" data-disc="15">15% Off</button>
+          <button type="button" class="wrrm-chip" data-disc="20">20% Off</button>
+          <button type="button" class="wrrm-chip" data-disc="25">25% Off</button>
+          <button type="button" class="wrrm-chip" data-disc="30">30% Off</button>
+          <button type="button" class="wrrm-chip" data-disc="0">Reset (0%)</button>
+        </div>
+
+        <div class="wrrm-table-wrapper" style="margin-top:12px;">
+          <table class="wrrm-table" style="font-size:0.85rem;">
+            <tbody>
+              <tr>
+                <td>Discounted Selling Price:</td>
+                <td style="text-align:right; font-weight:700;" id="wrrm-disc-price">$90.00</td>
+              </tr>
+              <tr>
+                <td>Dollar Discount Allowed:</td>
+                <td style="text-align:right; color:var(--wrrm-warning);" id="wrrm-disc-amount">-$0.00</td>
+              </tr>
+              <tr>
+                <td>Remaining Profit Per Unit:</td>
+                <td style="text-align:right; font-weight:700; color:var(--wrrm-success);" id="wrrm-disc-profit">+$42.09</td>
+              </tr>
+              <tr>
+                <td>Adjusted Gross Margin:</td>
+                <td style="text-align:right; font-weight:700;" id="wrrm-disc-margin">46.77%</td>
+              </tr>
+              <tr>
+                <td>Profit Reduction vs MSRP:</td>
+                <td style="text-align:right; font-weight:700; color:var(--wrrm-danger);" id="wrrm-disc-drop">0.0%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="wrrm-discount-danger-alert" class="wrrm-alert wrrm-alert-danger" style="display:none;">
+          ⚠️ <strong>Loss Warning:</strong> This discount lowers your selling price below your product unit cost basis. You will lose money on every unit sold.
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==================== SEO CONTENT SECTIONS ==================== -->
+  <article class="wrrm-content-section">
+
+    <!-- 3. Short Introduction -->
+    <section>
+      <h2>What Is the Wholesale Retail Markup vs Margin Calculator?</h2>
+      <p>
+        The <strong>Wholesale Retail Markup vs Margin Calculator</strong> is a specialized financial pricing application built for ecommerce merchants, retail store managers, wholesale distributors, and manufacturing brands. Setting profitable prices requires mastering the mathematical differences between <em>markup percentage</em> and <em>gross profit margin</em>.
+      </p>
+      <p>
+        This calculator solves the common pricing dilemma: misinterpreting markup as profit margin often causes online and brick-and-mortar stores to underprice products, underpay overhead, and experience cash flow strain. By inputting your true product cost breakdown, you can evaluate wholesale bulk sales against direct-to-consumer retail pricing, model quantity discount tiers, calculate exact transaction merchant processing fees, and pinpoint your monthly break-even sales volume.
+      </p>
+    </section>
+
+    <!-- 4. How to Use -->
+    <section>
+      <h2>How to Use the Calculator</h2>
+      <ol>
+        <li><strong>Select Currency:</strong> Choose USD, EUR, GBP, INR, CAD, AUD, AED, or Custom currency from the top toolbar.</li>
+        <li><strong>Enter Unit Cost Breakdown:</strong> Enter your base purchase cost, plus any optional packaging, manufacturing, inbound freight, and customs fees to establish your accurate unit cost basis.</li>
+        <li><strong>Choose Wholesale Strategy:</strong> In the Wholesale Channel tab, choose whether to price via Markup %, Target Margin %, or a manual wholesale price. Set your minimum order quantity (MOQ).</li>
+        <li><strong>Configure Retail Strategy (MSRP):</strong> In the Retail Channel tab, establish your suggested retail price and include payment gateway fees (e.g., 2.9% + $0.30) to compute true net margins.</li>
+        <li><strong>Evaluate Side-by-Side Comparison:</strong> Review the comparison table on the right to examine unit economics versus total batch dollar profitability.</li>
+        <li><strong>Test Bulk Tiers & Discounts:</strong> Model wholesale volume discounts (Tiers 1–5) and test how retail sales promotions (5% to 30% off) impact your profit retention.</li>
+        <li><strong>Export Your Pricing Analysis:</strong> Use the <em>Copy Results</em>, <em>Download CSV</em>, or <em>Print Report</em> buttons to save or share your pricing strategy.</li>
+      </ol>
+    </section>
+
+    <!-- 5. Features -->
+    <section>
+      <h2>Key Features of This Pricing System</h2>
+      <ul>
+        <li><strong>Dual-Channel Analysis:</strong> Model wholesale distribution pricing alongside direct retail consumer channels simultaneously.</li>
+        <li><strong>Cost-Basis Stacking:</strong> Consolidate base item cost, custom packaging, manufacturing, and shipping into a unified denominator.</li>
+        <li><strong>Two-Way Interactive Converter:</strong> Instantly convert any markup percentage into its equivalent gross profit margin and vice versa.</li>
+        <li><strong>Volume Tier Discount Matrix:</strong> Pre-calculate five editable wholesale volume tiers to protect your bottom line during buyer negotiations.</li>
+        <li><strong>Payment Processing Fee Integration:</strong> Accurately deduct percentage and fixed merchant gateway fees (Stripe, PayPal, Shopify Payments) to calculate real net profit.</li>
+        <li><strong>Break-Even Sales Simulator:</strong> Determine exactly how many wholesale or retail units you must sell monthly to pay off fixed business overhead.</li>
+        <li><strong>Zero Data Transmission:</strong> Complete client-side calculation engine. All financial entries stay strictly on your local computer.</li>
+      </ul>
+    </section>
+
+    <!-- 6. Examples / Formulas -->
+    <section>
+      <h2>Formulas & Mathematical Distinction: Markup vs Margin</h2>
+      <p>
+        The difference between markup and margin comes down to the denominator:
+      </p>
+      <ul>
+        <li><strong>Markup</strong> is the percentage added to the <em>Cost</em> to arrive at the selling price.</li>
+        <li><strong>Profit Margin</strong> is the percentage of the <em>Selling Price</em> that remains as profit.</li>
+      </ul>
+
+      <div class="wrrm-formula-box">
+Gross Profit = Selling Price - Total Cost Basis<br>
+Markup Percentage = (Gross Profit / Total Cost Basis) × 100<br>
+Profit Margin Percentage = (Gross Profit / Selling Price) × 100
+      </div>
+
+      <h3>Direct Mathematical Conversions</h3>
+      <div class="wrrm-formula-box">
+Margin from Markup = Markup / (100 + Markup) × 100<br>
+Markup from Margin = Margin / (100 - Margin) × 100
+      </div>
+
+      <h3>Worked Numerical Example</h3>
+      <p>
+        Assume an item costs <strong>$50.00</strong> to make and package, and you sell it for <strong>$100.00</strong>:
+      </p>
+      <ul>
+        <li><strong>Gross Profit:</strong> $100.00 - $50.00 = $50.00</li>
+        <li><strong>Markup Percentage:</strong> ($50.00 / $50.00) × 100 = <strong>100% Markup</strong></li>
+        <li><strong>Profit Margin:</strong> ($50.00 / $100.00) × 100 = <strong>50% Margin</strong></li>
+      </ul>
+      <p>
+        A 100% markup creates a 50% profit margin. If a merchant mistakenly sets a 50% markup intending to achieve a 50% margin, they would sell the $50 item for $75 (yielding only a 33.33% margin), leaving the business short on revenue.
+      </p>
+    </section>
+
+    <!-- 7. Use Cases -->
+    <section>
+      <h2>Practical Business Use Cases</h2>
+      <ul>
+        <li><strong>Wholesale Distributors:</strong> Establish transparent bulk price tiers that guarantee warehouse handling and packaging costs are covered before volume discounts apply.</li>
+        <li><strong>Ecommerce & Direct-to-Consumer Brands:</strong> Factor in merchant payment fees and shipping costs to protect margins during storewide sales events.</li>
+        <li><strong>Independent Makers & Artisans:</strong> Calculate sustainable wholesale rates for boutique accounts while maintaining adequate retail margins for direct sales.</li>
+        <li><strong>Hardware & Apparel Retailers:</strong> Rapidly convert supplier wholesale price sheets into keystone or target retail prices.</li>
+      </ul>
+    </section>
+
+    <!-- 8. FAQs (10 Detailed Questions) -->
+    <section>
+      <h2>Frequently Asked Questions (FAQ)</h2>
+
+      <h3>1. What is the fundamental difference between markup and profit margin?</h3>
+      <p>
+        Markup expresses profit as a percentage of your product cost, while profit margin expresses that same profit as a percentage of your final selling price. Because your selling price is higher than your cost (in a profitable transaction), your markup percentage will always be higher than your gross profit margin percentage.
+      </p>
+
+      <h3>2. How do I calculate markup percentage?</h3>
+      <p>
+        Subtract the product cost from the selling price to find your gross profit amount. Divide that gross profit by the product cost, then multiply by 100. For example: If cost is $40 and selling price is $60, gross profit is $20. ($20 / $40) × 100 = 50% markup.
+      </p>
+
+      <h3>3. How do I calculate profit margin from selling price?</h3>
+      <p>
+        Subtract the total product cost from the selling price to get gross profit. Divide gross profit by the selling price, then multiply by 100. Using the same numbers: ($20 / $60) × 100 = 33.33% gross profit margin.
+      </p>
+
+      <h3>4. How do I convert markup into profit margin?</h3>
+      <p>
+        Use the formula: <code>Margin = [Markup / (100 + Markup)] × 100</code>. For example, a 60% markup converts to: [60 / (100 + 60)] × 100 = (60 / 160) × 100 = 37.5% profit margin.
+      </p>
+
+      <h3>5. How do I convert profit margin into markup?</h3>
+      <p>
+        Use the formula: <code>Markup = [Margin / (100 - Margin)] × 100</code>. If you want a 40% target profit margin, the required markup is: [40 / (100 - 40)] × 100 = (40 / 60) × 100 = 66.67% markup.
+      </p>
+
+      <h3>6. How do I calculate a wholesale selling price?</h3>
+      <p>
+        Calculate your full landed unit cost (manufacturing + materials + freight). Apply your wholesale markup or target wholesale margin. Wholesale margins typically range between 20% and 40%, balancing distributor profit with volume purchasing.
+      </p>
+
+      <h3>7. How do I calculate a suggested retail price (MSRP)?</h3>
+      <p>
+        Retail pricing often uses "keystone pricing" (a 100% markup or 50% gross margin on the wholesale cost), or targets a specific retail margin (often 50% to 65% on landed cost) to absorb retail storefront overhead, merchant processing, marketing, and customer returns.
+      </p>
+
+      <h3>8. How much markup should a retailer typically charge?</h3>
+      <p>
+        Retail markups typically range from 50% to 200% (yielding 33% to 66% gross margin), depending on product category, brand positioning, and inventory turnover rate. High-turnover groceries often operate on lower markups (15%–30%), while specialty apparel, jewelry, and gifts commonly use markups of 100% to 300%.
+      </p>
+
+      <h3>9. How does a discount affect gross profit margin?</h3>
+      <p>
+        Discounts reduce selling price dollar-for-dollar directly from your profit, while your product cost remains fixed. For example, on a $100 retail item that costs $50 (a 50% margin), offering a 20% discount lowers the price to $80. Gross profit drops from $50 to $30—a 40% drop in total profit from a 20% discount, lowering the margin to 37.5%.
+      </p>
+
+      <h3>10. Is markup the same as gross profit margin?</h3>
+      <p>
+        No. While both use the exact same dollar gross profit figure in their numerators, markup divides profit by cost, whereas gross profit margin divides profit by selling price. Conflating the two can lead to significant pricing errors.
+      </p>
+    </section>
+
+    <!-- 9. Related Tools & Internal Links -->
+    <section>
+      <h2>Related Pricing Tools & Internal Navigation</h2>
+      <p>
+        Explore our specialized ecommerce and product cost calculators to refine your store's pricing structure:
+      </p>
+      <ul>
+        <li>
+          <a href="https://my-tool-app.pages.dev/" target="_self"><strong>Home & Financial Tools Hub</strong></a> — Browse our collection of business math calculators, profit estimators, and inventory management tools.
+        </li>
+        <li>
+          <a href="https://my-tool-app.pages.dev/etsy-seller-profit-calculator" target="_self"><strong>Etsy Seller Profit Calculator</strong></a> — Calculate Etsy selling costs, transaction expenses, and estimated product profit using the related Etsy seller profit calculator.
+        </li>
+      </ul>
+    </section>
+
+    <!-- 10. Authoritative External References -->
+    <section>
+      <h2>Authoritative Business & Pricing Resources</h2>
+      <p>
+        For further reading on pricing strategies, margins, and market positioning, review these industry references:
+      </p>
+      <ul>
+        <li>
+          <a href="https://www.shopify.com/blog/product-pricing" target="_blank" rel="noopener noreferrer"><strong>Shopify Retail Pricing Guide</strong></a> — Strategies for pricing products for retail and ecommerce channels.
+        </li>
+        <li>
+          <a href="https://www.sba.gov/business-guide/manage-your-business/marketing-sales" target="_blank" rel="noopener noreferrer"><strong>U.S. Small Business Administration (SBA)</strong></a> — Small business sales management and marketing pricing principles.
+        </li>
+        <li>
+          <a href="https://quickbooks.intuit.com/r/financial-management/" target="_blank" rel="noopener noreferrer"><strong>QuickBooks Financial Management Resources</strong></a> — Detailed guides on tracking gross margins, operating expenses, and cash flow.
+        </li>
+      </ul>
+    </section>
+
+    <!-- Footer Navigation -->
+    <footer style="margin-top: 30px; padding-top: 16px; border-top: 1px solid var(--wrrm-gray-200); font-size: 0.85rem; color: var(--wrrm-gray-600); display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between;">
+      <div>
+        © <span id="wrrm-year"></span> Wholesale Retail Markup vs Margin Calculator. Client-side financial computation tool.
+      </div>
+      <nav style="display: flex; gap: 12px;">
+        <a href="https://my-tool-app.pages.dev/" style="color: var(--wrrm-primary); text-decoration: none;">Home</a>
+        <a href="https://my-tool-app.pages.dev/about" style="color: var(--wrrm-primary); text-decoration: none;">About</a>
+        <a href="https://my-tool-app.pages.dev/contact" style="color: var(--wrrm-primary); text-decoration: none;">Contact</a>
+        <a href="https://my-tool-app.pages.dev/privacy" style="color: var(--wrrm-primary); text-decoration: none;">Privacy Policy</a>
+      </nav>
+    </footer>
+
+  </article>
+
+  <!-- ==================== STRUCTURED DATA (JSON-LD) ==================== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://my-tool-app.pages.dev/wholesale-retail-markup-vs-margin-calculator#app",
+        "name": "Wholesale Retail Markup vs Margin Calculator",
+        "url": "https://my-tool-app.pages.dev/wholesale-retail-markup-vs-margin-calculator",
+        "description": "Calculate wholesale and retail prices, markup, profit margin, discounts and product profit with this free pricing calculator.",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "All Web Browsers",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://my-tool-app.pages.dev/wholesale-retail-markup-vs-margin-calculator",
+        "url": "https://my-tool-app.pages.dev/wholesale-retail-markup-vs-margin-calculator",
+        "name": "Wholesale Retail Markup vs Margin Calculator",
+        "description": "Calculate wholesale and retail prices, markup, profit margin, discounts and product profit with this free pricing calculator.",
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://my-tool-app.pages.dev/#website",
+          "url": "https://my-tool-app.pages.dev/",
+          "name": "Ecommerce & Financial Pricing Calculators"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://my-tool-app.pages.dev/wholesale-retail-markup-vs-margin-calculator#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://my-tool-app.pages.dev/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Wholesale Retail Markup vs Margin Calculator",
+            "item": "https://my-tool-app.pages.dev/wholesale-retail-markup-vs-margin-calculator"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://my-tool-app.pages.dev/wholesale-retail-markup-vs-margin-calculator#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is the fundamental difference between markup and profit margin?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Markup expresses profit as a percentage of your product cost, while profit margin expresses profit as a percentage of the final selling price. Markup is always higher than gross margin in profitable transactions."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I calculate markup percentage?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Gross profit divided by total cost basis, multiplied by 100. Formula: ((Selling Price - Cost) / Cost) * 100."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I calculate profit margin from selling price?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Gross profit divided by selling price, multiplied by 100. Formula: ((Selling Price - Cost) / Selling Price) * 100."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I convert markup into profit margin?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Use the formula: Margin = [Markup / (100 + Markup)] * 100."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I convert profit margin into markup?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Use the formula: Markup = [Margin / (100 - Margin)] * 100."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I calculate wholesale selling price?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Calculate full landed unit cost and apply your wholesale markup (Cost * (1 + Markup/100)) or target margin (Cost / (1 - Margin/100))."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I calculate a suggested retail price (MSRP)?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Retail pricing commonly applies a 100% markup (keystone) over wholesale cost, or targets a 50% to 65% margin over landed product costs to absorb marketing, returns, and payment fees."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How much markup should a retailer typically charge?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Retail markups typically range from 50% to 200% (33% to 66% gross margin) depending on sales velocity, product category, and operational overhead."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does a discount affect gross profit margin?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Discounts come directly out of profit while product cost remains unchanged. A 20% discount on a 50% margin item leads to a 40% reduction in net gross profit."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is markup the same as gross profit margin?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. While both measure gross profit, markup calculates profit relative to cost, whereas margin calculates profit relative to the selling price."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <!-- ==================== JAVASCRIPT CALCULATION ENGINE (IIFE) ==================== -->
+  <script>
+  (function() {
+    'use strict';
+
+    // Guard against multiple executions
+    if (window.WRRM_CALCULATOR_LOADED) return;
+    window.WRRM_CALCULATOR_LOADED = true;
+
+    // Currency symbols mapping
+    const CURRENCY_SYMBOLS = {
+      USD: '$',
+      INR: '₹',
+      GBP: '£',
+      EUR: '€',
+      CAD: 'C$',
+      AUD: 'A$',
+      AED: 'د.إ',
+      CUSTOM: '¤'
+    };
+
+    let currentCurrency = 'USD';
+    let currentCurrencySym = '$';
+
+    // Number formatter helper
+    function formatMoney(amount) {
+      if (isNaN(amount) || !isFinite(amount)) return currentCurrencySym + '0.00';
+      const formatted = Math.abs(amount).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return (amount < 0 ? '-' : '') + currentCurrencySym + formatted;
+    }
+
+    function formatPercent(val) {
+      if (isNaN(val) || !isFinite(val)) return '0.00%';
+      return val.toFixed(2) + '%';
+    }
+
+    function getNum(id) {
+      const el = document.getElementById(id);
+      if (!el) return 0;
+      const v = parseFloat(el.value);
+      return isNaN(v) ? 0 : v;
+    }
+
+    function setVal(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.value = val;
+    }
+
+    function setText(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    // Main recalculation orchestrator
+    function calculateAll() {
+      // 1. Calculate Unit Cost Basis
+      const baseCost = Math.max(0, getNum('wrrm-cost-base'));
+      const packagingCost = Math.max(0, getNum('wrrm-cost-packaging'));
+      const mfgCost = Math.max(0, getNum('wrrm-cost-mfg'));
+      const procureCost = Math.max(0, getNum('wrrm-cost-procure'));
+      const otherCost = Math.max(0, getNum('wrrm-cost-other'));
+
+      const totalUnitCost = baseCost + packagingCost + mfgCost + procureCost + otherCost;
+      setText('wrrm-display-total-cost', formatMoney(totalUnitCost));
+      setText('wrrm-tbl-cost', formatMoney(totalUnitCost));
+
+      // 2. Wholesale Pricing Logic
+      const wsMode = document.getElementById('wrrm-ws-calc-mode').value;
+      let wsPrice = 0;
+      let wsMarkupPct = 0;
+      let wsMarginPct = 0;
+
+      if (wsMode === 'markup') {
+        wsMarkupPct = Math.max(0, getNum('wrrm-ws-markup'));
+        wsPrice = totalUnitCost * (1 + wsMarkupPct / 100);
+      } else if (wsMode === 'margin') {
+        wsMarginPct = Math.min(99.9, Math.max(0, getNum('wrrm-ws-margin')));
+        wsPrice = totalUnitCost > 0 ? (totalUnitCost / (1 - wsMarginPct / 100)) : 0;
+      } else {
+        wsPrice = Math.max(0, getNum('wrrm-ws-manual-price'));
+      }
+
+      // Re-derive wholesale metrics
+      const wsUnitProfit = wsPrice - totalUnitCost;
+      if (totalUnitCost > 0) {
+        wsMarkupPct = (wsUnitProfit / totalUnitCost) * 100;
+      } else {
+        wsMarkupPct = wsPrice > 0 ? 100 : 0;
+      }
+
+      if (wsPrice > 0) {
+        wsMarginPct = (wsUnitProfit / wsPrice) * 100;
+      } else {
+        wsMarginPct = 0;
+      }
+
+      const wsQty = Math.max(1, Math.floor(getNum('wrrm-ws-quantity')));
+      const wsDiscountPct = Math.min(100, Math.max(0, getNum('wrrm-ws-discount')));
+      const wsHandlingUnit = Math.max(0, getNum('wrrm-ws-handling'));
+
+      const effectiveWsPrice = wsPrice * (1 - wsDiscountPct / 100);
+      const wsGrossRev = effectiveWsPrice * wsQty;
+      const wsTotalCogs = totalUnitCost * wsQty;
+      const wsTotalFees = wsHandlingUnit * wsQty;
+      const wsTotalNetProfit = wsGrossRev - wsTotalCogs - wsTotalFees;
+
+      // Update wholesale display outputs
+      setText('wrrm-res-ws-price', formatMoney(effectiveWsPrice));
+      setText('wrrm-badge-ws-margin', formatPercent(wsMarginPct) + ' Margin');
+      setText('wrrm-res-ws-markup', formatPercent(wsMarkupPct));
+      setText('wrrm-sub-ws-profit', '+' + formatMoney(wsUnitProfit) + ' / unit');
+      setText('wrrm-tbl-ws-unit-profit', (wsUnitProfit >= 0 ? '+' : '') + formatMoney(wsUnitProfit));
+
+      // 3. Retail Pricing Logic
+      const rtMode = document.getElementById('wrrm-rt-calc-mode').value;
+      let rtPrice = 0;
+      let rtMarkupPct = 0;
+      let rtMarginPct = 0;
+
+      if (rtMode === 'markup') {
+        rtMarkupPct = Math.max(0, getNum('wrrm-rt-markup'));
+        rtPrice = totalUnitCost * (1 + rtMarkupPct / 100);
+      } else if (rtMode === 'margin') {
+        rtMarginPct = Math.min(99.9, Math.max(0, getNum('wrrm-rt-margin')));
+        rtPrice = totalUnitCost > 0 ? (totalUnitCost / (1 - rtMarginPct / 100)) : 0;
+      } else {
+        rtPrice = Math.max(0, getNum('wrrm-rt-manual-price'));
+      }
+
+      // Retail Unit Profit before fees
+      const rtUnitProfitBeforeFees = rtPrice - totalUnitCost;
+      if (totalUnitCost > 0) {
+        rtMarkupPct = (rtUnitProfitBeforeFees / totalUnitCost) * 100;
+      } else {
+        rtMarkupPct = rtPrice > 0 ? 100 : 0;
+      }
+
+      if (rtPrice > 0) {
+        rtMarginPct = (rtUnitProfitBeforeFees / rtPrice) * 100;
+      } else {
+        rtMarginPct = 0;
+      }
+
+      // Retail Fees & Net Profit
+      const rtFeePct = Math.max(0, getNum('wrrm-rt-fee-pct'));
+      const rtFeeFixed = Math.max(0, getNum('wrrm-rt-fee-fixed'));
+      const rtShippingUnit = Math.max(0, getNum('wrrm-rt-shipping-unit'));
+      const rtUnitFeeTotal = (rtPrice * (rtFeePct / 100)) + rtFeeFixed + rtShippingUnit;
+      const rtNetUnitProfit = rtPrice - totalUnitCost - rtUnitFeeTotal;
+
+      const rtQty = Math.max(1, Math.floor(getNum('wrrm-rt-quantity')));
+      const rtDiscountPct = Math.min(100, Math.max(0, getNum('wrrm-rt-discount')));
+
+      // Discounted retail calculations
+      const rtDiscountAmount = rtPrice * (rtDiscountPct / 100);
+      const rtDiscountedPrice = rtPrice - rtDiscountAmount;
+      const rtDiscountedUnitFee = (rtDiscountedPrice * (rtFeePct / 100)) + rtFeeFixed + rtShippingUnit;
+      const rtDiscountedNetUnitProfit = rtDiscountedPrice - totalUnitCost - rtDiscountedUnitFee;
+      const rtDiscountedMargin = rtDiscountedPrice > 0 ? ((rtDiscountedPrice - totalUnitCost) / rtDiscountedPrice) * 100 : 0;
+
+      const rtGrossRev = rtDiscountedPrice * rtQty;
+      const rtTotalCogs = totalUnitCost * rtQty;
+      const rtTotalFees = rtDiscountedUnitFee * rtQty;
+      const rtTotalNetProfit = rtGrossRev - rtTotalCogs - rtTotalFees;
+
+      // Update retail display outputs
+      setText('wrrm-res-rt-price', formatMoney(rtPrice));
+      setText('wrrm-badge-rt-margin', formatPercent(rtMarginPct) + ' Margin');
+      setText('wrrm-res-rt-markup', formatPercent(rtMarkupPct));
+      setText('wrrm-sub-rt-profit', '+' + formatMoney(rtUnitProfitBeforeFees) + ' / unit');
+      setText('wrrm-tbl-rt-unit-profit', (rtUnitProfitBeforeFees >= 0 ? '+' : '') + formatMoney(rtUnitProfitBeforeFees));
+      setText('wrrm-tbl-rt-net-profit', (rtNetUnitProfit >= 0 ? '+' : '') + formatMoney(rtNetUnitProfit));
+
+      // Visual Margin Progress Bar
+      const barWsEl = document.getElementById('wrrm-bar-ws');
+      const barRtEl = document.getElementById('wrrm-bar-rt');
+      const boundedWsMargin = Math.max(0, Math.min(100, wsMarginPct));
+      const boundedRtMargin = Math.max(0, Math.min(100, rtMarginPct));
+
+      if (barWsEl) barWsEl.style.width = boundedWsMargin + '%';
+      if (barRtEl) barRtEl.style.width = boundedRtMargin + '%';
+      setText('wrrm-bar-label-ws', formatPercent(wsMarginPct));
+      setText('wrrm-bar-label-rt', formatPercent(rtMarginPct));
+
+      // 4. Comparison Table Updates
+      setText('wrrm-cmp-qty-ws', wsQty.toString());
+      setText('wrrm-cmp-qty-rt', rtQty.toString());
+      setText('wrrm-cmp-rev-ws', formatMoney(wsGrossRev));
+      setText('wrrm-cmp-rev-rt', formatMoney(rtGrossRev));
+      setText('wrrm-cmp-cogs-ws', formatMoney(wsTotalCogs));
+      setText('wrrm-cmp-cogs-rt', formatMoney(rtTotalCogs));
+      setText('wrrm-cmp-fees-ws', formatMoney(wsTotalFees));
+      setText('wrrm-cmp-fees-rt', formatMoney(rtTotalFees));
+      setText('wrrm-cmp-profit-ws', formatMoney(wsTotalNetProfit));
+      setText('wrrm-cmp-profit-rt', formatMoney(rtTotalNetProfit));
+      setText('wrrm-cmp-margin-ws', formatPercent(wsMarginPct));
+      setText('wrrm-cmp-margin-rt', formatPercent(rtDiscountedMargin));
+
+      const rtEffectiveMarkup = totalUnitCost > 0 ? ((rtDiscountedPrice - totalUnitCost) / totalUnitCost) * 100 : 0;
+      setText('wrrm-cmp-markup-ws', formatPercent(wsMarkupPct));
+      setText('wrrm-cmp-markup-rt', formatPercent(rtEffectiveMarkup));
+
+      // Dynamic insight comparison
+      const insightEl = document.getElementById('wrrm-comparison-insight');
+      if (insightEl) {
+        const diff = Math.abs(wsTotalNetProfit - rtTotalNetProfit);
+        if (wsTotalNetProfit > rtTotalNetProfit) {
+          insightEl.innerHTML = '💡 <strong>Channel Strategy Insight:</strong> Wholesale yields <strong>' + formatMoney(diff) + ' more total batch profit</strong> due to bulk volume (' + wsQty + ' units), despite retail offering a higher unit profit margin.';
+        } else if (rtTotalNetProfit > wsTotalNetProfit) {
+          insightEl.innerHTML = '💡 <strong>Channel Strategy Insight:</strong> Retail yields <strong>' + formatMoney(diff) + ' more total net profit</strong> because higher retail unit margins outweigh the wholesale volume in this scenario.';
+        } else {
+          insightEl.innerHTML = '💡 <strong>Channel Strategy Insight:</strong> Both wholesale and retail sales channels yield equal total net dollar returns in this setup.';
+        }
+      }
+
+      // 5. Discount Analyzer Panel Updates
+      setText('wrrm-disc-price', formatMoney(rtDiscountedPrice));
+      setText('wrrm-disc-amount', '-' + formatMoney(rtDiscountAmount));
+      setText('wrrm-disc-profit', (rtDiscountedNetUnitProfit >= 0 ? '+' : '') + formatMoney(rtDiscountedNetUnitProfit));
+      setText('wrrm-disc-margin', formatPercent(rtDiscountedMargin));
+
+      const profitDropPct = rtNetUnitProfit > 0 ? Math.max(0, ((rtNetUnitProfit - rtDiscountedNetUnitProfit) / rtNetUnitProfit) * 100) : 0;
+      setText('wrrm-disc-drop', formatPercent(profitDropPct));
+
+      const dangerAlertEl = document.getElementById('wrrm-discount-danger-alert');
+      if (dangerAlertEl) {
+        dangerAlertEl.style.display = (rtDiscountedPrice < totalUnitCost) ? 'block' : 'none';
+      }
+
+      // 6. Bulk Tier Dynamic Calculation
+      const bulkRows = document.querySelectorAll('#wrrm-bulk-table tbody tr');
+      bulkRows.forEach(function(row) {
+        const discInput = row.querySelector('.wrrm-tier-disc');
+        const priceCell = row.querySelector('.wrrm-tier-price');
+        const marginCell = row.querySelector('.wrrm-tier-margin');
+        if (discInput && priceCell && marginCell) {
+          const disc = Math.min(99.9, Math.max(0, parseFloat(discInput.value) || 0));
+          const tierPrice = wsPrice * (1 - disc / 100);
+          const tierMargin = tierPrice > 0 ? ((tierPrice - totalUnitCost) / tierPrice) * 100 : 0;
+          priceCell.textContent = formatMoney(tierPrice);
+          marginCell.textContent = formatPercent(tierMargin);
+        }
+      });
+
+      // 7. Target Pricing Simulator
+      calculateTargetPrice(totalUnitCost);
+
+      // 8. Break-Even Simulator
+      calculateBreakEven(totalUnitCost, wsPrice, rtPrice, rtUnitFeeTotal, wsHandlingUnit);
+    }
+
+    // Target Price calculation sub-routine
+    function calculateTargetPrice(totalUnitCost) {
+      const mode = document.getElementById('wrrm-target-mode').value;
+      const targetVal = Math.max(0, getNum('wrrm-target-value'));
+      let reqPrice = 0;
+      let explanation = '';
+
+      if (mode === 'margin') {
+        const marginClamped = Math.min(99.9, targetVal);
+        reqPrice = totalUnitCost > 0 ? (totalUnitCost / (1 - marginClamped / 100)) : 0;
+        explanation = 'Selling at this price yields exactly ' + marginClamped.toFixed(1) + '% gross margin on your ' + formatMoney(totalUnitCost) + ' cost basis.';
+      } else if (mode === 'amount') {
+        reqPrice = totalUnitCost + targetVal;
+        explanation = 'Adding ' + formatMoney(targetVal) + ' target unit profit to your ' + formatMoney(totalUnitCost) + ' cost basis.';
+      } else {
+        reqPrice = totalUnitCost * (1 + targetVal / 100);
+        explanation = 'Applying a ' + targetVal.toFixed(1) + '% markup over your ' + formatMoney(totalUnitCost) + ' cost basis.';
+      }
+
+      setText('wrrm-display-target-price', formatMoney(reqPrice));
+      setText('wrrm-target-explanation', explanation);
+    }
+
+    // Break-even calculation sub-routine
+    function calculateBreakEven(totalUnitCost, wsPrice, rtPrice, rtUnitFeeTotal, wsHandlingUnit) {
+      const fixedCosts = Math.max(0, getNum('wrrm-be-fixed-costs'));
+      const channel = document.getElementById('wrrm-be-channel-select').value;
+
+      let contributionMargin = 0;
+      let effectiveSellingPrice = 0;
+
+      if (channel === 'wholesale') {
+        effectiveSellingPrice = wsPrice;
+        contributionMargin = wsPrice - totalUnitCost - wsHandlingUnit;
+      } else {
+        effectiveSellingPrice = rtPrice;
+        contributionMargin = rtPrice - totalUnitCost - rtUnitFeeTotal;
+      }
+
+      const beUnitsEl = document.getElementById('wrrm-be-units');
+      const beRevEl = document.getElementById('wrrm-be-revenue');
+
+      if (contributionMargin <= 0 || effectiveSellingPrice <= 0) {
+        if (beUnitsEl) beUnitsEl.textContent = 'Indeterminate (No Profit/Unit)';
+        if (beRevEl) beRevEl.textContent = 'N/A';
+        return;
+      }
+
+      const breakEvenUnits = Math.ceil(fixedCosts / contributionMargin);
+      const breakEvenRevenue = breakEvenUnits * effectiveSellingPrice;
+
+      if (beUnitsEl) beUnitsEl.textContent = breakEvenUnits.toLocaleString('en-US') + ' Units / mo';
+      if (beRevEl) beRevEl.textContent = formatMoney(breakEvenRevenue);
+    }
+
+    // Quick Converter Listeners
+    function setupConverter() {
+      const markupIn = document.getElementById('wrrm-conv-markup');
+      const marginIn = document.getElementById('wrrm-conv-margin');
+
+      if (markupIn) {
+        markupIn.addEventListener('input', function() {
+          const m = Math.max(0, parseFloat(markupIn.value) || 0);
+          const margin = (m / (100 + m)) * 100;
+          setText('wrrm-conv-res-margin', '= ' + margin.toFixed(2) + '% Margin');
+        });
+      }
+
+      if (marginIn) {
+        marginIn.addEventListener('input', function() {
+          const g = Math.min(99.9, Math.max(0, parseFloat(marginIn.value) || 0));
+          const markup = (g / (100 - g)) * 100;
+          setText('wrrm-conv-res-markup', '= ' + markup.toFixed(2) + '% Markup');
+        });
+      }
+    }
+
+    // Scenario Notification Banner
+    function showNotification(msg, isSuccess) {
+      const el = document.getElementById('wrrm-status-message');
+      if (!el) return;
+      el.className = 'wrrm-alert ' + (isSuccess ? 'wrrm-alert-warning' : 'wrrm-alert-danger');
+      el.style.display = 'block';
+      el.textContent = msg;
+      setTimeout(function() {
+        el.style.display = 'none';
+      }, 4000);
+    }
+
+    // LocalStorage Scenario Management
+    const STORAGE_KEY = 'wrrm_saved_pricing_scenarios';
+
+    function getSavedScenarios() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch(e) {
+        return [];
+      }
+    }
+
+    function renderSavedScenarios() {
+      const listEl = document.getElementById('wrrm-saved-list');
+      if (!listEl) return;
+      const items = getSavedScenarios();
+      listEl.innerHTML = '';
+
+      if (items.length === 0) {
+        listEl.innerHTML = '<span class="wrrm-hint">No scenarios saved yet. Enter a name above to save your configuration.</span>';
+        return;
+      }
+
+      items.forEach(function(item, idx) {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; background:var(--wrrm-gray-100); padding:6px 10px; border-radius:6px; font-size:0.85rem;';
+        
+        const titleSpan = document.createElement('span');
+        titleSpan.textContent = item.name + ' (' + item.currency + ' ' + item.baseCost + ')';
+        titleSpan.style.fontWeight = '600';
+        
+        const actionsDiv = document.createElement('div');
+        actionsDiv.style.cssText = 'display:flex; gap:6px;';
+
+        const loadBtn = document.createElement('button');
+        loadBtn.type = 'button';
+        loadBtn.className = 'wrrm-btn wrrm-btn-outline wrrm-btn-sm';
+        loadBtn.textContent = 'Load';
+        loadBtn.addEventListener('click', function() {
+          loadScenario(idx);
+        });
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'wrrm-btn wrrm-btn-danger wrrm-btn-sm';
+        delBtn.textContent = '✕';
+        delBtn.title = 'Delete scenario';
+        delBtn.addEventListener('click', function() {
+          deleteScenario(idx);
+        });
+
+        actionsDiv.appendChild(loadBtn);
+        actionsDiv.appendChild(delBtn);
+        row.appendChild(titleSpan);
+        row.appendChild(actionsDiv);
+        listEl.appendChild(row);
+      });
+    }
+
+    function saveCurrentScenario() {
+      const nameInput = document.getElementById('wrrm-scenario-name');
+      const name = nameInput ? nameInput.value.trim() : '';
+      if (!name) {
+        showNotification('Please enter a scenario name before saving.', false);
+        return;
+      }
+
+      const payload = {
+        name: name,
+        currency: currentCurrency,
+        baseCost: getNum('wrrm-cost-base'),
+        packagingCost: getNum('wrrm-cost-packaging'),
+        mfgCost: getNum('wrrm-cost-mfg'),
+        procureCost: getNum('wrrm-cost-procure'),
+        otherCost: getNum('wrrm-cost-other'),
+        wsMarkup: getNum('wrrm-ws-markup'),
+        wsMargin: getNum('wrrm-ws-margin'),
+        wsManual: getNum('wrrm-ws-manual-price'),
+        wsMode: document.getElementById('wrrm-ws-calc-mode').value,
+        wsQty: getNum('wrrm-ws-quantity'),
+        rtMarkup: getNum('wrrm-rt-markup'),
+        rtMargin: getNum('wrrm-rt-margin'),
+        rtManual: getNum('wrrm-rt-manual-price'),
+        rtMode: document.getElementById('wrrm-rt-calc-mode').value,
+        rtQty: getNum('wrrm-rt-quantity'),
+        rtFeePct: getNum('wrrm-rt-fee-pct'),
+        rtFeeFixed: getNum('wrrm-rt-fee-fixed')
+      };
+
+      try {
+        const scenarios = getSavedScenarios();
+        scenarios.unshift(payload);
+        if (scenarios.length > 8) scenarios.pop();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(scenarios));
+        if (nameInput) nameInput.value = '';
+        renderSavedScenarios();
+        showNotification('Scenario "' + name + '" saved securely to browser LocalStorage.', true);
+      } catch(e) {
+        showNotification('Failed to save to local storage (Storage may be disabled).', false);
+      }
+    }
+
+    function loadScenario(index) {
+      const scenarios = getSavedScenarios();
+      const s = scenarios[index];
+      if (!s) return;
+
+      if (s.currency && CURRENCY_SYMBOLS[s.currency]) {
+        currentCurrency = s.currency;
+        currentCurrencySym = CURRENCY_SYMBOLS[s.currency];
+        const currSelect = document.getElementById('wrrm-currency-select');
+        if (currSelect) currSelect.value = s.currency;
+        updateCurrencyDisplay();
+      }
+
+      setVal('wrrm-cost-base', s.baseCost || 0);
+      setVal('wrrm-cost-packaging', s.packagingCost || 0);
+      setVal('wrrm-cost-mfg', s.mfgCost || 0);
+      setVal('wrrm-cost-procure', s.procureCost || 0);
+      setVal('wrrm-cost-other', s.otherCost || 0);
+
+      const wsModeEl = document.getElementById('wrrm-ws-calc-mode');
+      if (wsModeEl && s.wsMode) {
+        wsModeEl.value = s.wsMode;
+        wsModeEl.dispatchEvent(new Event('change'));
+      }
+      setVal('wrrm-ws-markup', s.wsMarkup || 0);
+      setVal('wrrm-ws-margin', s.wsMargin || 0);
+      setVal('wrrm-ws-manual-price', s.wsManual || 0);
+      setVal('wrrm-ws-quantity', s.wsQty || 100);
+
+      const rtModeEl = document.getElementById('wrrm-rt-calc-mode');
+      if (rtModeEl && s.rtMode) {
+        rtModeEl.value = s.rtMode;
+        rtModeEl.dispatchEvent(new Event('change'));
+      }
+      setVal('wrrm-rt-markup', s.rtMarkup || 0);
+      setVal('wrrm-rt-margin', s.rtMargin || 0);
+      setVal('wrrm-rt-manual-price', s.rtManual || 0);
+      setVal('wrrm-rt-quantity', s.rtQty || 20);
+      setVal('wrrm-rt-fee-pct', s.rtFeePct || 0);
+      setVal('wrrm-rt-fee-fixed', s.rtFeeFixed || 0);
+
+      calculateAll();
+      showNotification('Loaded scenario: ' + s.name, true);
+    }
+
+    function deleteScenario(index) {
+      const scenarios = getSavedScenarios();
+      scenarios.splice(index, 1);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(scenarios));
+        renderSavedScenarios();
+        showNotification('Scenario deleted.', true);
+      } catch(e) {}
+    }
+
+    // Currency Switcher
+    function updateCurrencyDisplay() {
+      const symEls = document.querySelectorAll('.wrrm-curr-sym');
+      symEls.forEach(function(el) {
+        el.textContent = currentCurrencySym;
+      });
+      calculateAll();
+    }
+
+    // Sample Data Preset
+    function loadSampleData() {
+      setVal('wrrm-input-product-name', 'Artisan Leather Goods (Sample)');
+      setVal('wrrm-cost-base', '40.00');
+      setVal('wrrm-cost-packaging', '2.00');
+      setVal('wrrm-cost-mfg', '0.00');
+      setVal('wrrm-cost-procure', '3.00');
+      setVal('wrrm-cost-other', '0.00');
+
+      const wsMode = document.getElementById('wrrm-ws-calc-mode');
+      if (wsMode) {
+        wsMode.value = 'markup';
+        wsMode.dispatchEvent(new Event('change'));
+      }
+      setVal('wrrm-ws-markup', '40.0');
+      setVal('wrrm-ws-quantity', '100');
+      setVal('wrrm-ws-discount', '0');
+      setVal('wrrm-ws-handling', '0.00');
+
+      const rtMode = document.getElementById('wrrm-rt-calc-mode');
+      if (rtMode) {
+        rtMode.value = 'markup';
+        rtMode.dispatchEvent(new Event('change'));
+      }
+      setVal('wrrm-rt-markup', '100.0');
+      setVal('wrrm-rt-quantity', '20');
+      setVal('wrrm-rt-discount', '0');
+      setVal('wrrm-rt-fee-pct', '2.9');
+      setVal('wrrm-rt-fee-fixed', '0.30');
+
+      calculateAll();
+      showNotification('Loaded official sample benchmark data.', true);
+    }
+
+    // Reset Calculator to defaults
+    function resetCalculator() {
+      setVal('wrrm-input-product-name', '');
+      setVal('wrrm-cost-base', '0.00');
+      setVal('wrrm-cost-packaging', '0.00');
+      setVal('wrrm-cost-mfg', '0.00');
+      setVal('wrrm-cost-procure', '0.00');
+      setVal('wrrm-cost-other', '0.00');
+      setVal('wrrm-ws-markup', '40.0');
+      setVal('wrrm-ws-margin', '28.57');
+      setVal('wrrm-ws-manual-price', '0.00');
+      setVal('wrrm-ws-quantity', '100');
+      setVal('wrrm-ws-discount', '0');
+      setVal('wrrm-rt-markup', '100.0');
+      setVal('wrrm-rt-margin', '50.0');
+      setVal('wrrm-rt-manual-price', '0.00');
+      setVal('wrrm-rt-quantity', '20');
+      setVal('wrrm-rt-discount', '0');
+      calculateAll();
+      showNotification('Calculator reset to zero.', true);
+    }
+
+    // Clipboard Copy Feature
+    function copyResults() {
+      const totalCost = document.getElementById('wrrm-display-total-cost').textContent;
+      const wsPrice = document.getElementById('wrrm-res-ws-price').textContent;
+      const wsMargin = document.getElementById('wrrm-badge-ws-margin').textContent;
+      const rtPrice = document.getElementById('wrrm-res-rt-price').textContent;
+      const rtMargin = document.getElementById('wrrm-badge-rt-margin').textContent;
+
+      const summaryText = [
+        '=== Wholesale Retail Markup vs Margin Pricing Report ===',
+        'Unit Cost Basis: ' + totalCost,
+        'Wholesale Price: ' + wsPrice + ' (' + wsMargin + ')',
+        'Retail Price (MSRP): ' + rtPrice + ' (' + rtMargin + ')',
+        'Generated via: https://my-tool-app.pages.dev/wholesale-retail-markup-vs-margin-calculator'
+      ].join('\n');
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(summaryText).then(function() {
+          showNotification('Pricing summary copied to clipboard!', true);
+        }).catch(function() {
+          fallbackCopy(summaryText);
+        });
+      } else {
+        fallbackCopy(summaryText);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showNotification('Pricing summary copied to clipboard!', true);
+      } catch (err) {
+        showNotification('Unable to copy to clipboard.', false);
+      }
+      document.body.removeChild(ta);
+    }
+
+    // CSV Download Feature
+    function downloadCSV() {
+      const totalCost = document.getElementById('wrrm-display-total-cost').textContent;
+      const wsPrice = document.getElementById('wrrm-res-ws-price').textContent;
+      const wsMarkup = document.getElementById('wrrm-res-ws-markup').textContent;
+      const wsMargin = document.getElementById('wrrm-badge-ws-margin').textContent;
+      const rtPrice = document.getElementById('wrrm-res-rt-price').textContent;
+      const rtMarkup = document.getElementById('wrrm-res-rt-markup').textContent;
+      const rtMargin = document.getElementById('wrrm-badge-rt-margin').textContent;
+      const wsNetProfit = document.getElementById('wrrm-cmp-profit-ws').textContent;
+      const rtNetProfit = document.getElementById('wrrm-cmp-profit-rt').textContent;
+
+      const rows = [
+        ['Metric', 'Value'],
+        ['Currency', currentCurrency],
+        ['Total Landed Unit Cost Basis', totalCost],
+        ['Wholesale Unit Price', wsPrice],
+        ['Wholesale Markup', wsMarkup],
+        ['Wholesale Margin', wsMargin],
+        ['Wholesale Channel Batch Profit', wsNetProfit],
+        ['Retail Unit Price (MSRP)', rtPrice],
+        ['Retail Markup', rtMarkup],
+        ['Retail Margin', rtMargin],
+        ['Retail Channel Batch Profit', rtNetProfit]
+      ];
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + rows.map(function(e) {
+        return e.map(function(val) {
+          return '"' + (val || '').replace(/"/g, '""') + '"';
+        }).join(',');
+      }).join('\n');
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'pricing_analysis_report.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Setup Event Listeners
+    function initListeners() {
+      // Dynamic input change triggering instant recalculation
+      const inputs = document.querySelectorAll('#wrrm-calculator input, #wrrm-calculator select');
+      inputs.forEach(function(input) {
+        input.addEventListener('input', calculateAll);
+        input.addEventListener('change', calculateAll);
+      });
+
+      // Wholesale Mode Selector Toggle
+      const wsModeSelect = document.getElementById('wrrm-ws-calc-mode');
+      if (wsModeSelect) {
+        wsModeSelect.addEventListener('change', function() {
+          const val = wsModeSelect.value;
+          document.getElementById('wrrm-field-ws-markup').style.display = (val === 'markup') ? 'flex' : 'none';
+          document.getElementById('wrrm-field-ws-margin').style.display = (val === 'margin') ? 'flex' : 'none';
+          document.getElementById('wrrm-field-ws-manual').style.display = (val === 'manual') ? 'flex' : 'none';
+          calculateAll();
+        });
+      }
+
+      // Retail Mode Selector Toggle
+      const rtModeSelect = document.getElementById('wrrm-rt-calc-mode');
+      if (rtModeSelect) {
+        rtModeSelect.addEventListener('change', function() {
+          const val = rtModeSelect.value;
+          document.getElementById('wrrm-field-rt-markup').style.display = (val === 'markup') ? 'flex' : 'none';
+          document.getElementById('wrrm-field-rt-margin').style.display = (val === 'margin') ? 'flex' : 'none';
+          document.getElementById('wrrm-field-rt-manual').style.display = (val === 'manual') ? 'flex' : 'none';
+          calculateAll();
+        });
+      }
+
+      // Tab switcher
+      const tabBtns = document.querySelectorAll('.wrrm-tab-btn');
+      tabBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          tabBtns.forEach(function(b) {
+            b.classList.remove('wrrm-active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('wrrm-active');
+          btn.setAttribute('aria-selected', 'true');
+
+          const targetId = btn.getAttribute('data-tab');
+          document.querySelectorAll('.wrrm-tab-pane').forEach(function(pane) {
+            pane.style.display = 'none';
+          });
+          const activePane = document.getElementById(targetId);
+          if (activePane) activePane.style.display = 'block';
+        });
+      });
+
+      // Currency selector
+      const currSelect = document.getElementById('wrrm-currency-select');
+      if (currSelect) {
+        currSelect.addEventListener('change', function() {
+          currentCurrency = currSelect.value;
+          currentCurrencySym = CURRENCY_SYMBOLS[currentCurrency] || '$';
+          updateCurrencyDisplay();
+        });
+      }
+
+      // Discount Chips
+      const chips = document.querySelectorAll('.wrrm-chip');
+      chips.forEach(function(chip) {
+        chip.addEventListener('click', function() {
+          const disc = chip.getAttribute('data-disc');
+          setVal('wrrm-rt-discount', disc);
+          calculateAll();
+        });
+      });
+
+      // Top action buttons
+      const btnSample = document.getElementById('wrrm-btn-sample');
+      if (btnSample) btnSample.addEventListener('click', loadSampleData);
+
+      const btnReset = document.getElementById('wrrm-btn-reset');
+      if (btnReset) btnReset.addEventListener('click', resetCalculator);
+
+      const btnCopy = document.getElementById('wrrm-btn-copy');
+      if (btnCopy) btnCopy.addEventListener('click', copyResults);
+
+      const btnCsv = document.getElementById('wrrm-btn-csv');
+      if (btnCsv) btnCsv.addEventListener('click', downloadCSV);
+
+      const btnPrint = document.getElementById('wrrm-btn-print');
+      if (btnPrint) btnPrint.addEventListener('click', function() {
+        window.print();
+      });
+
+      // Save scenario button
+      const btnSaveScenario = document.getElementById('wrrm-btn-save-scenario');
+      if (btnSaveScenario) btnSaveScenario.addEventListener('click', saveCurrentScenario);
+
+      // Copyright year updater
+      const yearEl = document.getElementById('wrrm-year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      // Quick converter setup
+      setupConverter();
+
+      // Load saved scenarios list
+      renderSavedScenarios();
+    }
+
+    // Safe Initialization after DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        initListeners();
+        calculateAll();
+      });
+    } else {
+      initListeners();
+      calculateAll();
+    }
+  })();
+  </script>
+
+</div>
+<!-- ==================== END OF #wrrm-calculator ==================== -->
+
