@@ -1,0 +1,1820 @@
+<!-- ==========================================================================
+     Shopify Discount Stacking Impact Calculator
+     Canonical URL: https://my-tool-app.pages.dev/shopify-discount-stacking-impact-calculator
+     ========================================================================== -->
+<div id="shopify-discount-calculator">
+<style>
+/* CSS Reset & Scoped Styles for Blogger */
+#shopify-discount-calculator {
+  --sdc-primary: #2563eb;
+  --sdc-primary-dark: #1d4ed8;
+  --sdc-primary-light: #eff6ff;
+  --sdc-accent: #0f172a;
+  --sdc-success: #16a34a;
+  --sdc-success-light: #f0fdf4;
+  --sdc-danger: #dc2626;
+  --sdc-danger-light: #fef2f2;
+  --sdc-warning: #ea580c;
+  --sdc-warning-light: #fff7ed;
+  --sdc-bg: #f8fafc;
+  --sdc-card-bg: #ffffff;
+  --sdc-border: #e2e8f0;
+  --sdc-text: #1e293b;
+  --sdc-muted: #64748b;
+  --sdc-radius: 10px;
+  --sdc-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  color: var(--sdc-text);
+  background-color: var(--sdc-bg);
+  line-height: 1.5;
+  padding: 16px;
+  max-width: 1150px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+#shopify-discount-calculator * {
+  box-sizing: border-box;
+}
+
+/* Typography */
+#shopify-discount-calculator h1.sdc-main-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--sdc-accent);
+  margin: 0 0 8px 0;
+  line-height: 1.25;
+}
+
+#shopify-discount-calculator .sdc-subtitle {
+  font-size: 1.05rem;
+  color: var(--sdc-muted);
+  margin: 0 0 24px 0;
+}
+
+#shopify-discount-calculator h2.sdc-section-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--sdc-accent);
+  margin: 32px 0 16px 0;
+  border-bottom: 2px solid var(--sdc-border);
+  padding-bottom: 8px;
+}
+
+#shopify-discount-calculator h3.sdc-sub-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--sdc-accent);
+  margin: 16px 0 8px 0;
+}
+
+/* Navigation & Utility Bar */
+.sdc-top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--sdc-card-bg);
+  padding: 12px 18px;
+  border-radius: var(--sdc-radius);
+  border: 1px solid var(--sdc-border);
+  margin-bottom: 20px;
+  gap: 12px;
+}
+
+.sdc-home-link {
+  font-weight: 600;
+  color: var(--sdc-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.sdc-home-link:hover { text-decoration: underline; }
+
+.sdc-mode-toggles {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sdc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--sdc-border);
+  background: #ffffff;
+  color: var(--sdc-text);
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+.sdc-btn:hover {
+  background: var(--sdc-bg);
+  border-color: var(--sdc-muted);
+}
+.sdc-btn-primary {
+  background: var(--sdc-primary);
+  color: #ffffff;
+  border-color: var(--sdc-primary);
+}
+.sdc-btn-primary:hover {
+  background: var(--sdc-primary-dark);
+  border-color: var(--sdc-primary-dark);
+}
+.sdc-btn-danger {
+  color: var(--sdc-danger);
+  border-color: #fca5a5;
+  background: var(--sdc-danger-light);
+}
+.sdc-btn-danger:hover {
+  background: #fee2e2;
+}
+
+/* Layout Grid */
+.sdc-grid-layout {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .sdc-grid-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cards */
+.sdc-card {
+  background: var(--sdc-card-bg);
+  border: 1px solid var(--sdc-border);
+  border-radius: var(--sdc-radius);
+  padding: 20px;
+  box-shadow: var(--sdc-shadow);
+  margin-bottom: 20px;
+}
+
+.sdc-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--sdc-border);
+}
+
+.sdc-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--sdc-accent);
+  margin: 0;
+}
+
+/* Form Controls */
+.sdc-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.sdc-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sdc-form-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--sdc-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sdc-form-group input,
+.sdc-form-group select {
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  border: 1px solid var(--sdc-border);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--sdc-text);
+  width: 100%;
+}
+.sdc-form-group input:focus,
+.sdc-form-group select:focus {
+  outline: none;
+  border-color: var(--sdc-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Tooltip text */
+.sdc-info-icon {
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--sdc-muted);
+  font-size: 0.75rem;
+}
+
+/* Stacking Mode Pill Selector */
+.sdc-mode-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+@media (max-width: 600px) {
+  .sdc-mode-selector { grid-template-columns: 1fr; }
+}
+
+.sdc-mode-option {
+  border: 1px solid var(--sdc-border);
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  background: var(--sdc-card-bg);
+  transition: all 0.15s;
+}
+.sdc-mode-option.active {
+  border-color: var(--sdc-primary);
+  background: var(--sdc-primary-light);
+  font-weight: 600;
+  color: var(--sdc-primary-dark);
+}
+.sdc-mode-desc {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--sdc-muted);
+  margin-top: 4px;
+  font-weight: normal;
+}
+
+/* Discount Items List */
+.sdc-discount-row {
+  background: var(--sdc-bg);
+  border: 1px solid var(--sdc-border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  position: relative;
+}
+.sdc-discount-row.sdc-disabled {
+  opacity: 0.55;
+  filter: grayscale(80%);
+}
+
+.sdc-discount-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.sdc-discount-actions {
+  display: flex;
+  gap: 4px;
+}
+.sdc-mini-btn {
+  background: #ffffff;
+  border: 1px solid var(--sdc-border);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.sdc-mini-btn:hover { background: #e2e8f0; }
+
+/* Product Cart Line items */
+.sdc-cart-item {
+  border-left: 3px solid var(--sdc-primary);
+  background: var(--sdc-bg);
+  padding: 10px;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 10px;
+}
+
+/* Results Dashboard Sidebar */
+.sdc-sticky-sidebar {
+  position: sticky;
+  top: 16px;
+}
+
+.sdc-stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.sdc-stat-card {
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--sdc-bg);
+  border: 1px solid var(--sdc-border);
+}
+
+.sdc-stat-label {
+  font-size: 0.75rem;
+  color: var(--sdc-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.sdc-stat-value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--sdc-accent);
+}
+
+.sdc-stat-sub {
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.sdc-badge-profit {
+  background: var(--sdc-success-light);
+  color: var(--sdc-success);
+  border-color: #bbf7d0;
+}
+.sdc-badge-loss {
+  background: var(--sdc-danger-light);
+  color: var(--sdc-danger);
+  border-color: #fecaca;
+}
+.sdc-badge-warning {
+  background: var(--sdc-warning-light);
+  color: var(--sdc-warning);
+  border-color: #fed7aa;
+}
+
+/* Breakdown List */
+.sdc-breakdown-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.88rem;
+}
+.sdc-breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--sdc-border);
+}
+.sdc-breakdown-item:last-child {
+  border-bottom: none;
+  font-weight: 700;
+  padding-top: 10px;
+  font-size: 0.95rem;
+}
+
+/* Visual Native Progress / Bar Charts */
+.sdc-chart-container {
+  margin: 16px 0;
+}
+.sdc-chart-bar-bg {
+  height: 22px;
+  background: #e2e8f0;
+  border-radius: 11px;
+  overflow: hidden;
+  display: flex;
+  margin-top: 6px;
+}
+.sdc-bar-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+.sdc-bar-cogs { background: #94a3b8; }
+.sdc-bar-discount { background: #f87171; }
+.sdc-bar-profit { background: #22c55e; }
+.sdc-bar-fees { background: #fbbf24; }
+
+.sdc-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.75rem;
+  margin-top: 8px;
+}
+.sdc-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.sdc-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* Action Buttons Toolbar */
+.sdc-action-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* Scenario Comparison Table */
+.sdc-table-wrapper {
+  overflow-x: auto;
+  margin-top: 14px;
+}
+.sdc-comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  text-align: left;
+}
+.sdc-comp-table th, .sdc-comp-table td {
+  padding: 10px 12px;
+  border: 1px solid var(--sdc-border);
+}
+.sdc-comp-table th {
+  background: var(--sdc-bg);
+  font-weight: 700;
+}
+.sdc-highlight-col {
+  background: #f0fdf4;
+  font-weight: 600;
+}
+
+/* Notices & Alerts */
+.sdc-notice {
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  margin: 12px 0;
+  line-height: 1.4;
+}
+.sdc-notice-info {
+  background: var(--sdc-primary-light);
+  border-left: 4px solid var(--sdc-primary);
+  color: var(--sdc-accent);
+}
+.sdc-notice-warning {
+  background: var(--sdc-warning-light);
+  border-left: 4px solid var(--sdc-warning);
+  color: #9a3412;
+}
+
+/* Content SEO Sections */
+.sdc-article-section {
+  background: var(--sdc-card-bg);
+  border: 1px solid var(--sdc-border);
+  border-radius: var(--sdc-radius);
+  padding: 24px;
+  margin-top: 24px;
+  font-size: 0.95rem;
+  color: #334155;
+  line-height: 1.7;
+}
+.sdc-article-section h2 {
+  font-size: 1.35rem;
+  color: var(--sdc-accent);
+  margin-top: 24px;
+  margin-bottom: 10px;
+}
+.sdc-article-section h3 {
+  font-size: 1.1rem;
+  color: var(--sdc-accent);
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+.sdc-article-section ol, .sdc-article-section ul {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+.sdc-article-section li {
+  margin-bottom: 6px;
+}
+
+/* FAQ Accordion */
+.sdc-faq-item {
+  border-bottom: 1px solid var(--sdc-border);
+  padding: 14px 0;
+}
+.sdc-faq-item:last-child { border-bottom: none; }
+.sdc-faq-question {
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--sdc-accent);
+}
+.sdc-faq-answer {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+/* Links & Footer */
+.sdc-footer {
+  margin-top: 30px;
+  padding-top: 16px;
+  border-top: 1px solid var(--sdc-border);
+  font-size: 0.85rem;
+  color: var(--sdc-muted);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sdc-footer a {
+  color: var(--sdc-primary);
+  text-decoration: none;
+}
+.sdc-footer a:hover { text-decoration: underline; }
+
+/* Print Mode Optimization */
+@media print {
+  #shopify-discount-calculator {
+    background: #ffffff !important;
+    padding: 0 !important;
+  }
+  .sdc-top-bar, .sdc-action-toolbar, .sdc-btn, .sdc-mini-btn {
+    display: none !important;
+  }
+  .sdc-grid-layout {
+    display: block !important;
+  }
+  .sdc-card {
+    box-shadow: none !important;
+    border: 1px solid #000000 !important;
+    page-break-inside: avoid;
+  }
+}
+</style>
+
+  <!-- Top Utilities Bar -->
+  <div class="sdc-top-bar">
+    <a href="https://my-tool-app.pages.dev/" class="sdc-home-link" title="Back to Tools Home">
+      <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0L0 6v10h5V9h6v7h5V6z"/></svg>
+      Home: Ecommerce Analytics Suite
+    </a>
+    <div class="sdc-mode-toggles">
+      <button type="button" class="sdc-btn" id="sdc-btn-sample" title="Populate realistic numbers">Load Sample Data</button>
+      <button type="button" class="sdc-btn sdc-btn-danger" id="sdc-btn-reset" title="Reset all fields">Reset All</button>
+    </div>
+  </div>
+
+  <!-- Primary H1 & Intro -->
+  <h1 class="sdc-main-title">Shopify Discount Stacking Calculator & Profit Impact</h1>
+  <p class="sdc-subtitle">
+    Simulate multiple discount codes, sequential vs. additive stacking, shipping subsidies, and real store profit margins.
+  </p>
+
+  <!-- Main Calculator Grid -->
+  <div class="sdc-grid-layout">
+    
+    <!-- LEFT COLUMN: INPUT CONTROLS -->
+    <div class="sdc-inputs-col">
+
+      <!-- SECTION 1: STORE & CURRENCY CONFIG -->
+      <div class="sdc-card">
+        <div class="sdc-card-header">
+          <h2 class="sdc-card-title">1. Product & Order Baseline</h2>
+          <span style="font-size:0.8rem; color:var(--sdc-muted)">Base Assumptions</span>
+        </div>
+        <div class="sdc-form-grid">
+          <div class="sdc-form-group">
+            <label for="sdc-currency">Currency Symbol</label>
+            <select id="sdc-currency">
+              <option value="$" selected>USD ($)</option>
+              <option value="₹">INR (₹)</option>
+              <option value="£">GBP (£)</option>
+              <option value="€">EUR (€)</option>
+              <option value="CA$">CAD (CA$)</option>
+              <option value="A$">AUD (A$)</option>
+            </select>
+          </div>
+          <div class="sdc-form-group">
+            <label for="sdc-base-price">Product Selling Price <span class="sdc-info-icon" title="Original price before any discount">ℹ</span></label>
+            <input type="number" id="sdc-base-price" min="0" step="0.01" value="100.00">
+          </div>
+          <div class="sdc-form-group">
+            <label for="sdc-product-cogs">Product Cost (COGS) <span class="sdc-info-icon" title="Wholesale or manufacturing cost">ℹ</span></label>
+            <input type="number" id="sdc-product-cogs" min="0" step="0.01" value="35.00">
+          </div>
+          <div class="sdc-form-group">
+            <label for="sdc-order-qty">Quantity</label>
+            <input type="number" id="sdc-order-qty" min="1" step="1" value="1">
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: DISCOUNT STACKING ENGINE -->
+      <div class="sdc-card">
+        <div class="sdc-card-header">
+          <h2 class="sdc-card-title">2. Discount Stacking Engine</h2>
+          <button type="button" class="sdc-btn sdc-btn-primary" id="sdc-add-discount-btn">+ Add Discount</button>
+        </div>
+
+        <label style="font-size:0.82rem; font-weight:700; margin-bottom:6px; display:block;">Select Discount Stacking Logic:</label>
+        <div class="sdc-mode-selector">
+          <div class="sdc-mode-option" data-mode="sequential" id="sdc-mode-seq">
+            Sequential Stacking
+            <span class="sdc-mode-desc">Hypothetical compound: 20% then 10% = 28% off</span>
+          </div>
+          <div class="sdc-mode-option" data-mode="subtotal" id="sdc-mode-sub">
+            Original Subtotal Additive
+            <span class="sdc-mode-desc">Additive on subtotal: 20% + 10% = 30% off</span>
+          </div>
+          <div class="sdc-mode-option active" data-mode="shopify" id="sdc-mode-shop">
+            Shopify-Documented Flow
+            <span class="sdc-mode-desc">Product discounts first &rarr; Order discounts &rarr; Shipping</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Discounts Container -->
+        <div id="sdc-discounts-list">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+        <div class="sdc-notice sdc-notice-info">
+          <strong>Shopify Rule Reminder:</strong> Shopify evaluates discounts in stages (Product &rarr; Order &rarr; Shipping). 
+          Actual checkout stacking requires eligible combinations enabled in your Shopify Admin.
+        </div>
+      </div>
+
+      <!-- SECTION 3: SHIPPING CHARGES & SUBSIDIES -->
+      <div class="sdc-card">
+        <div class="sdc-card-header">
+          <h2 class="sdc-card-title">3. Shipping & Fulfillment Settings</h2>
+        </div>
+        <div class="sdc-form-grid">
+          <div class="sdc-form-group">
+            <label for="sdc-cust-shipping">Customer Shipping Charge <span class="sdc-info-icon" title="What customer normally pays before discounts">ℹ</span></label>
+            <input type="number" id="sdc-cust-shipping" min="0" step="0.01" value="10.00">
+          </div>
+          <div class="sdc-form-group">
+            <label for="sdc-store-shipping-cost">Actual Store Shipping Cost <span class="sdc-info-icon" title="What carrier charges the store">ℹ</span></label>
+            <input type="number" id="sdc-store-shipping-cost" min="0" step="0.01" value="6.00">
+          </div>
+          <div class="sdc-form-group">
+            <label for="sdc-shipping-discount-type">Shipping Discount</label>
+            <select id="sdc-shipping-discount-type">
+              <option value="free">Free Shipping (100% Off)</option>
+              <option value="none">No Shipping Discount</option>
+              <option value="percent">Percentage Off Shipping</option>
+              <option value="fixed">Fixed Amount Off Shipping</option>
+            </select>
+          </div>
+          <div class="sdc-form-group" id="sdc-shipping-val-wrap" style="display:none;">
+            <label for="sdc-shipping-discount-val">Shipping Discount Value</label>
+            <input type="number" id="sdc-shipping-discount-val" min="0" step="0.01" value="0.00">
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4: OPERATING EXPENSES & PAYMENT FEES -->
+      <div class="sdc-card">
+        <div class="sdc-card-header">
+          <h2 class="sdc-card-title">4. Operational Costs & Payment Gateways</h2>
+        </div>
+        <div class="sdc-form-grid">
+          <div class="sdc-form-group">
+            <label for="sdc-payment-pct">Payment Gateway Fee (%) <span class="sdc-info-icon" title="Shopify Payments / Stripe % (e.g. 2.9% or 2.0%)">ℹ</span></label>
+            <input type="number" id="sdc-payment-pct" min="0" step="0.01" value="2.9">
+          </div>
+          <div class="sdc-form-group">
+            <label for="sdc-payment-fixed">Payment Fixed Fee <span class="sdc-info-icon" title="Fixed transaction fee per order (e.g. 0.30)">ℹ</span></label>
+            <input type="number" id="sdc-payment-fixed" min="0" step="0.01" value="0.30">
+          </div>
+          <div class="sdc-form-group">
+            <label for="sdc-packaging-cost">Packaging Cost / Unit</label>
+            <input type="number" id="sdc-packaging-cost" min="0" step="0.01" value="2.00">
+          </div>
+          <div class="sdc-form-group">
+            <label for="sdc-marketing-cost">Ad / Marketing Expense / Order</label>
+            <input type="number" id="sdc-marketing-cost" min="0" step="0.01" value="12.00">
+          </div>
+          <div class="sdc-form-group">
+            <label for="sdc-tax-mode">Tax Mode</label>
+            <select id="sdc-tax-mode">
+              <option value="excluded">Tax Excluded from Analysis</option>
+              <option value="added">Tax Added After Discount (pass-through)</option>
+              <option value="included">Prices Include Tax</option>
+            </select>
+          </div>
+          <div class="sdc-form-group">
+            <label for="sdc-min-target-margin">Target Profit Margin (%) <span class="sdc-info-icon" title="Your desired minimum safety profit margin">ℹ</span></label>
+            <input type="number" id="sdc-min-target-margin" min="0" max="99" step="0.5" value="20">
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5: VOLUME & REVENUE SENSITIVITY -->
+      <div class="sdc-card">
+        <div class="sdc-card-header">
+          <h2 class="sdc-card-title">5. Revenue Sensitivity & Conversion Uplift</h2>
+        </div>
+        <div class="sdc-form-grid">
+          <div class="sdc-form-group">
+            <label for="sdc-base-orders">Expected Monthly Orders (Baseline)</label>
+            <input type="number" id="sdc-base-orders" min="1" step="1" value="100">
+          </div>
+          <div class="sdc-form-group">
+            <label for="sdc-hypo-uplift">Hypothetical Volume Uplift (%) <span class="sdc-info-icon" title="Estimated % increase in orders driven by discount">ℹ</span></label>
+            <input type="number" id="sdc-hypo-uplift" min="0" step="1" value="25">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: LIVE RESULTS DASHBOARD -->
+    <div class="sdc-results-col">
+      <div class="sdc-sticky-sidebar">
+        
+        <!-- MAIN KPI CARDS -->
+        <div class="sdc-card" style="border-top: 4px solid var(--sdc-primary);">
+          <div class="sdc-card-header">
+            <h2 class="sdc-card-title">Financial Impact Dashboard</h2>
+            <span id="sdc-profit-badge" class="sdc-btn" style="padding: 2px 8px; font-size:0.75rem;">Calculating...</span>
+          </div>
+
+          <div class="sdc-stat-grid">
+            <div class="sdc-stat-card">
+              <div class="sdc-stat-label">Final Customer Price</div>
+              <div class="sdc-stat-value" id="sdc-res-final-price">$0.00</div>
+              <div class="sdc-stat-sub" id="sdc-res-effective-pct">0% Total Discount</div>
+            </div>
+            <div class="sdc-stat-card">
+              <div class="sdc-stat-label">Estimated Net Profit</div>
+              <div class="sdc-stat-value" id="sdc-res-net-profit">$0.00</div>
+              <div class="sdc-stat-sub" id="sdc-res-profit-margin">0% Margin</div>
+            </div>
+            <div class="sdc-stat-card">
+              <div class="sdc-stat-label">Customer Total Savings</div>
+              <div class="sdc-stat-value" id="sdc-res-savings">$0.00</div>
+              <div class="sdc-stat-sub" id="sdc-res-shipping-saved">Incl. shipping savings</div>
+            </div>
+            <div class="sdc-stat-card">
+              <div class="sdc-stat-label">Break-Even Discount</div>
+              <div class="sdc-stat-value" id="sdc-res-breakeven-pct">0.0%</div>
+              <div class="sdc-stat-sub" id="sdc-res-max-safe-price">Min Price: $0.00</div>
+            </div>
+          </div>
+
+          <!-- Cost Breakdown Chart -->
+          <div class="sdc-chart-container">
+            <div style="font-size:0.8rem; font-weight:700; color:var(--sdc-accent); display:flex; justify-content:space-between;">
+              <span>Order Revenue Distribution</span>
+              <span id="sdc-chart-total-rev">$0.00</span>
+            </div>
+            <div class="sdc-chart-bar-bg" aria-label="Visual cost and profit breakdown">
+              <div id="sdc-bar-cogs" class="sdc-bar-segment sdc-bar-cogs" style="width: 35%;" title="Product Cost"></div>
+              <div id="sdc-bar-fees" class="sdc-bar-segment sdc-bar-fees" style="width: 15%;" title="Fees & Shipping"></div>
+              <div id="sdc-bar-discount" class="sdc-bar-segment sdc-bar-discount" style="width: 25%;" title="Discount Given"></div>
+              <div id="sdc-bar-profit" class="sdc-bar-segment sdc-bar-profit" style="width: 25%;" title="Retained Profit"></div>
+            </div>
+            <div class="sdc-chart-legend">
+              <span class="sdc-legend-item"><span class="sdc-legend-dot sdc-bar-cogs"></span> Product COGS</span>
+              <span class="sdc-legend-item"><span class="sdc-legend-dot sdc-bar-fees"></span> OpEx & Fees</span>
+              <span class="sdc-legend-item"><span class="sdc-legend-dot sdc-bar-discount"></span> Discount Given</span>
+              <span class="sdc-legend-item"><span class="sdc-legend-dot sdc-bar-profit"></span> Net Profit</span>
+            </div>
+          </div>
+
+          <!-- Detailed Breakdown List -->
+          <ul class="sdc-breakdown-list">
+            <li class="sdc-breakdown-item">
+              <span>Original Product Subtotal</span>
+              <span id="sdc-row-orig-subtotal">$0.00</span>
+            </li>
+            <li class="sdc-breakdown-item">
+              <span>Product-Level Discounts</span>
+              <span id="sdc-row-prod-discount" style="color:var(--sdc-danger);">-$0.00</span>
+            </li>
+            <li class="sdc-breakdown-item">
+              <span>Order-Level Discounts</span>
+              <span id="sdc-row-order-discount" style="color:var(--sdc-danger);">-$0.00</span>
+            </li>
+            <li class="sdc-breakdown-item">
+              <span>Final Customer Shipping Paid</span>
+              <span id="sdc-row-cust-shipping">+$0.00</span>
+            </li>
+            <li class="sdc-breakdown-item">
+              <span>Estimated Payment Gateway Fee</span>
+              <span id="sdc-row-payment-fee" style="color:var(--sdc-muted);">-$0.00</span>
+            </li>
+            <li class="sdc-breakdown-item">
+              <span>Store Fulfillment & Shipping Subsidy</span>
+              <span id="sdc-row-shipping-subsidy" style="color:var(--sdc-muted);">-$0.00</span>
+            </li>
+            <li class="sdc-breakdown-item">
+              <span>Marketing & Packaging Cost</span>
+              <span id="sdc-row-packaging-mkt" style="color:var(--sdc-muted);">-$0.00</span>
+            </li>
+            <li class="sdc-breakdown-item">
+              <span>Net Profit Per Order</span>
+              <span id="sdc-row-net-profit" style="color:var(--sdc-success);">$0.00</span>
+            </li>
+          </ul>
+
+          <div id="sdc-margin-reduction-notice" class="sdc-notice sdc-notice-warning" style="display:none;"></div>
+
+          <!-- Utility Export Buttons -->
+          <div class="sdc-action-toolbar">
+            <button type="button" class="sdc-btn" id="sdc-btn-copy">📋 Copy Summary</button>
+            <button type="button" class="sdc-btn" id="sdc-btn-csv">📥 Export CSV</button>
+            <button type="button" class="sdc-btn" id="sdc-btn-print">🖨️ Print Report</button>
+          </div>
+        </div>
+
+        <!-- STRATEGY SAFE LIMITS CARD -->
+        <div class="sdc-card">
+          <div class="sdc-card-header">
+            <h3 class="sdc-card-title" style="font-size:1rem;">Safety & Target Strategy</h3>
+          </div>
+          <div style="font-size:0.85rem; line-height:1.6;">
+            <p style="margin:4px 0;"><strong>Absolute Break-Even Discount:</strong> <span id="sdc-safe-breakeven">0%</span></p>
+            <p style="margin:4px 0;"><strong>Max Safe Discount (for target margin):</strong> <span id="sdc-safe-target-disc">0%</span></p>
+            <p style="margin:4px 0;"><strong>Min Profitable Selling Price:</strong> <span id="sdc-safe-min-price">$0.00</span></p>
+            <p style="margin:4px 0;"><strong>Additional Orders Needed to Match Base Profit:</strong> <span id="sdc-safe-extra-orders">0 orders</span></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECTION 6: THREE-WAY SCENARIO COMPARISON -->
+  <div class="sdc-card" style="margin-top:24px;">
+    <div class="sdc-card-header">
+      <h2 class="sdc-card-title">Scenario Comparison: Baseline vs. Single vs. Stacked Strategy</h2>
+      <span style="font-size:0.8rem; color:var(--sdc-muted)">Compare Financial Returns</span>
+    </div>
+    <div class="sdc-table-wrapper">
+      <table class="sdc-comp-table" id="sdc-comparison-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Scenario A: Full Price (No Discount)</th>
+            <th>Scenario B: Single 15% Promotion</th>
+            <th class="sdc-highlight-col">Scenario C: Current Configuration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Final Customer Price</strong></td>
+            <td id="sdc-scenA-price">$0.00</td>
+            <td id="sdc-scenB-price">$0.00</td>
+            <td class="sdc-highlight-col" id="sdc-scenC-price">$0.00</td>
+          </tr>
+          <tr>
+            <td><strong>Total Customer Savings</strong></td>
+            <td>$0.00 (0%)</td>
+            <td id="sdc-scenB-savings">$0.00 (15%)</td>
+            <td class="sdc-highlight-col" id="sdc-scenC-savings">$0.00</td>
+          </tr>
+          <tr>
+            <td><strong>Net Profit Per Order</strong></td>
+            <td id="sdc-scenA-profit" style="color:var(--sdc-success);">$0.00</td>
+            <td id="sdc-scenB-profit">$0.00</td>
+            <td class="sdc-highlight-col" id="sdc-scenC-profit">$0.00</td>
+          </tr>
+          <tr>
+            <td><strong>Profit Margin (%)</strong></td>
+            <td id="sdc-scenA-margin">0%</td>
+            <td id="sdc-scenB-margin">0%</td>
+            <td class="sdc-highlight-col" id="sdc-scenC-margin">0%</td>
+          </tr>
+          <tr>
+            <td><strong>Projected Monthly Revenue</strong></td>
+            <td id="sdc-scenA-mrev">$0.00</td>
+            <td id="sdc-scenB-mrev">$0.00</td>
+            <td class="sdc-highlight-col" id="sdc-scenC-mrev">$0.00</td>
+          </tr>
+          <tr>
+            <td><strong>Projected Monthly Net Profit</strong></td>
+            <td id="sdc-scenA-mprofit" style="font-weight:700;">$0.00</td>
+            <td id="sdc-scenB-mprofit" style="font-weight:700;">$0.00</td>
+            <td class="sdc-highlight-col" id="sdc-scenC-mprofit" style="font-weight:700;">$0.00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ARTICLE & EDUCATIONAL SEO CONTENT -->
+  <div class="sdc-article-section">
+    <h2>How to Use This Shopify Discount Stacking Calculator</h2>
+    <ol>
+      <li><strong>Enter Baseline Pricing:</strong> Enter your original product retail price, unit cost of goods (COGS), and typical order quantity.</li>
+      <li><strong>Select Currency:</strong> Choose USD ($), INR (₹), GBP (£), EUR (€), CAD, or AUD to match your storefront.</li>
+      <li><strong>Choose Discount Stacking Logic:</strong> Select either <em>Shopify-Documented Flow</em> (applies product discounts first, then order discounts on the remaining subtotal, then shipping), <em>Sequential Stacking</em>, or <em>Additive Subtotal</em>.</li>
+      <li><strong>Add Discount Codes:</strong> Click "+ Add Discount" to define discount items. Choose whether each discount is a Product Discount or Order Discount, and whether it represents a percentage or fixed cash discount.</li>
+      <li><strong>Review Shipping Costs & Subsidies:</strong> Free shipping promotions are not costless to the store. Enter what customers pay vs. what carriers charge you to reveal the exact shipping subsidy.</li>
+      <li><strong>Analyze Margins & Break-Even:</strong> Inspect the live dashboard to discover your profit reduction, break-even discount ceiling, and how many extra orders are needed to offset your promotional offers.</li>
+      <li><strong>Export or Print:</strong> Download a clean CSV report or print a client-ready discount analysis summary.</li>
+    </ol>
+
+    <h2>Understanding Shopify Discount Combinations: Sequential vs Additive</h2>
+    <p>
+      In ecommerce, applying two discounts does not always yield the same result. The order of operations and combination logic significantly impacts merchant profitability:
+    </p>
+    <ul>
+      <li><strong>Sequential Compounding (Hypothetical):</strong> A $100 cart with a 20% discount drops to $80. A secondary 10% discount applied sequentially subtracts 10% of $80 ($8), resulting in a $72 price (effective 28% total discount).</li>
+      <li><strong>Additive on Subtotal:</strong> If both 20% and 10% discounts apply directly to the original $100 subtotal, the total deduction is $30, resulting in a $70 final price (30% discount).</li>
+      <li><strong>Shopify Native Calculation Model:</strong> According to <a href="https://help.shopify.com/en/manual/discounts/discount-combinations" target="_blank" rel="noopener noreferrer">Shopify's official documentation on discount combinations</a>, product-level discounts are calculated first, reducing line-item prices. Order-level discounts then apply to the remaining order subtotal. Shipping discounts apply exclusively to applicable shipping rates.</li>
+    </ul>
+
+    <h2>Key Mathematical Formulas Behind This Calculator</h2>
+    <p>
+      Accurate financial evaluation requires accounting for variable transaction fees and operational overhead:
+    </p>
+    <div style="background:var(--sdc-bg); border-left:4px solid var(--sdc-primary); padding:12px; margin:12px 0; font-family:monospace; font-size:0.85rem;">
+      Net Order Revenue = Discounted Merchandise Subtotal + Customer Shipping Paid<br>
+      Total Direct Costs = COGS + Actual Carrier Shipping + Packaging + Marketing Expense<br>
+      Payment Gateway Fee = (Net Order Revenue &times; Fee %) + Fixed Fee<br>
+      Net Store Profit = Net Order Revenue - Total Direct Costs - Payment Gateway Fee<br>
+      Break-Even Price = (COGS + Carrier Shipping + Packaging + Marketing + Fixed Fee - Customer Shipping &times; (1 - Fee %)) / (1 - Fee %)
+    </div>
+
+    <h2>Working Sample Calculation</h2>
+    <p>
+      Consider a $100 item with $35 COGS, $10 customer shipping charge, $6 store shipping cost, $2 packaging, and $12 customer acquisition ad cost. Payment fees are 2.9% + $0.30:
+    </p>
+    <ul>
+      <li><strong>Product Discount (20%):</strong> Price drops from $100 to $80.</li>
+      <li><strong>Order Discount (10%):</strong> Applied on the $80 subtotal, subtracting $8. Merchandise subtotal is now $72.</li>
+      <li><strong>Free Shipping Promotion:</strong> Customer pays $0 shipping. Store absorbs the carrier cost of $6.00.</li>
+      <li><strong>Net Revenue Collected:</strong> $72.00.</li>
+      <li><strong>Total Variable Costs:</strong> COGS ($35) + Carrier Shipping ($6) + Packaging ($2) + Marketing ($12) + Payment Fee (2.9% &times; $72 + $0.30 = $2.39) = $55.39.</li>
+      <li><strong>Net Profit Retained:</strong> $72.00 - $55.39 = <strong>$16.61</strong> (23.07% Net Profit Margin).</li>
+    </ul>
+
+    <h2>Ecommerce Use Cases</h2>
+    <ul>
+      <li><strong>Black Friday / Cyber Monday (BFCM) Planning:</strong> Prevent accidental margin erosion when layering site-wide sales on top of coupon codes.</li>
+      <li><strong>Influencer & Affiliate Code Stacking:</strong> Test if affiliate 15% codes combined with free shipping lead to net losses on low-ticket SKUs.</li>
+      <li><strong>Tiered Spend Thresholds:</strong> Model "Spend $100 get $15 off" stacked with VIP club percentage discounts.</li>
+    </ul>
+
+    <h2>Important Notes & Limitations</h2>
+    <div class="sdc-notice sdc-notice-warning">
+      <strong>Independent Simulation Disclaimer:</strong> This calculator is an independent financial modeling utility. It does not connect to your Shopify store API or authenticate live checkout rules. 
+      Whether your customers can physically stack specific discount codes at checkout depends entirely on your Shopify store settings, discount combination permissions, and active app integrations. Review your settings in your Shopify admin under <em>Discounts &rarr; Combinations</em> before running promotions.
+    </div>
+
+    <!-- Frequently Asked Questions (FAQ) Section -->
+    <h2>Frequently Asked Questions (FAQ)</h2>
+    <div class="sdc-faq-item">
+      <div class="sdc-faq-question">What is a Shopify discount stacking calculator? <span>+</span></div>
+      <div class="sdc-faq-answer">
+        A Shopify discount stacking calculator is a financial tool that computes the net price, customer savings, and merchant profit margins when multiple promotional discounts, coupons, and free shipping offers are applied together to an order.
+      </div>
+    </div>
+
+    <div class="sdc-faq-item">
+      <div class="sdc-faq-question">Can customers use multiple discounts at Shopify checkout? <span>+</span></div>
+      <div class="sdc-faq-answer">
+        Yes, Shopify allows discount combinations if enabled by the merchant. Merchants can combine product discounts, order discounts, and shipping discounts. However, rules must be explicitly configured in the Shopify admin to allow specific codes or automatic discounts to combine.
+      </div>
+    </div>
+
+    <div class="sdc-faq-item">
+      <div class="sdc-faq-question">What is the difference between sequential and additive discounts? <span>+</span></div>
+      <div class="sdc-faq-answer">
+        Additive discounts sum percentages together before applying them (e.g., 20% + 10% = 30% off the original price). Sequential discounts apply the second discount to the balance remaining after the first discount has been deducted (e.g., $100 - 20% = $80, then 10% off $80 = $72, resulting in an effective 28% discount).
+      </div>
+    </div>
+
+    <div class="sdc-faq-item">
+      <div class="sdc-faq-question">How does Shopify calculate product vs order discounts? <span>+</span></div>
+      <div class="sdc-faq-answer">
+        Shopify processes product discounts first, reducing individual item prices. The order-level discount is subsequently applied to the revised subtotal. Shipping discounts apply separately to shipping rates.
+      </div>
+    </div>
+
+    <div class="sdc-faq-item">
+      <div class="sdc-faq-question">Can customers combine multiple shipping discounts in Shopify? <span>+</span></div>
+      <div class="sdc-faq-answer">
+        No. Shopify only allows one shipping discount code or automatic shipping discount per checkout. Shipping discounts cannot stack with other shipping discounts.
+      </div>
+    </div>
+
+    <div class="sdc-faq-item">
+      <div class="sdc-faq-question">How do stacked discounts hurt profit margins? <span>+</span></div>
+      <div class="sdc-faq-answer">
+        Because cost of goods (COGS), shipping fulfillment, packaging, and advertising costs remain fixed, any dollar discounted comes directly out of your net profit. A 20% discount on an item with a 40% gross margin cuts your actual dollar profit in half.
+      </div>
+    </div>
+
+    <div class="sdc-faq-item">
+      <div class="sdc-faq-question">How do you calculate break-even discount percentage? <span>+</span></div>
+      <div class="sdc-faq-answer">
+        The break-even discount percentage is calculated by solving for the price where Net Revenue equals Total Variable Costs (COGS, carrier shipping, packaging, marketing, and payment processing fees). Any discount beyond this threshold generates a loss.
+      </div>
+    </div>
+
+    <div class="sdc-faq-item">
+      <div class="sdc-faq-question">Does this calculator verify live Shopify checkout eligibility? <span>+</span></div>
+      <div class="sdc-faq-answer">
+        No. This tool operates as a pure financial simulator. It does not connect to Shopify or query store APIs. Always verify your combination checkboxes within the Shopify admin under individual discount settings.
+      </div>
+    </div>
+
+    <!-- Related Ecommerce Tools & Internal Links -->
+    <h2 style="margin-top:28px;">Related Ecommerce Profit Calculators</h2>
+    <p>
+      Explore our suite of specialized merchant calculators to protect your ecommerce profit margins:
+    </p>
+    <ul>
+      <li>
+        <a href="https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator">Amazon FBA Fee Profit Estimator</a> &mdash; 
+        Use the Amazon FBA Fee Profit Estimator to calculate product costs, fulfillment fees, referral fees, and estimated seller profitability.
+      </li>
+      <li>
+        <a href="https://my-tool-app.pages.dev/">Ecommerce Free Business Tool Suite</a> &mdash; 
+        Browse all free browser-based financial and ecommerce calculators.
+      </li>
+    </ul>
+
+    <!-- Authoritative Official External Links -->
+    <h3>Official Shopify Documentation References</h3>
+    <ul style="font-size:0.85rem;">
+      <li><a href="https://help.shopify.com/en/manual/discounts/discount-combinations" target="_blank" rel="noopener noreferrer">Shopify Help Center: Discount Combinations</a></li>
+      <li><a href="https://help.shopify.com/en/manual/discounts/discounts-faq" target="_blank" rel="noopener noreferrer">Shopify Help Center: Discounts FAQ</a></li>
+      <li><a href="https://help.shopify.com/en/manual/discounts" target="_blank" rel="noopener noreferrer">Shopify Help Center: Managing Discounts</a></li>
+      <li><a href="https://www.shopify.com/pricing" target="_blank" rel="noopener noreferrer">Official Shopify Pricing Plans & Transaction Rates</a></li>
+      <li><a href="https://help.shopify.com/en/manual/payments/shopify-payments" target="_blank" rel="noopener noreferrer">Shopify Payments Processing Fee Guidelines</a></li>
+    </ul>
+  </div>
+
+  <!-- Footer Navigation -->
+  <footer class="sdc-footer">
+    <div>
+      &copy; <span id="sdc-current-year"></span> <a href="https://my-tool-app.pages.dev/">my-tool-app.pages.dev</a> &bull; Independent Merchant Utility.
+    </div>
+    <div>
+      <a href="https://my-tool-app.pages.dev/">Home</a> | 
+      <a href="https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator">Amazon FBA Estimator</a>
+    </div>
+  </footer>
+
+</div>
+
+<!-- JSON-LD Structured Data Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://my-tool-app.pages.dev/shopify-discount-stacking-impact-calculator#webpage",
+      "url": "https://my-tool-app.pages.dev/shopify-discount-stacking-impact-calculator",
+      "name": "Shopify Discount Stacking Calculator & Profit Impact",
+      "description": "Calculate stacked Shopify discounts, final prices, profit margins and revenue impact. Compare discount combinations with this free calculator.",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://my-tool-app.pages.dev/#website",
+        "url": "https://my-tool-app.pages.dev/",
+        "name": "Ecommerce Analytics & Calculators"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://my-tool-app.pages.dev/shopify-discount-stacking-impact-calculator#software",
+      "name": "Shopify Discount Stacking Calculator",
+      "operatingSystem": "Web Browser",
+      "applicationCategory": "BusinessApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "A financial calculator for Shopify store owners to analyze the revenue and profit margin impact of multiple stacked discounts.",
+      "url": "https://my-tool-app.pages.dev/shopify-discount-stacking-impact-calculator"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://my-tool-app.pages.dev/shopify-discount-stacking-impact-calculator#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://my-tool-app.pages.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Shopify Discount Stacking Calculator",
+          "item": "https://my-tool-app.pages.dev/shopify-discount-stacking-impact-calculator"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://my-tool-app.pages.dev/shopify-discount-stacking-impact-calculator#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a Shopify discount stacking calculator?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A Shopify discount stacking calculator is a financial tool that computes net customer price, customer savings, and merchant profit margins when multiple promotional discounts and shipping offers are applied together."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can customers use multiple discounts at Shopify checkout?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Shopify allows multiple discounts to be combined if the merchant configures combination settings in the Shopify Admin for product, order, and shipping promotions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between sequential and additive discounts?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Additive discounts sum percentages directly from the subtotal (20% + 10% = 30%), whereas sequential discounts compound the second percentage on the balance left after the first deduction (effective 28%)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does Shopify calculate product vs order discounts?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Shopify applies product discounts first to the line items, then order discounts to the reduced subtotal, and shipping discounts to the shipping rate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you calculate break-even discount percentage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The break-even discount is reached when total net revenue equals all variable costs including COGS, fulfillment, packaging, marketing, and gateway processing fees."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<!-- Vanilla JavaScript Execution Logic -->
+<script>
+(function() {
+  'use strict';
+
+  // Set Current Year in Footer
+  const yearEl = document.getElementById('sdc-current-year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // Application State
+  const state = {
+    currency: '$',
+    mode: 'shopify', // 'sequential', 'subtotal', 'shopify'
+    discounts: [
+      { id: 1, name: 'VIP Promo Code', type: 'percent', class: 'product', value: 20, active: true },
+      { id: 2, name: 'Flash Order Sale', type: 'percent', class: 'order', value: 10, active: true }
+    ],
+    nextId: 3
+  };
+
+  // DOM Elements
+  const elBasePrice = document.getElementById('sdc-base-price');
+  const elProductCogs = document.getElementById('sdc-product-cogs');
+  const elOrderQty = document.getElementById('sdc-order-qty');
+  const elCurrency = document.getElementById('sdc-currency');
+  const elCustShipping = document.getElementById('sdc-cust-shipping');
+  const elStoreShippingCost = document.getElementById('sdc-store-shipping-cost');
+  const elShippingType = document.getElementById('sdc-shipping-discount-type');
+  const elShippingValWrap = document.getElementById('sdc-shipping-val-wrap');
+  const elShippingVal = document.getElementById('sdc-shipping-discount-val');
+  const elPaymentPct = document.getElementById('sdc-payment-pct');
+  const elPaymentFixed = document.getElementById('sdc-payment-fixed');
+  const elPackagingCost = document.getElementById('sdc-packaging-cost');
+  const elMarketingCost = document.getElementById('sdc-marketing-cost');
+  const elTaxMode = document.getElementById('sdc-tax-mode');
+  const elMinTargetMargin = document.getElementById('sdc-min-target-margin');
+  const elBaseOrders = document.getElementById('sdc-base-orders');
+  const elHypoUplift = document.getElementById('sdc-hypo-uplift');
+  const discountsContainer = document.getElementById('sdc-discounts-list');
+
+  // Format Currency Helper
+  function formatMoney(amount, curr = state.currency) {
+    if (isNaN(amount) || !isFinite(amount)) return curr + '0.00';
+    return (amount < 0 ? '-' : '') + curr + Math.abs(amount).toFixed(2);
+  }
+
+  // Sanitize Numeric Inputs
+  function parseVal(el, fallback = 0) {
+    const val = parseFloat(el.value);
+    return isNaN(val) ? fallback : Math.max(0, val);
+  }
+
+  // Render Dynamic Discounts UI
+  function renderDiscounts() {
+    discountsContainer.innerHTML = '';
+    state.discounts.forEach((disc, index) => {
+      const row = document.createElement('div');
+      row.className = `sdc-discount-row ${disc.active ? '' : 'sdc-disabled'}`;
+      row.innerHTML = `
+        <div class="sdc-discount-header">
+          <span>#${index + 1} <strong>${escapeHtml(disc.name)}</strong></span>
+          <div class="sdc-discount-actions">
+            <button type="button" class="sdc-mini-btn sdc-toggle-btn" data-id="${disc.id}">
+              ${disc.active ? 'Disable' : 'Enable'}
+            </button>
+            <button type="button" class="sdc-mini-btn sdc-duplicate-btn" data-id="${disc.id}">Copy</button>
+            <button type="button" class="sdc-mini-btn sdc-delete-btn" data-id="${disc.id}" style="color:var(--sdc-danger);">Delete</button>
+          </div>
+        </div>
+        <div class="sdc-form-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
+          <div class="sdc-form-group">
+            <label>Title</label>
+            <input type="text" class="sdc-in-name" data-id="${disc.id}" value="${escapeHtml(disc.name)}">
+          </div>
+          <div class="sdc-form-group">
+            <label>Discount Class</label>
+            <select class="sdc-in-class" data-id="${disc.id}">
+              <option value="product" ${disc.class === 'product' ? 'selected' : ''}>Product Discount</option>
+              <option value="order" ${disc.class === 'order' ? 'selected' : ''}>Order Discount</option>
+            </select>
+          </div>
+          <div class="sdc-form-group">
+            <label>Type</label>
+            <select class="sdc-in-type" data-id="${disc.id}">
+              <option value="percent" ${disc.type === 'percent' ? 'selected' : ''}>Percentage (%)</option>
+              <option value="fixed" ${disc.type === 'fixed' ? 'selected' : ''}>Fixed Cash (${state.currency})</option>
+            </select>
+          </div>
+          <div class="sdc-form-group">
+            <label>Value (${disc.type === 'percent' ? '%' : state.currency})</label>
+            <input type="number" min="0" step="0.01" class="sdc-in-value" data-id="${disc.id}" value="${disc.value}">
+          </div>
+        </div>
+      `;
+      discountsContainer.appendChild(row);
+    });
+
+    // Attach row events
+    discountsContainer.querySelectorAll('.sdc-toggle-btn').forEach(btn => {
+      btn.onclick = () => {
+        const id = parseInt(btn.dataset.id, 10);
+        const item = state.discounts.find(d => d.id === id);
+        if (item) { item.active = !item.active; renderDiscounts(); calculateAll(); }
+      };
+    });
+
+    discountsContainer.querySelectorAll('.sdc-duplicate-btn').forEach(btn => {
+      btn.onclick = () => {
+        const id = parseInt(btn.dataset.id, 10);
+        const item = state.discounts.find(d => d.id === id);
+        if (item && state.discounts.length < 6) {
+          state.discounts.push({ ...item, id: state.nextId++, name: item.name + ' (Copy)' });
+          renderDiscounts();
+          calculateAll();
+        } else if (state.discounts.length >= 6) {
+          alert('Maximum of 6 discount levels allowed for clean simulation.');
+        }
+      };
+    });
+
+    discountsContainer.querySelectorAll('.sdc-delete-btn').forEach(btn => {
+      btn.onclick = () => {
+        const id = parseInt(btn.dataset.id, 10);
+        state.discounts = state.discounts.filter(d => d.id !== id);
+        renderDiscounts();
+        calculateAll();
+      };
+    });
+
+    discountsContainer.querySelectorAll('.sdc-in-name').forEach(input => {
+      input.oninput = () => {
+        const id = parseInt(input.dataset.id, 10);
+        const item = state.discounts.find(d => d.id === id);
+        if (item) item.name = input.value;
+      };
+    });
+
+    discountsContainer.querySelectorAll('.sdc-in-class').forEach(sel => {
+      sel.onchange = () => {
+        const id = parseInt(sel.dataset.id, 10);
+        const item = state.discounts.find(d => d.id === id);
+        if (item) { item.class = sel.value; calculateAll(); }
+      };
+    });
+
+    discountsContainer.querySelectorAll('.sdc-in-type').forEach(sel => {
+      sel.onchange = () => {
+        const id = parseInt(sel.dataset.id, 10);
+        const item = state.discounts.find(d => d.id === id);
+        if (item) { item.type = sel.value; renderDiscounts(); calculateAll(); }
+      };
+    });
+
+    discountsContainer.querySelectorAll('.sdc-in-value').forEach(input => {
+      input.oninput = () => {
+        const id = parseInt(input.dataset.id, 10);
+        const item = state.discounts.find(d => d.id === id);
+        if (item) { item.value = parseFloat(input.value) || 0; calculateAll(); }
+      };
+    });
+  }
+
+  function escapeHtml(str) {
+    return (str || '').replace(/[&<>"']/g, m => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[m]));
+  }
+
+  // Central Calculation Engine
+  function calculateMetrics(customMode = null, overrideDiscounts = null) {
+    const basePrice = parseVal(elBasePrice, 100);
+    const cogs = parseVal(elProductCogs, 35);
+    const qty = Math.max(1, parseInt(elOrderQty.value, 10) || 1);
+    const origSubtotal = basePrice * qty;
+
+    const custShippingNormal = parseVal(elCustShipping, 0);
+    const storeShippingCost = parseVal(elStoreShippingCost, 0);
+    const paymentFeePct = parseVal(elPaymentPct, 2.9) / 100;
+    const paymentFeeFixed = parseVal(elPaymentFixed, 0.30);
+    const packagingCost = parseVal(elPackagingCost, 0) * qty;
+    const marketingCost = parseVal(elMarketingCost, 0);
+
+    const mode = customMode || state.mode;
+    const activeDiscounts = (overrideDiscounts !== null ? overrideDiscounts : state.discounts).filter(d => d.active);
+
+    let productSavings = 0;
+    let orderSavings = 0;
+    let runningSubtotal = origSubtotal;
+
+    if (mode === 'sequential') {
+      // Each discount applies to the balance of the previous
+      activeDiscounts.forEach(d => {
+        let deduction = 0;
+        if (d.type === 'percent') {
+          deduction = runningSubtotal * (Math.min(100, Math.max(0, d.value)) / 100);
+        } else {
+          deduction = Math.min(runningSubtotal, d.value);
+        }
+        runningSubtotal -= deduction;
+        if (d.class === 'product') productSavings += deduction;
+        else orderSavings += deduction;
+      });
+    } else if (mode === 'subtotal') {
+      // Additive from original subtotal
+      activeDiscounts.forEach(d => {
+        let deduction = 0;
+        if (d.type === 'percent') {
+          deduction = origSubtotal * (Math.min(100, Math.max(0, d.value)) / 100);
+        } else {
+          deduction = d.value;
+        }
+        if (d.class === 'product') productSavings += deduction;
+        else orderSavings += deduction;
+      });
+      // Cap savings so price cannot fall below zero
+      if (productSavings + orderSavings > origSubtotal) {
+        const factor = origSubtotal / (productSavings + orderSavings);
+        productSavings *= factor;
+        orderSavings *= factor;
+      }
+      runningSubtotal = Math.max(0, origSubtotal - productSavings - orderSavings);
+    } else {
+      // Shopify documented flow: Product discounts first -> Order discounts on remainder
+      const prodDiscounts = activeDiscounts.filter(d => d.class === 'product');
+      const ordDiscounts = activeDiscounts.filter(d => d.class === 'order');
+
+      // Stage 1: Product discounts
+      prodDiscounts.forEach(d => {
+        let deduction = 0;
+        if (d.type === 'percent') {
+          deduction = origSubtotal * (Math.min(100, Math.max(0, d.value)) / 100);
+        } else {
+          deduction = Math.min(origSubtotal, d.value);
+        }
+        productSavings += deduction;
+      });
+      productSavings = Math.min(origSubtotal, productSavings);
+      let subAfterProd = origSubtotal - productSavings;
+
+      // Stage 2: Order discounts applied on revised subtotal
+      ordDiscounts.forEach(d => {
+        let deduction = 0;
+        if (d.type === 'percent') {
+          deduction = subAfterProd * (Math.min(100, Math.max(0, d.value)) / 100);
+        } else {
+          deduction = Math.min(subAfterProd, d.value);
+        }
+        orderSavings += deduction;
+      });
+      orderSavings = Math.min(subAfterProd, orderSavings);
+      runningSubtotal = Math.max(0, subAfterProd - orderSavings);
+    }
+
+    // Shipping Discount Calculation
+    const shipType = elShippingType.value;
+    const shipVal = parseVal(elShippingVal, 0);
+    let shippingSavings = 0;
+    if (shipType === 'free') {
+      shippingSavings = custShippingNormal;
+    } else if (shipType === 'percent') {
+      shippingSavings = custShippingNormal * (Math.min(100, shipVal) / 100);
+    } else if (shipType === 'fixed') {
+      shippingSavings = Math.min(custShippingNormal, shipVal);
+    }
+    const finalCustShipping = Math.max(0, custShippingNormal - shippingSavings);
+
+    // Final Customer Figures
+    const finalMerchSubtotal = runningSubtotal;
+    const finalCustomerTotal = finalMerchSubtotal + finalCustShipping;
+    const totalSavings = (origSubtotal - finalMerchSubtotal) + shippingSavings;
+    const effectiveDiscountPct = origSubtotal > 0 ? ((origSubtotal - finalMerchSubtotal) / origSubtotal) * 100 : 0;
+
+    // Direct Costs & Fees
+    const totalCogs = cogs * qty;
+    const paymentProcessingFee = (finalCustomerTotal * paymentFeePct) + paymentFeeFixed;
+    const shippingSubsidy = storeShippingCost - finalCustShipping;
+    const totalCosts = totalCogs + storeShippingCost + packagingCost + marketingCost + paymentProcessingFee;
+
+    // Revenue & Net Profit
+    const netRevenue = finalCustomerTotal;
+    const netProfit = netRevenue - (totalCogs + storeShippingCost + packagingCost + marketingCost + paymentProcessingFee);
+    const profitMargin = netRevenue > 0 ? (netProfit / netRevenue) * 100 : 0;
+
+    // Mathematical Break-Even Analysis
+    // NetRev * (1 - feePct) - feeFixed - totalDirectCosts = 0
+    // NetRev_breakeven = (totalDirectCosts + feeFixed) / (1 - feePct)
+    const fixedCostsExclFees = totalCogs + storeShippingCost + packagingCost + marketingCost;
+    const denominator = Math.max(0.01, 1 - paymentFeePct);
+    const breakEvenRevenue = (fixedCostsExclFees + paymentFeeFixed) / denominator;
+    const breakEvenMerchPrice = Math.max(0, breakEvenRevenue - finalCustShipping);
+    const breakEvenDiscountAmount = Math.max(0, origSubtotal - breakEvenMerchPrice);
+    const breakEvenDiscountPct = origSubtotal > 0 ? Math.min(100, (breakEvenDiscountAmount / origSubtotal) * 100) : 0;
+
+    // Target Margin Safe Price Calculation
+    const targetMarginPct = parseVal(elMinTargetMargin, 20) / 100;
+    // NetProfit / NetRev = targetMargin => NetRev(1 - targetMargin) = costs + fees
+    // NetRev * (1 - feePct - targetMargin) = fixedCostsExclFees + paymentFeeFixed
+    const targetDenom = 1 - paymentFeePct - targetMarginPct;
+    let targetSafeMerchPrice = 0;
+    let maxSafeDiscountPct = 0;
+    if (targetDenom > 0.05) {
+      const targetRevenue = (fixedCostsExclFees + paymentFeeFixed) / targetDenom;
+      targetSafeMerchPrice = Math.max(0, targetRevenue - finalCustShipping);
+      maxSafeDiscountPct = origSubtotal > 0 ? Math.max(0, ((origSubtotal - targetSafeMerchPrice) / origSubtotal) * 100) : 0;
+    }
+
+    return {
+      origSubtotal,
+      finalMerchSubtotal,
+      finalCustShipping,
+      finalCustomerTotal,
+      productSavings,
+      orderSavings,
+      shippingSavings,
+      totalSavings,
+      effectiveDiscountPct,
+      totalCogs,
+      storeShippingCost,
+      shippingSubsidy,
+      paymentProcessingFee,
+      packagingCost,
+      marketingCost,
+      totalCosts,
+      netRevenue,
+      netProfit,
+      profitMargin,
+      breakEvenDiscountPct,
+      breakEvenMerchPrice,
+      maxSafeDiscountPct,
+      targetSafeMerchPrice
+    };
+  }
+
+  // Update Main Dashboard & Visualizations
+  function calculateAll() {
+    const res = calculateMetrics();
+
+    // 1. Text & KPI values
+    document.getElementById('sdc-res-final-price').textContent = formatMoney(res.finalCustomerTotal);
+    document.getElementById('sdc-res-effective-pct').textContent = `${res.effectiveDiscountPct.toFixed(1)}% Total Discount`;
+
+    const netProfitEl = document.getElementById('sdc-res-net-profit');
+    netProfitEl.textContent = formatMoney(res.netProfit);
+    netProfitEl.style.color = res.netProfit >= 0 ? 'var(--sdc-success)' : 'var(--sdc-danger)';
+
+    const marginEl = document.getElementById('sdc-res-profit-margin');
+    marginEl.textContent = `${res.profitMargin.toFixed(1)}% Net Margin`;
+
+    document.getElementById('sdc-res-savings').textContent = formatMoney(res.totalSavings);
+    document.getElementById('sdc-res-shipping-saved').textContent = `Merch: ${formatMoney(res.productSavings + res.orderSavings)} | Ship: ${formatMoney(res.shippingSavings)}`;
+
+    document.getElementById('sdc-res-breakeven-pct').textContent = `${res.breakEvenDiscountPct.toFixed(1)}%`;
+    document.getElementById('sdc-res-max-safe-price').textContent = `Min Price: ${formatMoney(res.breakEvenMerchPrice)}`;
+
+    // Status Badge
+    const badge = document.getElementById('sdc-profit-badge');
+    if (res.netProfit < 0) {
+      badge.textContent = 'Net Loss!';
+      badge.className = 'sdc-btn sdc-badge-loss';
+    } else if (res.profitMargin < 15) {
+      badge.textContent = 'Thin Margins';
+      badge.className = 'sdc-btn sdc-badge-warning';
+    } else {
+      badge.textContent = 'Healthy Profit';
+      badge.className = 'sdc-btn sdc-badge-profit';
+    }
+
+    // 2. Breakdown table
+    document.getElementById('sdc-row-orig-subtotal').textContent = formatMoney(res.origSubtotal);
+    document.getElementById('sdc-row-prod-discount').textContent = `-${formatMoney(res.productSavings)}`;
+    document.getElementById('sdc-row-order-discount').textContent = `-${formatMoney(res.orderSavings)}`;
+    document.getElementById('sdc-row-cust-shipping').textContent = `+${formatMoney(res.finalCustShipping)}`;
+    document.getElementById('sdc-row-payment-fee').textContent = `-${formatMoney(res.paymentProcessingFee)}`;
+    document.getElementById('sdc-row-shipping-subsidy').textContent = `-${formatMoney(Math.max(0, res.shippingSubsidy))}`;
+    document.getElementById('sdc-row-packaging-mkt').textContent = `-${formatMoney(res.packagingCost + res.marketingCost)}`;
+    
+    const rowNetProfit = document.getElementById('sdc-row-net-profit');
+    rowNetProfit.textContent = formatMoney(res.netProfit);
+    rowNetProfit.style.color = res.netProfit >= 0 ? 'var(--sdc-success)' : 'var(--sdc-danger)';
+
+    // Warning notice if margin drops drastically
+    const noticeEl = document.getElementById('sdc-margin-reduction-notice');
+    if (res.netProfit < 0) {
+      noticeEl.style.display = 'block';
+      noticeEl.textContent = `Warning: Under this discount structure, you lose ${formatMoney(Math.abs(res.netProfit))} per order. Consider lowering the discount or charging for shipping.`;
+    } else {
+      noticeEl.style.display = 'none';
+    }
+
+    // 3. Native Visual Bar Chart
+    const totalRev = Math.max(1, res.origSubtotal + parseVal(elCustShipping, 0));
+    document.getElementById('sdc-chart-total-rev').textContent = formatMoney(totalRev);
+    const cogsPct = Math.min(100, (res.totalCogs / totalRev) * 100);
+    const feesPct = Math.min(100, ((res.totalCosts - res.totalCogs) / totalRev) * 100);
+    const discPct = Math.min(100, (res.totalSavings / totalRev) * 100);
+    const profitPct = Math.max(0, (res.netProfit / totalRev) * 100);
+
+    document.getElementById('sdc-bar-cogs').style.width = `${cogsPct}%`;
+    document.getElementById('sdc-bar-fees').style.width = `${feesPct}%`;
+    document.getElementById('sdc-bar-discount').style.width = `${discPct}%`;
+    document.getElementById('sdc-bar-profit').style.width = `${profitPct}%`;
+
+    // 4. Safe Limit Strategy Cards
+    document.getElementById('sdc-safe-breakeven').textContent = `${res.breakEvenDiscountPct.toFixed(1)}% off`;
+    document.getElementById('sdc-safe-target-disc').textContent = `${res.maxSafeDiscountPct.toFixed(1)}% off`;
+    document.getElementById('sdc-safe-min-price').textContent = formatMoney(res.breakEvenMerchPrice);
+
+    // Additional Orders Needed to Offset
+    const baseRes = calculateMetrics('sequential', []); // No discounts
+    const baseProfit = baseRes.netProfit;
+    const extraOrdersEl = document.getElementById('sdc-safe-extra-orders');
+    if (res.netProfit <= 0) {
+      extraOrdersEl.textContent = 'Infinite (Promotion is unprofitable)';
+    } else if (res.netProfit >= baseProfit) {
+      extraOrdersEl.textContent = '0 (Profit per order already matches or exceeds baseline)';
+    } else {
+      const baseMonthlyOrders = parseVal(elBaseOrders, 100);
+      const targetMonthlyProfit = baseMonthlyOrders * baseProfit;
+      const ordersNeeded = Math.ceil(targetMonthlyProfit / res.netProfit);
+      const additional = ordersNeeded - baseMonthlyOrders;
+      extraOrdersEl.textContent = `+${additional} orders (${Math.round((additional / baseMonthlyOrders) * 100)}% volume uplift needed)`;
+    }
+
+    // 5. Update 3-Way Comparison Table
+    updateComparisonTable(res);
+  }
+
+  function updateComparisonTable(currentRes) {
+    const baseOrders = parseVal(elBaseOrders, 100);
+    const hypoUplift = parseVal(elHypoUplift, 25) / 100;
+    const scenCOrders = Math.round(baseOrders * (1 + hypoUplift));
+
+    // Scenario A: No discount
+    const scenA = calculateMetrics('sequential', []);
+    document.getElementById('sdc-scenA-price').textContent = formatMoney(scenA.finalCustomerTotal);
+    document.getElementById('sdc-scenA-profit').textContent = formatMoney(scenA.netProfit);
+    document.getElementById('sdc-scenA-margin').textContent = `${scenA.profitMargin.toFixed(1)}%`;
+    document.getElementById('sdc-scenA-mrev').textContent = formatMoney(scenA.netRevenue * baseOrders);
+    document.getElementById('sdc-scenA-mprofit').textContent = formatMoney(scenA.netProfit * baseOrders);
+
+    // Scenario B: Single 15% promotion
+    const single15Discount = [{ id: 99, name: '15% Off', type: 'percent', class: 'product', value: 15, active: true }];
+    const scenB = calculateMetrics('shopify', single15Discount);
+    document.getElementById('sdc-scenB-price').textContent = formatMoney(scenB.finalCustomerTotal);
+    document.getElementById('sdc-scenB-savings').textContent = `${formatMoney(scenB.totalSavings)} (${scenB.effectiveDiscountPct.toFixed(1)}%)`;
+    document.getElementById('sdc-scenB-profit').textContent = formatMoney(scenB.netProfit);
+    document.getElementById('sdc-scenB-margin').textContent = `${scenB.profitMargin.toFixed(1)}%`;
+    document.getElementById('sdc-scenB-mrev').textContent = formatMoney(scenB.netRevenue * baseOrders);
+    document.getElementById('sdc-scenB-mprofit').textContent = formatMoney(scenB.netProfit * baseOrders);
+
+    // Scenario C: Current configuration with hypothetical uplift
+    document.getElementById('sdc-scenC-price').textContent = formatMoney(currentRes.finalCustomerTotal);
+    document.getElementById('sdc-scenC-savings').textContent = `${formatMoney(currentRes.totalSavings)} (${currentRes.effectiveDiscountPct.toFixed(1)}%)`;
+    
+    const profitCEl = document.getElementById('sdc-scenC-profit');
+    profitCEl.textContent = formatMoney(currentRes.netProfit);
+    profitCEl.style.color = currentRes.netProfit >= 0 ? 'var(--sdc-success)' : 'var(--sdc-danger)';
+    
+    document.getElementById('sdc-scenC-margin').textContent = `${currentRes.profitMargin.toFixed(1)}%`;
+    document.getElementById('sdc-scenC-mrev').textContent = `${formatMoney(currentRes.netRevenue * scenCOrders)} (${scenCOrders} ord)`;
+    
+    const mprofitCEl = document.getElementById('sdc-scenC-mprofit');
+    const totalMProfitC = currentRes.netProfit * scenCOrders;
+    mprofitCEl.textContent = formatMoney(totalMProfitC);
+    mprofitCEl.style.color = totalMProfitC >= 0 ? 'var(--sdc-success)' : 'var(--sdc-danger)';
+  }
+
+  // Event Listeners: Inputs & Selects
+  [
+    elBasePrice, elProductCogs, elOrderQty, elCustShipping, elStoreShippingCost,
+    elPaymentPct, elPaymentFixed, elPackagingCost, elMarketingCost, elMinTargetMargin,
+    elBaseOrders, elHypoUplift, elShippingVal
+  ].forEach(input => {
+    input.addEventListener('input', calculateAll);
+  });
+
+  elShippingType.addEventListener('change', () => {
+    elShippingValWrap.style.display = (elShippingType.value === 'percent' || elShippingType.value === 'fixed') ? 'block' : 'none';
+    calculateAll();
+  });
+
+  elCurrency.addEventListener('change', () => {
+    state.currency = elCurrency.value;
+    renderDiscounts();
+    calculateAll();
+  });
+
+  elTaxMode.addEventListener('change', calculateAll);
+
+  // Stacking Mode Switcher
+  const modeButtons = [
+    { el: document.getElementById('sdc-mode-seq'), mode: 'sequential' },
+    { el: document.getElementById('sdc-mode-sub'), mode: 'subtotal' },
+    { el: document.getElementById('sdc-mode-shop'), mode: 'shopify' }
+  ];
+
+  modeButtons.forEach(item => {
+    item.el.addEventListener('click', () => {
+      modeButtons.forEach(b => b.el.classList.remove('active'));
+      item.el.classList.add('active');
+      state.mode = item.mode;
+      calculateAll();
+    });
+  });
+
+  // Add Discount Button
+  document.getElementById('sdc-add-discount-btn').addEventListener('click', () => {
+    if (state.discounts.length >= 6) {
+      alert('Maximum of 6 discount entries supported.');
+      return;
+    }
+    state.discounts.push({
+      id: state.nextId++,
+      name: `Promotion ${state.discounts.length + 1}`,
+      type: 'percent',
+      class: 'order',
+      value: 10,
+      active: true
+    });
+    renderDiscounts();
+    calculateAll();
+  });
+
+  // Sample Data & Reset Controls
+  document.getElementById('sdc-btn-sample').addEventListener('click', () => {
+    elBasePrice.value = '100.00';
+    elProductCogs.value = '35.00';
+    elOrderQty.value = '1';
+    elCustShipping.value = '10.00';
+    elStoreShippingCost.value = '6.00';
+    elShippingType.value = 'free';
+    elShippingValWrap.style.display = 'none';
+    elPackagingCost.value = '2.00';
+    elMarketingCost.value = '12.00';
+    elPaymentPct.value = '2.9';
+    elPaymentFixed.value = '0.30';
+    state.mode = 'shopify';
+    modeButtons.forEach(b => b.el.classList.toggle('active', b.mode === 'shopify'));
+    state.discounts = [
+      { id: 1, name: 'Summer Product Sale', type: 'percent', class: 'product', value: 20, active: true },
+      { id: 2, name: 'VIP Cart Coupon', type: 'percent', class: 'order', value: 10, active: true }
+    ];
+    state.nextId = 3;
+    renderDiscounts();
+    calculateAll();
+  });
+
+  document.getElementById('sdc-btn-reset').addEventListener('click', () => {
+    if (confirm('Reset all values to zero?')) {
+      elBasePrice.value = '0.00';
+      elProductCogs.value = '0.00';
+      elOrderQty.value = '1';
+      elCustShipping.value = '0.00';
+      elStoreShippingCost.value = '0.00';
+      elShippingType.value = 'none';
+      elShippingValWrap.style.display = 'none';
+      elPackagingCost.value = '0.00';
+      elMarketingCost.value = '0.00';
+      state.discounts = [];
+      renderDiscounts();
+      calculateAll();
+    }
+  });
+
+  // Action: Copy Summary to Clipboard
+  document.getElementById('sdc-btn-copy').addEventListener('click', () => {
+    const res = calculateMetrics();
+    const text = `Shopify Discount Stacking Impact Summary
+----------------------------------------
+Original Price: ${formatMoney(res.origSubtotal)}
+Customer Price After Stacked Discounts: ${formatMoney(res.finalCustomerTotal)}
+Total Customer Savings: ${formatMoney(res.totalSavings)} (${res.effectiveDiscountPct.toFixed(1)}%)
+Estimated Store Net Profit: ${formatMoney(res.netProfit)} (Margin: ${res.profitMargin.toFixed(1)}%)
+Break-Even Discount: ${res.breakEvenDiscountPct.toFixed(1)}%
+Generated with: https://my-tool-app.pages.dev/shopify-discount-stacking-impact-calculator`;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => alert('Summary copied to clipboard!'));
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      alert('Summary copied to clipboard!');
+    }
+  });
+
+  // Action: Export CSV
+  document.getElementById('sdc-btn-csv').addEventListener('click', () => {
+    const res = calculateMetrics();
+    const headers = ['Metric', 'Value'];
+    const rows = [
+      ['Currency', state.currency],
+      ['Stacking Logic Mode', state.mode],
+      ['Original Product Subtotal', res.origSubtotal.toFixed(2)],
+      ['Product Discounts Total', res.productSavings.toFixed(2)],
+      ['Order Discounts Total', res.orderSavings.toFixed(2)],
+      ['Customer Shipping Paid', res.finalCustShipping.toFixed(2)],
+      ['Customer Final Price', res.finalCustomerTotal.toFixed(2)],
+      ['Customer Savings', res.totalSavings.toFixed(2)],
+      ['Effective Discount %', res.effectiveDiscountPct.toFixed(2) + '%'],
+      ['Product COGS', res.totalCogs.toFixed(2)],
+      ['Store Shipping Cost', res.storeShippingCost.toFixed(2)],
+      ['Shipping Subsidy Absorbed', res.shippingSubsidy.toFixed(2)],
+      ['Payment Gateway Fee', res.paymentProcessingFee.toFixed(2)],
+      ['Packaging & Marketing', (res.packagingCost + res.marketingCost).toFixed(2)],
+      ['Store Net Profit', res.netProfit.toFixed(2)],
+      ['Net Profit Margin %', res.profitMargin.toFixed(2) + '%'],
+      ['Break-Even Discount %', res.breakEvenDiscountPct.toFixed(2) + '%']
+    ];
+
+    let csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => `"${e[0]}","${e[1]}"`)].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'shopify-discount-impact-analysis.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+
+  // Action: Print Report
+  document.getElementById('sdc-btn-print').addEventListener('click', () => {
+    window.print();
+  });
+
+  // FAQ Accordion Interaction
+  document.querySelectorAll('.sdc-faq-item').forEach(item => {
+    const q = item.querySelector('.sdc-faq-question');
+    const a = item.querySelector('.sdc-faq-answer');
+    a.style.display = 'none';
+    q.addEventListener('click', () => {
+      const isVisible = a.style.display === 'block';
+      a.style.display = isVisible ? 'none' : 'block';
+      q.querySelector('span').textContent = isVisible ? '+' : '−';
+    });
+  });
+
+  // Initial Boot
+  renderDiscounts();
+  calculateAll();
+
+})();
+</script>
+<!-- ==========================================================================
+     END OF SHOPIFY DISCOUNT STACKING CALCULATOR IMPLEMENTATION
+     ========================================================================== -->
