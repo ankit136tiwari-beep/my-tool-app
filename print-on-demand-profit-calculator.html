@@ -1,0 +1,361 @@
+<div id="pod-profit-calculator" data-mode="basic">
+<style>
+#pod-profit-calculator{--a:#0f766e;--a2:#ecfdf5;--g:#15803d;--r:#b91c1c;--t:#1e293b;--m:#64748b;--b:#e2e8f0;font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--t);max-width:1100px;margin:0 auto;padding:12px;box-sizing:border-box}
+#pod-profit-calculator *{box-sizing:border-box}
+#pod-profit-calculator h1{font-size:1.65rem;line-height:1.25;margin:8px 0 4px}
+#pod-profit-calculator h2{font-size:1.3rem;margin:28px 0 8px}
+#pod-profit-calculator h3{font-size:1.05rem;margin:14px 0 4px}
+#pod-profit-calculator a{color:var(--a)}
+.pod-nav,.pod-sub{font-size:.9rem;color:var(--m)}
+.pod-tabs{display:flex;gap:6px;margin:12px 0}
+.pod-tab,.pod-btn{font:inherit;border:1px solid var(--a);background:#fff;color:var(--a);border-radius:8px;padding:9px 14px;cursor:pointer;min-height:42px}
+.pod-tab[aria-selected=true],.pod-btn.pod-p{background:var(--a);color:#fff}
+.pod-btn.pod-d{border-color:var(--r);color:var(--r)}
+#pod-profit-calculator :focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+.pod-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.pod-card{background:#fff;border:1px solid var(--b);border-radius:12px;padding:12px 14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(15,23,42,.08)}
+.pod-card>summary{cursor:pointer;font-weight:700}
+.pod-f{display:flex;flex-direction:column;margin:8px 0}
+.pod-f label{font-size:.88rem;font-weight:600;margin-bottom:3px}
+.pod-f input[type=text],.pod-f input[type=number],.pod-f select{font:inherit;width:100%;padding:8px;border:1px solid #94a3b8;border-radius:8px;background:#fff;color:var(--t);min-width:0}
+.pod-ck{flex-direction:row;align-items:center;gap:8px}.pod-ck label{margin:0}
+.pod-two{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.pod-kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pod-kpi{border:1px solid var(--b);border-radius:10px;padding:8px 10px;background:#f8fafc}
+.pod-kpi span{display:block;font-size:.8rem;color:var(--m)}.pod-kpi b{font-size:1.05rem;word-break:break-word}
+.pod-pos{border-color:var(--g);background:#f0fdf4}.pod-pos b{color:var(--g)}
+.pod-neg{border-color:var(--r);background:#fef2f2}.pod-neg b{color:var(--r)}
+.pod-scroll{overflow-x:auto;max-width:100%}
+.pod-tbl{border-collapse:collapse;width:100%;font-size:.9rem}
+.pod-tbl th,.pod-tbl td{border-bottom:1px solid var(--b);padding:6px 8px;text-align:right}
+.pod-tbl th:first-child,.pod-tbl td:first-child{text-align:left}
+.pod-tbl .pod-tot td{font-weight:700;background:var(--a2)}
+.pod-best{background:#dcfce7;font-weight:700}
+.pod-err{color:var(--r);font-size:.9rem;margin:6px 0}
+.pod-note{color:var(--m);font-size:.85rem}
+.pod-acts{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+#pod-profit-calculator[data-mode=basic] .pod-adv{display:none}
+@media(max-width:760px){.pod-grid{grid-template-columns:minmax(0,1fr)}.pod-two{grid-template-columns:1fr}.pod-btn,.pod-tab{flex:1 1 auto}}
+</style>
+
+<nav class="pod-nav" aria-label="Tool navigation"><a href="https://my-tool-app.pages.dev/">Home</a> &rsaquo; Print on Demand Profit Calculator</nav>
+<h1>Print on Demand Profit Calculator</h1>
+<p class="pod-sub">Find your real profit per order after production, shipping, platform fees, payment fees, ads and returns.</p>
+
+<section aria-label="Calculator">
+<div class="pod-tabs" role="tablist" aria-label="Calculator mode">
+<button class="pod-tab" role="tab" data-m="basic" aria-selected="true">Basic Mode</button>
+<button class="pod-tab" role="tab" data-m="adv" aria-selected="false">Advanced Mode</button>
+</div>
+<div class="pod-grid">
+<div id="pod-left"></div>
+<div>
+<div class="pod-card" aria-live="polite">
+<strong id="pod-title">Results</strong>
+<div id="pod-err" class="pod-err" role="alert"></div>
+<div id="pod-kpis" class="pod-kpis"></div>
+</div>
+<div class="pod-card">
+<strong>Calculation breakdown</strong>
+<div class="pod-scroll"><table class="pod-tbl" id="pod-bd"></table></div>
+<p id="pod-basis" class="pod-note"></p>
+<div class="pod-acts">
+<button class="pod-btn pod-p" id="pod-copy">Copy summary</button>
+<button class="pod-btn" id="pod-csv">Download CSV</button>
+<button class="pod-btn" id="pod-print">Print report</button>
+<button class="pod-btn" id="pod-sample">Load sample data</button>
+<button class="pod-btn pod-d" id="pod-reset">Reset all</button>
+</div>
+<div class="pod-two">
+<div class="pod-f"><label for="pod-sname">Save scenario as</label><input type="text" id="pod-sname" maxlength="40" class="pod-x"></div>
+<div class="pod-f"><label for="pod-slist">Saved scenarios</label><select id="pod-slist" class="pod-x"></select></div>
+</div>
+<div class="pod-acts">
+<button class="pod-btn" id="pod-save">Save locally</button>
+<button class="pod-btn" id="pod-load">Load</button>
+<button class="pod-btn pod-d" id="pod-del">Delete</button>
+</div>
+<p class="pod-note">Saved scenarios stay only in this browser. Nothing is sent to any server.</p>
+<div id="pod-msg" class="pod-note" role="status"></div>
+</div>
+</div>
+</div>
+
+<div class="pod-card"><strong>Shipping profitability</strong><div id="pod-shp" class="pod-kpis"></div></div>
+<div class="pod-card"><strong>Shipping and pricing scenarios</strong>
+<p class="pod-note">A: free shipping at your price. B: customer pays your shipping charge. C: higher price with free shipping. The comparison uses only your entered numbers and does not predict sales or conversions.</p>
+<div id="pod-sc-in" class="pod-two"></div>
+<div class="pod-scroll"><table class="pod-tbl" id="pod-sct"></table></div></div>
+<details class="pod-card" open><summary>Pricing optimizer (target selling price)</summary>
+<p class="pod-note">Solves the full fee model for the price per unit that reaches your target. Your entered price is never changed.</p>
+<div id="pod-op-in" class="pod-two"></div><div id="pod-op-out" aria-live="polite"></div></details>
+</section>
+
+<section>
+<h2>What this POD profit calculator does</h2>
+<p>This free tool helps print on demand sellers estimate profit per product and per order. It includes production cost, supplier shipping, customer shipping, marketplace and payment fees, advertising, discounts, returns and monthly overheads. Shipping matters because a low customer shipping charge against a high supplier shipping cost can turn a sale into a loss. All supplier and platform fees are entered by you.</p>
+
+<h2>How to use the print on demand calculator</h2>
+<ol>
+<li>Select your POD provider and sales platform (labels only).</li>
+<li>Choose your currency.</li>
+<li>Enter the product's base and production cost.</li>
+<li>Enter the selling price, units per order and expected monthly orders.</li>
+<li>Add the supplier shipping cost.</li>
+<li>Enter the customer shipping charge, or tick free shipping.</li>
+<li>Add marketplace and payment processing fees.</li>
+<li>Add advertising, discounts and optional return costs (Advanced Mode).</li>
+<li>Review net profit, margin, markup and ROI.</li>
+<li>Use the pricing optimizer and the shipping scenario comparison.</li>
+<li>Copy, print or download your report.</li>
+</ol>
+
+<h2>Features</h2>
+<ul>
+<li>Production cost and shipping cost calculator, with customer shipping revenue kept separate from supplier shipping expense</li>
+<li>Net profit per unit, per order and per month</li>
+<li>Marketplace fee and payment processing fee calculator with selectable fee basis</li>
+<li>Gross margin, net profit margin, markup and ROI</li>
+<li>Break-even selling price and target selling price optimizer</li>
+<li>Free shipping versus paid shipping versus higher price comparison</li>
+<li>ACOS, ROAS and break-even ACOS</li>
+<li>CSV download, printable report and local scenario saving</li>
+</ul>
+
+<h2>Examples and calculation formula</h2>
+<p><strong>Illustrative example (assumed numbers, not official supplier or marketplace fees):</strong> selling price $30.00, customer shipping $5.00, blank product $9.00, printing $4.00, supplier shipping $6.00, marketplace fee 6.5% of product plus shipping plus $0.20 transaction and $0.20 listing, payment fee 3% plus $0.30, advertising $3.00 per order.</p>
+<ul>
+<li>Total revenue = 30.00 + 5.00 = $35.00</li>
+<li>Production cost = 9.00 + 4.00 = $13.00; supplier shipping = $6.00 (shipping profit/loss = 5 − 6 = −$1.00)</li>
+<li>Marketplace fees = 35 × 6.5% + 0.20 + 0.20 = $2.675; payment fees = 35 × 3% + 0.30 = $1.35</li>
+<li>Total expenses = 13 + 6 + 2.675 + 1.35 + 3 = $26.025</li>
+<li>Net profit = 35 − 26.025 = $8.975. Margin = 8.975 ÷ 35 = 25.64%. Markup = 8.975 ÷ 13 = 69.04%.</li>
+</ul>
+<p>Formulas: net profit = total revenue − total expenses. Margin = net profit ÷ total revenue (including shipping revenue). Markup = net profit ÷ production cost. ROI = net profit ÷ (production cost + supplier shipping). Break-even price is the price where net profit is zero, found by a numerical search that includes percentage fees.</p>
+
+<h2>Use cases</h2>
+<p>Printify, Printful and Gelato sellers, Etsy, Shopify and WooCommerce sellers and independent POD sellers can use it with their own supplier and platform numbers. It also helps when comparing free and paid shipping, choosing profitable prices and planning monthly revenue and profit. This site is not affiliated with any provider or platform.</p>
+
+<h2>Important notes and limitations</h2>
+<ul>
+<li>Supplier costs, shipping rates, marketplace fees and taxes vary by provider, product, destination, country and plan. Nothing is fetched live and no fees are pre-filled.</li>
+<li>Enter only costs that are not already included in your supplier's base product price. Use the checkboxes to avoid double counting.</li>
+<li>Tax setting “price includes tax” removes the tax portion from product revenue. Shipping revenue is not adjusted. Tax rules differ by country.</li>
+<li>Returns: the loss per return is refund + return shipping + replacement + handling + non-refundable fees − recoverable value. In expected mode it is multiplied by your return rate.</li>
+<li>Income tax is only a simple optional estimate. Results are estimates, not financial or tax advice. Real profit depends on your actual transactions.</li>
+</ul>
+<p>Check current fees (they vary by country and plan): <a href="https://www.printful.com/pricing" target="_blank" rel="noopener noreferrer">Printful Pricing</a>, <a href="https://printify.com/pricing/" target="_blank" rel="noopener noreferrer">Printify Pricing</a>, <a href="https://www.etsy.com/legal/fees/" target="_blank" rel="noopener noreferrer">Etsy Fees</a>, <a href="https://www.shopify.com/pricing" target="_blank" rel="noopener noreferrer">Shopify Pricing</a>, <a href="https://woocommerce.com/" target="_blank" rel="noopener noreferrer">WooCommerce</a>, <a href="https://www.paypal.com/us/business/paypal-business-fees" target="_blank" rel="noopener noreferrer">PayPal Merchant Fees</a>.</p>
+
+<h2>Frequently asked questions</h2>
+<h3>What is a Print on Demand Profit Calculator?</h3><p>It estimates how much you keep from a POD sale after production, shipping, fees, ads and other costs.</p>
+<h3>How do I calculate print on demand profit?</h3><p>Add product price and shipping revenue, then subtract production cost, supplier shipping, marketplace and payment fees, advertising and returns.</p>
+<h3>How do I include shipping costs in POD profit?</h3><p>Add what the customer pays as revenue and what the supplier charges as an expense. The difference is your shipping profit or loss.</p>
+<h3>What is the difference between supplier shipping and customer shipping?</h3><p>Supplier shipping is a cost you pay the POD provider. Customer shipping is revenue the buyer pays you at checkout.</p>
+<h3>How do I calculate Printify profit?</h3><p>Enter your Printify product and shipping costs from your Printify account, plus your sales platform fees. The calculator does not fetch them.</p>
+<h3>How do I calculate Printful product profit?</h3><p>Enter the Printful base price and shipping from your order or quote, then add platform, payment and ad costs.</p>
+<h3>How do I calculate print on demand profit margin?</h3><p>Divide net profit by total revenue and multiply by 100. Markup divides net profit by production cost instead.</p>
+<h3>How do I find the break-even selling price for a POD product?</h3><p>It is the price where net profit is zero. The calculator solves it including percentage fees and fixed costs.</p>
+<h3>Should I offer free shipping or charge customers separately?</h3><p>Compare both in the scenario table. It shows profit using your numbers only and cannot predict how buyers will respond.</p>
+<h3>Does this calculator automatically fetch Printify, Printful, Etsy, or Shopify fees?</h3><p>No. You enter every fee yourself, and the provider and platform choices are only labels.</p>
+
+<h2>Related tools and financial planning</h2>
+<p><a href="https://my-tool-app.pages.dev/emergency-fund-months-of-expenses-calculator">Emergency Fund Months of Expenses Calculator</a> – estimate how many months your savings can cover essential expenses. This related calculator can help online business owners think about personal financial reserves.</p>
+<p class="pod-nav"><a href="https://my-tool-app.pages.dev/">Home</a></p>
+</section>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+{"@type":"WebPage","name":"Print on Demand Profit Calculator & Shipping Costs","description":"Calculate print-on-demand profit, product costs, shipping, marketplace fees and margins. Find your break-even and ideal selling price for every product.","url":"https://my-tool-app.pages.dev/print-on-demand-profit-calculator","isPartOf":{"@type":"WebSite","name":"My Tool App","url":"https://my-tool-app.pages.dev/"}},
+{"@type":"SoftwareApplication","name":"Print on Demand Profit Calculator","description":"Free browser-based calculator for print-on-demand profit, shipping, fees, margin and break-even price.","applicationCategory":"BusinessApplication","operatingSystem":"Web Browser","browserRequirements":"Requires JavaScript","url":"https://my-tool-app.pages.dev/print-on-demand-profit-calculator","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},
+{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://my-tool-app.pages.dev/"},{"@type":"ListItem","position":2,"name":"Print on Demand Profit Calculator","item":"https://my-tool-app.pages.dev/print-on-demand-profit-calculator"}]},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a Print on Demand Profit Calculator?","acceptedAnswer":{"@type":"Answer","text":"It estimates how much you keep from a POD sale after production, shipping, fees, ads and other costs."}},
+{"@type":"Question","name":"How do I calculate print on demand profit?","acceptedAnswer":{"@type":"Answer","text":"Add product price and shipping revenue, then subtract production cost, supplier shipping, marketplace and payment fees, advertising and returns."}},
+{"@type":"Question","name":"How do I include shipping costs in POD profit?","acceptedAnswer":{"@type":"Answer","text":"Add what the customer pays as revenue and what the supplier charges as an expense. The difference is your shipping profit or loss."}},
+{"@type":"Question","name":"What is the difference between supplier shipping and customer shipping?","acceptedAnswer":{"@type":"Answer","text":"Supplier shipping is a cost you pay the POD provider. Customer shipping is revenue the buyer pays you at checkout."}},
+{"@type":"Question","name":"How do I calculate Printify profit?","acceptedAnswer":{"@type":"Answer","text":"Enter your Printify product and shipping costs from your Printify account, plus your sales platform fees. The calculator does not fetch them."}},
+{"@type":"Question","name":"How do I calculate Printful product profit?","acceptedAnswer":{"@type":"Answer","text":"Enter the Printful base price and shipping from your order or quote, then add platform, payment and ad costs."}},
+{"@type":"Question","name":"How do I calculate print on demand profit margin?","acceptedAnswer":{"@type":"Answer","text":"Divide net profit by total revenue and multiply by 100. Markup divides net profit by production cost instead."}},
+{"@type":"Question","name":"How do I find the break-even selling price for a POD product?","acceptedAnswer":{"@type":"Answer","text":"It is the price where net profit is zero. The calculator solves it including percentage fees and fixed costs."}},
+{"@type":"Question","name":"Should I offer free shipping or charge customers separately?","acceptedAnswer":{"@type":"Answer","text":"Compare both in the scenario table. It shows profit using your numbers only and cannot predict how buyers will respond."}},
+{"@type":"Question","name":"Does this calculator automatically fetch Printify, Printful, Etsy, or Shopify fees?","acceptedAnswer":{"@type":"Answer","text":"No. You enter every fee yourself, and the provider and platform choices are only labels."}}
+]}]}</script>
+
+<script>
+(function(){
+function init(){
+var R=document.getElementById('pod-profit-calculator');if(!R||R.getAttribute('data-ready'))return;R.setAttribute('data-ready','1');
+var $=function(i){return document.getElementById('pod-'+i)};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+var SYM={USD:'$',GBP:'£',EUR:'€',CAD:'C$',AUD:'A$',INR:'₹'};
+var PC=['mf','pp','taxp','tsup','itx','rrate','dpct'];
+var BO=[['prod','Product price (after discounts)'],['rev','Product + customer shipping revenue'],['custom','Custom amount']];
+var D=[
+{t:'Product and platform',f:[
+{i:'pn',l:'Product name (optional)',t:'t'},
+{i:'pt',l:'Product type',t:'s',o:['T-Shirt','Hoodie','Sweatshirt','Mug','Poster','Canvas Print','Phone Case','Tote Bag','Pillow','Sticker','Other / Custom Product']},
+{i:'pv',l:'Variant (optional)',t:'t',a:1},{i:'sku',l:'SKU (optional)',t:'t',a:1},
+{i:'prov',l:'POD provider (label only)',t:'s',o:['Printify','Printful','Gelato','Custom Supplier','Other']},
+{i:'plat',l:'Sales platform (label only)',t:'s',o:['Etsy','Shopify','WooCommerce','eBay','Amazon','TikTok Shop','Other / Custom']},
+{i:'cur',l:'Currency',t:'s',d:'USD',o:[['USD','USD – US Dollar'],['GBP','GBP – British Pound'],['EUR','EUR – Euro'],['CAD','CAD – Canadian Dollar'],['AUD','AUD – Australian Dollar'],['INR','INR – Indian Rupee'],['CUS','Custom Currency']]},
+{i:'csym',l:'Custom currency symbol',t:'t',a:1},
+{i:'price',l:'Product selling price (per unit)',t:'n',d:''},
+{i:'units',l:'Units per order',t:'n',d:'1'},
+{i:'orders',l:'Expected monthly orders',t:'n',d:'100'}]},
+{t:'Production cost (per unit)',h:'Enter only costs that are not already included in your supplier\'s base product price.',f:[
+{i:'blank',l:'Blank product cost',t:'n',d:''},{i:'print',l:'Printing cost',t:'n',d:''},
+{i:'inclp',l:'Base price already includes printing (ignore printing cost)',t:'c',a:1},
+{i:'design',l:'Design / customization cost',t:'n',d:'',a:1},{i:'prodfee',l:'Production fee',t:'n',d:'',a:1},
+{i:'opt',l:'Include optional costs below',t:'c',a:1},
+{i:'emb',l:'Embroidery fee',t:'n',d:'',a:1},{i:'lab',l:'Labeling cost',t:'n',d:'',a:1},{i:'pack',l:'Packaging cost',t:'n',d:'',a:1},{i:'addl',l:'Additional manufacturing',t:'n',d:'',a:1},{i:'othp',l:'Other production expenses',t:'n',d:'',a:1}]},
+{t:'Shipping',f:[
+{i:'free',l:'Free shipping for customer (customer shipping revenue = 0)',t:'c'},
+{i:'dest',l:'Destination for supplier cost',t:'s',o:[['dom','Domestic'],['intl','International']]},
+{i:'shm',l:'Shipping method (label only)',t:'s',a:1,o:['Standard Shipping','Express Shipping','Free Shipping','Custom Shipping']},
+{i:'cust',l:'Customer shipping charge (per order)',t:'n',d:''},
+{i:'sdisc',l:'Shipping discount (per order)',t:'n',d:'',a:1},
+{i:'sd',l:'Supplier shipping cost – domestic (per order)',t:'n',d:''},
+{i:'si',l:'Supplier shipping cost – international (per order)',t:'n',d:'',a:1},
+{i:'sxon',l:'Include additional shipping expenses below',t:'c',a:1},
+{i:'sxe',l:'Express upgrade',t:'n',d:'',a:1},{i:'srm',l:'Remote area surcharge',t:'n',d:'',a:1},{i:'ssur',l:'Additional surcharge',t:'n',d:'',a:1},{i:'sph',l:'Packaging / handling (shipping)',t:'n',d:'',a:1},{i:'sos',l:'Other shipping expense',t:'n',d:'',a:1}]},
+{t:'Discounts',a:1,f:[
+{i:'dmode',l:'Discount mode',t:'s',o:[['pct','Percentage only'],['fix','Fixed per unit only'],['both','Percentage + fixed']]},
+{i:'dpct',l:'Percentage discount',t:'n',d:''},{i:'dfix',l:'Fixed discount (per unit)',t:'n',d:''},{i:'coupon',l:'Coupon / promo / bundle discount (per order)',t:'n',d:''}]},
+{t:'Marketplace fees',f:[
+{i:'mf',l:'Marketplace fee %',t:'n',d:''},
+{i:'mfb',l:'Marketplace fee basis',t:'s',a:1,d:'rev',o:BO},{i:'mfc',l:'Custom marketplace fee basis amount',t:'n',d:'',a:1},
+{i:'mfx',l:'Fixed transaction fee (per order)',t:'n',d:'',a:1},{i:'lst',l:'Listing fee (per order)',t:'n',d:'',a:1},{i:'opf',l:'Order processing fee',t:'n',d:'',a:1},{i:'psub',l:'Subscription allocation (per order)',t:'n',d:'',a:1},{i:'osf',l:'Other selling fees (per order)',t:'n',d:'',a:1}]},
+{t:'Payment processing',f:[
+{i:'pp',l:'Payment fee %',t:'n',d:''},
+{i:'ppb',l:'Payment fee basis',t:'s',a:1,d:'rev',o:BO},
+{i:'pfx',l:'Fixed payment fee (per order)',t:'n',d:'',a:1},{i:'pxt',l:'Gateway / additional payment fee (per order)',t:'n',d:'',a:1}]},
+{t:'Advertising and marketing',f:[
+{i:'admode',l:'Advertising mode',t:'s',o:[['order','Fixed per order'],['unit','Fixed per unit'],['pct','% of total revenue']]},
+{i:'adv',l:'Advertising amount (or %)',t:'n',d:''},
+{i:'mkt',l:'Other marketing (per order)',t:'n',d:'',a:1},{i:'infl',l:'Influencer / promotion (per order)',t:'n',d:'',a:1},
+{i:'adsp',l:'Ad spend for ACOS (optional)',t:'n',d:'',a:1},{i:'adrev',l:'Ad-attributed revenue for ACOS (optional)',t:'n',d:'',a:1}]},
+{t:'Returns and refunds',a:1,f:[
+{i:'rmode',l:'Return mode',t:'s',o:[['act','Actual cost per order'],['exp','Expected cost (uses return rate)']]},
+{i:'rrate',l:'Expected return rate %',t:'n',d:''},
+{i:'rrefund',l:'Refund amount per return',t:'n',d:''},{i:'rship',l:'Return shipping cost',t:'n',d:''},{i:'rrepl',l:'Replacement product cost',t:'n',d:''},{i:'rhand',l:'Return handling cost',t:'n',d:''},{i:'rfee',l:'Non-refundable fees',t:'n',d:''},{i:'rrec',l:'Recoverable value per return',t:'n',d:''}]},
+{t:'Tax and other expenses',a:1,f:[
+{i:'tax',l:'Selling price tax treatment',t:'s',o:[['none','No tax / not applicable'],['incl','Price includes tax (remove pass-through tax)'],['excl','Tax added on top (not my revenue)']]},
+{i:'taxp',l:'Sales tax / VAT / GST %',t:'n',d:''},
+{i:'tsup',l:'Tax paid on supplier purchases %',t:'n',d:''},{i:'tsupr',l:'That tax is recoverable',t:'c'},
+{i:'itx',l:'Income tax estimate % (optional)',t:'n',d:''},{i:'oex',l:'Other business expenses (per order)',t:'n',d:''}]},
+{t:'Monthly business costs',a:1,f:[
+{i:'msub',l:'Monthly subscriptions',t:'n',d:''},{i:'msoft',l:'Monthly software',t:'n',d:''},{i:'mfixed',l:'Other monthly fixed / design costs',t:'n',d:''},
+{i:'incfix',l:'Include fixed costs in per-order profit (÷ monthly orders)',t:'c'}]},
+{z:'op',f:[{i:'tm',l:'Target method',t:'s',o:[['margin','Profit margin %'],['unit','Profit per unit'],['order','Profit per order'],['markup','Markup %'],['month','Monthly profit']],d:'margin'},{i:'tv',l:'Target value',t:'n',d:'30'}]},
+{z:'sc',f:[{i:'s3',l:'Scenario C: price increase %',t:'n',d:'15'}]}
+];
+var FL=[],DEF={};
+function mk(x){var w=el('div','pod-f'+(x.t==='c'?' pod-ck':'')+(x.a?' pod-adv':'')),id='pod-'+x.i,l=el('label',null,x.l),c;l.htmlFor=id;
+if(x.t==='s'){c=el('select');x.o.forEach(function(o){o=Array.isArray(o)?o:[o,o];var e=el('option',null,o[1]);e.value=o[0];c.appendChild(e)});DEF[x.i]=x.d!=null?x.d:(Array.isArray(x.o[0])?x.o[0][0]:x.o[0]);c.value=DEF[x.i]}
+else{c=el('input');if(x.t==='c'){c.type='checkbox';DEF[x.i]=false}else{if(x.t==='n'){c.type='number';c.step='any';c.min='0';c.setAttribute('inputmode','decimal')}else{c.type='text';c.maxLength=40}c.value=x.d!=null?x.d:'';DEF[x.i]=c.value}}
+c.id=id;c.className='pod-in';
+if(x.t==='c'){w.appendChild(c);w.appendChild(l)}else{w.appendChild(l);w.appendChild(c)}
+FL.push(x);return w}
+D.forEach(function(g){if(g.z){var h=$(g.z+'-in');g.f.forEach(function(f){h.appendChild(mk(f))});return}
+var h=el('details','pod-card'+(g.a?' pod-adv':''));h.open=true;h.appendChild(el('summary',null,g.t));
+if(g.h)h.appendChild(el('p','pod-note',g.h));var b=el('div','pod-two');h.appendChild(b);g.f.forEach(function(f){b.appendChild(mk(f))});$('left').appendChild(h)});
+function say(t){$('msg').textContent=t}
+
+function read(){var o={},er=[];FL.forEach(function(x){var c=$(x.i);
+if(x.t==='n'){var v=parseFloat(c.value);if(!isFinite(v))v=0;if(v<0){er.push(x.l+' cannot be negative.');v=0}
+if((PC.indexOf(x.i)>-1||(x.i==='tv'&&o.tm==='margin'))&&v>100){er.push(x.l+' cannot exceed 100%. Using 100.');v=100}o[x.i]=v}
+else if(x.t==='c')o[x.i]=c.checked;else o[x.i]=c.value});
+if(o.units<=0)er.push('Units per order must be above zero to see results.');
+if(o.tm==='margin'&&o.tv>=100)er.push('Target margin must be below 100%.');return{o:o,er:er}}
+
+function calc(o){var u=o.units,act=u>0?1:0,k=o.tax==='incl'?1/(1+o.taxp/100):1;
+var pu=o.blank+(o.inclp?0:o.print)+o.design+o.prodfee+(o.opt?o.emb+o.lab+o.pack+o.addl+o.othp:0),prodO=pu*u;
+var d=o.dmode==='pct'?o.price*o.dpct/100:o.dmode==='fix'?o.dfix:o.price*o.dpct/100+o.dfix;if(d>o.price)d=o.price;
+var gp=o.price*u,discT=Math.min(gp,d*u+o.coupon),prodRev=(gp-discT)*k;
+var cust=act*(o.free?0:Math.max(0,o.cust-o.sdisc));
+var sup=act*((o.dest==='dom'?o.sd:o.si)+(o.sxon?o.sxe+o.srm+o.ssur+o.sph+o.sos:0));
+var rev=prodRev+cust;
+var bs=function(b,c){return b==='prod'?prodRev:b==='rev'?rev:c};
+var mfee=act*(bs(o.mfb,o.mfc)*o.mf/100+o.mfx+o.lst+o.opf+o.psub+o.osf);
+var pay=act*(bs(o.ppb,o.mfc)*o.pp/100+o.pfx+o.pxt);
+var ad=act*(o.admode==='order'?o.adv:o.admode==='unit'?o.adv*u:rev*o.adv/100),mkt=act*(o.mkt+o.infl);
+var loss=Math.max(0,o.rrefund+o.rship+o.rrepl+o.rhand+o.rfee-o.rrec),ret=act*(o.rmode==='exp'?o.rrate/100*loss:loss);
+var tsup=o.tsupr?0:(prodO+sup)*o.tsup/100,oex=act*o.oex;
+var fixM=o.msub+o.msoft+o.mfixed,fixO=o.incfix&&o.orders>0?fixM/o.orders:0;
+var exp=prodO+sup+mfee+pay+ad+mkt+ret+tsup+fixO+oex,net=rev-exp,inv=prodO+sup;
+var nbf=net+fixO;
+return{u:u,gp:gp,discT:discT,taxAdj:prodRev-(gp-discT),cust:cust,rev:rev,prodO:prodO,sup:sup,shipPL:cust-sup,mfee:mfee,pay:pay,ad:ad,mkt:mkt,ret:ret,tsup:tsup,fixO:fixO,oex:oex,exp:exp,net:net,
+ppu:u>0?net/u:null,margin:rev>0?net/rev*100:null,gm:rev>0?(rev-inv)/rev*100:null,markup:prodO>0?net/prodO*100:null,roi:inv>0?net/inv*100:null,
+shipPct:rev>0?sup/rev*100:null,mRev:rev*o.orders,mNet:nbf*o.orders-fixM,mFix:fixM,
+atax:net>0?net*(1-o.itx/100):net,acos:o.adsp>0&&o.adrev>0?o.adsp/o.adrev*100:null,roas:o.adsp>0&&o.adrev>0?o.adrev/o.adsp:null,
+beAcos:rev>0&&net+ad>0?(net+ad)/rev*100:null}}
+
+function metric(tm,r,o){return tm==='unit'?r.net/r.u:tm==='order'?r.net:tm==='margin'?(r.margin==null?-1e9:r.margin):tm==='markup'?(r.markup==null?-1e9:r.markup):(r.mNet)}
+function solve(o,tm,tv){if(o.units<=0)return null;var g=function(p){return metric(tm,calc(Object.assign({},o,{price:p})),o)-tv};
+var hi=100,n=0;while(g(hi)<0&&n<35){hi*=2;n++}if(g(hi)<0)return null;if(g(0)>=0)return 0;var lo=0;for(var i=0;i<90;i++){var mid=(lo+hi)/2;if(g(mid)<0)lo=mid;else hi=mid}return hi}
+
+function sym(){var c=$('cur').value;return c==='CUS'?($('csym').value||''):SYM[c]}
+function m(v){if(v==null||!isFinite(v))return 'N/A';return(v<-0.005?'-':'')+sym()+Math.abs(v).toLocaleString($('cur').value==='INR'?'en-IN':'en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function pc(v){return v==null||!isFinite(v)?'N/A':v.toFixed(2)+'%'}
+var LAST=null;
+function render(){var s=read(),o=s.o,r=calc(o);$('err').textContent=s.er.join(' ');
+$('title').textContent='Results'+(o.pn?' – '+o.pn:'')+' ('+o.prov+' / '+o.plat+')';
+var be=solve(o,'order',0),rec=solve(o,o.tm,o.tv);
+var st=r.net>0.004?'pod-pos':r.net<-0.004?'pod-neg':'',tag=r.net>0.004?' (profit ▲)':r.net<-0.004?' (loss ▼)':'';
+var K=[['Net profit per unit',m(r.ppu)+tag,st],['Net profit per order',m(r.net)+tag,st],['Net profit margin',pc(r.margin)],['Gross margin (after production and supplier shipping)',pc(r.gm)],['Product markup',pc(r.markup)],['ROI (on production + supplier shipping)',pc(r.roi)],
+['Total revenue per order',m(r.rev)],['Total production cost',m(r.prodO)],['Total shipping cost (supplier)',m(r.sup)],['Net shipping profit / loss',m(r.shipPL),r.shipPL<-0.004?'pod-neg':''],['Marketplace fees',m(r.mfee)],['Payment processing fees',m(r.pay)],['Advertising cost',m(r.ad)],['Total expenses',m(r.exp)],
+['Break-even selling price (per unit)',be==null?'Not reachable (fees too high)':m(be)],['Recommended price for target',rec==null?'Not reachable':m(rec)],['Monthly revenue',m(r.mRev)],['Monthly net profit (after fixed costs)',m(r.mNet),r.mNet<-0.004?'pod-neg':''],
+['Break-even ACOS (all revenue ad-attributed)',pc(r.beAcos)],['Actual ACOS / ROAS',r.acos==null?'N/A':pc(r.acos)+' / '+r.roas.toFixed(2)],['Profit after income tax estimate',m(r.atax)]];
+var kp=$('kpis');kp.textContent='';K.forEach(function(a){var d=el('div','pod-kpi '+(a[2]||''));d.appendChild(el('span',null,a[0]));d.appendChild(el('b',null,a[1]));kp.appendChild(d)});
+var R2=[['Product list revenue',r.gp],['Less: product discounts and coupons',-r.discT],['Less: tax removed from revenue',r.taxAdj],['Add: customer shipping revenue',r.cust],['Total revenue',r.rev,1],['Less: production expenses',-r.prodO],['Less: supplier shipping expenses',-r.sup],['Less: marketplace fees',-r.mfee],['Less: payment fees',-r.pay],['Less: advertising',-r.ad],['Less: other marketing',-r.mkt],['Less: returns allowance',-r.ret],['Less: supplier tax not recoverable',-r.tsup],['Less: allocated fixed costs',-r.fixO],['Less: other expenses',-r.oex],['Estimated net profit',r.net,1]].map(function(a){return{l:a[0],v:a[1],t:a[2],u:r.u>0?a[1]/r.u:null}});
+var bd=$('bd');bd.textContent='';var h=el('tr');['Item','Per order','Per unit'].forEach(function(x){h.appendChild(el('th',null,x))});bd.appendChild(h);
+R2.forEach(function(x){var t=el('tr',x.t?'pod-tot':'');t.appendChild(el('td',null,x.l));t.appendChild(el('td',null,m(x.v)));t.appendChild(el('td',null,m(x.u)));bd.appendChild(t)});
+$('basis').textContent='Margin basis: total revenue including customer shipping revenue. Markup basis: production cost. No rounding until display.';
+var sp=$('shp');sp.textContent='';[['Customer shipping revenue',m(r.cust)],['Supplier shipping cost',m(r.sup)],['Shipping profit / loss',m(r.shipPL)+(r.shipPL>0.004?' (profit)':r.shipPL<-0.004?' (loss)':'')],['Shipping cost % of revenue',pc(r.shipPct)]].forEach(function(a){var d=el('div','pod-kpi');d.appendChild(el('span',null,a[0]));d.appendChild(el('b',null,a[1]));sp.appendChild(d)});
+LAST={o:o,r:r,K:K,R2:R2};scen(o);opt(o,r,rec)}
+
+function scen(o){var T=$('sct');T.textContent='';var S=[['A: Free shipping',Object.assign({},o,{free:true})],['B: Customer-paid shipping',Object.assign({},o,{free:false})],['C: Higher price, free shipping',Object.assign({},o,{free:true,price:o.price*(1+o.s3/100)})]];
+var res=S.map(function(s){return{r:calc(s[1]),b:solve(s[1],'order',0)}});var mx=Math.max.apply(null,res.map(function(x){return x.r.net}));
+var h=el('tr');h.appendChild(el('th',null,'Metric'));S.forEach(function(s){h.appendChild(el('th',null,s[0]))});T.appendChild(h);
+[['Total revenue',function(x){return m(x.r.rev)}],['Total shipping cost',function(x){return m(x.r.sup)}],['Total expenses',function(x){return m(x.r.exp)}],['Net profit per order',function(x){return m(x.r.net)},1],['Profit margin',function(x){return pc(x.r.margin)}],['Break-even price',function(x){return x.b==null?'N/A':m(x.b)}]].forEach(function(a){var t=el('tr');t.appendChild(el('td',null,a[0]));res.forEach(function(x){var b=a[2]&&x.r.net===mx;t.appendChild(el('td',b?'pod-best':'',a[1](x)+(b?' ★ best':'')))});T.appendChild(t)})}
+
+function opt(o,r,rec){var out=$('op-out');out.textContent='';var L=[];
+if(o.units<=0)L.push('Enter units per order above zero.');
+else if(rec==null)L.push('This target cannot be reached. Percentage fees may be 100% or more of the price, or the target is too high.');
+else{var r2=calc(Object.assign({},o,{price:rec}));L.push('Current selling price: '+m(o.price)+'. Required selling price: '+m(rec)+'. Difference: '+m(rec-o.price)+' per unit.');
+L.push('Estimated profit per order at current price: '+m(r.net)+' ('+m(r.ppu)+' per unit). At target price: '+m(r2.net)+' ('+m(r2.ppu)+' per unit).');
+L.push('How it was solved: the tool searches for the price where your target is met after discounts, percentage fees, fixed fees, shipping and all enabled costs.')}
+L.forEach(function(t){out.appendChild(el('p',null,t))})}
+
+function cs(v){v=String(v);if(/^[=+\-@\t\r]/.test(v))v="'"+v;return'"'+v.replace(/"/g,'""')+'"'}
+function dl(name,txt){var b=new Blob(['\ufeff'+txt],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(a.href)},500)}
+function plain(){var t='Print on Demand Profit Calculator\n';LAST.K.forEach(function(a){t+=a[0]+': '+a[1]+'\n'});t+='\nBreakdown (per order | per unit)\n';LAST.R2.forEach(function(x){t+=x.l+': '+m(x.v)+' | '+m(x.u)+'\n'});return t}
+$('copy').addEventListener('click',function(){var t=plain();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){say('Summary copied.')},function(){say('Copy failed.')})}else{var a=el('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');say('Summary copied.')}catch(e){say('Copy failed.')}document.body.removeChild(a)}});
+$('csv').addEventListener('click',function(){var t=['Item','Per order','Per unit'].map(cs).join(',')+'\n';LAST.R2.forEach(function(x){t+=cs(x.l)+','+(+x.v.toFixed(4))+','+(x.u==null?'':+x.u.toFixed(4))+'\n'});LAST.K.forEach(function(a){t+=cs(a[0])+','+cs(a[1])+',\n'});dl('pod-profit-report.csv',t);say('CSV downloaded.')});
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+$('print').addEventListener('click',function(){var w=window.open('','_blank');if(!w){say('Allow pop-ups to print the report.');return}
+var h='<!doctype html><title>POD profit report</title><body style="font-family:Arial,sans-serif;max-width:720px;margin:20px auto"><h2>Print on Demand Profit Report'+(LAST.o.pn?' – '+esc(LAST.o.pn):'')+'</h2><p>Estimates only. Fees were entered manually.</p><table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%">';
+LAST.K.forEach(function(a){h+='<tr><td>'+esc(a[0])+'</td><td>'+esc(a[1])+'</td></tr>'});h+='</table><h3>Breakdown</h3><table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%"><tr><th>Item</th><th>Per order</th><th>Per unit</th></tr>';
+LAST.R2.forEach(function(x){h+='<tr><td>'+esc(x.l)+'</td><td align="right">'+esc(m(x.v))+'</td><td align="right">'+esc(m(x.u))+'</td></tr>'});h+='</table></body>';
+w.document.open();w.document.write(h);w.document.close();w.focus();w.print()});
+
+function apply(S){Object.keys(DEF).forEach(function(k){var c=$(k),v=S&&S[k]!=null?S[k]:DEF[k];if(c.type==='checkbox')c.checked=!!v;else c.value=v});render()}
+function state(){var S={};Object.keys(DEF).forEach(function(k){var c=$(k);S[k]=c.type==='checkbox'?c.checked:c.value});return S}
+$('reset').addEventListener('click',function(){apply(null);say('All inputs restored to defaults.')});
+$('sample').addEventListener('click',function(){apply({price:'30',units:'1',blank:'9',print:'4',cust:'5',sd:'6',mf:'6.5',mfb:'rev',mfx:'0.2',lst:'0.2',pp:'3',ppb:'rev',pfx:'0.3',adv:'3',admode:'order',orders:'100'});say('Sample data loaded (illustrative values, not official fees).')});
+var KEY='pod_saved_v1';
+function store(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function fillList(){var s=store(),L=$('slist');L.textContent='';var n=Object.keys(s);if(!n.length){var e=el('option',null,'No saved scenarios');e.value='';L.appendChild(e)}n.forEach(function(k){var e=el('option',null,k);e.value=k;L.appendChild(e)})}
+$('save').addEventListener('click',function(){var n=$('sname').value.trim().slice(0,40);if(!n){say('Enter a name to save.');return}try{var s=store();s[n]=state();localStorage.setItem(KEY,JSON.stringify(s));fillList();$('slist').value=n;say('Saved in this browser only.')}catch(e){say('Saving is unavailable or storage is full.')}});
+$('load').addEventListener('click',function(){var s=store(),k=$('slist').value;if(!k||!s[k]){say('Nothing to load.');return}apply(s[k]);say('Loaded "'+k+'".')});
+$('del').addEventListener('click',function(){var s=store(),k=$('slist').value;if(!k||!s[k]){say('Nothing to delete.');return}delete s[k];try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}fillList();say('Deleted.')});
+
+[].forEach.call(R.querySelectorAll('.pod-tab'),function(b){b.addEventListener('click',function(){R.setAttribute('data-mode',b.getAttribute('data-m'));[].forEach.call(R.querySelectorAll('.pod-tab'),function(x){x.setAttribute('aria-selected',x===b?'true':'false')})})});
+var tm=null;
+R.addEventListener('input',function(e){if(e.target.classList.contains('pod-x'))return;clearTimeout(tm);tm=setTimeout(render,80)});
+R.addEventListener('change',function(e){if(e.target.classList.contains('pod-x'))return;render()});
+fillList();render();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+</div>
