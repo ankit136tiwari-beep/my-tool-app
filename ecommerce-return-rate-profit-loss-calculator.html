@@ -1,2141 +1,378 @@
-<!-- ==========================================================================
-     ECOMMERCE RETURN RATE PROFIT LOSS CALCULATOR
-     Production-ready standalone component for Google Blogger & Web CMS
-     ========================================================================== -->
-
-<div id="ecommerce-return-calculator" class="erc-app-wrapper" role="region" aria-label="Ecommerce Return Rate Profit Loss Calculator">
-  <style>
-    /* Scoped Styles for Ecommerce Return Rate Profit Loss Calculator */
-    #ecommerce-return-calculator {
-      --erc-primary: #1e40af;
-      --erc-primary-hover: #1d4ed8;
-      --erc-primary-light: #eff6ff;
-      --erc-secondary: #0f172a;
-      --erc-surface: #ffffff;
-      --erc-bg: #f8fafc;
-      --erc-border: #e2e8f0;
-      --erc-border-focus: #3b82f6;
-      --erc-text: #1e293b;
-      --erc-text-muted: #64748b;
-      --erc-danger: #dc2626;
-      --erc-danger-bg: #fef2f2;
-      --erc-warning: #d97706;
-      --erc-warning-bg: #fffbeb;
-      --erc-success: #16a34a;
-      --erc-success-bg: #f0fdf4;
-      --erc-radius: 10px;
-      --erc-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --erc-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-      --erc-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-      --erc-font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      
-      font-family: var(--erc-font);
-      color: var(--erc-text);
-      background-color: var(--erc-bg);
-      line-height: 1.5;
-      padding: 1rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      box-sizing: border-box;
-    }
-
-    #ecommerce-return-calculator * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    /* Typography & Header */
-    .erc-main-header {
-      text-align: center;
-      margin-bottom: 2rem;
-      padding: 1.5rem 1rem 0;
-    }
-
-    .erc-main-title {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--erc-secondary);
-      letter-spacing: -0.025em;
-      line-height: 1.25;
-      margin-bottom: 0.5rem;
-    }
-
-    .erc-main-subtitle {
-      font-size: 1.05rem;
-      color: var(--erc-text-muted);
-      max-width: 780px;
-      margin: 0 auto;
-    }
-
-    /* Top Action Bar */
-    .erc-action-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--erc-surface);
-      border: 1px solid var(--erc-border);
-      border-radius: var(--erc-radius);
-      padding: 0.75rem 1rem;
-      margin-bottom: 1.5rem;
-      gap: 0.75rem;
-      box-shadow: var(--erc-shadow-sm);
-    }
-
-    .erc-toolbar-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    .erc-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      padding: 0.5rem 0.85rem;
-      font-size: 0.875rem;
-      font-weight: 600;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border: 1px solid transparent;
-      background: #f1f5f9;
-      color: var(--erc-text);
-    }
-
-    .erc-btn:hover {
-      background: #e2e8f0;
-    }
-
-    .erc-btn-primary {
-      background: var(--erc-primary);
-      color: #ffffff;
-    }
-
-    .erc-btn-primary:hover {
-      background: var(--erc-primary-hover);
-    }
-
-    .erc-btn-outline {
-      background: transparent;
-      border-color: var(--erc-border);
-    }
-
-    .erc-btn-outline:hover {
-      background: #f8fafc;
-      border-color: var(--erc-text-muted);
-    }
-
-    /* Grid Layout */
-    .erc-workspace-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.75rem;
-    }
-
-    @media (min-width: 1024px) {
-      .erc-workspace-grid {
-        grid-template-columns: 1.15fr 0.85fr;
-      }
-    }
-
-    /* Card Panels */
-    .erc-panel {
-      background: var(--erc-surface);
-      border: 1px solid var(--erc-border);
-      border-radius: var(--erc-radius);
-      box-shadow: var(--erc-shadow-sm);
-      margin-bottom: 1.5rem;
-      overflow: hidden;
-    }
-
-    .erc-panel-header {
-      padding: 1rem 1.25rem;
-      background: #ffffff;
-      border-bottom: 1px solid var(--erc-border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .erc-panel-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--erc-secondary);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .erc-panel-body {
-      padding: 1.25rem;
-    }
-
-    /* Form Fields */
-    .erc-form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-    }
-
-    .erc-form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-
-    .erc-label {
-      font-size: 0.825rem;
-      font-weight: 600;
-      color: var(--erc-text);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .erc-tooltip-trigger {
-      display: inline-block;
-      cursor: help;
-      color: var(--erc-text-muted);
-      font-size: 0.75rem;
-      border: 1px solid var(--erc-border);
-      border-radius: 50%;
-      width: 16px;
-      height: 16px;
-      text-align: center;
-      line-height: 14px;
-      font-weight: bold;
-    }
-
-    .erc-input, .erc-select {
-      width: 100%;
-      padding: 0.55rem 0.75rem;
-      font-size: 0.9rem;
-      border: 1px solid var(--erc-border);
-      border-radius: 6px;
-      background-color: #fff;
-      color: var(--erc-text);
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .erc-input:focus, .erc-select:focus {
-      outline: none;
-      border-color: var(--erc-border-focus);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-    }
-
-    .erc-input-prefix-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .erc-input-prefix {
-      position: absolute;
-      left: 0.65rem;
-      font-size: 0.85rem;
-      color: var(--erc-text-muted);
-      pointer-events: none;
-    }
-
-    .erc-input-prefix-wrap .erc-input {
-      padding-left: 1.75rem;
-    }
-
-    .erc-help-text {
-      font-size: 0.75rem;
-      color: var(--erc-text-muted);
-    }
-
-    /* Accordions / Collapsible Sections */
-    .erc-collapsible-header {
-      cursor: pointer;
-      user-select: none;
-      background: #f8fafc;
-    }
-
-    .erc-collapsible-header:hover {
-      background: #f1f5f9;
-    }
-
-    .erc-collapse-icon {
-      transition: transform 0.2s ease;
-      font-size: 0.8rem;
-    }
-
-    .erc-panel.erc-collapsed .erc-panel-body {
-      display: none;
-    }
-
-    .erc-panel.erc-collapsed .erc-collapse-icon {
-      transform: rotate(-90deg);
-    }
-
-    /* Dashboard & KPI Metrics */
-    .erc-kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 0.85rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .erc-kpi-card {
-      background: #fff;
-      border: 1px solid var(--erc-border);
-      border-radius: var(--erc-radius);
-      padding: 1rem;
-      box-shadow: var(--erc-shadow-sm);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .erc-kpi-title {
-      font-size: 0.775rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--erc-text-muted);
-      margin-bottom: 0.25rem;
-    }
-
-    .erc-kpi-value {
-      font-size: 1.45rem;
-      font-weight: 800;
-      color: var(--erc-secondary);
-      line-height: 1.2;
-    }
-
-    .erc-kpi-subtext {
-      font-size: 0.75rem;
-      margin-top: 0.35rem;
-      color: var(--erc-text-muted);
-    }
-
-    .erc-kpi-danger .erc-kpi-value { color: var(--erc-danger); }
-    .erc-kpi-success .erc-kpi-value { color: var(--erc-success); }
-    .erc-kpi-warning .erc-kpi-value { color: var(--erc-warning); }
-
-    /* Financial Statement Waterfall Table */
-    .erc-statement-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.875rem;
-      margin-top: 0.5rem;
-    }
-
-    .erc-statement-table tr {
-      border-bottom: 1px solid var(--erc-border);
-    }
-
-    .erc-statement-table td {
-      padding: 0.65rem 0.5rem;
-    }
-
-    .erc-statement-table td:last-child {
-      text-align: right;
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .erc-statement-total {
-      font-weight: 800 !important;
-      background: #f8fafc;
-      border-top: 2px solid var(--erc-secondary);
-      border-bottom: 2px solid var(--erc-secondary);
-    }
-
-    .erc-statement-subtotal {
-      font-weight: 700;
-      background: #fdfdfd;
-    }
-
-    .erc-text-danger { color: var(--erc-danger); }
-    .erc-text-success { color: var(--erc-success); }
-
-    /* Condition Table (Inventory Recovery) */
-    .erc-table-responsive {
-      overflow-x: auto;
-      margin-top: 0.5rem;
-    }
-
-    .erc-data-table {
-      width: 100%;
-      min-width: 580px;
-      border-collapse: collapse;
-      font-size: 0.825rem;
-    }
-
-    .erc-data-table th, .erc-data-table td {
-      padding: 0.6rem;
-      border: 1px solid var(--erc-border);
-      text-align: left;
-    }
-
-    .erc-data-table th {
-      background: #f8fafc;
-      font-weight: 700;
-      color: var(--erc-secondary);
-    }
-
-    .erc-data-table input {
-      padding: 0.35rem 0.5rem;
-      font-size: 0.825rem;
-      border: 1px solid var(--erc-border);
-      border-radius: 4px;
-      width: 100%;
-    }
-
-    /* Tabs */
-    .erc-tabs {
-      display: flex;
-      border-bottom: 2px solid var(--erc-border);
-      margin-bottom: 1.25rem;
-      gap: 0.5rem;
-    }
-
-    .erc-tab-btn {
-      background: none;
-      border: none;
-      padding: 0.65rem 1rem;
-      font-size: 0.875rem;
-      font-weight: 700;
-      color: var(--erc-text-muted);
-      cursor: pointer;
-      position: relative;
-      bottom: -2px;
-      border-bottom: 2px solid transparent;
-      transition: all 0.2s;
-    }
-
-    .erc-tab-btn.active {
-      color: var(--erc-primary);
-      border-bottom-color: var(--erc-primary);
-    }
-
-    .erc-tab-content {
-      display: none;
-    }
-
-    .erc-tab-content.active {
-      display: block;
-    }
-
-    /* Content & Documentation Sections */
-    .erc-seo-content {
-      background: var(--erc-surface);
-      border: 1px solid var(--erc-border);
-      border-radius: var(--erc-radius);
-      padding: 2rem;
-      margin-top: 2rem;
-      box-shadow: var(--erc-shadow-sm);
-    }
-
-    .erc-seo-content h2 {
-      font-size: 1.45rem;
-      font-weight: 800;
-      color: var(--erc-secondary);
-      margin: 1.75rem 0 0.85rem;
-      line-height: 1.3;
-      border-bottom: 1px solid var(--erc-border);
-      padding-bottom: 0.4rem;
-    }
-
-    .erc-seo-content h2:first-of-type {
-      margin-top: 0;
-    }
-
-    .erc-seo-content h3 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--erc-secondary);
-      margin: 1.25rem 0 0.5rem;
-    }
-
-    .erc-seo-content p, .erc-seo-content li {
-      font-size: 0.95rem;
-      color: #334155;
-      line-height: 1.65;
-      margin-bottom: 0.85rem;
-    }
-
-    .erc-seo-content ul, .erc-seo-content ol {
-      padding-left: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .erc-seo-content li {
-      margin-bottom: 0.4rem;
-    }
-
-    .erc-formula-card {
-      background: #f8fafc;
-      border-left: 4px solid var(--erc-primary);
-      padding: 1rem;
-      border-radius: 4px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.875rem;
-      margin: 1rem 0;
-      color: #0f172a;
-    }
-
-    .erc-alert {
-      padding: 0.85rem 1.1rem;
-      border-radius: 6px;
-      margin-bottom: 1rem;
-      font-size: 0.875rem;
-      line-height: 1.4;
-    }
-
-    .erc-alert-info {
-      background: var(--erc-primary-light);
-      border: 1px solid #bfdbfe;
-      color: #1e3a8a;
-    }
-
-    .erc-alert-warning {
-      background: var(--erc-warning-bg);
-      border: 1px solid #fde68a;
-      color: #92400e;
-    }
-
-    /* FAQ Accordion */
-    .erc-faq-item {
-      border: 1px solid var(--erc-border);
-      border-radius: 6px;
-      margin-bottom: 0.75rem;
-      overflow: hidden;
-    }
-
-    .erc-faq-question {
-      width: 100%;
-      text-align: left;
-      background: #ffffff;
-      padding: 0.9rem 1.1rem;
-      border: none;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--erc-secondary);
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .erc-faq-question:hover {
-      background: #f8fafc;
-    }
-
-    .erc-faq-answer {
-      padding: 0.9rem 1.1rem;
-      background: #ffffff;
-      border-top: 1px solid var(--erc-border);
-      display: none;
-      font-size: 0.9rem;
-      color: #334155;
-      line-height: 1.6;
-    }
-
-    .erc-faq-item.active .erc-faq-answer {
-      display: block;
-    }
-
-    .erc-faq-item.active .erc-faq-arrow {
-      transform: rotate(180deg);
-    }
-
-    /* Print Stylesheet */
-    @media print {
-      body * {
-        visibility: hidden;
-      }
-      #ecommerce-return-calculator, #ecommerce-return-calculator * {
-        visibility: visible;
-      }
-      #ecommerce-return-calculator {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        max-width: 100%;
-        background: #fff;
-        padding: 0;
-      }
-      .erc-action-toolbar, .erc-tabs, .erc-btn, .erc-collapsible-header span, .erc-faq-section, .erc-related-tools {
-        display: none !important;
-      }
-      .erc-workspace-grid {
-        display: block !important;
-      }
-      .erc-panel {
-        border: 1px solid #ccc;
-        page-break-inside: avoid;
-        margin-bottom: 1rem;
-      }
-    }
-  </style>
-
-  <!-- Canonical and Schema Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebPage",
-        "@id": "https://my-tool-app.pages.dev/ecommerce-return-rate-profit-loss-calculator",
-        "url": "https://my-tool-app.pages.dev/ecommerce-return-rate-profit-loss-calculator",
-        "name": "Ecommerce Return Rate Profit Loss Calculator",
-        "description": "Calculate ecommerce return rates, refund costs and profit losses. Analyze return expenses and discover how reducing returns can improve profits.",
-        "isPartOf": {
-          "@type": "WebSite",
-          "@id": "https://my-tool-app.pages.dev/#website",
-          "url": "https://my-tool-app.pages.dev/",
-          "name": "Ecommerce Analytics & Calculators"
-        }
-      },
-      {
-        "@type": "SoftwareApplication",
-        "name": "Ecommerce Return Rate Profit Loss Calculator",
-        "operatingSystem": "Web Browser",
-        "applicationCategory": "BusinessApplication",
-        "browserRequirements": "Requires JavaScript. Compatible with modern web browsers.",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        "description": "Financial analytics tool to model product return rates, logistics costs, refund reversals, inventory write-offs, and return reduction savings."
-      },
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://my-tool-app.pages.dev/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Ecommerce Return Rate Profit Loss Calculator",
-            "item": "https://my-tool-app.pages.dev/ecommerce-return-rate-profit-loss-calculator"
-          }
-        ]
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What is an Ecommerce Return Rate Profit Loss Calculator?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "An Ecommerce Return Rate Profit Loss Calculator is a financial tool that computes overall order and unit return rates, measures reverse shipping, processing, restocking expenses, and analyzes net profit reduction caused by returned products."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I calculate ecommerce return rate?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Order Return Rate is calculated as (Returned Orders ÷ Eligible Delivered Orders) × 100. Unit Return Rate is calculated as (Returned Units ÷ Eligible Delivered Units) × 100. Cancelled pre-fulfillment orders must be excluded from delivered totals."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What is the difference between order return rate and unit return rate?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Order return rate tracks how many complete or partial shipments came back relative to total shipments. Unit return rate tracks how many individual product items came back relative to total items delivered, which accounts for multi-item carts."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I calculate ecommerce return costs?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Total return cost is calculated by summing reverse freight, return shipping labels, inspection labor, restocking and repackaging fees, unrecoverable payment gateway fees, non-refundable marketplace commissions, and the cost of damaged or written-off inventory."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How do refunds affect ecommerce profit?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Refunds erase the gross revenue recognized on the sale, while the merchant frequently retains unrecoverable merchant processing fees, outbound and reverse delivery costs, handling labor, and potential inventory depreciation if the item cannot be resold at full price."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I calculate product return rate?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Product return rate isolates specific SKUs: (Returned Units of Product A ÷ Total Delivered Units of Product A) × 100. This isolates high-friction products from the store-wide baseline."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I calculate the cost of damaged returned products?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Multiply the quantity of unsellable or damaged units by the landed product cost (unit COGS). If the item can be refurbished or liquidated, subtract the net recovered liquidation value minus repair labor."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Can returned products be counted as recoverable inventory?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes. If an item is unopened or inspected and returned to stock in Grade-A condition, its cost of goods remains an asset on your balance sheet rather than a complete financial write-off."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How can I calculate potential savings by reducing product returns?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Calculate Avoided Returns = (Current Return Rate - Target Return Rate) × Delivered Orders. Then multiply Avoided Returns by the average non-recoverable operational loss per return."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Does this calculator automatically connect to Shopify or Amazon?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "No. This tool operates entirely client-side using manual data inputs. It does not require API keys, credentials, or third-party platform integrations, ensuring privacy and control."
-            }
-          }
-        ]
-      }
-    ]
-  }
-  </script>
-
-  <!-- 1. H1 HEADING (Follows Strict SEO Guidelines) -->
-  <header class="erc-main-header">
-    <h1 class="erc-main-title">Ecommerce Return Rate Profit Loss Calculator</h1>
-    <p class="erc-main-subtitle">
-      Analyze order return rates, reverse logistics expenses, unrecoverable payment fees, inventory write-offs, and true bottom-line profit impact.
-    </p>
-  </header>
-
-  <!-- TOP ACTION TOOLBAR -->
-  <div class="erc-action-toolbar">
-    <div class="erc-toolbar-group">
-      <span style="font-size: 0.85rem; font-weight: 700; color: var(--erc-text-muted);">PRESETS:</span>
-      <button type="button" class="erc-btn" id="erc-load-fashion" title="Load High-Return Fashion D2C Benchmark">Apparel / Fashion</button>
-      <button type="button" class="erc-btn" id="erc-load-electronics" title="Load Electronics / Refurbish Benchmark">Consumer Electronics</button>
-      <button type="button" class="erc-btn" id="erc-load-standard" title="Load Standard Low-Return Retail Benchmark">General Retail</button>
-    </div>
-    <div class="erc-toolbar-group">
-      <button type="button" class="erc-btn erc-btn-outline" id="erc-copy-btn" title="Copy financial summary to clipboard">
-        <span>📋</span> Copy Summary
-      </button>
-      <button type="button" class="erc-btn erc-btn-outline" id="erc-csv-btn" title="Export analysis to safe CSV">
-        <span>📥</span> Export CSV
-      </button>
-      <button type="button" class="erc-btn erc-btn-outline" id="erc-print-btn" title="Print professional financial statement">
-        <span>🖨️</span> Print Report
-      </button>
-      <button type="button" class="erc-btn" id="erc-reset-btn" title="Reset all input fields to zero">
-        <span>🔄</span> Reset
-      </button>
-    </div>
-  </div>
-
-  <!-- NAVIGATION TABS -->
-  <nav class="erc-tabs" role="tablist" aria-label="Analysis Modes">
-    <button type="button" class="erc-tab-btn active" role="tab" aria-selected="true" data-tab="erc-tab-main">Storewide Analysis</button>
-    <button type="button" class="erc-tab-btn" role="tab" aria-selected="false" data-tab="erc-tab-products">Product Comparison (SKU A/B/C)</button>
-    <button type="button" class="erc-tab-btn" role="tab" aria-selected="false" data-tab="erc-tab-scenario">Scenario What-If Modeling</button>
-  </nav>
-
-  <!-- ==================== TAB 1: STOREWIDE ANALYSIS ==================== -->
-  <div id="erc-tab-main" class="erc-tab-content active" role="tabpanel">
-    <div class="erc-workspace-grid">
-      
-      <!-- LEFT COLUMN: INPUT PANELS -->
-      <div class="erc-input-column">
-        
-        <!-- SECTION A: Business & Reporting Information -->
-        <section class="erc-panel" id="erc-sec-biz">
-          <div class="erc-panel-header erc-collapsible-header">
-            <h2 class="erc-panel-title"><span>🏢</span> Section A: Reporting Parameters</h2>
-            <span class="erc-collapse-icon">▼</span>
-          </div>
-          <div class="erc-panel-body">
-            <div class="erc-form-grid">
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-biz-name">Business / Store Name</label>
-                <input type="text" id="erc-biz-name" class="erc-input" placeholder="e.g. Acme Apparel" maxlength="60">
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-currency">Currency Symbol</label>
-                <select id="erc-currency" class="erc-select">
-                  <option value="$" selected>USD ($)</option>
-                  <option value="₹">INR (₹)</option>
-                  <option value="£">GBP (£)</option>
-                  <option value="€">EUR (€)</option>
-                  <option value="CA$">CAD (CA$)</option>
-                  <option value="AU$">AUD (AU$)</option>
-                  <option value="AED ">AED (د.إ)</option>
-                </select>
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-period">Reporting Period</label>
-                <select id="erc-period" class="erc-select">
-                  <option value="Monthly" selected>Monthly</option>
-                  <option value="Quarterly">Quarterly</option>
-                  <option value="Yearly">Yearly</option>
-                  <option value="Weekly">Weekly</option>
-                  <option value="Custom">Custom Period</option>
-                </select>
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-sales-channel">Sales Channel</label>
-                <select id="erc-sales-channel" class="erc-select">
-                  <option value="Shopify Store">Shopify Store</option>
-                  <option value="WooCommerce Store">WooCommerce Store</option>
-                  <option value="Amazon Marketplace">Amazon Marketplace</option>
-                  <option value="Flipkart Marketplace">Flipkart Marketplace</option>
-                  <option value="Direct D2C Brand">Direct D2C Brand</option>
-                  <option value="Multi-Channel Ecommerce">Multi-Channel Ecommerce</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECTION B: Sales and Order Information -->
-        <section class="erc-panel" id="erc-sec-sales">
-          <div class="erc-panel-header erc-collapsible-header">
-            <h2 class="erc-panel-title"><span>📦</span> Section B: Sales & Order Volume</h2>
-            <span class="erc-collapse-icon">▼</span>
-          </div>
-          <div class="erc-panel-body">
-            <div class="erc-form-grid">
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-delivered-orders">
-                  Delivered Orders
-                  <span class="erc-tooltip-trigger" title="Total successfully delivered orders (excluding cancelled pre-shipment orders)">?</span>
-                </label>
-                <input type="number" id="erc-delivered-orders" class="erc-input" min="0" step="1" value="1200" placeholder="1200">
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-delivered-units">
-                  Delivered Units
-                  <span class="erc-tooltip-trigger" title="Total units delivered. Accounts for multi-item baskets">?</span>
-                </label>
-                <input type="number" id="erc-delivered-units" class="erc-input" min="0" step="1" value="1800" placeholder="1800">
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-gross-revenue">Gross Sales Revenue</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-gross-revenue" class="erc-input" min="0" step="0.01" value="72000" placeholder="72000.00">
-                </div>
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-discounts">Discounts / Promo Codes</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-discounts" class="erc-input" min="0" step="0.01" value="3600" placeholder="0.00">
-                </div>
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-returned-orders">
-                  Returned Orders
-                  <span class="erc-tooltip-trigger" title="Total shipments with at least one returned unit">?</span>
-                </label>
-                <input type="number" id="erc-returned-orders" class="erc-input" min="0" step="1" value="180" placeholder="180">
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-returned-units">
-                  Returned Units
-                  <span class="erc-tooltip-trigger" title="Total individual units returned by customers">?</span>
-                </label>
-                <input type="number" id="erc-returned-units" class="erc-input" min="0" step="1" value="240" placeholder="240">
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECTION C & D: Refund Details -->
-        <section class="erc-panel" id="erc-sec-refunds">
-          <div class="erc-panel-header erc-collapsible-header">
-            <h2 class="erc-panel-title"><span>💳</span> Section C & D: Refund Computations</h2>
-            <span class="erc-collapse-icon">▼</span>
-          </div>
-          <div class="erc-panel-body">
-            <div class="erc-form-grid">
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-refund-mode">Refund Calculation Mode</label>
-                <select id="erc-refund-mode" class="erc-select">
-                  <option value="auto">Automatic (Units × Avg Net Price)</option>
-                  <option value="manual" selected>Manual Actual Refund Entry</option>
-                </select>
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-total-refunds">Total Refunds Issued</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-total-refunds" class="erc-input" min="0" step="0.01" value="9120" placeholder="0.00">
-                </div>
-                <span class="erc-help-text">Includes full and partial product refund totals.</span>
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-refunded-orders-cnt">Refunded Orders Count</label>
-                <input type="number" id="erc-refunded-orders-cnt" class="erc-input" min="0" step="1" value="180" placeholder="180">
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-customer-concessions">Customer Concessions / Goodwill</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-customer-concessions" class="erc-input" min="0" step="0.01" value="150" placeholder="0.00">
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECTION E: Return Shipping & Logistics -->
-        <section class="erc-panel" id="erc-sec-shipping">
-          <div class="erc-panel-header erc-collapsible-header">
-            <h2 class="erc-panel-title"><span>🚚</span> Section E: Reverse Shipping & Logistics Costs</h2>
-            <span class="erc-collapse-icon">▼</span>
-          </div>
-          <div class="erc-panel-body">
-            <div class="erc-form-grid">
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-return-ship-per-order">Return Label / Shipping (Per Return Order)</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-return-ship-per-order" class="erc-input" min="0" step="0.01" value="6.50" placeholder="0.00">
-                </div>
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-pickup-fee">Courier Pickup Surcharge (Per Return Order)</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-pickup-fee" class="erc-input" min="0" step="0.01" value="1.00" placeholder="0.00">
-                </div>
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-fixed-logistics">Fixed Monthly Logistics / Freight Contract</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-fixed-logistics" class="erc-input" min="0" step="0.01" value="0.00" placeholder="0.00">
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECTION F: Return Processing & Restocking -->
-        <section class="erc-panel" id="erc-sec-processing">
-          <div class="erc-panel-header erc-collapsible-header">
-            <h2 class="erc-panel-title"><span>🏷️</span> Section F: Warehouse Inspection & Restocking</h2>
-            <span class="erc-collapse-icon">▼</span>
-          </div>
-          <div class="erc-panel-body">
-            <div class="erc-form-grid">
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-inspect-per-unit">Inspection & QA Cost (Per Returned Unit)</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-inspect-per-unit" class="erc-input" min="0" step="0.01" value="1.50" placeholder="0.00">
-                </div>
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-repack-per-unit">Repackaging / Relabeling (Per Returned Unit)</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-repack-per-unit" class="erc-input" min="0" step="0.01" value="1.25" placeholder="0.00">
-                </div>
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-restock-fee-per-unit">Restocking Labor (Per Returned Unit)</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-restock-fee-per-unit" class="erc-input" min="0" step="0.01" value="0.75" placeholder="0.00">
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECTION G: Inventory Condition & Value Recovery -->
-        <section class="erc-panel" id="erc-sec-inventory">
-          <div class="erc-panel-header erc-collapsible-header">
-            <h2 class="erc-panel-title"><span>♻️</span> Section G: Product Condition & Inventory Recovery</h2>
-            <span class="erc-collapse-icon">▼</span>
-          </div>
-          <div class="erc-panel-body">
-            <p class="erc-help-text" style="margin-bottom: 0.75rem;">
-              Classify returned units. Units restored to stock recover asset value; damaged or scrap units become a permanent inventory loss.
-            </p>
-            <div class="erc-table-responsive">
-              <table class="erc-data-table" id="erc-condition-table">
-                <thead>
-                  <tr>
-                    <th>Condition Grade</th>
-                    <th style="width: 80px;">Units</th>
-                    <th>Resale % Value</th>
-                    <th>Repair Cost/Unit</th>
-                    <th>Net Asset Recovery</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr data-cat="unopened">
-                    <td><strong>Grade A (Unopened / Resellable)</strong></td>
-                    <td><input type="number" class="erc-cond-units" min="0" value="150"></td>
-                    <td><input type="number" class="erc-cond-resale-pct" min="0" max="100" value="100">%</td>
-                    <td><input type="number" class="erc-cond-repair" min="0" step="0.01" value="0.00"></td>
-                    <td class="erc-cond-row-net">$0.00</td>
-                  </tr>
-                  <tr data-cat="opened">
-                    <td><strong>Grade B (Opened / Repackaged)</strong></td>
-                    <td><input type="number" class="erc-cond-units" min="0" value="50"></td>
-                    <td><input type="number" class="erc-cond-resale-pct" min="0" max="100" value="85">%</td>
-                    <td><input type="number" class="erc-cond-repair" min="0" step="0.01" value="2.00"></td>
-                    <td class="erc-cond-row-net">$0.00</td>
-                  </tr>
-                  <tr data-cat="refurbish">
-                    <td><strong>Grade C (Minor Defect / Refurbish)</strong></td>
-                    <td><input type="number" class="erc-cond-units" min="0" value="25"></td>
-                    <td><input type="number" class="erc-cond-resale-pct" min="0" max="100" value="60">%</td>
-                    <td><input type="number" class="erc-cond-repair" min="0" step="0.01" value="6.50"></td>
-                    <td class="erc-cond-row-net">$0.00</td>
-                  </tr>
-                  <tr data-cat="damaged">
-                    <td><strong>Grade D (Damaged / Liquidated)</strong></td>
-                    <td><input type="number" class="erc-cond-units" min="0" value="10"></td>
-                    <td><input type="number" class="erc-cond-resale-pct" min="0" max="100" value="20">%</td>
-                    <td><input type="number" class="erc-cond-repair" min="0" step="0.01" value="0.00"></td>
-                    <td class="erc-cond-row-net">$0.00</td>
-                  </tr>
-                  <tr data-cat="scrap">
-                    <td><strong>Total Scrap / Unsellable (Write-off)</strong></td>
-                    <td><input type="number" class="erc-cond-units" min="0" value="5"></td>
-                    <td><input type="number" class="erc-cond-resale-pct" min="0" max="100" value="0" readonly>%</td>
-                    <td><input type="number" class="erc-cond-repair" min="0" step="0.01" value="0.50" title="Disposal fee"></td>
-                    <td class="erc-cond-row-net">$0.00</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECTION H: Payment Gateway & Marketplace Non-Recoverable Fees -->
-        <section class="erc-panel" id="erc-sec-fees">
-          <div class="erc-panel-header erc-collapsible-header">
-            <h2 class="erc-panel-title"><span>🏦</span> Section H: Unrecoverable Transaction Fees</h2>
-            <span class="erc-collapse-icon">▼</span>
-          </div>
-          <div class="erc-panel-body">
-            <div class="erc-form-grid">
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-non-refund-pg-pct">
-                  Unrecoverable Merchant Fee %
-                  <span class="erc-tooltip-trigger" title="Payment processors like Stripe retain original transaction processing fees (~2.9%)">?</span>
-                </label>
-                <input type="number" id="erc-non-refund-pg-pct" class="erc-input" min="0" max="10" step="0.1" value="2.9" placeholder="2.9">
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-fixed-pg-fee">Fixed Fee Retained Per Refund</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-fixed-pg-fee" class="erc-input" min="0" step="0.01" value="0.30" placeholder="0.30">
-                </div>
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-market-fee-loss">Retained Marketplace Commission / Chargeback Fees</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-market-fee-loss" class="erc-input" min="0" step="0.01" value="120.00" placeholder="0.00">
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECTION I: Baseline Profit Mode -->
-        <section class="erc-panel" id="erc-sec-cogs">
-          <div class="erc-panel-header erc-collapsible-header">
-            <h2 class="erc-panel-title"><span>📊</span> Section I: Product Cost & Baseline Profit</h2>
-            <span class="erc-collapse-icon">▼</span>
-          </div>
-          <div class="erc-panel-body">
-            <div class="erc-form-grid">
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-unit-cogs">Average Landed Cost (COGS / Unit)</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-unit-cogs" class="erc-input" min="0" step="0.01" value="12.00" placeholder="12.00">
-                </div>
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-outbound-shipping-unit">Original Outbound Delivery Cost / Order</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-outbound-shipping-unit" class="erc-input" min="0" step="0.01" value="5.00" placeholder="0.00">
-                </div>
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-ad-spend">Attributed Marketing / Ad Spend</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-ad-spend" class="erc-input" min="0" step="0.01" value="12000" placeholder="0.00">
-                </div>
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-operating-exp">Other Operating Overhead</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-operating-exp" class="erc-input" min="0" step="0.01" value="4500" placeholder="0.00">
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </div>
-
-      <!-- RIGHT COLUMN: RESULTS DASHBOARD -->
-      <div class="erc-results-column">
-        
-        <!-- MAIN KPI DASHBOARD -->
-        <div class="erc-kpi-grid">
-          <div class="erc-kpi-card erc-kpi-warning">
-            <div class="erc-kpi-title">Order Return Rate</div>
-            <div class="erc-kpi-value" id="erc-kpi-order-rate">0.0%</div>
-            <div class="erc-kpi-subtext" id="erc-kpi-order-sub">0 returned / 0 delivered</div>
-          </div>
-          <div class="erc-kpi-card erc-kpi-warning">
-            <div class="erc-kpi-title">Unit Return Rate</div>
-            <div class="erc-kpi-value" id="erc-kpi-unit-rate">0.0%</div>
-            <div class="erc-kpi-subtext" id="erc-kpi-unit-sub">0 units returned</div>
-          </div>
-          <div class="erc-kpi-card erc-kpi-danger">
-            <div class="erc-kpi-title">Total Refunds Issued</div>
-            <div class="erc-kpi-value" id="erc-kpi-refunds">$0.00</div>
-            <div class="erc-kpi-subtext" id="erc-kpi-refund-pct">0.0% of Gross Revenue</div>
-          </div>
-          <div class="erc-kpi-card erc-kpi-danger">
-            <div class="erc-kpi-title">Direct Return Costs</div>
-            <div class="erc-kpi-value" id="erc-kpi-direct-costs">$0.00</div>
-            <div class="erc-kpi-subtext">Freight, QA, fees & disposal</div>
-          </div>
-          <div class="erc-kpi-card erc-kpi-success">
-            <div class="erc-kpi-title">Recovered Stock Value</div>
-            <div class="erc-kpi-value" id="erc-kpi-recovery">$0.00</div>
-            <div class="erc-kpi-subtext" id="erc-kpi-recovery-sub">Asset retained via restock</div>
-          </div>
-          <div class="erc-kpi-card" id="erc-kpi-profit-card">
-            <div class="erc-kpi-title">Return-Adjusted Profit</div>
-            <div class="erc-kpi-value" id="erc-kpi-adj-profit">$0.00</div>
-            <div class="erc-kpi-subtext" id="erc-kpi-margin-sub">Margin: 0.0%</div>
-          </div>
-        </div>
-
-        <!-- DETAILED FINANCIAL RECONCILIATION STATEMENT -->
-        <div class="erc-panel">
-          <div class="erc-panel-header">
-            <h2 class="erc-panel-title"><span>📑</span> Return Financial Reconciliation</h2>
-            <span style="font-size: 0.75rem; color: var(--erc-text-muted);" id="erc-statement-channel">Direct D2C</span>
-          </div>
-          <div class="erc-panel-body">
-            <table class="erc-statement-table" aria-label="Financial Reconciliation Statement">
-              <tbody>
-                <tr>
-                  <td>Gross Sales Revenue</td>
-                  <td id="erc-st-gross">$0.00</td>
-                </tr>
-                <tr>
-                  <td>Less: Discounts & Promos</td>
-                  <td class="erc-text-danger" id="erc-st-discounts">-$0.00</td>
-                </tr>
-                <tr>
-                  <td>Less: Customer Refunds Issued</td>
-                  <td class="erc-text-danger" id="erc-st-refunds">-$0.00</td>
-                </tr>
-                <tr class="erc-statement-subtotal">
-                  <td><strong>= Net Recognized Revenue</strong></td>
-                  <td id="erc-st-net-rev"><strong>$0.00</strong></td>
-                </tr>
-                <tr>
-                  <td>Cost of Goods Sold (Retained Sales)</td>
-                  <td class="erc-text-danger" id="erc-st-cogs">-$0.00</td>
-                </tr>
-                <tr>
-                  <td>Outbound Shipping (All Delivered Orders)</td>
-                  <td class="erc-text-danger" id="erc-st-outbound">-$0.00</td>
-                </tr>
-                <tr>
-                  <td>Advertising & Customer Acquisition</td>
-                  <td class="erc-text-danger" id="erc-st-adspend">-$0.00</td>
-                </tr>
-                <tr>
-                  <td>Operating Overhead & Admin</td>
-                  <td class="erc-text-danger" id="erc-st-overhead">-$0.00</td>
-                </tr>
-                <tr class="erc-statement-subtotal">
-                  <td><strong>Pre-Return Operating Baseline Profit</strong></td>
-                  <td id="erc-st-baseline-profit"><strong>$0.00</strong></td>
-                </tr>
-                <tr>
-                  <td>Reverse Shipping & Return Freight</td>
-                  <td class="erc-text-danger" id="erc-st-rev-freight">-$0.00</td>
-                </tr>
-                <tr>
-                  <td>Restocking, Inspection & Repackaging Labor</td>
-                  <td class="erc-text-danger" id="erc-st-inspect-labor">-$0.00</td>
-                </tr>
-                <tr>
-                  <td>Unrecoverable Gateway Fees & Marketplace Losses</td>
-                  <td class="erc-text-danger" id="erc-st-fee-loss">-$0.00</td>
-                </tr>
-                <tr>
-                  <td>Scrap & Unsellable Product Write-offs</td>
-                  <td class="erc-text-danger" id="erc-st-scrap-writeoff">-$0.00</td>
-                </tr>
-                <tr>
-                  <td>Repair, Refurbishment & Concessions</td>
-                  <td class="erc-text-danger" id="erc-st-repair-costs">-$0.00</td>
-                </tr>
-                <tr class="erc-statement-subtotal">
-                  <td><strong>Total Return-Related Operational Drag</strong></td>
-                  <td class="erc-text-danger" id="erc-st-total-drag"><strong>-$0.00</strong></td>
-                </tr>
-                <tr class="erc-statement-total">
-                  <td><strong>NET RETURN-ADJUSTED PROFIT</strong></td>
-                  <td id="erc-st-final-profit"><strong>$0.00</strong></td>
-                </tr>
-                <tr>
-                  <td>Cost Per Returned Order</td>
-                  <td id="erc-st-cost-per-return">$0.00</td>
-                </tr>
-                <tr>
-                  <td>Break-Even Maximum Return Rate</td>
-                  <td id="erc-st-breakeven-rate">0.0%</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- SECTION K: Return Reduction Savings Calculator -->
-        <div class="erc-panel" id="erc-sec-savings">
-          <div class="erc-panel-header">
-            <h3 class="erc-panel-title"><span>💡</span> Section K: Return Reduction Savings Simulator</h3>
-          </div>
-          <div class="erc-panel-body">
-            <div class="erc-form-grid" style="margin-bottom: 1rem;">
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-target-return-rate">Target Return Rate (%)</label>
-                <input type="number" id="erc-target-return-rate" class="erc-input" min="0" max="100" step="0.5" value="10.0">
-              </div>
-              <div class="erc-form-group">
-                <label class="erc-label" for="erc-avoidable-cost-override">Avoidable Loss / Return</label>
-                <div class="erc-input-prefix-wrap">
-                  <span class="erc-input-prefix erc-curr-label">$</span>
-                  <input type="number" id="erc-avoidable-cost-override" class="erc-input" min="0" step="0.1" value="18.50">
-                </div>
-              </div>
-            </div>
-            <div class="erc-alert erc-alert-info" id="erc-savings-summary">
-              Reducing your return rate to <strong>10.0%</strong> would prevent <strong>60 returned orders</strong>, adding an estimated <strong>$1,110.00</strong> directly to your operating profit.
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== TAB 2: PRODUCT COMPARISON (SKU A / B / C) ==================== -->
-  <div id="erc-tab-products" class="erc-tab-content" role="tabpanel">
-    <div class="erc-panel">
-      <div class="erc-panel-header">
-        <h2 class="erc-panel-title"><span>⚖️</span> Section L: Product-Level Return Rate & Impact Comparison</h2>
-      </div>
-      <div class="erc-panel-body">
-        <p class="erc-help-text" style="margin-bottom: 1rem;">
-          Compare 3 SKUs to separate items with high return percentages from items generating the largest absolute cash losses.
-        </p>
-        <div class="erc-table-responsive">
-          <table class="erc-data-table" id="erc-sku-table">
-            <thead>
-              <tr>
-                <th>Product Identifier</th>
-                <th>Delivered Units</th>
-                <th>Returned Units</th>
-                <th>Selling Price</th>
-                <th>Landed COGS</th>
-                <th>Reverse Ship / Unit</th>
-                <th>Return Rate (%)</th>
-                <th>Total Return Drag</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr id="erc-sku-row-1">
-                <td><input type="text" class="erc-sku-name" value="Product A (Denim Pants)"></td>
-                <td><input type="number" class="erc-sku-delivered" min="1" value="600"></td>
-                <td><input type="number" class="erc-sku-returned" min="0" value="150"></td>
-                <td><input type="number" class="erc-sku-price" min="0" step="0.01" value="65.00"></td>
-                <td><input type="number" class="erc-sku-cogs" min="0" step="0.01" value="18.00"></td>
-                <td><input type="number" class="erc-sku-ship" min="0" step="0.01" value="6.50"></td>
-                <td class="erc-sku-rate-res">25.0%</td>
-                <td class="erc-sku-loss-res">$0.00</td>
-              </tr>
-              <tr id="erc-sku-row-2">
-                <td><input type="text" class="erc-sku-name" value="Product B (Silk Blouse)"></td>
-                <td><input type="number" class="erc-sku-delivered" min="1" value="400"></td>
-                <td><input type="number" class="erc-sku-returned" min="0" value="70"></td>
-                <td><input type="number" class="erc-sku-price" min="0" step="0.01" value="95.00"></td>
-                <td><input type="number" class="erc-sku-cogs" min="0" step="0.01" value="28.00"></td>
-                <td><input type="number" class="erc-sku-ship" min="0" step="0.01" value="6.50"></td>
-                <td class="erc-sku-rate-res">17.5%</td>
-                <td class="erc-sku-loss-res">$0.00</td>
-              </tr>
-              <tr id="erc-sku-row-3">
-                <td><input type="text" class="erc-sku-name" value="Product C (Leather Wallet)"></td>
-                <td><input type="number" class="erc-sku-delivered" min="1" value="200"></td>
-                <td><input type="number" class="erc-sku-returned" min="0" value="10"></td>
-                <td><input type="number" class="erc-sku-price" min="0" step="0.01" value="45.00"></td>
-                <td><input type="number" class="erc-sku-cogs" min="0" step="0.01" value="11.00"></td>
-                <td><input type="number" class="erc-sku-ship" min="0" step="0.01" value="4.50"></td>
-                <td class="erc-sku-rate-res">5.0%</td>
-                <td class="erc-sku-loss-res">$0.00</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="erc-alert erc-alert-warning" id="erc-sku-insight" style="margin-top: 1rem;">
-          Evaluating SKU performance...
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== TAB 3: SCENARIO WHAT-IF MODELING ==================== -->
-  <div id="erc-tab-scenario" class="erc-tab-content" role="tabpanel">
-    <div class="erc-panel">
-      <div class="erc-panel-header">
-        <h2 class="erc-panel-title"><span>🔄</span> Scenario Comparison (Current vs Target Optimization)</h2>
-      </div>
-      <div class="erc-panel-body">
-        <p class="erc-help-text" style="margin-bottom: 1.25rem;">
-          Save your current numbers as Scenario A (Baseline) and compare against improved return logistics policies in Scenario B.
-        </p>
-        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-          <button type="button" class="erc-btn erc-btn-primary" id="erc-save-scenario-btn">Save Current as Scenario A</button>
-          <button type="button" class="erc-btn" id="erc-clear-scenario-btn">Clear Saved Scenarios</button>
-        </div>
-        <div class="erc-table-responsive">
-          <table class="erc-data-table" id="erc-scenario-table">
-            <thead>
-              <tr>
-                <th>Financial Metric</th>
-                <th>Scenario A (Baseline)</th>
-                <th>Scenario B (Optimized)</th>
-                <th>Variance / Benefit</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Order Return Rate</td>
-                <td id="erc-sc-a-rate">15.0%</td>
-                <td id="erc-sc-b-rate">10.0%</td>
-                <td id="erc-sc-var-rate" class="erc-text-success">-5.0% pts</td>
-              </tr>
-              <tr>
-                <td>Total Return Expenses</td>
-                <td id="erc-sc-a-cost">$0.00</td>
-                <td id="erc-sc-b-cost">$0.00</td>
-                <td id="erc-sc-var-cost" class="erc-text-success">-$0.00</td>
-              </tr>
-              <tr>
-                <td>Net Return-Adjusted Profit</td>
-                <td id="erc-sc-a-profit">$0.00</td>
-                <td id="erc-sc-b-profit">$0.00</td>
-                <td id="erc-sc-var-profit" class="erc-text-success">+$0.00</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== SEO CONTENT, DOCUMENTATION & GUIDE ==================== -->
-  <article class="erc-seo-content">
-    
-    <h2>Understanding Ecommerce Return Rates and Financial Drag</h2>
-    <p>
-      In modern digital commerce, product returns represent one of the fastest-growing operational profit drains. When a customer returns an item, the financial damage extends far beyond the loss of the original sale. The merchant often absorbs unrecoverable merchant gateway processing surcharges, outbound logistics, customer return freight labels, warehouse receiving labor, repackaging, defect write-offs, and liquidation markdowns.
-    </p>
-    <p>
-      This <strong>Ecommerce Return Rate Profit Loss Calculator</strong> provides a granular financial model designed specifically for Shopify store owners, Amazon marketplace sellers, WooCommerce operators, and direct-to-consumer (D2C) brands to identify their real bottom-line loss and simulate cost recoveries.
-    </p>
-
-    <h2>How to Use This Calculator</h2>
-    <ol>
-      <li><strong>Step 1: Set Reporting Parameters:</strong> Choose your currency symbol, reporting timeframe (monthly, quarterly, yearly), and primary selling channel.</li>
-      <li><strong>Step 2: Enter Order & Delivery Volume:</strong> Input delivered orders and units sold. Ensure pre-fulfillment cancelled orders are removed from this total.</li>
-      <li><strong>Step 3: Specify Return Quantities:</strong> Enter total returned orders and individual returned units to establish both order-level and unit-level return rates.</li>
-      <li><strong>Step 4: Audit Reverse Logistics & Processing Costs:</strong> Input return shipping label expenses, pickup fees, inspection QA labor, and repackaging fees.</li>
-      <li><strong>Step 5: Classify Inventory Condition:</strong> Enter unit counts across unopened (Grade A), opened (Grade B), refurbishable, damaged, and scrap categories to accurately calculate recoverable balance-sheet value.</li>
-      <li><strong>Step 6: Account for Unrecoverable Payment & Platform Fees:</strong> Enter retained gateway percentages (such as credit card transaction fees) and platform commission losses.</li>
-      <li><strong>Step 7: Analyze Results & Export:</strong> Review the comprehensive reconciliation statement, test return reduction targets, and download or print your report.</li>
-    </ol>
-
-    <h2>Core Features of This Analysis System</h2>
-    <ul>
-      <li><strong>Ecommerce Return Rate Calculator:</strong> Delineates between order-level return rates and unit-level return rates to accurately track multi-item basket behavior.</li>
-      <li><strong>Ecommerce Return Cost Calculator:</strong> Measures the entire reverse pipeline including reverse postage, depot handling, QA labor, and packaging replacement.</li>
-      <li><strong>Ecommerce Refund Calculator:</strong> Tracks gross revenue clawbacks, partial refunds, customer concessions, and average refund amounts per return.</li>
-      <li><strong>Product Return Rate Calculator:</strong> Features a dedicated multi-product comparison matrix to distinguish between items with high return percentages and items generating the largest monetary loss.</li>
-      <li><strong>Ecommerce Return Loss Calculator:</strong> Performs double-entry style financial reconciliation to prevent double-counting inventory cost of goods sold.</li>
-      <li><strong>Inventory Recovery & Salvage Engine:</strong> Classifies items into Grade A through Scrap, preventing merchants from counting salvageable inventory as a 100% loss.</li>
-      <li><strong>Return Reduction Simulator:</strong> Models the exact cash profit unlocked by reducing your return rate by 1% to 5%.</li>
-    </ul>
-
-    <h2>Mathematical Formulas and Worked Financial Example</h2>
-    <p>All computations inside this engine adhere to standard ecommerce financial accounting practices:</p>
-    
-    <div class="erc-formula-card">
-      1. Order Return Rate (%) = (Returned Orders / Delivered Orders) × 100<br>
-      2. Unit Return Rate (%) = (Returned Units / Delivered Units) × 100<br>
-      3. Net Recognized Revenue = Gross Sales - Discounts - Refunds Issued<br>
-      4. Total Direct Return Drag = Reverse Freight + Inspection Labor + Repackaging + Retained Gateway Fees + Salvage Repair Costs + Scrap COGS Write-off<br>
-      5. Return-Adjusted Operating Profit = Net Recognized Revenue - COGS (Retained Sales) - Outbound Delivery - Ad Spend - Operating Overhead - Total Direct Return Drag
-    </div>
-
-    <h3>Hypothetical Worked Example:</h3>
-    <p>
-      Consider an online apparel brand that delivers <strong>1,200 orders</strong> (comprising <strong>1,800 units</strong>) in a given month, generating <strong>$72,000</strong> in gross sales with <strong>$3,600</strong> in promotional discounts:
-    </p>
-    <ul>
-      <li><strong>Returned Orders:</strong> 180 (Order Return Rate = 15.0%)</li>
-      <li><strong>Returned Units:</strong> 240 (Unit Return Rate = 13.33%)</li>
-      <li><strong>Refunds Issued:</strong> $9,120</li>
-      <li><strong>Reverse Freight & Postage ($7.50/order):</strong> $1,350.00</li>
-      <li><strong>Inspection, Repacking & Restocking ($3.50/unit):</strong> $840.00</li>
-      <li><strong>Non-Refunded Gateway Fees (2.9% + $0.30):</strong> $318.48</li>
-      <li><strong>Scrap & Salvage Losses (5 scrapped units @ $12 COGS + repairs):</strong> $182.50</li>
-      <li><strong>Total Return-Related Operational Drag:</strong> $2,690.98 (excluding the refunded revenue itself)</li>
-    </ul>
-    <p>
-      In this case, returns drained <strong>$9,120 in top-line cash flow</strong> and cost an extra <strong>$2,690.98 in unrecoverable operational expenses</strong>, demonstrating why looking solely at gross sales can mislead store owners.
-    </p>
-
-    <h2>Ecommerce Use Cases</h2>
-    <ul>
-      <li><strong>Shopify & Direct D2C Brands:</strong> Audit carrier return label costs, assess packaging salvage rates, and calculate the profitability impact of offering free vs. paid customer returns.</li>
-      <li><strong>Amazon & Marketplace Sellers:</strong> Measure the true net loss when Amazon retains non-refundable referral fees and assesses customer return processing fees.</li>
-      <li><strong>Apparel & Footwear Retailers:</strong> Accurately model "bracket purchases" (where shoppers order multiple sizes with the intent of returning all but one).</li>
-      <li><strong>Consumer Electronics Brands:</strong> Quantify the exact financial trade-off between scrapping open-box electronics versus paying for depot testing and refurbishing.</li>
-    </ul>
-
-    <h2>Important Accounting Notes & Analytical Limitations</h2>
-    <ul>
-      <li><strong>Denominator Selection:</strong> Never calculate return rates using total orders placed if pre-fulfillment cancellations or pending orders are included. Use <em>Delivered Orders</em> for accurate logistics reconciliation.</li>
-      <li><strong>Inventory COGS Double-Counting:</strong> Unopened, resellable inventory is not an expense; it returns to your inventory asset balance. Only damaged inventory, scrap, or refurbishment repair costs should be expensed against profit.</li>
-      <li><strong>Tax & Duty Implications:</strong> This tool performs pre-tax or net-of-tax operating profit analysis. Consult your certified public accountant (CPA) regarding regional sales tax recovery (VAT/GST) on returned goods.</li>
-    </ul>
-
-    <!-- 13. FAQ SECTION -->
-    <section class="erc-faq-section">
-      <h2>Frequently Asked Questions</h2>
-      
-      <div class="erc-faq-item">
-        <button type="button" class="erc-faq-question">
-          <span>What is an Ecommerce Return Rate Profit Loss Calculator?</span>
-          <span class="erc-faq-arrow">▼</span>
-        </button>
-        <div class="erc-faq-answer">
-          An Ecommerce Return Rate Profit Loss Calculator is a specialized financial instrument that calculates order and unit return percentages, accounts for reverse shipping, restocking labor, unrecoverable payment gateway fees, and determines your final return-adjusted operating profit.
-        </div>
-      </div>
-
-      <div class="erc-faq-item">
-        <button type="button" class="erc-faq-question">
-          <span>How do I calculate ecommerce return rate accurately?</span>
-          <span class="erc-faq-arrow">▼</span>
-        </button>
-        <div class="erc-faq-answer">
-          Divide total returned orders by eligible delivered orders and multiply by 100. Avoid using total orders placed as the denominator if it contains cancelled or unfulfilled orders.
-        </div>
-      </div>
-
-      <div class="erc-faq-item">
-        <button type="button" class="erc-faq-question">
-          <span>What is the difference between order return rate and unit return rate?</span>
-          <span class="erc-faq-arrow">▼</span>
-        </button>
-        <div class="erc-faq-answer">
-          Order return rate tracks how many customer orders experienced a return. Unit return rate measures the total proportion of physical items returned relative to total items shipped, which is essential for multi-item shopping carts.
-        </div>
-      </div>
-
-      <div class="erc-faq-item">
-        <button type="button" class="erc-faq-question">
-          <span>How do I calculate total ecommerce return expenses?</span>
-          <span class="erc-faq-arrow">▼</span>
-        </button>
-        <div class="erc-faq-answer">
-          Sum your reverse postage charges, warehouse labor for inspection and re-bagging, non-refundable merchant gateway fees, marketplace penalty commissions, repair expenses, and the raw unit cost of unsellable/scrap inventory.
-        </div>
-      </div>
-
-      <div class="erc-faq-item">
-        <button type="button" class="erc-faq-question">
-          <span>How do refunds impact ecommerce profit margins?</span>
-          <span class="erc-faq-arrow">▼</span>
-        </button>
-        <div class="erc-faq-answer">
-          Refunds eliminate recognized gross sales revenue while leaving unrecoverable outbound shipping, merchant processing surcharges, return shipping labels, and handling labor intact as permanent expenses.
-        </div>
-      </div>
-
-      <div class="erc-faq-item">
-        <button type="button" class="erc-faq-question">
-          <span>How do I calculate product-specific return rate?</span>
-          <span class="erc-faq-arrow">▼</span>
-        </button>
-        <div class="erc-faq-answer">
-          Divide returned units of a specific SKU by total delivered units of that specific SKU and multiply by 100. This isolates sizing, fit, or defective product issues.
-        </div>
-      </div>
-
-      <div class="erc-faq-item">
-        <button type="button" class="erc-faq-question">
-          <span>How should damaged returned inventory be expensed?</span>
-          <span class="erc-faq-arrow">▼</span>
-        </button>
-        <div class="erc-faq-answer">
-          Damaged units that cannot be resold must be written off at their landed product cost (unit COGS). If liquidated at a discount, record the loss as the difference between original COGS and net liquidation proceeds.
-        </div>
-      </div>
-
-      <div class="erc-faq-item">
-        <button type="button" class="erc-faq-question">
-          <span>Can returned products be counted as recoverable inventory?</span>
-          <span class="erc-faq-arrow">▼</span>
-        </button>
-        <div class="erc-faq-answer">
-          Yes. If an item is unopened or repackaged to Grade-A condition, it is returned to available stock and remains an asset on your balance sheet rather than a profit loss.
-        </div>
-      </div>
-
-      <div class="erc-faq-item">
-        <button type="button" class="erc-faq-question">
-          <span>How do I calculate savings from reducing return rates?</span>
-          <span class="erc-faq-arrow">▼</span>
-        </button>
-        <div class="erc-faq-answer">
-          Calculate Avoided Returns as: (Current Return Rate - Target Return Rate) × Delivered Orders. Then multiply avoided returns by your average avoidable cost per return (shipping, handling, and non-recoverable fee loss).
-        </div>
-      </div>
-
-      <div class="erc-faq-item">
-        <button type="button" class="erc-faq-question">
-          <span>Does this tool connect to Shopify or Amazon seller APIs?</span>
-          <span class="erc-faq-arrow">▼</span>
-        </button>
-        <div class="erc-faq-answer">
-          No. This is a private, client-side calculator. All computations occur within your web browser with zero data transmitted to external servers.
-        </div>
-      </div>
-    </section>
-
-    <!-- 14. INTERNAL NAVIGATION & MANDATORY TOOL LINK -->
-    <div class="erc-related-tools" style="margin-top: 2rem; padding: 1.25rem; background: #f8fafc; border-radius: 8px; border: 1px solid var(--erc-border);">
-      <h3 style="margin-top: 0; font-size: 1.1rem; font-weight: 700;">Explore Related Ecommerce Financial Analyzers</h3>
-      <p style="margin-bottom: 0.5rem;">
-        Navigate back to the <a href="https://my-tool-app.pages.dev/" style="color: var(--erc-primary); font-weight: 600; text-decoration: underline;">Ecommerce Analytics Suite Homepage</a>.
-      </p>
-      <p style="margin-bottom: 0;">
-        Optimize paid customer acquisition efficiency: Use our <a href="https://my-tool-app.pages.dev/target-roas-calculator" style="color: var(--erc-primary); font-weight: 700; text-decoration: underline;">Target ROAS Calculator</a> to estimate the advertising return on ad spend required to achieve your desired ecommerce profitability.
-      </p>
-    </div>
-
-    <!-- 15. EXTERNAL REFERENCES & VERIFIED DOCUMENTATION -->
-    <div class="erc-external-refs" style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--erc-text-muted);">
-      <p>Official Industry References & Frameworks:</p>
-      <ul style="list-style: none; padding-left: 0; display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem;">
-        <li><a href="https://www.shopify.com/retail/returns-management" target="_blank" rel="noopener noreferrer" style="color: var(--erc-primary); text-decoration: underline;">Shopify Returns Management Guide</a></li>
-        <li><a href="https://docs.stripe.com/refunds" target="_blank" rel="noopener noreferrer" style="color: var(--erc-primary); text-decoration: underline;">Stripe Refunds and Payment Processing Documentation</a></li>
-        <li><a href="https://developers.google.com/search/docs/fundamentals/seo-starter-guide" target="_blank" rel="noopener noreferrer" style="color: var(--erc-primary); text-decoration: underline;">Google SEO Starter Guide</a></li>
-        <li><a href="https://web.dev/articles/vitals" target="_blank" rel="noopener noreferrer" style="color: var(--erc-primary); text-decoration: underline;">Core Web Vitals Documentation</a></li>
-      </ul>
-    </div>
-
-  </article>
-
-  <!-- ==================== JAVASCRIPT ENGINE ==================== -->
-  <script>
-  (function() {
-    'use strict';
-
-    // Data Store
-    var state = {
-      currency: '$',
-      period: 'Monthly',
-      bizName: '',
-      salesChannel: 'Shopify Store',
-      deliveredOrders: 1200,
-      deliveredUnits: 1800,
-      grossRevenue: 72000,
-      discounts: 3600,
-      returnedOrders: 180,
-      returnedUnits: 240,
-      refundMode: 'manual',
-      totalRefunds: 9120,
-      refundedOrdersCnt: 180,
-      customerConcessions: 150,
-      returnShipPerOrder: 6.50,
-      pickupFee: 1.00,
-      fixedLogistics: 0,
-      inspectPerUnit: 1.50,
-      repackPerUnit: 1.25,
-      restockFeePerUnit: 0.75,
-      nonRefundPgPct: 2.9,
-      fixedPgFee: 0.30,
-      marketFeeLoss: 120.00,
-      unitCogs: 12.00,
-      outboundShippingUnit: 5.00,
-      adSpend: 12000,
-      operatingExp: 4500,
-      targetReturnRate: 10.0,
-      avoidableCostOverride: 18.50,
-      savedScenarioA: null
-    };
-
-    // Helper: Safe DOM Selector
-    function el(id) {
-      return document.getElementById(id);
-    }
-
-    // Helper: Currency Formatter
-    function formatCurr(val) {
-      if (isNaN(val) || !isFinite(val)) return state.currency + '0.00';
-      var formatted = Math.abs(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      return (val < 0 ? '-' : '') + state.currency + formatted;
-    }
-
-    // Helper: Percent Formatter
-    function formatPct(val) {
-      if (isNaN(val) || !isFinite(val)) return '0.0%';
-      return val.toFixed(1) + '%';
-    }
-
-    // Sanitize string for CSV injection safety
-    function sanitizeCsv(str) {
-      if (typeof str !== 'string') str = String(str);
-      if (/^[=\+\-@]/.test(str)) {
-        str = "'" + str;
-      }
-      return '"' + str.replace(/"/g, '""') + '"';
-    }
-
-    // Sync UI elements to state
-    function readInputs() {
-      state.currency = el('erc-currency').value;
-      state.period = el('erc-period').value;
-      state.bizName = el('erc-biz-name').value.trim();
-      state.salesChannel = el('erc-sales-channel').value;
-      
-      state.deliveredOrders = Math.max(0, parseFloat(el('erc-delivered-orders').value) || 0);
-      state.deliveredUnits = Math.max(0, parseFloat(el('erc-delivered-units').value) || 0);
-      state.grossRevenue = Math.max(0, parseFloat(el('erc-gross-revenue').value) || 0);
-      state.discounts = Math.max(0, parseFloat(el('erc-discounts').value) || 0);
-      state.returnedOrders = Math.max(0, parseFloat(el('erc-returned-orders').value) || 0);
-      state.returnedUnits = Math.max(0, parseFloat(el('erc-returned-units').value) || 0);
-      
-      state.refundMode = el('erc-refund-mode').value;
-      if (state.refundMode === 'auto') {
-        var avgUnitPrice = state.deliveredUnits > 0 ? (state.grossRevenue - state.discounts) / state.deliveredUnits : 0;
-        state.totalRefunds = Math.max(0, state.returnedUnits * avgUnitPrice);
-        el('erc-total-refunds').value = state.totalRefunds.toFixed(2);
-        el('erc-total-refunds').disabled = true;
-      } else {
-        el('erc-total-refunds').disabled = false;
-        state.totalRefunds = Math.max(0, parseFloat(el('erc-total-refunds').value) || 0);
-      }
-      
-      state.refundedOrdersCnt = Math.max(0, parseFloat(el('erc-refunded-orders-cnt').value) || 0);
-      state.customerConcessions = Math.max(0, parseFloat(el('erc-customer-concessions').value) || 0);
-      
-      state.returnShipPerOrder = Math.max(0, parseFloat(el('erc-return-ship-per-order').value) || 0);
-      state.pickupFee = Math.max(0, parseFloat(el('erc-pickup-fee').value) || 0);
-      state.fixedLogistics = Math.max(0, parseFloat(el('erc-fixed-logistics').value) || 0);
-      
-      state.inspectPerUnit = Math.max(0, parseFloat(el('erc-inspect-per-unit').value) || 0);
-      state.repackPerUnit = Math.max(0, parseFloat(el('erc-repack-per-unit').value) || 0);
-      state.restockFeePerUnit = Math.max(0, parseFloat(el('erc-restock-fee-per-unit').value) || 0);
-      
-      state.nonRefundPgPct = Math.max(0, parseFloat(el('erc-non-refund-pg-pct').value) || 0);
-      state.fixedPgFee = Math.max(0, parseFloat(el('erc-fixed-pg-fee').value) || 0);
-      state.marketFeeLoss = Math.max(0, parseFloat(el('erc-market-fee-loss').value) || 0);
-      
-      state.unitCogs = Math.max(0, parseFloat(el('erc-unit-cogs').value) || 0);
-      state.outboundShippingUnit = Math.max(0, parseFloat(el('erc-outbound-shipping-unit').value) || 0);
-      state.adSpend = Math.max(0, parseFloat(el('erc-ad-spend').value) || 0);
-      state.operatingExp = Math.max(0, parseFloat(el('erc-operating-exp').value) || 0);
-      
-      state.targetReturnRate = Math.max(0, parseFloat(el('erc-target-return-rate').value) || 0);
-      state.avoidableCostOverride = Math.max(0, parseFloat(el('erc-avoidable-cost-override').value) || 0);
-
-      // Update currency indicators across inputs
-      var currLabels = document.querySelectorAll('.erc-curr-label');
-      for (var i = 0; i < currLabels.length; i++) {
-        currLabels[i].textContent = state.currency;
-      }
-    }
-
-    // Core Calculation Routine
-    function calculate() {
-      readInputs();
-
-      // Rates
-      var orderReturnRate = state.deliveredOrders > 0 ? (state.returnedOrders / state.deliveredOrders) * 100 : 0;
-      var unitReturnRate = state.deliveredUnits > 0 ? (state.returnedUnits / state.deliveredUnits) * 100 : 0;
-      var refundRate = state.deliveredOrders > 0 ? (state.refundedOrdersCnt / state.deliveredOrders) * 100 : 0;
-      var netRevenue = Math.max(0, state.grossRevenue - state.discounts - state.totalRefunds);
-
-      // Direct Reverse Shipping Costs
-      var totalRevFreight = (state.returnedOrders * (state.returnShipPerOrder + state.pickupFee)) + state.fixedLogistics;
-
-      // Processing & Restocking
-      var totalInspectRepack = state.returnedUnits * (state.inspectPerUnit + state.repackPerUnit + state.restockFeePerUnit);
-
-      // Inventory Recovery Table Calculations
-      var condRows = document.querySelectorAll('#erc-condition-table tbody tr');
-      var totalRecoveredValue = 0;
-      var totalRepairCost = 0;
-      var scrapUnits = 0;
-
-      condRows.forEach(function(row) {
-        var cat = row.getAttribute('data-cat');
-        var u = Math.max(0, parseFloat(row.querySelector('.erc-cond-units').value) || 0);
-        var resalePct = Math.max(0, parseFloat(row.querySelector('.erc-cond-resale-pct').value) || 0);
-        var repair = Math.max(0, parseFloat(row.querySelector('.erc-cond-repair').value) || 0);
-
-        var netRecoveredRow = 0;
-        if (cat === 'scrap') {
-          scrapUnits += u;
-          totalRepairCost += (u * repair); // disposal fee
-          netRecoveredRow = 0;
-        } else {
-          var grossAssetVal = u * state.unitCogs * (resalePct / 100);
-          var repTotal = u * repair;
-          totalRepairCost += repTotal;
-          netRecoveredRow = Math.max(0, grossAssetVal - repTotal);
-          totalRecoveredValue += netRecoveredRow;
-        }
-        row.querySelector('.erc-cond-row-net').textContent = formatCurr(netRecoveredRow);
-      });
-
-      var scrapWriteOff = scrapUnits * state.unitCogs;
-
-      // Unrecoverable Payment & Marketplace Surcharges
-      var unrecoverablePg = (state.totalRefunds * (state.nonRefundPgPct / 100)) + (state.refundedOrdersCnt * state.fixedPgFee);
-      var totalFeeLoss = unrecoverablePg + state.marketFeeLoss;
-
-      // Retained COGS (Only units delivered and NOT returned + units returned but scrapped)
-      var retainedUnits = Math.max(0, state.deliveredUnits - state.returnedUnits);
-      var cogsRetainedSales = retainedUnits * state.unitCogs;
-
-      // Outbound Delivery for all orders delivered initially
-      var totalOutboundShipping = state.deliveredOrders * state.outboundShippingUnit;
-
-      // Pre-Return Baseline Operating Profit
-      // Gross Rev - Discounts - COGS of all delivered - Outbound - Ads - Overhead
-      var allDeliveredCogs = state.deliveredUnits * state.unitCogs;
-      var baselineProfit = (state.grossRevenue - state.discounts) - allDeliveredCogs - totalOutboundShipping - state.adSpend - state.operatingExp;
-
-      // Total Return Operational Drag (Cash outflow + permanent asset damage)
-      var totalReturnDrag = totalRevFreight + totalInspectRepack + totalFeeLoss + scrapWriteOff + totalRepairCost + state.customerConcessions;
-
-      // Net Return Adjusted Profit:
-      // Net Revenue - COGS Retained Sales - Scrap Write-off - Outbound - AdSpend - OperatingExp - Rev Freight - Processing - Fees - Repairs - Concessions
-      var finalAdjustedProfit = netRevenue - cogsRetainedSales - scrapWriteOff - totalOutboundShipping - state.adSpend - state.operatingExp - totalRevFreight - totalInspectRepack - totalFeeLoss - totalRepairCost - state.customerConcessions;
-
-      var adjustedMargin = netRevenue > 0 ? (finalAdjustedProfit / netRevenue) * 100 : 0;
-      var costPerReturnOrder = state.returnedOrders > 0 ? totalReturnDrag / state.returnedOrders : 0;
-
-      // Break-even return rate (Maximum return rate before profit touches 0)
-      var breakevenRate = 'N/A';
-      if (baselineProfit > 0 && costPerReturnOrder > 0 && state.deliveredOrders > 0) {
-        var avgLostGrossMarginPerReturn = state.returnedOrders > 0 ? (state.totalRefunds / state.returnedOrders) : 0;
-        var fullDragPerReturn = costPerReturnOrder + avgLostGrossMarginPerReturn;
-        var maxReturnsAllowed = baselineProfit / fullDragPerReturn;
-        var calcRate = (maxReturnsAllowed / state.deliveredOrders) * 100;
-        breakevenRate = formatPct(Math.min(100, Math.max(0, calcRate)));
-      }
-
-      // Populate KPI Cards
-      el('erc-kpi-order-rate').textContent = formatPct(orderReturnRate);
-      el('erc-kpi-order-sub').textContent = state.returnedOrders + ' / ' + state.deliveredOrders + ' orders';
-      
-      el('erc-kpi-unit-rate').textContent = formatPct(unitReturnRate);
-      el('erc-kpi-unit-sub').textContent = state.returnedUnits + ' / ' + state.deliveredUnits + ' units';
-      
-      el('erc-kpi-refunds').textContent = formatCurr(state.totalRefunds);
-      var refundPctOfGross = state.grossRevenue > 0 ? (state.totalRefunds / state.grossRevenue) * 100 : 0;
-      el('erc-kpi-refund-pct').textContent = formatPct(refundPctOfGross) + ' of Gross Sales';
-      
-      el('erc-kpi-direct-costs').textContent = formatCurr(totalReturnDrag);
-      el('erc-kpi-recovery').textContent = formatCurr(totalRecoveredValue);
-      
-      el('erc-kpi-adj-profit').textContent = formatCurr(finalAdjustedProfit);
-      el('erc-kpi-margin-sub').textContent = 'Net Margin: ' + formatPct(adjustedMargin);
-
-      // Colorize KPI Profit Card
-      var profitCard = el('erc-kpi-profit-card');
-      profitCard.className = 'erc-kpi-card ' + (finalAdjustedProfit >= 0 ? 'erc-kpi-success' : 'erc-kpi-danger');
-
-      // Detailed Financial Statement Waterfall
-      el('erc-statement-channel').textContent = state.salesChannel + ' (' + state.period + ')';
-      el('erc-st-gross').textContent = formatCurr(state.grossRevenue);
-      el('erc-st-discounts').textContent = '-' + formatCurr(state.discounts);
-      el('erc-st-refunds').textContent = '-' + formatCurr(state.totalRefunds);
-      el('erc-st-net-rev').textContent = formatCurr(netRevenue);
-      
-      el('erc-st-cogs').textContent = '-' + formatCurr(cogsRetainedSales);
-      el('erc-st-outbound').textContent = '-' + formatCurr(totalOutboundShipping);
-      el('erc-st-adspend').textContent = '-' + formatCurr(state.adSpend);
-      el('erc-st-overhead').textContent = '-' + formatCurr(state.operatingExp);
-      el('erc-st-baseline-profit').textContent = formatCurr(baselineProfit);
-      
-      el('erc-st-rev-freight').textContent = '-' + formatCurr(totalRevFreight);
-      el('erc-st-inspect-labor').textContent = '-' + formatCurr(totalInspectRepack);
-      el('erc-st-fee-loss').textContent = '-' + formatCurr(totalFeeLoss);
-      el('erc-st-scrap-writeoff').textContent = '-' + formatCurr(scrapWriteOff);
-      el('erc-st-repair-costs').textContent = '-' + formatCurr(totalRepairCost + state.customerConcessions);
-      el('erc-st-total-drag').textContent = '-' + formatCurr(totalReturnDrag);
-      
-      el('erc-st-final-profit').textContent = formatCurr(finalAdjustedProfit);
-      el('erc-st-final-profit').style.color = finalAdjustedProfit >= 0 ? 'var(--erc-success)' : 'var(--erc-danger)';
-      
-      el('erc-st-cost-per-return').textContent = formatCurr(costPerReturnOrder);
-      el('erc-st-breakeven-rate').textContent = breakevenRate;
-
-      // Section K: Savings Simulation
-      calculateSavings(orderReturnRate, costPerReturnOrder);
-
-      // Product Comparison Tab
-      calculateSkuTable();
-    }
-
-    // Savings Simulator
-    function calculateSavings(currentRate, avgCostPerReturn) {
-      var targetRate = state.targetReturnRate;
-      var currentOrders = state.deliveredOrders;
-      var currentReturns = state.returnedOrders;
-      var targetReturns = Math.round((targetRate / 100) * currentOrders);
-      var avoided = Math.max(0, currentReturns - targetReturns);
-      
-      var effectiveCostPerReturn = state.avoidableCostOverride > 0 ? state.avoidableCostOverride : avgCostPerReturn;
-      var totalSavings = avoided * effectiveCostPerReturn;
-
-      var summaryEl = el('erc-savings-summary');
-      if (currentRate <= targetRate) {
-        summaryEl.className = 'erc-alert erc-alert-warning';
-        summaryEl.innerHTML = 'Target return rate (<strong>' + formatPct(targetRate) + '</strong>) is equal to or higher than current rate (<strong>' + formatPct(currentRate) + '</strong>). Set a lower target to model cost recoveries.';
-      } else {
-        summaryEl.className = 'erc-alert erc-alert-info';
-        summaryEl.innerHTML = 'Reducing your return rate from <strong>' + formatPct(currentRate) + '</strong> to <strong>' + formatPct(targetRate) + '</strong> prevents approximately <strong>' + avoided + ' returned orders</strong>, adding an estimated <strong>' + formatCurr(totalSavings) + '</strong> in preserved bottom-line cash flow.';
-      }
-    }
-
-    // SKU Comparison Module
-    function calculateSkuTable() {
-      var rows = [el('erc-sku-row-1'), el('erc-sku-row-2'), el('erc-sku-row-3')];
-      var highestRate = -1;
-      var highestRateSku = '';
-      var highestLoss = -1;
-      var highestLossSku = '';
-
-      rows.forEach(function(row) {
-        if (!row) return;
-        var name = row.querySelector('.erc-sku-name').value;
-        var del = Math.max(1, parseFloat(row.querySelector('.erc-sku-delivered').value) || 1);
-        var ret = Math.max(0, parseFloat(row.querySelector('.erc-sku-returned').value) || 0);
-        var price = Math.max(0, parseFloat(row.querySelector('.erc-sku-price').value) || 0);
-        var cogs = Math.max(0, parseFloat(row.querySelector('.erc-sku-cogs').value) || 0);
-        var ship = Math.max(0, parseFloat(row.querySelector('.erc-sku-ship').value) || 0);
-
-        var rate = (ret / del) * 100;
-        // Direct Drag = reverse freight + estimated QA/restock ($2.50) + scrap factor (10% of returned items scrapped)
-        var loss = (ret * ship) + (ret * 2.50) + (ret * 0.10 * cogs);
-
-        row.querySelector('.erc-sku-rate-res').textContent = formatPct(rate);
-        row.querySelector('.erc-sku-loss-res').textContent = formatCurr(loss);
-
-        if (rate > highestRate) {
-          highestRate = rate;
-          highestRateSku = name;
-        }
-        if (loss > highestLoss) {
-          highestLoss = loss;
-          highestLossSku = name;
-        }
-      });
-
-      var insightEl = el('erc-sku-insight');
-      insightEl.innerHTML = 'Highest Return Rate: <strong>' + highestRateSku + ' (' + formatPct(highestRate) + ')</strong>. Largest Absolute Cash Loss: <strong>' + highestLossSku + ' (' + formatCurr(highestLoss) + ')</strong>. Prioritize supplier QA and sizing chart adjustments for the largest cash loss SKU.';
-    }
-
-    // Load Industry Presets
-    function loadPreset(type) {
-      if (type === 'fashion') {
-        el('erc-delivered-orders').value = 1200;
-        el('erc-delivered-units').value = 1800;
-        el('erc-gross-revenue').value = 72000;
-        el('erc-discounts').value = 3600;
-        el('erc-returned-orders').value = 240;
-        el('erc-returned-units').value = 330;
-        el('erc-total-refunds').value = 12500;
-        el('erc-return-ship-per-order').value = 7.00;
-        el('erc-pickup-fee').value = 1.00;
-        el('erc-unit-cogs').value = 14.00;
-        el('erc-target-return-rate').value = 14.0;
-      } else if (type === 'electronics') {
-        el('erc-delivered-orders').value = 500;
-        el('erc-delivered-units').value = 550;
-        el('erc-gross-revenue').value = 110000;
-        el('erc-discounts').value = 2500;
-        el('erc-returned-orders').value = 45;
-        el('erc-returned-units').value = 48;
-        el('erc-total-refunds').value = 9600;
-        el('erc-return-ship-per-order').value = 12.50;
-        el('erc-pickup-fee').value = 2.00;
-        el('erc-unit-cogs').value = 85.00;
-        el('erc-target-return-rate').value = 5.0;
-      } else if (type === 'standard') {
-        el('erc-delivered-orders').value = 2000;
-        el('erc-delivered-units').value = 2400;
-        el('erc-gross-revenue').value = 84000;
-        el('erc-discounts').value = 4200;
-        el('erc-returned-orders').value = 120;
-        el('erc-returned-units').value = 135;
-        el('erc-total-refunds').value = 4600;
-        el('erc-return-ship-per-order').value = 5.50;
-        el('erc-pickup-fee').value = 0.50;
-        el('erc-unit-cogs').value = 9.50;
-        el('erc-target-return-rate').value = 4.0;
-      }
-      calculate();
-    }
-
-    // Reset Inputs
-    function resetAll() {
-      if (!confirm('Reset all values to default zero values?')) return;
-      var inputs = document.querySelectorAll('#ecommerce-return-calculator input[type="number"]');
-      inputs.forEach(function(i) { i.value = '0'; });
-      el('erc-delivered-orders').value = '100';
-      el('erc-delivered-units').value = '100';
-      calculate();
-    }
-
-    // CSV Safe Export
-    function exportCsv() {
-      calculate();
-      var csv = [];
-      csv.push([sanitizeCsv('ECOMMERCE RETURN RATE & FINANCIAL LOSS REPORT')]);
-      csv.push([sanitizeCsv('Generated: ' + new Date().toISOString().slice(0, 10))]);
-      csv.push([sanitizeCsv('Store: ' + (state.bizName || 'My Ecommerce Store')), sanitizeCsv('Channel: ' + state.salesChannel), sanitizeCsv('Period: ' + state.period)]);
-      csv.push([]);
-      
-      csv.push([sanitizeCsv('Metric'), sanitizeCsv('Value')]);
-      csv.push([sanitizeCsv('Gross Revenue'), sanitizeCsv(state.grossRevenue)]);
-      csv.push([sanitizeCsv('Total Discounts'), sanitizeCsv(state.discounts)]);
-      csv.push([sanitizeCsv('Refunds Issued'), sanitizeCsv(state.totalRefunds)]);
-      csv.push([sanitizeCsv('Delivered Orders'), sanitizeCsv(state.deliveredOrders)]);
-      csv.push([sanitizeCsv('Delivered Units'), sanitizeCsv(state.deliveredUnits)]);
-      csv.push([sanitizeCsv('Returned Orders'), sanitizeCsv(state.returnedOrders)]);
-      csv.push([sanitizeCsv('Returned Units'), sanitizeCsv(state.returnedUnits)]);
-      csv.push([sanitizeCsv('Order Return Rate'), sanitizeCsv(el('erc-kpi-order-rate').textContent)]);
-      csv.push([sanitizeCsv('Unit Return Rate'), sanitizeCsv(el('erc-kpi-unit-rate').textContent)]);
-      csv.push([sanitizeCsv('Direct Return Operational Drag'), sanitizeCsv(el('erc-st-total-drag').textContent)]);
-      csv.push([sanitizeCsv('Net Return-Adjusted Operating Profit'), sanitizeCsv(el('erc-st-final-profit').textContent)]);
-      csv.push([sanitizeCsv('Break-Even Return Rate'), sanitizeCsv(el('erc-st-breakeven-rate').textContent)]);
-
-      var blob = new Blob([csv.map(function(row) { return row.join(','); }).join('\n')], { type: 'text/csv;charset=utf-8;' });
-      var link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'ecommerce-return-analysis.csv';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    // Copy Summary to Clipboard
-    function copySummary() {
-      calculate();
-      var txt = 'ECOMMERCE RETURN FINANCIAL SUMMARY\n' +
-        '------------------------------------\n' +
-        'Store: ' + (state.bizName || 'Ecommerce Business') + ' (' + state.salesChannel + ')\n' +
-        'Delivered Orders: ' + state.deliveredOrders + ' | Units: ' + state.deliveredUnits + '\n' +
-        'Order Return Rate: ' + el('erc-kpi-order-rate').textContent + '\n' +
-        'Unit Return Rate: ' + el('erc-kpi-unit-rate').textContent + '\n' +
-        'Total Refunds: ' + el('erc-kpi-refunds').textContent + '\n' +
-        'Direct Return Expenses: ' + el('erc-st-total-drag').textContent + '\n' +
-        'Net Return-Adjusted Profit: ' + el('erc-st-final-profit').textContent + '\n' +
-        'Break-Even Return Rate: ' + el('erc-st-breakeven-rate').textContent + '\n' +
-        'Analysis created with: https://my-tool-app.pages.dev/ecommerce-return-rate-profit-loss-calculator';
-
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(txt).then(function() {
-          alert('Financial summary copied to clipboard!');
-        });
-      } else {
-        var ta = document.createElement('textarea');
-        ta.value = txt;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        alert('Financial summary copied to clipboard!');
-      }
-    }
-
-    // Scenario Comparison Logic
-    function saveScenario() {
-      calculate();
-      state.savedScenarioA = {
-        rate: el('erc-kpi-order-rate').textContent,
-        drag: el('erc-st-total-drag').textContent,
-        profit: el('erc-st-final-profit').textContent,
-        rawProfit: parseFloat(el('erc-st-final-profit').textContent.replace(/[^0-9.-]+/g, '')) || 0,
-        rawDrag: parseFloat(el('erc-st-total-drag').textContent.replace(/[^0-9.-]+/g, '')) || 0
-      };
-
-      try {
-        localStorage.setItem('erc_scenario_a', JSON.stringify(state.savedScenarioA));
-      } catch(e) {}
-
-      updateScenarioUI();
-      alert('Current numbers saved as Scenario A (Baseline)! You can now adjust targets or expenses to evaluate Scenario B.');
-    }
-
-    function updateScenarioUI() {
-      if (!state.savedScenarioA) {
-        try {
-          var stored = localStorage.getItem('erc_scenario_a');
-          if (stored) state.savedScenarioA = JSON.parse(stored);
-        } catch(e) {}
-      }
-
-      if (state.savedScenarioA) {
-        el('erc-sc-a-rate').textContent = state.savedScenarioA.rate;
-        el('erc-sc-a-cost').textContent = state.savedScenarioA.drag;
-        el('erc-sc-a-profit').textContent = state.savedScenarioA.profit;
-
-        var currRate = el('erc-kpi-order-rate').textContent;
-        var currDragStr = el('erc-st-total-drag').textContent;
-        var currProfitStr = el('erc-st-final-profit').textContent;
-
-        el('erc-sc-b-rate').textContent = currRate;
-        el('erc-sc-b-cost').textContent = currDragStr;
-        el('erc-sc-b-profit').textContent = currProfitStr;
-
-        var curProfitRaw = parseFloat(currProfitStr.replace(/[^0-9.-]+/g, '')) || 0;
-        var profitDiff = curProfitRaw - state.savedScenarioA.rawProfit;
-        el('erc-sc-var-profit').textContent = (profitDiff >= 0 ? '+' : '') + formatCurr(profitDiff);
-        el('erc-sc-var-profit').className = profitDiff >= 0 ? 'erc-text-success' : 'erc-text-danger';
-      }
-    }
-
-    // Attach Event Listeners
-    function initEvents() {
-      var allInputs = document.querySelectorAll('#ecommerce-return-calculator input, #ecommerce-return-calculator select');
-      allInputs.forEach(function(inp) {
-        inp.addEventListener('input', calculate);
-        inp.addEventListener('change', calculate);
-      });
-
-      // Presets
-      el('erc-load-fashion').addEventListener('click', function() { loadPreset('fashion'); });
-      el('erc-load-electronics').addEventListener('click', function() { loadPreset('electronics'); });
-      el('erc-load-standard').addEventListener('click', function() { loadPreset('standard'); });
-
-      // Action buttons
-      el('erc-reset-btn').addEventListener('click', resetAll);
-      el('erc-csv-btn').addEventListener('click', exportCsv);
-      el('erc-copy-btn').addEventListener('click', copySummary);
-      el('erc-print-btn').addEventListener('click', function() { window.print(); });
-
-      // Tabs
-      var tabBtns = document.querySelectorAll('.erc-tab-btn');
-      tabBtns.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          tabBtns.forEach(function(b) {
-            b.classList.remove('active');
-            b.setAttribute('aria-selected', 'false');
-          });
-          document.querySelectorAll('.erc-tab-content').forEach(function(tc) {
-            tc.classList.remove('active');
-          });
-          btn.classList.add('active');
-          btn.setAttribute('aria-selected', 'true');
-          var target = el(btn.getAttribute('data-tab'));
-          if (target) target.classList.add('active');
-          if (btn.getAttribute('data-tab') === 'erc-tab-scenario') {
-            updateScenarioUI();
-          }
-        });
-      });
-
-      // Collapsible Panels
-      var headers = document.querySelectorAll('.erc-collapsible-header');
-      headers.forEach(function(h) {
-        h.addEventListener('click', function() {
-          var panel = h.closest('.erc-panel');
-          panel.classList.toggle('erc-collapsed');
-        });
-      });
-
-      // FAQ Accordion
-      var faqQuestions = document.querySelectorAll('.erc-faq-question');
-      faqQuestions.forEach(function(q) {
-        q.addEventListener('click', function() {
-          var item = q.closest('.erc-faq-item');
-          item.classList.toggle('active');
-        });
-      });
-
-      // Scenario save & clear
-      el('erc-save-scenario-btn').addEventListener('click', saveScenario);
-      el('erc-clear-scenario-btn').addEventListener('click', function() {
-        state.savedScenarioA = null;
-        try { localStorage.removeItem('erc_scenario_a'); } catch(e) {}
-        el('erc-sc-a-rate').textContent = 'N/A';
-        el('erc-sc-a-cost').textContent = 'N/A';
-        el('erc-sc-a-profit').textContent = 'N/A';
-        el('erc-sc-var-profit').textContent = '$0.00';
-        alert('Saved baseline scenario cleared.');
-      });
-    }
-
-    // Initialize Calculator on DOM Ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() {
-        initEvents();
-        calculate();
-      });
-    } else {
-      initEvents();
-      calculate();
-    }
-  })();
-  </script>
+<div id="ecommerce-return-calculator">
+<style>
+#ecommerce-return-calculator{--t:#0f766e;--g:#15803d;--r:#b91c1c;--o:#b45309;--ink:#14213d;--mut:#51607a;--ln:#d9e2ec;--bg:#f6f9fb;font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);padding:16px;border-radius:16px;max-width:1180px;margin:0 auto;box-sizing:border-box}
+#ecommerce-return-calculator *{box-sizing:border-box}
+#ecommerce-return-calculator h1{font-size:clamp(1.5rem,4vw,2.2rem);line-height:1.2;margin:4px 0 14px}
+#ecommerce-return-calculator h2{font-size:1.3rem;margin:26px 0 8px}
+#ecommerce-return-calculator h3{font-size:1.05rem;margin:14px 0 6px}
+#ecommerce-return-calculator a{color:var(--t)}
+.erc-bar,.erc-main,.erc-grid,.erc-cards,.erc-cmp{display:grid;gap:12px}
+.erc-bar{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+.erc-main{grid-template-columns:1fr}
+@media(min-width:900px){.erc-main{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:start}}
+.erc-box{background:#fff;border:1px solid var(--ln);border-radius:14px;padding:14px;box-shadow:0 1px 3px rgba(20,33,61,.07);margin-bottom:12px}
+.erc-box>summary{font-weight:700;cursor:pointer}
+.erc-grid{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-top:10px}
+.erc-f label{display:block;font-weight:600;font-size:.9rem}
+.erc-f small{display:block;color:var(--mut);font-size:.78rem}
+.erc-f input,.erc-f select{width:100%;min-height:42px;padding:8px;border:1px solid #9fb0c3;border-radius:8px;font:inherit;background:#fff;color:var(--ink)}
+.erc-f input[type=checkbox]{width:auto;min-height:0}
+#ecommerce-return-calculator button{min-height:42px;padding:8px 12px;border:1px solid var(--t);border-radius:8px;background:#fff;color:var(--t);font:inherit;font-weight:600;cursor:pointer}
+#ecommerce-return-calculator button.erc-p,#ecommerce-return-calculator button[aria-pressed=true]{background:var(--t);color:#fff}
+#ecommerce-return-calculator :focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+.erc-cards{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.erc-card{background:#fff;border:1px solid var(--ln);border-radius:12px;padding:10px}
+.erc-card b{display:block;font-size:1.15rem;overflow-wrap:anywhere}
+.erc-card span{font-size:.8rem;color:var(--mut)}
+.erc-good b{color:var(--g)}.erc-bad b{color:var(--r)}.erc-warn b{color:var(--o)}
+.erc-w{background:#fff7ed;border:1px solid #fdba74;color:#7c2d12;border-radius:8px;padding:8px;margin:6px 0;font-size:.9rem}
+.erc-w:empty{display:none}
+.erc-tw{overflow-x:auto}
+#ecommerce-return-calculator table{border-collapse:collapse;width:100%;background:#fff}
+#ecommerce-return-calculator th,#ecommerce-return-calculator td{border:1px solid var(--ln);padding:7px 9px;text-align:left}
+#ecommerce-return-calculator td.erc-n{text-align:right;font-variant-numeric:tabular-nums}
+.erc-ch{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.erc-row{display:grid;grid-template-columns:110px 1fr 90px;gap:6px;align-items:center;font-size:.82rem;margin:4px 0}
+.erc-trk{background:#e8eef4;border-radius:6px;height:14px;overflow:hidden}
+.erc-fill{height:100%;background:var(--t)}.erc-fill.erc-neg{background:var(--r)}.erc-fill.erc-pos{background:var(--g)}.erc-fill.erc-or{background:var(--o)}
+.erc-cmp{grid-template-columns:1fr}
+.erc-basic .erc-adv{display:none}
+.erc-live{position:absolute;left:-9999px}
+.erc-faq details{background:#fff;border:1px solid var(--ln);border-radius:10px;padding:8px 12px;margin:6px 0}
+.erc-faq summary{font-weight:600;cursor:pointer}
+@media print{#ecommerce-return-calculator .erc-tools,#ecommerce-return-calculator .erc-inputs,#ecommerce-return-calculator .erc-seo{display:none}}
+</style>
+
+<h1>Ecommerce Return Rate Profit Loss Calculator</h1>
+
+<div class="erc-box erc-tools">
+<div class="erc-bar" role="toolbar" aria-label="Calculator actions">
+<button type="button" id="erc-mode" aria-pressed="false">Advanced mode: off</button>
+<button type="button" id="erc-sample">Load sample data</button>
+<button type="button" id="erc-reset">Reset</button>
+<button type="button" id="erc-save">Save scenario</button>
+<button type="button" id="erc-restore">Restore saved</button>
+<button type="button" id="erc-clear">Delete saved</button>
+<button type="button" id="erc-copy" class="erc-p">Copy results</button>
+<button type="button" id="erc-csv" class="erc-p">Download CSV</button>
+<button type="button" id="erc-print" class="erc-p">Print report</button>
+</div>
+<p id="erc-msg" role="status" style="margin:8px 0 0;color:var(--mut);font-size:.9rem">Basic mode shows essential fields. Turn on Advanced mode for inventory recovery, marketing, extra costs, comparison and simulation. All math runs in your browser.</p>
+</div>
+
+<div class="erc-main">
+<div class="erc-inputs" id="erc-inputs"></div>
+<div id="erc-out" aria-label="Results">
+<div id="erc-warn" class="erc-w" role="alert"></div>
+<div class="erc-cards" id="erc-cards"></div>
+<p id="erc-note" style="font-size:.85rem;color:var(--mut)"></p>
+<div class="erc-live" id="erc-live" aria-live="polite"></div>
+</div>
+</div>
+
+<section aria-labelledby="erc-h-an">
+<h2 id="erc-h-an">Detailed analysis</h2>
+<div class="erc-box erc-tw"><table><caption style="text-align:left;font-weight:700;padding:4px">Financial breakdown</caption><thead><tr><th scope="col">Financial metric</th><th scope="col">Amount</th></tr></thead><tbody id="erc-tb"></tbody></table></div>
+<div class="erc-ch" id="erc-charts"></div>
+
+<div class="erc-box"><h3 style="margin-top:0">Return rate reduction opportunity</h3>
+<div class="erc-grid" id="erc-red"></div><p id="erc-redout" style="font-weight:600"></p><div id="erc-redch"></div></div>
+
+<div class="erc-box erc-adv"><h3 style="margin-top:0">What-if simulation</h3>
+<p style="font-size:.85rem;color:var(--mut)">Leave a field blank to keep the current value. Your original inputs are never changed.</p>
+<div class="erc-grid" id="erc-sim"></div>
+<p><button type="button" id="erc-imp">Fill improved scenario</button> <button type="button" id="erc-simclr">Clear scenario</button></p>
+<div class="erc-tw"><table><thead><tr><th scope="col">Metric</th><th scope="col">Current</th><th scope="col">Scenario</th><th scope="col">Difference</th><th scope="col">Change</th></tr></thead><tbody id="erc-simtb"></tbody></table></div></div>
+
+<div class="erc-box erc-adv"><h3 style="margin-top:0">Compare up to three products</h3>
+<p style="font-size:.85rem;color:var(--mut)">Assumes one unit per order for each product. Lowest return rate does not always mean highest profit.</p>
+<div class="erc-tw" id="erc-cmp"></div><p id="erc-cmpout" style="font-weight:600"></p></div>
+</section>
+
+<div class="erc-seo">
+<section><h2>What this calculator does</h2>
+<p>This free calculator shows what product returns really cost an online store. It separates order return rate from unit return rate, then works out refunds, reverse shipping, handling, write-offs, the value of resellable stock you get back, and profit before and after returns. It suits store owners, marketplace sellers, and analysts who want to see how returns affect profit, not just how many there are.</p></section>
+
+<section><h2>How to use it</h2><ol>
+<li>Pick Store-wide or Single product analysis.</li><li>Choose reporting period and currency (labels only, no exchange conversion).</li>
+<li>Enter total orders and returned orders.</li><li>Enter units sold and returned units.</li>
+<li>Add selling price and purchase cost.</li><li>Enter refunds, or leave blank to calculate them from returned units.</li>
+<li>Add forward shipping and reverse logistics costs.</li><li>In Advanced mode, describe the condition of returned stock and its recovery value.</li>
+<li>Switch on optional costs you actually pay.</li><li>Read return rate, net return loss and profit after returns.</li>
+<li>Use the reduction simulator to estimate profit recovery.</li><li>Copy, download, or print the report.</li></ol></section>
+
+<section><h2>Features</h2><ul>
+<li><strong>Return rate analysis:</strong> order-based and unit-based, with annual projection.</li>
+<li><strong>Refund loss:</strong> manual or auto-calculated refunds, with payment, refund and chargeback fees.</li>
+<li><strong>Reverse shipping:</strong> cost per return with a recovered-by-customer or carrier percentage.</li>
+<li><strong>Inventory recovery:</strong> resellable, open-box, damaged and unsellable units, capped at cost.</li>
+<li><strong>Profit analysis:</strong> two accounting methods, break-even return rate and margin.</li>
+<li><strong>Product comparison</strong> for three products, a <strong>return reduction simulator</strong>, and what-if analysis.</li></ul></section>
+
+<section><h2>Formulas and example</h2>
+<p><strong>Order return rate</strong> = returned orders ÷ total orders × 100. <strong>Unit return rate</strong> = returned units ÷ units sold × 100. The two differ when orders contain several units, so they are never mixed.</p>
+<p><strong>Profit before returns</strong> = revenue − COGS − outbound shipping and packaging − marketing − other operating costs. <strong>Profit after returns</strong> = profit before − refunds − return costs (reverse shipping, handling, inspection, restocking, refurbishing, disposal, fees) + inventory recovery (method B only). Forward shipping and marketing are already in profit before, so they are not charged twice.</p>
+<p><strong>Net return loss</strong> = non-recovered forward shipping on returned orders + return costs + inventory write-off (+ marketing on returned orders if enabled). Refunds are not added again because they reduce retained revenue.</p>
+<p><strong>Worked example (the sample data):</strong> 1,000 orders and 120 returned; 1,500 units and 170 returned; price 40, cost 18. Order return rate 12%, unit return rate 11.33%. Revenue 60,000, refunds 6,800, COGS 27,000, forward shipping 5,000, marketing 4,000, so profit before returns is 24,000. Return costs total 1,170. Of the 170 returned units, 110 are resellable and 30 open-box (each restocked at cost, 18), 20 damaged (5 each) and 10 unsellable, so recovery is 2,620 and write-off is 440. Profit after returns (method B) = 24,000 − 6,800 − 1,170 + 2,620 = 18,650. Net return loss = 600 + 1,170 + 440 + 480 = 2,690, or 22.42 per returned order. Resellable goods are recovered at cost, not written off.</p></section>
+
+<section><h2>Use cases</h2><p>Shopify and WooCommerce stores can paste totals from their order reports. Amazon sellers can include marketplace fees as other return costs. D2C brands and small online businesses can find which costs dominate. Multi-product sellers can compare products, and ecommerce analysts can model scenarios and export CSV.</p></section>
+
+<section><h2>Important notes and limitations</h2><ul>
+<li>Results depend entirely on the values you enter; actual return costs vary by business.</li>
+<li>A refund is not automatically a permanent inventory loss, because returned goods may be resold.</li>
+<li>Tax, VAT, GST and accounting treatment may need separate calculation. Consult an accountant.</li>
+<li>Inventory recovery is an estimate unless you enter actual resale values.</li>
+<li>Annual figures are projections, not actual results.</li>
+<li>This tool does not connect to Shopify, WooCommerce, Amazon, or any payment gateway. Entered data stays in your browser unless you choose to save a scenario locally.</li></ul></section>
+
+<section class="erc-faq" id="erc-faq"><h2>Frequently asked questions</h2>
+<details><summary>What is an ecommerce return rate?</summary><p>It is the share of sales that customers send back, measured either by orders or by units sold.</p></details>
+<details><summary>How do I calculate ecommerce return rate?</summary><p>Divide returned orders by total orders and multiply by 100 for the order-based rate. Divide returned units by units sold for the unit-based rate.</p></details>
+<details><summary>What is the difference between order return rate and unit return rate?</summary><p>Order rate counts orders with a return. Unit rate counts items. If a customer returns one item from a three-item order, the order counts once and units count one of three.</p></details>
+<details><summary>How do I calculate the cost of product returns?</summary><p>Add non-recovered forward shipping, reverse shipping, handling, inspection, restocking, refurbishing, disposal, payment fees and inventory write-offs. Subtract any costs recovered from customers or carriers.</p></details>
+<details><summary>How much profit does an ecommerce business lose from returns?</summary><p>It varies widely with price, margin, shipping and product condition. Enter your own numbers: the calculator shows lost profit as profit before returns minus profit after returns.</p></details>
+<details><summary>How do refunds affect ecommerce profit?</summary><p>Refunds reduce retained revenue. Profit falls by the refund amount minus whatever returned stock is worth when it is resold, plus the costs of processing the return.</p></details>
+<details><summary>How do I calculate reverse shipping costs?</summary><p>Multiply returned shipments by the reverse shipping cost per return, then subtract any amount the customer, carrier or marketplace covers.</p></details>
+<details><summary>Are returned products always considered a financial loss?</summary><p>No. Resellable items go back into stock at cost. Losses come from damaged or unsellable units, processing costs and lost margin on the refunded sale.</p></details>
+<details><summary>How can an online store reduce its return rate?</summary><p>Improve product descriptions, photos and size guidance, check packaging and quality control, and look at which products or reasons drive returns. Then test the effect with the reduction simulator.</p></details>
+<details><summary>Is this ecommerce return calculator free and private?</summary><p>It is free. Calculations run in your browser and nothing is sent to a server. Data is stored locally only if you click Save scenario, and you can delete it with Delete saved.</p></details></section>
+
+<section><h2>Related resources</h2>
+<h3>Related financial tools</h3>
+<p><a href="https://my-tool-app.pages.dev/dividend-reinvestment-growth-calculator">Dividend Reinvestment Growth Calculator</a>: users who also want to explore long-term investment growth and dividend reinvestment projections can use this related financial calculator.</p>
+<h3>Further reading on returns</h3><ul>
+<li><a href="https://www.shopify.com/enterprise/blog/returns-management" target="_blank" rel="noopener noreferrer">Shopify guide to returns management</a></li>
+<li><a href="https://help.shopify.com/" target="_blank" rel="noopener noreferrer">Shopify Help Center</a></li>
+<li><a href="https://woocommerce.com/documentation/" target="_blank" rel="noopener noreferrer">WooCommerce documentation</a></li>
+<li><a href="https://sellercentral.amazon.com/help/hub" target="_blank" rel="noopener noreferrer">Amazon Seller Central help</a></li>
+<li><a href="https://consumer.ftc.gov/" target="_blank" rel="noopener noreferrer">FTC consumer advice on refunds and returns</a></li></ul></section>
+<nav aria-label="Footer" style="margin-top:18px"><a href="https://my-tool-app.pages.dev/">Home</a> | <a href="https://my-tool-app.pages.dev/dividend-reinvestment-growth-calculator">Dividend Reinvestment Growth Calculator</a></nav>
+</div>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://my-tool-app.pages.dev/ecommerce-return-rate-profit-loss-calculator#page","name":"Ecommerce Return Rate Profit Loss Calculator","description":"Calculate ecommerce return rates, refund losses, reverse shipping costs and profit impact. Discover how returns affect your store's profitability.","url":"https://my-tool-app.pages.dev/ecommerce-return-rate-profit-loss-calculator","isPartOf":{"@type":"WebSite","url":"https://my-tool-app.pages.dev/"}},{"@type":"SoftwareApplication","name":"Ecommerce Return Rate Profit Loss Calculator","description":"Browser-based calculator for return rates, refund losses, reverse shipping and profit after returns.","applicationCategory":"BusinessApplication","operatingSystem":"Web Browser","url":"https://my-tool-app.pages.dev/ecommerce-return-rate-profit-loss-calculator","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://my-tool-app.pages.dev/"},{"@type":"ListItem","position":2,"name":"Ecommerce Return Rate Profit Loss Calculator","item":"https://my-tool-app.pages.dev/ecommerce-return-rate-profit-loss-calculator"}]}]}</script>
+
+<script>
+(function(){
+var root=document.getElementById('ecommerce-return-calculator');
+if(!root||root.getAttribute('data-erc')){return;}
+root.setAttribute('data-erc','1');
+var $=function(s){return root.querySelector(s);};
+//ENGINE_START
+function cl(v,a,b){return Math.min(b,Math.max(a,v));}
+function calc(i){
+ var W=[],O=i.orders,U=i.units,RO=i.retOrders,RU=i.retUnits;
+ if(RO>O){W.push('Returned orders exceed total orders; capped at '+O+'.');RO=O;}
+ if(RU>U){W.push('Returned units exceed units sold; capped at '+U+'.');RU=U;}
+ if(RO>RU){W.push('Returned orders exceed returned units; please check your counts.');}
+ var store=i.mode==='store',ovC=store&&i.cogsOverride>0;
+ var gross=store&&i.grossOverride>0?i.grossOverride:U*i.price;
+ var cogs=ovC?i.cogsOverride:U*i.cost;
+ var C=ovC&&U>0?i.cogsOverride/U:i.cost;
+ var P=U>0?gross/U:i.price;
+ var fr=cl(i.fwdRec,0,100),rr=cl(i.revRec,0,100);
+ var refunds=i.refManual!=null?i.refManual:RU*P*cl(i.refPct,0,100)/100;
+ if(refunds>gross){W.push('Refunds exceed gross revenue; capped at gross revenue.');refunds=gross;}
+ if(i.open+i.dam+i.uns>RU){W.push('Open-box + damaged + unsellable units exceed returned units; extra units ignored.');}
+ var open=Math.min(i.open,RU),dam=Math.min(i.dam,RU-open),uns=Math.min(i.uns,RU-open-dam),res=RU-open-dam-uns;
+ var v=function(x){return Math.min(C,Math.max(0,x));};
+ var recEst=res*v(P*i.resPct/100)+open*v(P*i.openPct/100)+dam*v(i.damVal)+uns*v(i.unsVal);
+ var recov=i.method==='B'?recEst:0;
+ var writeoff=RU*C-recov;
+ var fu=i.fwd*(1-fr/100)+i.fulf,fwdAll=O*fu,fwdLoss=RO*fu;
+ var revG=RO*i.rev,revN=revG*(1-rr/100);
+ var hand=RU*(i.handling+i.inspect+i.restock),refurb=(open+dam)*i.refurb,disp=uns*i.disposal;
+ var other=RO*(i.support+i.otherRet+i.payFee+i.refFee)+i.chargeback+i.fraud+i.storage;
+ var retExp=revN+hand+refurb+disp+other;
+ var mktAll=O*i.mkt,mktRet=i.mktOn?RO*i.mkt:0;
+ var pBefore=gross-cogs-fwdAll-mktAll-i.opex;
+ var pAfter=pBefore-refunds-retExp+recov;
+ var netRev=gross-refunds,NRL=fwdLoss+retExp+writeoff+mktRet,impact=pBefore-pAfter;
+ var k=RO>0?impact/RO:0;
+ var f=null;
+ if(i.period==='monthly')f=12;else if(i.period==='quarterly')f=4;else if(i.period==='yearly')f=1;
+ else if(i.start&&i.end){var d=(new Date(i.end)-new Date(i.start))/864e5+1;if(d>0)f=365/d;}
+ return {W:W,O:O,U:U,RO:RO,RU:RU,gross:gross,cogs:cogs,refunds:refunds,netRev:netRev,open:open,dam:dam,uns:uns,res:res,recEst:recEst,recov:recov,writeoff:writeoff,fwdLoss:fwdLoss,fwdAll:fwdAll,revG:revG,revN:revN,hand:hand,refurb:refurb,disp:disp,other:other,retExp:retExp,mktAll:mktAll,mktRet:mktRet,pBefore:pBefore,pAfter:pAfter,NRL:NRL,impact:impact,
+  oRate:O>0?RO/O*100:null,uRate:U>0?RU/U*100:null,perOrder:RO>0?NRL/RO:null,perUnit:RU>0?NRL/RU:null,cpr:RO>0?(NRL-writeoff)/RO:null,
+  margin:netRev>0?pAfter/netRev*100:null,
+  be:(pBefore>0&&k>0&&O>0)?pBefore/k/O*100:null,
+  ann:f==null?null:{rev:netRev*f,loss:NRL*f,profit:pAfter*f,f:f}};
+}
+function prod(p){
+ var u=p.units,ru=Math.min(p.retU,u),ro=Math.min(p.retO,u),rec=Math.min(p.rec,ru*p.cost);
+ var before=u*(p.price-p.cost-p.fwd),loss=ro*(p.fwd+p.rev+p.proc)+p.other+ru*p.cost-rec;
+ var after=before-ru*p.price-ro*(p.rev+p.proc)-p.other+rec,nr=(u-ru)*p.price;
+ return {oRate:u>0?ro/u*100:null,uRate:u>0?ru/u*100:null,loss:loss,perUnit:ru>0?loss/ru:null,before:before,after:after,margin:nr>0?after/nr*100:null};
+}
+//ENGINE_END
+var S={a:'Store and reporting',b:'Revenue and product cost',c:'Return counts',d:'Refunds',e:'Forward shipping',f:'Reverse shipping and handling',g:'Returned inventory condition and recovery',h:'Marketing',i:'Other return costs (switch on the ones you pay)'};
+var F=[
+['name','Store name (optional)','t','a',0,0,''],
+['platform','Platform','s:Shopify|WooCommerce|Amazon Marketplace|Other Marketplace|Custom Online Store','a',0,0,''],
+['mode','Analysis mode','s:store=Store-wide|single=Single product','a',1,0,'Store-wide can use total revenue and COGS below. Single product uses units x price and units x cost.'],
+['period','Reporting period','s:monthly=Monthly|quarterly=Quarterly|yearly=Yearly|custom=Custom date range','a',1,0,'Used for annual projection only.'],
+['start','Start date','d','a',1,0,'Needed for custom range.'],['end','End date','d','a',1,0,''],
+['cur','Currency','s:USD|INR|GBP|EUR|CAD|AUD|CUSTOM=Custom','a',1,0,'Label only, no exchange conversion.'],
+['sym','Custom currency symbol','t','a',0,0,'Used when Custom is selected.'],
+['method','Accounting method','s:B=Inventory-recovery-adjusted|A=Simple estimate (no recovery credit)','a',0,0,'A treats returned goods as fully lost (conservative). B credits the resale value of returned stock, capped at cost.'],
+['price','Average selling price per unit','n','b',1,0,''],['cost','Purchase cost per unit','n','b',1,0,''],
+['grossOverride','Total gross sales revenue','n','b',0,0,'Store-wide mode. Blank = units x price.'],
+['cogsOverride','Total COGS','n','b',0,0,'Store-wide mode. Blank = units x cost.'],
+['opex','Other normal operating expenses (total)','n','b',0,0,'Costs you pay with or without returns.'],
+['orders','Total orders','n','c',1,0,''],['retOrders','Returned orders','n','c',1,0,'Cannot exceed total orders.'],
+['units','Total units sold','n','c',1,0,''],['retUnits','Returned units','n','c',1,0,'Cannot exceed units sold.'],
+['refManual','Total refund amount','n','d',1,0,'Leave blank to calculate from returned units x price x refund %. Only one method is used.'],
+['refPct','Refund % when calculated','n','d',0,0,'100 = full refunds, 50 = half.'],
+['payFee','Non-refundable payment fee per return','n','d',0,0,''],['refFee','Refund transaction fee per return','n','d',0,0,''],
+['chargeback','Chargeback fees (total)','n','d',0,1,''],
+['fwd','Outbound shipping cost per order','n','e',1,0,'Do not repeat it if already inside product cost.'],
+['fwdRec','Forward shipping recovered from customers (%)','n','e',0,0,'0 = seller absorbs all.'],
+['fulf','Packaging and fulfilment per order','n','e',0,0,''],
+['rev','Reverse shipping cost per return','n','f',1,0,''],['revRec','Reverse shipping recovered (%)','n','f',0,0,'Customer, carrier or marketplace reimbursement.'],
+['handling','Handling and sorting per returned unit','n','f',0,0,''],['inspect','Inspection per returned unit','n','f',0,0,''],['restock','Restocking per returned unit','n','f',0,0,''],
+['open','Open-box / repackaged units','n','g',0,0,''],['dam','Damaged units','n','g',0,0,''],['uns','Unsellable units (written off)','n','g',0,0,'Remaining returned units count as resellable.'],
+['resPct','Resellable resale value (% of price)','n','g',0,0,'Recovery is capped at your unit cost.'],['openPct','Open-box resale value (% of price)','n','g',0,0,''],
+['damVal','Recoverable value per damaged unit','n','g',0,0,''],['unsVal','Salvage value per unsellable unit','n','g',0,0,''],
+['refurb','Refurbishment per open-box or damaged unit','n','g',0,0,''],['disposal','Disposal per unsellable unit','n','g',0,0,''],
+['mkt','Marketing / acquisition cost per order','n','h',0,0,'Already inside profit before returns.'],
+['mktOn','Count marketing on returned orders as unrecovered cost','k','h',0,0,'Affects net return loss only, not profit.'],
+['support','Customer support per return','n','i',0,1,''],['otherRet','Other cost per return','n','i',0,1,''],
+['fraud','Fraud / return abuse loss (total)','n','i',0,1,''],['storage','Warehouse storage for returns (total)','n','i',0,1,'']];
+var D={resPct:100,openPct:70,refPct:100,mode:'store',method:'B',period:'monthly',cur:'USD'};
+var SAMPLE={name:'Demo Store',orders:1000,retOrders:120,units:1500,retUnits:170,price:40,cost:18,fwd:5,rev:6,handling:1.5,inspect:.5,open:30,dam:20,uns:10,damVal:5,unsVal:0,refurb:2,disposal:1,mkt:4,mktOn:1};
+var host=$('#erc-inputs'),els={},sym='$',loc='en-US',last=null,rows=[];
+function mk(t,c,x,p){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;if(p)p.appendChild(e);return e;}
+Object.keys(S).forEach(function(s){
+ var fs=F.filter(function(f){return f[3]===s;}),dt=mk('details','erc-box'+(fs.some(function(f){return f[4];})?'':' erc-adv'),null,host);
+ if('abcdef'.indexOf(s)>-1)dt.open=true;
+ mk('summary','',S[s],dt);var g=mk('div','erc-grid',null,dt);
+ fs.forEach(function(f){
+  var id=f[0],w=mk('div','erc-f'+(f[4]?'':' erc-adv'),null,g),lb=mk('label','',f[1],w),inp;
+  lb.setAttribute('for','erc-'+id);
+  if(f[2]==='k'){inp=mk('input');inp.type='checkbox';}
+  else if(f[2].charAt(0)==='s'){inp=mk('select');f[2].slice(2).split('|').forEach(function(o){var p=o.split('='),op=mk('option','',p[1]||p[0],inp);op.value=p[0];});inp.value=D[id]||inp.options[0].value;}
+  else{inp=mk('input');inp.type=f[2]==='n'?'number':f[2]==='d'?'date':'text';if(f[2]==='n'){inp.min='0';inp.step='any';inp.inputMode='decimal';if(D[id]!=null)inp.value=D[id];}}
+  inp.id='erc-'+id;els[id]=inp;
+  if(f[5]){var ck=mk('input');ck.type='checkbox';ck.id='erc-on-'+id;ck.setAttribute('aria-label','Include '+f[1]);inp.disabled=true;ck.addEventListener('change',function(){inp.disabled=!ck.checked;});w.insertBefore(ck,lb);els['on-'+id]=ck;}
+  w.appendChild(inp);
+  if(f[6]){var sm=mk('small','',f[6],w);sm.id='erc-t-'+id;inp.setAttribute('aria-describedby',sm.id);}
+ });
+});
+function getI(){
+ var I={},neg=false;
+ F.forEach(function(f){
+  var id=f[0],e=els[id],t=f[2];
+  if(t==='k'){I[id]=e.checked;return;}
+  if(t==='t'||t==='d'||t.charAt(0)==='s'){I[id]=e.value;return;}
+  var raw=parseFloat(e.value),n=isFinite(raw)?raw:0;
+  if(f[5]&&!els['on-'+id].checked)n=0;
+  if(n<0){neg=true;n=0;}
+  I[id]=(id==='refManual'&&(e.value===''||!isFinite(raw)))?null:n;
+ });
+ I.neg=neg;return I;
+}
+function money(n){if(n==null||!isFinite(n))return 'N/A';var a=Math.abs(Math.round(n*100)/100);return (n<0&&a>0?'-':'')+sym+a.toLocaleString(loc,{minimumFractionDigits:2,maximumFractionDigits:2});}
+function pc(n){return n==null||!isFinite(n)?'N/A':(Math.round(n*100)/100)+'%';}
+function num(n){return n==null||!isFinite(n)?'N/A':String(Math.round(n*100)/100);}
+function st(n){return n>0.005?'Positive profit':n<-0.005?'Negative profit (loss)':'Break-even';}
+function bars(p,title,items,sum,empty){
+ var b=mk('div','erc-box',null,p);mk('h3','',title,b).style.marginTop='0';
+ if(empty){mk('p','',empty,b);return;}
+ var m=Math.max.apply(null,items.map(function(x){return Math.abs(x[1]);}))||1;
+ items.forEach(function(x){var r=mk('div','erc-row',null,b);mk('span','',x[0],r);var t=mk('div','erc-trk',null,r),fl=mk('div','erc-fill '+(x[3]||''),null,t);fl.style.width=(Math.abs(x[1])/m*100)+'%';mk('span','',x[2],r);});
+ mk('p','',sum,b).style.cssText='font-size:.8rem;color:#51607a;margin:6px 0 0';
+}
+function clear(e){while(e.firstChild)e.removeChild(e.firstChild);}
+function getRed(){return {sel:$('#erc-rsel').value,t:parseFloat($('#erc-rtarget').value),c:parseFloat($('#erc-rcustom').value)};}
+function render(){
+ var I=getI();sym=I.cur==='CUSTOM'?(I.sym||''):({USD:'$',INR:'₹',GBP:'£',EUR:'€',CAD:'CA$',AUD:'A$'})[I.cur];loc=I.cur==='INR'?'en-IN':'en-US';
+ var r=calc(I);last=r;
+ var wr=r.W.slice();if(I.neg)wr.push('Negative values were treated as 0.');
+ if(!I.orders&&!I.units)wr.push('Enter your orders and units to start.');
+ $('#erc-warn').textContent=wr.join(' ');
+ var rd=getRed(),cur=r.oRate,tg=null;
+ if(cur!=null){if(rd.sel==='target')tg=isFinite(rd.t)?rd.t:null;else if(rd.sel==='custom')tg=isFinite(rd.c)?cur*(1-cl(rd.c,0,100)/100):null;else tg=cur*(1-parseFloat(rd.sel)/100);}
+ var avoided=0,opp=null;
+ if(tg!=null&&cur!=null&&tg>=0&&tg<cur&&r.perOrder!=null){avoided=r.O*(cur-tg)/100;opp=avoided*r.perOrder;}
+ else if(tg!=null&&r.perOrder!=null)opp=0;
+ var ps=r.pAfter>0.005?'erc-good':r.pAfter<-0.005?'erc-bad':'erc-warn';
+ var cd=[['Order return rate',pc(r.oRate)],['Unit return rate',pc(r.uRate)],['Returned orders',num(r.RO)],['Returned units',num(r.RU)],['Gross sales revenue',money(r.gross)],['Total refunds',money(r.refunds)],['Net retained revenue',money(r.netRev)],['Net return loss',money(r.NRL),r.NRL>0?'erc-bad':''],['Profit before returns',money(r.pBefore)+' ('+st(r.pBefore)+')',r.pBefore>0?'erc-good':r.pBefore<0?'erc-bad':'erc-warn'],['Profit after returns',money(r.pAfter)+' ('+st(r.pAfter)+')',ps],['Return-adjusted margin',pc(r.margin)],['Average cost per return',money(r.cpr)],['Inventory recovery credited',money(r.recov)],['Profit recovery opportunity',money(opp),opp>0?'erc-good':''],['Break-even return rate',r.be==null?'N/A':r.be>100?'Above 100%':pc(r.be)]];
+ var c=$('#erc-cards');clear(c);
+ cd.forEach(function(x){var d=mk('div','erc-card '+(x[2]||''),null,c);mk('span','',x[0],d);mk('b','',x[1],d);});
+ $('#erc-note').textContent=(I.method==='B'?'Method B: returned stock is credited at its estimated resale value, capped at cost.':'Method A: no credit for returned stock; returned goods are treated as fully lost.')+' '+(I.mode==='store'?'Store-wide mode: total revenue/COGS override units x price if entered.':'Single product mode: revenue and COGS come from units x price and cost.')+' Recovery values are estimates unless you enter actual resale values. '+(r.ann?'Annual projection (not actual): net revenue '+money(r.ann.rev)+', return loss '+money(r.ann.loss)+', profit after returns '+money(r.ann.profit)+'.':'Annual projection: N/A (set a valid period or dates).');
+ rows=[['Gross sales revenue',r.gross],['Total refunds',r.refunds],['Net retained revenue',r.netRev],['Product cost (COGS)',r.cogs],['Forward shipping loss (returned orders)',r.fwdLoss],['Reverse shipping cost (net)',r.revN],['Return handling, inspection, restocking',r.hand],['Refurbishment and disposal',r.refurb+r.disp],['Inventory write-off',r.writeoff],['Inventory recovery credited',r.recov],['Other return expenses',r.other],['Marketing on returned orders',r.mktRet],['Net return loss',r.NRL],['Profit before returns',r.pBefore],['Profit after returns',r.pAfter],['Total profit impact of returns',r.impact]];
+ var tb=$('#erc-tb');clear(tb);rows.forEach(function(x){var tr=mk('tr','',null,tb);mk('th','',x[0],tr).scope='row';mk('td','erc-n',money(x[1]),tr);});
+ var ch=$('#erc-charts');clear(ch);var E=(r.RU>0||r.RO>0)?null:'Enter returned orders or units to see this chart.';
+ bars(ch,'Return rate breakdown',[['Order rate',r.oRate||0,pc(r.oRate)],['Unit rate',r.uRate||0,pc(r.uRate),'erc-or']],'Order return rate '+pc(r.oRate)+'; unit return rate '+pc(r.uRate)+'.',E);
+ bars(ch,'Returned inventory condition',[['Resellable',r.res,num(r.res),'erc-pos'],['Open-box',r.open,num(r.open)],['Damaged',r.dam,num(r.dam),'erc-or'],['Unsellable',r.uns,num(r.uns),'erc-neg']],'Resellable '+num(r.res)+', open-box '+num(r.open)+', damaged '+num(r.dam)+', unsellable '+num(r.uns)+' units.',r.RU>0?null:'Enter returned units to see this chart.');
+ bars(ch,'Refunds vs return processing costs',[['Refunds',r.refunds,money(r.refunds),'erc-neg'],['Return costs',r.retExp,money(r.retExp),'erc-or']],'Refunds '+money(r.refunds)+' versus return costs '+money(r.retExp)+'.',E);
+ bars(ch,'Profit before vs after returns',[['Before',r.pBefore,money(r.pBefore),r.pBefore<0?'erc-neg':'erc-pos'],['After',r.pAfter,money(r.pAfter),r.pAfter<0?'erc-neg':'erc-pos']],'Profit before returns '+money(r.pBefore)+'; after returns '+money(r.pAfter)+'.',I.orders>0?null:'Enter orders to see this chart.');
+ bars(ch,'Return loss by category',[['Fwd shipping',r.fwdLoss,money(r.fwdLoss)],['Reverse ship',r.revN,money(r.revN)],['Handling',r.hand,money(r.hand)],['Refurb/disposal',r.refurb+r.disp,money(r.refurb+r.disp)],['Other',r.other,money(r.other)],['Write-off',r.writeoff,money(r.writeoff),'erc-neg'],['Marketing',r.mktRet,money(r.mktRet),'erc-or']],'Net return loss '+money(r.NRL)+' split across the categories shown.',E);
+ var rc=$('#erc-redch');clear(rc);
+ $('#erc-redout').textContent=cur==null?'Enter orders to model a target.':tg==null?'Enter a target rate or choose a reduction.':tg>=cur?'Target must be below the current order return rate of '+pc(cur)+'.':'Reaching '+pc(tg)+' avoids about '+num(avoided)+' returns and recovers an estimated '+money(opp)+', assuming similar costs per return. This is an estimate.';
+ if(cur!=null&&tg!=null&&tg>=0)bars(rc,'Current vs target return rate',[['Current',cur,pc(cur),'erc-neg'],['Target',tg,pc(tg),'erc-pos']],'Current '+pc(cur)+' versus target '+pc(tg)+'.');
+ sim(I,r);compare();
+ $('#erc-live').textContent='Order return rate '+pc(r.oRate)+'. Net return loss '+money(r.NRL)+'. Profit after returns '+money(r.pAfter)+', '+st(r.pAfter)+'.';
+}
+var RD=$('#erc-red');
+[['rsel','Reduction scenario','s:target=Target return rate|5=5% relative reduction|10=10% relative reduction|20=20% relative reduction|custom=Custom reduction'],['rtarget','Target order return rate (%)','n'],['rcustom','Custom reduction (%)','n']].forEach(function(f){var w=mk('div','erc-f',null,RD);mk('label','',f[1],w).setAttribute('for','erc-'+f[0]);var e;if(f[2].charAt(0)==='s'){e=mk('select');f[2].slice(2).split('|').forEach(function(o){var p=o.split('='),op=mk('option','',p[1],e);op.value=p[0];});e.value='10';}else{e=mk('input');e.type='number';e.min='0';e.step='any';}e.id='erc-'+f[0];w.appendChild(e);});
+var SF=[['rate','Target order return rate (%)'],['rev','Reverse shipping per return'],['hand','Handling per returned unit'],['dam','Damaged share of returns (%)'],['res','Resale value of resellable (% of price)'],['ref','Average refund per returned unit']];
+SF.forEach(function(f){var w=mk('div','erc-f',null,$('#erc-sim'));mk('label','',f[1],w).setAttribute('for','erc-s-'+f[0]);var e=mk('input',null,null,w);e.type='number';e.min='0';e.step='any';e.id='erc-s-'+f[0];});
+function sv(k){var v=parseFloat($('#erc-s-'+k).value);return isFinite(v)&&v>=0?v:null;}
+function sim(I,r){
+ var s={rate:sv('rate'),rev:sv('rev'),hand:sv('hand'),dam:sv('dam'),res:sv('res'),ref:sv('ref')},tb=$('#erc-simtb');clear(tb);
+ if(s.rate==null&&s.rev==null&&s.hand==null&&s.dam==null&&s.res==null&&s.ref==null){var tr=mk('tr','',null,tb),td=mk('td','','Enter at least one scenario value above.',tr);td.colSpan=5;return;}
+ var J=Object.assign({},I),f=1;
+ if(s.rate!=null&&r.O>0&&r.RO>0){f=s.rate/100*r.O/r.RO;J.retOrders=r.RO*f;J.retUnits=r.RU*f;J.open=r.open*f;J.dam=r.dam*f;J.uns=r.uns*f;if(J.refManual!=null)J.refManual=r.refunds*f;}
+ if(s.dam!=null)J.dam=J.retUnits*s.dam/100;
+ if(s.rev!=null)J.rev=s.rev;if(s.hand!=null)J.handling=s.hand;if(s.res!=null)J.resPct=s.res;
+ if(s.ref!=null)J.refManual=J.retUnits*s.ref;
+ var q=calc(J);
+ [['Net return loss',r.NRL,q.NRL,1],['Profit after returns',r.pAfter,q.pAfter,1],['Profit margin (%)',r.margin,q.margin,0],['Inventory recovery',r.recov,q.recov,1],['Returned orders',r.RO,q.RO,0]].forEach(function(x){
+  var tr=mk('tr','',null,tb);mk('th','',x[0],tr).scope='row';var m=x[3]?money:num;
+  mk('td','erc-n',m(x[1]),tr);mk('td','erc-n',m(x[2]),tr);
+  var d=x[1]!=null&&x[2]!=null?x[2]-x[1]:null;mk('td','erc-n',d==null?'N/A':(d>0?'+':'')+m(d),tr);
+  mk('td','erc-n',d==null||!x[1]?'N/A':(d>0?'+':'')+pc(d/Math.abs(x[1])*100),tr);});
+ var tr2=mk('tr','',null,tb);mk('th','','Profit recovery opportunity',tr2).scope='row';var td2=mk('td','erc-n',money(q.pAfter-r.pAfter),tr2);td2.colSpan=4;
+}
+var PF=[['name','Product name','t'],['price','Selling price'],['cost','Purchase cost'],['units','Units sold'],['retU','Returned units'],['retO','Returned orders'],['fwd','Forward shipping per order'],['rev','Reverse shipping per return'],['proc','Return processing per return'],['rec','Inventory recovery value (total)'],['other','Other return costs (total)']];
+var ct=mk('table','',null,$('#erc-cmp')),hd=mk('tr','',null,mk('thead','',null,ct));mk('th','','Field',hd).scope='col';
+for(var pi=1;pi<=3;pi++)mk('th','','Product '+pi,hd).scope='col';
+var cb=mk('tbody','',null,ct);
+PF.forEach(function(f){var tr=mk('tr','',null,cb);mk('th','',f[1],tr).scope='row';for(var p=1;p<=3;p++){var e=mk('input',null,null,mk('td','',null,tr));e.id='erc-p'+p+f[0];e.type=f[2]==='t'?'text':'number';if(f[2]!=='t'){e.min='0';e.step='any';}e.setAttribute('aria-label',f[1]+' product '+p);e.style.cssText='width:100%;min-width:90px;min-height:38px;padding:6px;border:1px solid #9fb0c3;border-radius:6px';}});
+var rb=mk('tbody','',null,ct);
+function compare(){
+ clear(rb);var res=[];
+ for(var p=1;p<=3;p++){var g=function(k){var v=parseFloat($('#erc-p'+p+k).value);return isFinite(v)&&v>0?v:0;};
+  var nm=$('#erc-p'+p+'name').value||('Product '+p),o={units:g('units'),price:g('price'),cost:g('cost'),retU:g('retU'),retO:g('retO'),fwd:g('fwd'),rev:g('rev'),proc:g('proc'),rec:g('rec'),other:g('other')};
+  res.push(o.units>0?{n:nm,r:prod(o)}:null);}
+ [['Order return rate','oRate',pc],['Unit return rate','uRate',pc],['Total return loss','loss',money],['Return loss per unit','perUnit',money],['Profit before returns','before',money],['Profit after returns','after',money],['Profit margin','margin',pc]].forEach(function(m){
+  var tr=mk('tr','',null,rb);mk('th','',m[0],tr).scope='row';res.forEach(function(x){mk('td','erc-n',x?m[2](x.r[m[1]]):'N/A',tr);});});
+ var ok=res.filter(function(x){return x;}),out=$('#erc-cmpout');
+ if(ok.length<2){out.textContent='Enter units sold for at least two products to compare.';return;}
+ var lo=ok.reduce(function(a,b){return b.r.loss<a.r.loss?b:a;}),hi=ok.reduce(function(a,b){return b.r.after>a.r.after?b:a;});
+ out.textContent='Lowest return-related loss: '+lo.n+'. Highest profit after returns: '+hi.n+'.';
+}
+function setAll(o){F.forEach(function(f){var e=els[f[0]];if(f[2]==='k'){e.checked=!!(o&&o[f[0]]);return;}var v=o&&o[f[0]]!=null?o[f[0]]:(D[f[0]]!=null?D[f[0]]:(f[2]==='n'||f[2]==='t'||f[2]==='d'?'':e.options[0].value));if(f[2]==='n'||f[2]==='t'||f[2]==='d'||f[2].charAt(0)==='s')e.value=v;if(f[5]){var ck=els['on-'+f[0]];ck.checked=!!(o&&o[f[0]]);e.disabled=!ck.checked;}});}
+function say(t){$('#erc-msg').textContent=t;}
+function vals(){var o={};F.forEach(function(f){var e=els[f[0]];o[f[0]]=f[2]==='k'?e.checked:e.value;if(f[5])o['on-'+f[0]]=els['on-'+f[0]].checked;});return o;}
+var tm;root.addEventListener('input',function(){clearTimeout(tm);tm=setTimeout(render,120);});
+root.addEventListener('change',function(){render();});
+$('#erc-mode').addEventListener('click',function(){var b=this,on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);b.textContent='Advanced mode: '+(on?'on':'off');root.classList.toggle('erc-basic',!on);});
+root.classList.add('erc-basic');
+$('#erc-sample').addEventListener('click',function(){var s=Object.assign({},SAMPLE);F.forEach(function(f){if(f[5]&&s[f[0]]!=null)s['on-'+f[0]]=1;});setAll(s);render();say('Sample data loaded. Replace it with your own numbers.');});
+$('#erc-reset').addEventListener('click',function(){setAll(null);['rtarget','rcustom'].forEach(function(k){$('#erc-'+k).value='';});$('#erc-rsel').value='10';SF.forEach(function(f){$('#erc-s-'+f[0]).value='';});PF.forEach(function(f){for(var p=1;p<=3;p++)$('#erc-p'+p+f[0]).value='';});render();say('Calculator reset.');});
+$('#erc-save').addEventListener('click',function(){try{localStorage.setItem('erc_scenario',JSON.stringify(vals()));say('Scenario saved in this browser only.');}catch(e){say('Saving is not available in this browser.');}});
+$('#erc-restore').addEventListener('click',function(){try{var s=localStorage.getItem('erc_scenario');if(!s){say('No saved scenario found.');return;}var o=JSON.parse(s),m={};F.forEach(function(f){if(f[2]==='k')m[f[0]]=o[f[0]];else m[f[0]]=o[f[0]];if(f[5])m[f[0]]=o['on-'+f[0]]?o[f[0]]:m[f[0]];});F.forEach(function(f){var e=els[f[0]];if(f[2]==='k')e.checked=!!o[f[0]];else if(o[f[0]]!=null)e.value=o[f[0]];if(f[5]){els['on-'+f[0]].checked=!!o['on-'+f[0]];e.disabled=!els['on-'+f[0]].checked;}});render();say('Saved scenario restored.');}catch(e){say('Could not restore the saved scenario.');}});
+$('#erc-clear').addEventListener('click',function(){try{localStorage.removeItem('erc_scenario');say('Saved scenario deleted.');}catch(e){say('Could not access browser storage.');}});
+function report(){return ['Ecommerce Return Rate Profit Loss Report',$('#erc-name').value?'Store: '+$('#erc-name').value:'','Order return rate: '+pc(last.oRate),'Unit return rate: '+pc(last.uRate)].concat(rows.map(function(x){return x[0]+': '+money(x[1]);})).filter(Boolean).join('\n');}
+$('#erc-copy').addEventListener('click',function(){var t=report();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){say('Results copied.');},fb);}else fb();function fb(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');say('Results copied.');}catch(e){say('Copy failed. Select the table and copy manually.');}document.body.removeChild(a);}});
+$('#erc-csv').addEventListener('click',function(){var q=function(s){return '"'+String(s).replace(/"/g,'""')+'"';},l=[['Metric','Value'],['Order return rate',pc(last.oRate)],['Unit return rate',pc(last.uRate)]].concat(rows.map(function(x){return [x[0],money(x[1])];}));var b=new Blob([l.map(function(r){return r.map(q).join(',');}).join('\n')],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='return-loss-report.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(a.href);},500);say('CSV downloaded.');});
+$('#erc-print').addEventListener('click',function(){window.print();});
+$('#erc-imp').addEventListener('click',function(){if(!last||last.oRate==null){say('Enter your orders and returns first.');return;}var I=getI();$('#erc-s-rate').value=Math.round(last.oRate*80)/100;$('#erc-s-rev').value=Math.round(I.rev*90)/100;$('#erc-s-hand').value=Math.round(I.handling*90)/100;render();});
+$('#erc-simclr').addEventListener('click',function(){SF.forEach(function(f){$('#erc-s-'+f[0]).value='';});render();});
+try{var qs=[],fq=root.querySelectorAll('#erc-faq details');for(var q=0;q<fq.length;q++){qs.push({"@type":"Question","name":fq[q].querySelector('summary').textContent,"acceptedAnswer":{"@type":"Answer","text":fq[q].querySelector('p').textContent}});}
+var sc=document.createElement('script');sc.type='application/ld+json';sc.text=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":qs});root.appendChild(sc);}catch(e){}
+render();
+})();
+</script>
 </div>
