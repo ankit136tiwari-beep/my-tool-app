@@ -1,0 +1,399 @@
+<div id="marketplace-commission-tool" data-mode="basic">
+<style>
+#marketplace-commission-tool{--a:#4338ca;--a2:#eef2ff;--g:#15803d;--r:#b91c1c;--t:#1e293b;--m:#64748b;--b:#e2e8f0;font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--t);max-width:1100px;margin:0 auto;padding:12px;box-sizing:border-box}
+#marketplace-commission-tool *{box-sizing:border-box}
+#marketplace-commission-tool h1{font-size:1.65rem;line-height:1.25;margin:8px 0 14px}
+#marketplace-commission-tool h2{font-size:1.3rem;margin:28px 0 8px}
+#marketplace-commission-tool h3{font-size:1.05rem;margin:14px 0 4px}
+#marketplace-commission-tool a{color:var(--a)}
+.mcc-nav{font-size:.9rem;color:var(--m)}
+.mcc-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.mcc-tab,.mcc-btn{font:inherit;border:1px solid var(--a);background:#fff;color:var(--a);border-radius:8px;padding:9px 14px;cursor:pointer;min-height:42px}
+.mcc-tab[aria-selected=true],.mcc-btn.mcc-p{background:var(--a);color:#fff}
+.mcc-btn.mcc-d{border-color:var(--r);color:var(--r)}
+#marketplace-commission-tool :focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+.mcc-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.mcc-card{background:#fff;border:1px solid var(--b);border-radius:12px;padding:12px 14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(15,23,42,.08)}
+.mcc-card>summary{cursor:pointer;font-weight:700}
+.mcc-f{display:flex;flex-direction:column;margin:8px 0}
+.mcc-f label{font-size:.88rem;font-weight:600;margin-bottom:3px}
+.mcc-f input[type=text],.mcc-f input[type=number],.mcc-f select,.mcc-row input,.mcc-row select{font:inherit;width:100%;padding:8px;border:1px solid #94a3b8;border-radius:8px;background:#fff;color:var(--t);min-width:0}
+.mcc-ck{flex-direction:row;align-items:center;gap:8px}.mcc-ck label{margin:0}
+.mcc-two{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.mcc-kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mcc-kpi{border:1px solid var(--b);border-radius:10px;padding:8px 10px;background:#f8fafc}
+.mcc-kpi span{display:block;font-size:.8rem;color:var(--m)}.mcc-kpi b{font-size:1.08rem;word-break:break-word}
+.mcc-pos{border-color:var(--g);background:#f0fdf4}.mcc-pos b{color:var(--g)}
+.mcc-neg{border-color:var(--r);background:#fef2f2}.mcc-neg b{color:var(--r)}
+.mcc-scroll{overflow-x:auto;max-width:100%}
+.mcc-tbl{border-collapse:collapse;width:100%;font-size:.9rem}
+.mcc-tbl th,.mcc-tbl td{border-bottom:1px solid var(--b);padding:6px 8px;text-align:right}
+.mcc-tbl th:first-child,.mcc-tbl td:first-child{text-align:left}
+.mcc-tbl .mcc-tot td{font-weight:700;background:var(--a2)}
+.mcc-best{background:#dcfce7;font-weight:700}
+.mcc-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin:6px 0;align-items:end;border-bottom:1px dashed var(--b);padding-bottom:6px}
+.mcc-err{color:var(--r);font-size:.9rem;margin:6px 0}
+.mcc-note{color:var(--m);font-size:.85rem}
+.mcc-acts{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+#marketplace-commission-tool[data-mode=basic] .mcc-adv,#marketplace-commission-tool[data-mode=cmp] .mcc-adv{display:none}
+#marketplace-commission-tool:not([data-mode=cmp]) .mcc-cmp{display:none}
+@media(max-width:760px){.mcc-grid{grid-template-columns:minmax(0,1fr)}.mcc-two{grid-template-columns:1fr}.mcc-btn,.mcc-tab{flex:1 1 auto}}
+</style>
+
+<nav class="mcc-nav" aria-label="Tool navigation"><a href="https://my-tool-app.pages.dev/">Home</a> &rsaquo; Marketplace Commission Fee Calculator</nav>
+<h1>Marketplace Commission Fee Calculator – Calculate Custom Fees &amp; Seller Earnings</h1>
+
+<section aria-label="Calculator">
+<div class="mcc-tabs" role="tablist" aria-label="Calculator mode">
+<button class="mcc-tab" role="tab" data-m="basic" aria-selected="true">Basic Commission</button>
+<button class="mcc-tab" role="tab" data-m="adv" aria-selected="false">Advanced Fees</button>
+<button class="mcc-tab" role="tab" data-m="cmp" aria-selected="false">Compare Marketplaces</button>
+</div>
+<div class="mcc-grid">
+<div id="mcc-left"></div>
+<div>
+<div class="mcc-card" aria-live="polite">
+<strong id="mcc-title">Results</strong>
+<div id="mcc-err" class="mcc-err" role="alert"></div>
+<div id="mcc-kpis" class="mcc-kpis"></div>
+</div>
+<div class="mcc-card">
+<strong>Detailed breakdown</strong>
+<div class="mcc-scroll"><table class="mcc-tbl" id="mcc-bd"></table></div>
+<p class="mcc-note">No rounding is done during calculation. Values are rounded to 2 decimals only for display.</p>
+<div class="mcc-acts">
+<button class="mcc-btn mcc-p" id="mcc-copy">Copy results</button>
+<button class="mcc-btn" id="mcc-csv">Download CSV</button>
+<button class="mcc-btn" id="mcc-print">Print report</button>
+<button class="mcc-btn" id="mcc-sample">Load sample data</button>
+<button class="mcc-btn mcc-d" id="mcc-reset">Reset</button>
+</div>
+<div class="mcc-two">
+<div class="mcc-f"><label for="mcc-sname">Save this calculation as</label><input type="text" id="mcc-sname" maxlength="40" class="mcc-x"></div>
+<div class="mcc-f"><label for="mcc-slist">Saved calculations</label><select id="mcc-slist" class="mcc-x"></select></div>
+</div>
+<div class="mcc-acts">
+<button class="mcc-btn" id="mcc-save">Save locally</button>
+<button class="mcc-btn" id="mcc-load">Load</button>
+<button class="mcc-btn mcc-d" id="mcc-del">Delete</button>
+</div>
+<div id="mcc-msg" class="mcc-note" role="status"></div>
+</div>
+</div>
+</div>
+
+<div class="mcc-card mcc-cmp"><strong>Multi-marketplace comparison (up to 5)</strong>
+<p class="mcc-note">Uses your sale details and costs above. Each marketplace below replaces commission, fixed fee, payment fee and other charges. The values shown are only examples. Enter your real fees.</p>
+<div id="mcc-mk"></div>
+<div class="mcc-acts"><button class="mcc-btn" id="mcc-addmk">Add marketplace</button></div>
+<div class="mcc-scroll"><table class="mcc-tbl" id="mcc-cmpt"></table></div>
+<p class="mcc-note">Highlighted cells show the lowest total deductions, highest payout and highest net profit. Compare total fees, not only commission percentage.</p>
+</div>
+
+<details class="mcc-card"><summary>Reverse commission calculator</summary>
+<div id="mcc-rv-in" class="mcc-two"></div><div id="mcc-rv-out" aria-live="polite"></div></details>
+<details class="mcc-card"><summary>Target selling price calculator</summary>
+<p class="mcc-note">Uses all fee and cost settings above and finds the selling price per unit that reaches your target.</p>
+<div id="mcc-tg-in" class="mcc-two"></div><div id="mcc-tg-out" aria-live="polite"></div></details>
+<details class="mcc-card"><summary>Bulk product calculator</summary>
+<p class="mcc-note">Per product: commission = price × quantity × rate + fixed fee per product. Extra expenses are a total amount for that row.</p>
+<div id="mcc-bulk"></div>
+<div class="mcc-acts"><button class="mcc-btn" id="mcc-addb">Add product</button><button class="mcc-btn" id="mcc-bcsv">Export CSV</button><button class="mcc-btn mcc-d" id="mcc-bclr">Clear all</button></div>
+<div class="mcc-scroll"><table class="mcc-tbl" id="mcc-bt"></table></div></details>
+</section>
+
+<section>
+<h2>What this calculator does</h2>
+<p>This free tool helps sellers calculate marketplace commission, custom percentages, additional fees, seller payout and estimated profit. All fee rates are entered manually by you. Nothing is fetched from any marketplace, and all calculations run in your browser.</p>
+
+<h2>How to use the Marketplace Commission Calculator</h2>
+<ol>
+<li>Select a marketplace label or type a custom marketplace name.</li>
+<li>Choose your currency (no automatic conversion is done).</li>
+<li>Enter the selling price and order quantity.</li>
+<li>Enter your commission percentage.</li>
+<li>Choose the commission calculation basis.</li>
+<li>Enter fixed commission fees, if any.</li>
+<li>Switch to Advanced Fees to add payment, transaction, service, listing and custom fees.</li>
+<li>Enter product cost and your operating expenses.</li>
+<li>Review seller payout, total deductions and net profit.</li>
+<li>Use Compare Marketplaces, Reverse Commission or Target Selling Price if needed.</li>
+<li>Copy, print or download your results.</li>
+</ol>
+
+<h2>Features</h2>
+<ul>
+<li>Custom commission percentage with minimum, maximum and fixed fees</li>
+<li>Marketplace fee breakdown with percentage and fixed fees, plus up to 10 custom fees</li>
+<li>Seller payout calculator and net profit analysis (profit per unit, margin, ROI)</li>
+<li>Effective commission rate and effective total fee rate</li>
+<li>Reverse commission calculator and target selling price calculator</li>
+<li>Comparison of up to 5 marketplaces</li>
+<li>Bulk product calculation with CSV export</li>
+<li>Local save, load and delete of calculations</li>
+</ul>
+
+<h2>Calculation formulas and example</h2>
+<ul>
+<li>Percentage commission = commissionable amount × rate ÷ 100. Then the minimum is applied, then the maximum.</li>
+<li>Fixed commission = fixed per order + (fixed per item × quantity).</li>
+<li>Total commission = percentage commission + fixed commission.</li>
+<li>Seller payout = net sales + shipping collected − marketplace deductions.</li>
+<li>Net profit = seller payout − product costs − operating expenses (including advertising).</li>
+<li>Profit margin = net profit ÷ net sales × 100. ROI = net profit ÷ product cost × 100.</li>
+<li>Effective commission rate = total commission ÷ commissionable amount × 100.</li>
+</ul>
+<p><strong>Illustrative example (not an official fee schedule):</strong> selling price ₹2,000, commission 10%, fixed fee ₹20, payment fee ₹30, product cost ₹1,000, other expenses ₹100. Percentage commission = ₹200. Total deductions = 200 + 20 + 30 = ₹250. Seller payout = ₹1,750. Net profit = 1,750 − 1,000 − 100 = ₹650.</p>
+
+<h2>Use cases</h2>
+<p>Amazon, Flipkart, Meesho, Etsy and eBay sellers, Shopify store owners and independent ecommerce sellers can use it with their own fee values. It also helps new marketplace businesses, sellers comparing commission rates and sellers planning selling prices.</p>
+
+<h2>Important notes and limitations</h2>
+<ul>
+<li>Results are estimates. The tool has no preset fee rates. The marketplace names are only labels.</li>
+<li>Tax and shipping treatment differ by platform and country. Choose the commissionable base yourself.</li>
+<li>If tax is set to “included, exclude from base”, net sales and the commission base are divided by (1 + tax%).</li>
+<li>Advertising is treated as your operating expense, not as a marketplace deduction, so it is never counted twice.</li>
+<li>Per-order fees are charged once per order, not once per item.</li>
+<li>Saved calculations stay only in this browser (LocalStorage). Nothing is sent to a server.</li>
+</ul>
+<p>Check official fee pages (fees change by category, region, seller account and program): <a href="https://sell.amazon.com/pricing" target="_blank" rel="noopener noreferrer">Amazon Selling Plans and Pricing</a>, <a href="https://sellercentral.amazon.com/help/hub" target="_blank" rel="noopener noreferrer">Amazon Seller Central Help</a>, <a href="https://seller.flipkart.com/" target="_blank" rel="noopener noreferrer">Flipkart Seller Hub</a>, <a href="https://www.etsy.com/legal/fees/" target="_blank" rel="noopener noreferrer">Etsy Seller Fees</a>, <a href="https://www.ebay.com/help/selling/fees-credits-invoices/selling-fees?id=4822" target="_blank" rel="noopener noreferrer">eBay Selling Fees</a>, <a href="https://www.shopify.com/pricing" target="_blank" rel="noopener noreferrer">Shopify Pricing</a>.</p>
+
+<h2>Frequently asked questions</h2>
+<h3>What is a Marketplace Commission Fee Calculator?</h3><p>It is a tool that estimates the commission and fees a marketplace deducts from a sale and the amount you receive.</p>
+<h3>How do I calculate marketplace commission fees?</h3><p>Multiply the commissionable amount by the commission percentage, then add any fixed fees.</p>
+<h3>How do I calculate a 10% marketplace commission?</h3><p>Multiply the amount by 0.10. On ₹2,000, a 10% commission is ₹200.</p>
+<h3>How can I calculate seller earnings after commission?</h3><p>Subtract commission and other marketplace fees from your sales revenue to get the seller payout.</p>
+<h3>What is the difference between marketplace commission and marketplace fees?</h3><p>Commission is the main percentage charge on a sale. Marketplace fees also include payment, listing, service and other charges.</p>
+<h3>How do I calculate net profit after marketplace commission?</h3><p>Subtract product cost, shipping, packaging, advertising and other expenses from your seller payout.</p>
+<h3>Can I enter custom commission percentages?</h3><p>Yes. You enter every percentage and fixed fee yourself.</p>
+<h3>Can I compare commission rates across multiple marketplaces?</h3><p>Yes. Compare mode lets you compare up to 5 marketplaces by total fees, payout and profit.</p>
+<h3>Does this calculator automatically retrieve marketplace fees?</h3><p>No. It does not fetch any fee rates. Please check the marketplace's official fee page and enter the values.</p>
+<h3>Can I use this commission calculator for Amazon, Flipkart, Etsy and eBay?</h3><p>Yes, if you enter the fee values that apply to your category, region and seller plan. It is not affiliated with any marketplace.</p>
+
+<h2>Related tools</h2>
+<p><a href="https://my-tool-app.pages.dev/break-even-roas-calculator">Break-Even ROAS Calculator</a> – use this related calculator to estimate the break-even advertising ROAS required to cover your product and advertising costs.</p>
+<p class="mcc-nav"><a href="https://my-tool-app.pages.dev/">Home</a></p>
+</section>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+{"@type":"WebPage","name":"Marketplace Commission Fee Calculator – Free Tool","description":"Calculate marketplace commission, custom fees and seller earnings. Compare rates, estimate net revenue and analyze product profitability.","url":"https://my-tool-app.pages.dev/marketplace-commission-fee-calculator","isPartOf":{"@type":"WebSite","name":"My Tool App","url":"https://my-tool-app.pages.dev/"}},
+{"@type":"SoftwareApplication","name":"Marketplace Commission Fee Calculator","description":"Free browser-based calculator for marketplace commission, fees, seller payout and profit.","applicationCategory":"BusinessApplication","operatingSystem":"Web Browser","browserRequirements":"Requires JavaScript","url":"https://my-tool-app.pages.dev/marketplace-commission-fee-calculator","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},
+{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://my-tool-app.pages.dev/"},{"@type":"ListItem","position":2,"name":"Marketplace Commission Fee Calculator","item":"https://my-tool-app.pages.dev/marketplace-commission-fee-calculator"}]},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a Marketplace Commission Fee Calculator?","acceptedAnswer":{"@type":"Answer","text":"It is a tool that estimates the commission and fees a marketplace deducts from a sale and the amount you receive."}},
+{"@type":"Question","name":"How do I calculate marketplace commission fees?","acceptedAnswer":{"@type":"Answer","text":"Multiply the commissionable amount by the commission percentage, then add any fixed fees."}},
+{"@type":"Question","name":"How do I calculate a 10% marketplace commission?","acceptedAnswer":{"@type":"Answer","text":"Multiply the amount by 0.10. On ₹2,000, a 10% commission is ₹200."}},
+{"@type":"Question","name":"How can I calculate seller earnings after commission?","acceptedAnswer":{"@type":"Answer","text":"Subtract commission and other marketplace fees from your sales revenue to get the seller payout."}},
+{"@type":"Question","name":"What is the difference between marketplace commission and marketplace fees?","acceptedAnswer":{"@type":"Answer","text":"Commission is the main percentage charge on a sale. Marketplace fees also include payment, listing, service and other charges."}},
+{"@type":"Question","name":"How do I calculate net profit after marketplace commission?","acceptedAnswer":{"@type":"Answer","text":"Subtract product cost, shipping, packaging, advertising and other expenses from your seller payout."}},
+{"@type":"Question","name":"Can I enter custom commission percentages?","acceptedAnswer":{"@type":"Answer","text":"Yes. You enter every percentage and fixed fee yourself."}},
+{"@type":"Question","name":"Can I compare commission rates across multiple marketplaces?","acceptedAnswer":{"@type":"Answer","text":"Yes. Compare mode lets you compare up to 5 marketplaces by total fees, payout and profit."}},
+{"@type":"Question","name":"Does this calculator automatically retrieve marketplace fees?","acceptedAnswer":{"@type":"Answer","text":"No. It does not fetch any fee rates. Please check the marketplace's official fee page and enter the values."}},
+{"@type":"Question","name":"Can I use this commission calculator for Amazon, Flipkart, Etsy and eBay?","acceptedAnswer":{"@type":"Answer","text":"Yes, if you enter the fee values that apply to your category, region and seller plan. It is not affiliated with any marketplace."}}
+]}]}</script>
+
+<script>
+(function(){
+function init(){
+var R=document.getElementById('marketplace-commission-tool');if(!R||R.getAttribute('data-ready'))return;R.setAttribute('data-ready','1');
+var $=function(i){return document.getElementById('mcc-'+i)};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+var SYM={INR:'₹',USD:'$',GBP:'£',EUR:'€',CAD:'C$',AUD:'A$',AED:'AED ',SGD:'S$'};
+var PC=['rate','pp','tr','sp','taxp','rr','rr2'];
+var D=[
+{z:'l',t:'Marketplace and currency',f:[
+{i:'mp',l:'Marketplace (label only, no rates are filled in)',t:'s',o:['Custom Marketplace','Amazon','Flipkart','Meesho','Etsy','eBay','Walmart Marketplace','Shopify']},
+{i:'mpn',l:'Custom marketplace name',t:'t'},
+{i:'cur',l:'Currency',t:'s',d:'INR',o:[['INR','INR – Indian Rupee'],['USD','USD – US Dollar'],['GBP','GBP – British Pound'],['EUR','EUR – Euro'],['CAD','CAD – Canadian Dollar'],['AUD','AUD – Australian Dollar'],['AED','AED – UAE Dirham'],['SGD','SGD – Singapore Dollar'],['CUS','Custom Currency']]},
+{i:'csym',l:'Custom currency symbol',t:'t'},
+{i:'pn',l:'Product name (optional)',t:'t'}]},
+{z:'l',t:'Sale details',f:[
+{i:'price',l:'Selling price per unit',t:'n',d:''},
+{i:'qty',l:'Order quantity',t:'n',d:'1'},
+{i:'dt',l:'Discount type',t:'s',o:[['pct','Percentage'],['fix','Fixed amount per unit']]},
+{i:'dv',l:'Discount value',t:'n',d:''},
+{i:'basis',l:'Commission calculation basis',t:'s',o:[['orig','Product selling price (before discount)'],['disc','Discounted selling price'],['sub','Order subtotal (discounted + shipping collected)'],['custom','Custom commissionable amount']],d:'disc'},
+{i:'cbase',l:'Custom commissionable amount (total)',t:'n',d:''},
+{i:'ship',l:'Shipping collected from buyer (per order)',t:'n',d:''},
+{i:'tax',l:'Tax treatment',t:'s',o:[['na','Tax not applicable'],['inc-ex','Tax included in price, exclude from base'],['inc-keep','Tax included in price, keep in base'],['exc','Tax excluded from price (not in base)']]},
+{i:'taxp',l:'Tax %',t:'n',d:''}]},
+{z:'l',t:'Commission',f:[
+{i:'rate',l:'Commission percentage (%)',t:'n',d:''},
+{i:'minen',l:'Enable minimum commission per order',t:'c'},{i:'minv',l:'Minimum commission',t:'n',d:''},
+{i:'maxen',l:'Enable maximum commission per order',t:'c'},{i:'maxv',l:'Maximum commission',t:'n',d:''},
+{i:'fo',l:'Fixed commission per order',t:'n',d:''},{i:'fi',l:'Fixed commission per item',t:'n',d:''}]},
+{z:'l',a:1,t:'Other marketplace fees',f:[
+{i:'pp',l:'Payment processing %',t:'n',d:''},{i:'pf',l:'Payment processing fixed (per order)',t:'n',d:''},
+{i:'tr',l:'Transaction fee %',t:'n',d:''},{i:'tf',l:'Transaction fee fixed (per order)',t:'n',d:''},
+{i:'sp',l:'Platform service fee %',t:'n',d:''},{i:'sf',l:'Platform service fee fixed (per order)',t:'n',d:''},
+{i:'lf',l:'Listing fee (per order)',t:'n',d:''}]},
+{z:'l',a:1,t:'Advertising (your operating expense)',f:[
+{i:'adt',l:'Advertising type',t:'s',o:[['fix','Fixed per order'],['pct','% of sales']]},
+{i:'adv',l:'Advertising amount or %',t:'n',d:''}]},
+{z:'l',t:'Your costs',f:[
+{i:'cost',l:'Product purchase cost per unit',t:'n',d:''},
+{i:'sc',l:'Shipping cost you pay (per order)',t:'n',d:''},
+{i:'pk',l:'Packaging cost (per order)',t:'n',d:''},
+{i:'hc',l:'Handling cost (per order)',t:'n',d:''},
+{i:'ox',l:'Other operating expenses (per order)',t:'n',d:''}]},
+{z:'rv',f:[
+{i:'rc',l:'Commission amount',t:'n',d:''},{i:'rr',l:'Commission % applied',t:'n',d:''},
+{i:'ro',l:'Order amount (optional, for effective %)',t:'n',d:''},{i:'rr2',l:'Compare with another %',t:'n',d:''}]},
+{z:'tg',f:[
+{i:'tm',l:'Target type',t:'s',o:[['unit','Profit per unit'],['margin','Profit margin %'],['pay','Seller payout per unit']]},
+{i:'tv',l:'Target value',t:'n',d:''}]}
+];
+var FL=[],DEF={};
+function mk(x){var w=el('div','mcc-f'+(x.t==='c'?' mcc-ck':'')),id='mcc-'+x.i,l=el('label',null,x.l),c;l.htmlFor=id;
+if(x.t==='s'){c=el('select');x.o.forEach(function(o){o=Array.isArray(o)?o:[o,o];var e=el('option',null,o[1]);e.value=o[0];c.appendChild(e)})}
+else{c=el('input');if(x.t==='c')c.type='checkbox';else if(x.t==='n'){c.type='number';c.step='any';c.min='0';c.setAttribute('inputmode','decimal')}else{c.type='text';c.maxLength=40}}
+c.id=id;c.className='mcc-in';
+if(x.t==='c'){c.checked=false;DEF[x.i]=false}else{if(x.d!=null)c.value=x.d;DEF[x.i]=x.d!=null?x.d:(x.t==='s'?x.o[0][0]||x.o[0]:'')}
+if(x.t==='s'&&x.d==null)DEF[x.i]=Array.isArray(x.o[0])?x.o[0][0]:x.o[0];
+if(x.t==='c'){w.appendChild(c);w.appendChild(l)}else{w.appendChild(l);w.appendChild(c)}
+FL.push(x);return w}
+var left=$('left');
+D.forEach(function(g){var host;
+if(g.z==='l'){host=el('details','mcc-card'+(g.a?' mcc-adv':''));host.open=true;host.appendChild(el('summary',null,g.t));var b=el('div','mcc-two');host.appendChild(b);g.f.forEach(function(f){b.appendChild(mk(f))});
+if(g.t==='Other marketplace fees'){host.appendChild(el('h3',null,'Custom fees (up to 10)'));var cf=el('div');cf.id='mcc-cf';host.appendChild(cf);var ab=el('button','mcc-btn','Add custom fee');ab.type='button';ab.id='mcc-addcf';host.appendChild(ab)}
+left.appendChild(host)}
+else{host=$(g.z==='rv'?'rv-in':'tg-in');g.f.forEach(function(f){host.appendChild(mk(f))})}});
+
+/* dynamic rows */
+function row(host,defs,data,max,rm){var r=el('div','mcc-row');defs.forEach(function(d){var w=el('div','mcc-f'),l=el('label',null,d.l),c;
+if(d.t==='s'){c=el('select');d.o.forEach(function(o){var e=el('option',null,o[1]);e.value=o[0];c.appendChild(e)})}else if(d.t==='c'){c=el('input');c.type='checkbox'}else{c=el('input');c.type=d.t==='n'?'number':'text';if(d.t==='n'){c.step='any';c.min='0'}else c.maxLength=40}
+c.setAttribute('data-k',d.k);c.setAttribute('aria-label',d.l);var v=data&&data[d.k]!=null?data[d.k]:d.d;if(d.t==='c')c.checked=!!v;else if(v!=null)c.value=v;w.appendChild(l);l.textContent=d.l;w.appendChild(c);r.appendChild(w)});
+var b=el('button','mcc-btn mcc-d','Remove');b.type='button';b.addEventListener('click',function(){r.parentNode.removeChild(r);rm&&rm();update()});r.appendChild(b);host.appendChild(r)}
+function rd(host,defs){var out=[];[].forEach.call(host.children,function(r){var o={};defs.forEach(function(d){var c=r.querySelector('[data-k="'+d.k+'"]');o[d.k]=d.t==='c'?c.checked:d.t==='n'?Math.max(0,parseFloat(c.value)||0):c.value});out.push(o)});return out}
+var CFD=[{k:'n',l:'Fee name',t:'t',d:''},{k:'t',l:'Fee type',t:'s',o:[['fixed','Fixed per order'],['pct','% of net sales']],d:'fixed'},{k:'v',l:'Amount or %',t:'n',d:''},{k:'en',l:'Enabled',t:'c',d:true}];
+var MKD=[{k:'n',l:'Marketplace name',t:'t',d:''},{k:'rate',l:'Commission %',t:'n',d:''},{k:'fixed',l:'Fixed fee per order',t:'n',d:''},{k:'pp',l:'Payment fee %',t:'n',d:''},{k:'other',l:'Other charges per order',t:'n',d:''}];
+var BKD=[{k:'n',l:'Product',t:'t',d:''},{k:'p',l:'Price',t:'n',d:''},{k:'q',l:'Qty',t:'n',d:'1'},{k:'r',l:'Commission %',t:'n',d:''},{k:'f',l:'Fixed fee',t:'n',d:''},{k:'c',l:'Cost per unit',t:'n',d:''},{k:'x',l:'Extra expenses',t:'n',d:''}];
+function addCF(d){if($('cf').children.length>=10){say('Maximum 10 custom fees.');return}row($('cf'),CFD,d)}
+function addMK(d){if($('mk').children.length>=5){say('Maximum 5 marketplaces.');return}row($('mk'),MKD,d)}
+function addB(d){row($('bulk'),BKD,d)}
+var MKDEF=[{n:'Marketplace A',rate:10,fixed:20,pp:2,other:0},{n:'Marketplace B',rate:15,fixed:0,pp:0,other:0}];
+function say(t){$('msg').textContent=t}
+
+/* read */
+function read(){var o={},er=[];FL.forEach(function(x){var c=$(x.i);
+if(x.t==='n'){var v=parseFloat(c.value);if(!isFinite(v))v=0;if(v<0){er.push(x.l+' cannot be negative.');v=0}if(PC.indexOf(x.i)>-1&&v>100){er.push(x.l+' cannot exceed 100%. Using 100.');v=100}o[x.i]=v}
+else if(x.t==='c')o[x.i]=c.checked;else o[x.i]=c.value});
+if(o.dt==='pct'&&o.dv>100){er.push('Discount cannot exceed 100%. Using 100.');o.dv=100}
+if(o.dt==='fix'&&o.dv>o.price){er.push('Discount cannot exceed the selling price. Using the full price.')}
+if(o.qty<=0)er.push('Enter a quantity above zero to see results.');
+o.cf=rd($('cf'),CFD);return{o:o,er:er}}
+
+/* core engine */
+function calc(o){var q=o.qty,act=q>0?1:0,p=o.price,k=o.tax==='inc-ex'?1/(1+o.taxp/100):1;
+var d=o.dt==='pct'?p*o.dv/100:o.dv;if(d>p)d=p;var dp=p-d;
+var gross=p*q,disc=d*q,net=dp*q,sh=act*o.ship;
+var base=o.basis==='orig'?gross:o.basis==='disc'?net:o.basis==='sub'?net+sh:o.cbase;if(o.basis!=='custom')base*=k;
+var pcm=base*o.rate/100;if(o.minen)pcm=Math.max(pcm,o.minv);if(o.maxen)pcm=Math.min(pcm,o.maxv);pcm*=act;
+var fx=act*o.fo+o.fi*q,comm=pcm+fx;
+var netS=net*k,rev=(net+sh)*k;
+var pay=act*(rev*o.pp/100+o.pf),trn=act*(rev*o.tr/100+o.tf),svc=act*(rev*o.sp/100+o.sf),lst=act*o.lf,cus=0;
+(o.cf||[]).forEach(function(f){if(f.en)cus+=act*(f.t==='pct'?netS*f.v/100:f.v)});
+var ded=comm+pay+trn+lst+svc+cus,payout=rev-ded;
+var prod=o.cost*q,adv=act*(o.adt==='pct'?netS*o.adv/100:o.adv);
+var ship=act*o.sc,pack=act*o.pk,hand=act*o.hc,oth=act*o.ox,opx=ship+pack+hand+oth+adv,profit=payout-prod-opx;
+var grossK=gross*k;
+return{q:q,gross:gross,disc:disc,net:net,netS:netS,sh:sh,rev:rev,base:base,pcm:pcm,fx:fx,comm:comm,pay:pay,trn:trn,lst:lst,svc:svc,cus:cus,ded:ded,payout:payout,prod:prod,ship:ship,pack:pack,hand:hand,oth:oth,adv:adv,opx:opx,profit:profit,
+ppu:q>0?profit/q:null,margin:netS>0?profit/netS*100:null,eff:base>0?comm/base*100:null,effT:rev>0?ded/rev*100:null,pp2:grossK>0?payout/grossK*100:null,roi:prod>0?profit/prod*100:null}}
+
+function sym(){var c=$('cur').value;return c==='CUS'?($('csym').value||''):SYM[c]}
+function m(v){if(v==null||!isFinite(v))return 'N/A';var s=Math.abs(v).toLocaleString($('cur').value==='INR'?'en-IN':'en-US',{minimumFractionDigits:2,maximumFractionDigits:2});return(v<-0.005?'-':'')+sym()+s}
+function pc(v){return v==null||!isFinite(v)?'N/A':v.toFixed(2)+'%'}
+var LAST=null;
+function rows(r){var q=r.q;return[
+['Gross selling revenue',r.gross],['Less: discounts',-r.disc],['Net sales',r.net,1],['Add: shipping collected',r.sh],
+['Less: percentage commission',-r.pcm],['Less: fixed commission',-r.fx],['Less: payment processing fee',-r.pay],['Less: transaction fee',-r.trn],['Less: listing fee',-r.lst],['Less: platform service fee',-r.svc],['Less: custom marketplace fees',-r.cus],
+['Estimated seller payout',r.payout,1],
+['Less: product costs',-r.prod],['Less: shipping expenses',-r.ship],['Less: packaging',-r.pack],['Less: handling',-r.hand],['Less: advertising',-r.adv],['Less: other operating costs',-r.oth],
+['Estimated net profit',r.profit,1]].map(function(a){return{l:a[0],v:a[1],t:a[2],u:q>0?a[1]/q:null}})}
+function render(){var s=read(),o=s.o,r=calc(o);var nm=o.mpn.trim()||o.mp;
+$('title').textContent='Results – '+nm+(o.pn?' – '+o.pn:'');
+$('err').textContent=s.er.join(' ');
+var K=[['Total gross sales',m(r.gross)],['Total commission',m(r.comm)],['Total marketplace fees',m(r.ded-r.comm)],['Total marketplace deductions',m(r.ded)],['Seller payout',m(r.payout)],['Total product costs',m(r.prod)],
+['Net profit',m(r.profit)+(r.profit>0.004?' (profit ▲)':r.profit<-0.004?' (loss ▼)':''),r.profit>0.004?'mcc-pos':r.profit<-0.004?'mcc-neg':''],['Profit per unit',m(r.ppu)],['Profit margin',pc(r.margin)],['Effective commission rate',pc(r.eff)],['Effective total fee rate',pc(r.effT)],['Seller payout % of gross',pc(r.pp2)],['ROI (on product cost)',pc(r.roi)]];
+var kp=$('kpis');kp.textContent='';K.forEach(function(a){var d=el('div','mcc-kpi '+(a[2]||''));d.appendChild(el('span',null,a[0]));d.appendChild(el('b',null,a[1]));kp.appendChild(d)});
+var bd=$('bd');bd.textContent='';var h=el('tr');['Item','Total','Per unit'].forEach(function(x){h.appendChild(el('th',null,x))});bd.appendChild(h);
+var rs=rows(r);rs.forEach(function(x){var t=el('tr',x.t?'mcc-tot':'');t.appendChild(el('td',null,x.l));t.appendChild(el('td',null,m(x.v)));t.appendChild(el('td',null,m(x.u)));bd.appendChild(t)});
+LAST={nm:nm,o:o,r:r,rs:rs,K:K};
+compare(o);reverse(o);target(o);bulk()}
+
+function compare(o){var ms=rd($('mk'),MKD),T=$('cmpt');T.textContent='';if(!ms.length)return;
+var res=ms.map(function(x){return calc(Object.assign({},o,{rate:x.rate,fo:x.fixed,fi:0,minen:false,maxen:false,pp:x.pp,pf:0,tr:0,tf:0,sp:0,sf:0,lf:0,cf:[{en:true,t:'fixed',v:x.other}]}))});
+var mn=Math.min.apply(null,res.map(function(r){return r.ded})),mxp=Math.max.apply(null,res.map(function(r){return r.payout})),mxf=Math.max.apply(null,res.map(function(r){return r.profit}));
+var h=el('tr');h.appendChild(el('th',null,'Metric'));ms.forEach(function(x,i){h.appendChild(el('th',null,x.n||'Marketplace '+(i+1)))});T.appendChild(h);
+[['Commission',function(r){return m(r.comm)}],['Additional fees',function(r){return m(r.ded-r.comm)}],['Total deductions',function(r){return m(r.ded)},function(r){return r.ded===mn}],['Seller payout',function(r){return m(r.payout)},function(r){return r.payout===mxp}],['Net profit',function(r){return m(r.profit)},function(r){return r.profit===mxf}],['Profit margin',function(r){return pc(r.margin)}],['Effective fee rate',function(r){return pc(r.effT)}]].forEach(function(a){var t=el('tr');t.appendChild(el('td',null,a[0]));res.forEach(function(r){var c=el('td',a[2]&&a[2](r)&&res.length>1?'mcc-best':'',a[1](r)+(a[2]&&a[2](r)&&res.length>1?' ★':''));t.appendChild(c)});T.appendChild(t)})}
+
+function reverse(o){var out=$('rv-out');out.textContent='';var L=[];
+if(o.rr<=0){L.push('Enter a commission percentage above zero.')}
+else{var a=o.rc/(o.rr/100);L.push('Commissionable amount = '+m(a));if(o.ro>0)L.push('Effective commission % on the order amount = '+pc(o.rc/o.ro*100));
+if(o.rr2>0){var c2=a*o.rr2/100;L.push('At '+pc(o.rr2)+' the commission would be '+m(c2)+' (difference '+m(c2-o.rc)+', rate difference '+(o.rr2-o.rr).toFixed(2)+' points).')}}
+L.forEach(function(t){out.appendChild(el('p',null,t))})}
+
+function target(o){var out=$('tg-out');out.textContent='';var line=function(t){out.appendChild(el('p',null,t))};
+if(o.qty<=0){line('Enter a quantity above zero.');return}
+if(o.tm==='margin'&&o.tv>=100){line('Target margin must be below 100%.');return}
+var g=function(p){var r=calc(Object.assign({},o,{price:p}));return(o.tm==='unit'?r.profit/r.q:o.tm==='pay'?r.payout/r.q:(r.margin==null?-1e9:r.margin))-o.tv};
+var lo=0,hi=1000,n=0;while(g(hi)<0&&n<12){hi*=10;n++}
+if(g(hi)<0){line('This target cannot be reached. Total percentage fees may be 100% or more of the price, or the target is too high.');return}
+for(var i=0;i<100;i++){var mid=(lo+hi)/2;if(g(mid)<0)lo=mid;else hi=mid}
+var p=hi;if(g(0)>=0)p=0;var r=calc(Object.assign({},o,{price:p}));
+line('Required selling price per unit = '+m(p));
+line('Check at this price: payout '+m(r.payout)+', net profit '+m(r.profit)+', profit per unit '+m(r.ppu)+', margin '+pc(r.margin)+'.');
+line('How it was solved: net profit changes steadily with the price, so the tool searches for the price where your target is met after commission, percentage fees, fixed fees and costs. This also handles minimum and maximum commission.')}
+
+function bulk(){var rs=rd($('bulk'),BKD),T=$('bt');T.textContent='';if(!rs.length)return;
+var h=el('tr');['Product','Commission','Total commission','Seller payout','Est. net profit'].forEach(function(x){h.appendChild(el('th',null,x))});T.appendChild(h);
+var tc=0,tp=0,tn=0,data=[];
+rs.forEach(function(x,i){var c=x.p*x.q*x.r/100+(x.q>0?x.f:0),sc=x.p*x.q,po=sc-c,pr=po-x.c*x.q-x.x,per=x.q>0?c/x.q:0;tc+=c;tp+=po;tn+=pr;
+data.push([x.n||'Product '+(i+1),per,c,po,pr]);var t=el('tr');[x.n||'Product '+(i+1),m(per)+' / unit',m(c),m(po),m(pr)].forEach(function(v){t.appendChild(el('td',null,v))});T.appendChild(t)});
+var t=el('tr','mcc-tot');['Total','',m(tc),m(tp),m(tn)].forEach(function(v){t.appendChild(el('td',null,v))});T.appendChild(t);BK=data}
+var BK=[];
+
+/* export helpers */
+function cs(v){v=String(v);if(/^[=+\-@\t\r]/.test(v))v="'"+v;return'"'+v.replace(/"/g,'""')+'"'}
+function dl(name,txt){var b=new Blob(['\ufeff'+txt],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(a.href)},500)}
+function plain(){var t='Marketplace Commission Fee Calculator – '+LAST.nm+'\n';LAST.K.forEach(function(a){t+=a[0]+': '+a[1]+'\n'});t+='\nBreakdown (total | per unit)\n';LAST.rs.forEach(function(x){t+=x.l+': '+m(x.v)+' | '+m(x.u)+'\n'});return t}
+$('copy').addEventListener('click',function(){var t=plain();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){say('Results copied.')},function(){say('Copy failed. Select the text manually.')})}else{var a=el('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');say('Results copied.')}catch(e){say('Copy failed.')}document.body.removeChild(a)}});
+$('csv').addEventListener('click',function(){var t=cs('Item')+','+cs('Total')+','+cs('Per unit')+'\n';LAST.rs.forEach(function(x){t+=cs(x.l)+','+(+x.v.toFixed(4))+','+(x.u==null?'':+x.u.toFixed(4))+'\n'});LAST.K.forEach(function(a){t+=cs(a[0])+','+cs(a[1])+',\n'});dl('commission-calculation.csv',t);say('CSV downloaded.')});
+$('bcsv').addEventListener('click',function(){var t=['Product','Commission per unit','Total commission','Seller payout','Net profit'].map(cs).join(',')+'\n';BK.forEach(function(r){t+=[cs(r[0]),r[1].toFixed(4),r[2].toFixed(4),r[3].toFixed(4),r[4].toFixed(4)].join(',')+'\n'});dl('bulk-commission.csv',t);say('Bulk CSV downloaded.')});
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+$('print').addEventListener('click',function(){var w=window.open('','_blank');if(!w){say('Allow pop-ups to print the report.');return}
+var h='<!doctype html><title>Commission report</title><body style="font-family:Arial,sans-serif;max-width:720px;margin:20px auto"><h2>'+esc(LAST.nm)+' – Commission and Profit Report</h2><p>Estimates only. Fee values were entered manually.</p><table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%">';
+LAST.K.forEach(function(a){h+='<tr><td>'+esc(a[0])+'</td><td>'+esc(a[1])+'</td></tr>'});h+='</table><h3>Breakdown</h3><table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%"><tr><th>Item</th><th>Total</th><th>Per unit</th></tr>';
+LAST.rs.forEach(function(x){h+='<tr><td>'+esc(x.l)+'</td><td align="right">'+esc(m(x.v))+'</td><td align="right">'+esc(m(x.u))+'</td></tr>'});h+='</table></body>';
+w.document.open();w.document.write(h);w.document.close();w.focus();w.print()});
+
+/* state: reset / sample / save */
+function apply(S){Object.keys(DEF).forEach(function(k){var c=$(k),v=S&&S[k]!=null?S[k]:DEF[k];if(c.type==='checkbox')c.checked=!!v;else c.value=v});
+$('cf').textContent='';((S&&S.cf)||[]).slice(0,10).forEach(addCF);
+$('mk').textContent='';((S&&S.mk)||MKDEF).slice(0,5).forEach(addMK);update()}
+function state(){var S={};Object.keys(DEF).forEach(function(k){var c=$(k);S[k]=c.type==='checkbox'?c.checked:c.value});S.cf=rd($('cf'),CFD);S.mk=rd($('mk'),MKD);return S}
+$('reset').addEventListener('click',function(){apply(null);$('bulk').textContent='';addB();update();say('Calculator reset.')});
+$('sample').addEventListener('click',function(){apply({price:'2000',qty:'1',rate:'10',fo:'20',pf:'30',cost:'1000',ox:'100',basis:'disc',mpn:'Sample Marketplace',pn:'Sample product'});say('Sample data loaded (illustrative values, not official fees).')});
+var KEY='mcc_saved_v1';
+function store(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function fillList(){var s=store(),L=$('slist');L.textContent='';var n=Object.keys(s);if(!n.length){var e=el('option',null,'No saved calculations');e.value='';L.appendChild(e)}n.forEach(function(k){var e=el('option',null,k);e.value=k;L.appendChild(e)})}
+$('save').addEventListener('click',function(){var n=$('sname').value.trim().slice(0,40);if(!n){say('Enter a name to save.');return}try{var s=store();s[n]=state();localStorage.setItem(KEY,JSON.stringify(s));fillList();$('slist').value=n;say('Saved in this browser only.')}catch(e){say('Saving is not available in this browser.')}});
+$('load').addEventListener('click',function(){var s=store(),k=$('slist').value;if(!k||!s[k]){say('Nothing to load.');return}apply(s[k]);say('Loaded "'+k+'".')});
+$('del').addEventListener('click',function(){var s=store(),k=$('slist').value;if(!k||!s[k]){say('Nothing to delete.');return}delete s[k];try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}fillList();say('Deleted.')});
+
+/* modes and events */
+[].forEach.call(R.querySelectorAll('.mcc-tab'),function(b){b.addEventListener('click',function(){R.setAttribute('data-mode',b.getAttribute('data-m'));[].forEach.call(R.querySelectorAll('.mcc-tab'),function(x){x.setAttribute('aria-selected',x===b?'true':'false')})})});
+$('addcf').addEventListener('click',function(){addCF();update()});
+$('addmk').addEventListener('click',function(){addMK();update()});
+$('addb').addEventListener('click',function(){addB();update()});
+$('bclr').addEventListener('click',function(){$('bulk').textContent='';update()});
+var tm=null;function update(){render()}
+R.addEventListener('input',function(e){if(e.target.classList.contains('mcc-x'))return;clearTimeout(tm);tm=setTimeout(update,80)});
+R.addEventListener('change',function(e){if(e.target.classList.contains('mcc-x'))return;update()});
+MKDEF.forEach(addMK);addB();fillList();render();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+</div>
