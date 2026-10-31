@@ -1,0 +1,423 @@
+<div id="wholesale-moq-calculator" data-mode="b">
+<style>
+#wholesale-moq-calculator{--a:#1d4ed8;--a2:#eff6ff;--g:#15803d;--r:#b91c1c;--o:#c2410c;--t:#1e293b;--m:#64748b;--b:#e2e8f0;font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--t);max-width:1150px;margin:0 auto;padding:12px;box-sizing:border-box}
+#wholesale-moq-calculator *{box-sizing:border-box}
+#wholesale-moq-calculator h1{font-size:1.6rem;line-height:1.25;margin:8px 0 4px}
+#wholesale-moq-calculator h2{font-size:1.3rem;margin:28px 0 8px}
+#wholesale-moq-calculator h3{font-size:1.05rem;margin:14px 0 4px}
+#wholesale-moq-calculator a{color:var(--a)}
+.whmoq-nav,.whmoq-sub,.whmoq-note{font-size:.88rem;color:var(--m)}
+.whmoq-tabs{display:flex;gap:6px;margin:12px 0}
+.whmoq-tab,.whmoq-btn{font:inherit;border:1px solid var(--a);background:#fff;color:var(--a);border-radius:8px;padding:9px 14px;cursor:pointer;min-height:42px}
+.whmoq-tab[aria-selected=true],.whmoq-btn.whmoq-p{background:var(--a);color:#fff}
+.whmoq-btn.whmoq-d{border-color:var(--r);color:var(--r)}
+#wholesale-moq-calculator :focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+.whmoq-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px;align-items:start}
+.whmoq-card{background:#fff;border:1px solid var(--b);border-radius:12px;padding:12px 14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(15,23,42,.08)}
+.whmoq-card>summary{cursor:pointer;font-weight:700}
+.whmoq-f{display:flex;flex-direction:column;margin:8px 0}
+.whmoq-f label{font-size:.88rem;font-weight:600;margin-bottom:3px}
+.whmoq-f input[type=text],.whmoq-f input[type=number],.whmoq-f select,.whmoq-row input{font:inherit;width:100%;padding:8px;border:1px solid #94a3b8;border-radius:8px;background:#fff;color:var(--t);min-width:0}
+.whmoq-ck{flex-direction:row;align-items:center;gap:8px}.whmoq-ck label{margin:0}
+.whmoq-two{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.whmoq-kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.whmoq-kpi{border:1px solid var(--b);border-radius:10px;padding:8px 10px;background:#f8fafc}
+.whmoq-kpi span{display:block;font-size:.8rem;color:var(--m)}.whmoq-kpi b{font-size:1.05rem;word-break:break-word}.whmoq-kpi small{display:block;font-size:.75rem;color:var(--m);line-height:1.3}
+.whmoq-pos{border-color:var(--g);background:#f0fdf4}.whmoq-pos b{color:var(--g)}
+.whmoq-neg{border-color:var(--r);background:#fef2f2}.whmoq-neg b{color:var(--r)}
+.whmoq-warn{border-color:var(--o);background:#fff7ed}.whmoq-warn b{color:var(--o)}
+.whmoq-scroll{overflow-x:auto;max-width:100%}
+.whmoq-tbl{border-collapse:collapse;width:100%;font-size:.9rem}
+.whmoq-tbl th,.whmoq-tbl td{border-bottom:1px solid var(--b);padding:6px 8px;text-align:right}
+.whmoq-tbl th:first-child,.whmoq-tbl td:first-child{text-align:left}
+.whmoq-tbl .whmoq-tot td{font-weight:700;background:var(--a2)}
+.whmoq-best{background:#dcfce7;font-weight:700}
+.whmoq-msg{font-size:.9rem;margin:6px 0}.whmoq-e{color:var(--r)}.whmoq-w{color:var(--o)}
+.whmoq-acts{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.whmoq-row{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;margin:6px 0;align-items:end}
+.whmoq-bar{display:grid;grid-template-columns:minmax(90px,30%) 1fr auto;gap:8px;align-items:center;font-size:.85rem;margin:4px 0}
+.whmoq-bar i{display:block;height:14px;border-radius:4px;background:var(--a)}.whmoq-bar i.whmoq-gi{background:var(--g)}.whmoq-bar i.whmoq-ri{background:var(--r)}
+.whmoq-svg{width:100%;height:auto;max-height:260px}
+.whmoq-hide-s,.whmoq-hide-b{}
+#wholesale-moq-calculator[data-mode=b] .whmoq-s,#wholesale-moq-calculator[data-mode=s] .whmoq-b{display:none}
+@media(max-width:760px){.whmoq-grid{grid-template-columns:minmax(0,1fr)}.whmoq-two{grid-template-columns:1fr}.whmoq-btn,.whmoq-tab{flex:1 1 auto}}
+</style>
+
+<nav class="whmoq-nav" aria-label="Tool navigation"><a href="https://my-tool-app.pages.dev/">Home</a> &rsaquo; Wholesale Order Minimum Quantity Break-Even Calculator</nav>
+<h1>Wholesale Order Minimum Quantity Break-Even Calculator</h1>
+<p class="whmoq-sub">Check supplier MOQs, landed cost, break-even quantity and bulk order profit before you commit to an order.</p>
+
+<section aria-label="Calculator">
+<div class="whmoq-tabs" role="tablist" aria-label="Calculator mode">
+<button class="whmoq-tab" role="tab" data-m="b" aria-selected="true">Wholesale Buyer Mode</button>
+<button class="whmoq-tab" role="tab" data-m="s" aria-selected="false">Wholesale Supplier Mode</button>
+</div>
+<p class="whmoq-note">Buyer Mode is for retailers, resellers and importers buying in bulk. Supplier Mode is for manufacturers and distributors selling in bulk. Switching modes keeps your data.</p>
+<div class="whmoq-grid">
+<div id="whmoq-left"></div>
+<div>
+<div class="whmoq-card" aria-live="polite">
+<strong id="whmoq-title">Results</strong>
+<div id="whmoq-msgs" role="alert"></div>
+<div id="whmoq-kpis" class="whmoq-kpis"></div>
+</div>
+<div class="whmoq-card"><strong>Calculation breakdown</strong>
+<div class="whmoq-scroll"><table class="whmoq-tbl" id="whmoq-bd"></table></div>
+<p class="whmoq-note">Internal values are not rounded. Display is rounded to 2 decimals. Unit counts that must be whole are rounded up.</p>
+<div class="whmoq-acts">
+<button class="whmoq-btn whmoq-p" id="whmoq-copy">Copy results</button>
+<button class="whmoq-btn" id="whmoq-csv">Download CSV</button>
+<button class="whmoq-btn" id="whmoq-print">Print report</button>
+<button class="whmoq-btn" id="whmoq-sample">Load sample data</button>
+<button class="whmoq-btn whmoq-d" id="whmoq-reset">Reset / clear all</button>
+</div>
+<div class="whmoq-two">
+<div class="whmoq-f"><label for="whmoq-sname">Save scenario as</label><input type="text" id="whmoq-sname" maxlength="40" class="whmoq-x"></div>
+<div class="whmoq-f"><label for="whmoq-slist">Saved scenarios</label><select id="whmoq-slist" class="whmoq-x"></select></div>
+</div>
+<div class="whmoq-acts"><button class="whmoq-btn" id="whmoq-save">Save locally</button><button class="whmoq-btn" id="whmoq-load">Load</button><button class="whmoq-btn whmoq-d" id="whmoq-del">Delete</button></div>
+<p class="whmoq-note">Saved scenarios stay only in this browser. Nothing is sent to any server.</p>
+<div id="whmoq-msg" class="whmoq-note" role="status"></div>
+</div>
+</div>
+</div>
+
+<div class="whmoq-card"><strong>Charts</strong><div id="whmoq-ch"></div></div>
+
+<div class="whmoq-card whmoq-b"><strong>Order quantity recommendation</strong>
+<div id="whmoq-rec" aria-live="polite"></div></div>
+
+<div class="whmoq-card whmoq-b"><strong>Scenario comparison</strong>
+<p class="whmoq-note">A: supplier MOQ. B: recommended quantity. C: larger bulk order. Leave a quantity blank to use the automatic value, or type your own.</p>
+<div class="whmoq-two" id="whmoq-sc-in"></div>
+<div class="whmoq-scroll"><table class="whmoq-tbl" id="whmoq-sct"></table></div>
+<p class="whmoq-note">The best scenario depends on the objective you pick. The largest order is not assumed to be best.</p></div>
+</section>
+
+<section>
+<h2>What this calculator does</h2>
+<p>The Wholesale Order Minimum Quantity Break-Even Calculator helps buyers, importers, resellers, manufacturers and distributors decide whether a minimum order quantity makes financial sense. It works out landed cost per unit, break-even quantity, bulk discount savings and order profit. Landed cost matters because freight, duties, taxes and storage can add much more to the real unit price than the supplier's quote shows. All values are entered by you.</p>
+
+<h2>How to use</h2>
+<ol>
+<li>Select Buyer Mode or Supplier Mode.</li>
+<li>Enter your product and supplier information.</li>
+<li>Enter the supplier's minimum order quantity.</li>
+<li>Add product purchase or manufacturing costs.</li>
+<li>Enter shipping, freight, customs, packaging and handling expenses.</li>
+<li>Enter your expected selling price and sales quantity.</li>
+<li>Add applicable discounts and other expenses.</li>
+<li>Review the landed cost, break-even quantity and estimated profit.</li>
+<li>Compare different bulk order quantities.</li>
+<li>Download or print your report.</li>
+</ol>
+
+<h2>Features</h2>
+<ul>
+<li><strong>Wholesale MOQ calculator:</strong> MOQ status, carton and pack-multiple checks, and a recommended quantity within your budget, storage and demand limits.</li>
+<li><strong>Minimum order quantity analysis:</strong> the smallest valid quantity that is profitable, reaches a target profit or reaches a target margin.</li>
+<li><strong>Wholesale break-even calculator:</strong> contribution per unit, break-even quantity and break-even revenue.</li>
+<li><strong>Bulk order profit calculator:</strong> editable discount tiers, savings, profit, margin and ROI.</li>
+<li><strong>Wholesale order cost calculator:</strong> freight, duties, taxes, storage and payment charges rolled into landed cost per unit.</li>
+<li>Supplier mode, three-scenario comparison, charts, CSV, print and local saving.</li>
+</ul>
+
+<h2>Formulas and examples</h2>
+<ul>
+<li>Landed cost = purchase cost + shipping and freight + customs and import charges + non-recoverable tax + storage and handling. Landed cost per unit = landed cost ÷ order quantity.</li>
+<li>Contribution per unit = net selling price − variable cost per unit. Break-even quantity = fixed order costs ÷ contribution per unit, rounded up.</li>
+<li>Target quantity = (fixed costs + target profit) ÷ contribution per unit.</li>
+<li>Buyer break-even units = total investment ÷ contribution per unit sold (cash recovery view).</li>
+</ul>
+<p><strong>Illustrative example (assumed numbers):</strong> a buyer orders 500 units at $10 each. Shipping and other landed expenses are $500, so total investment is $5,500 and landed cost is $11 per unit. At a resale price of $18, selling all 500 units gives $9,000 revenue and $3,500 gross profit. This excludes selling expenses, returns, taxes or financing costs not entered. Cash break-even is 306 units (5,500 ÷ 18, rounded up).</p>
+<p><strong>MOQ versus break-even:</strong> MOQ is the smallest order the supplier will accept. Break-even quantity is the number of units you must sell to cover your costs. A supplier MOQ can be higher than your break-even quantity, which means you may carry unsold stock even when the order is profitable overall.</p>
+
+<h2>Use cases</h2>
+<p>Retailers buying from wholesalers, ecommerce sellers planning bulk purchases, small businesses evaluating supplier MOQs, importers estimating landed costs, distributors comparing bulk orders and resellers analyzing discounts can use the buyer mode. Manufacturers estimating production minimums and suppliers calculating minimum profitable order sizes can use the supplier mode.</p>
+
+<h2>Important notes and limitations</h2>
+<ul>
+<li>Supplier MOQs vary by supplier. Freight, customs and tax values must be entered manually. Nothing is fetched or verified.</li>
+<li>Duty is calculated on purchase cost plus shipping and freight. Tax is calculated on purchase cost plus shipping and duty. Check your own jurisdiction's rules.</li>
+<li>Recoverable tax is excluded from landed cost when you tick that option.</li>
+<li>Discounts add together (base discount % + tier %) and are applied to the base price once. A negotiated price replaces the base price before discounts.</li>
+<li>Returned units are assumed to go back into stock and refunded revenue is removed. The return cost per unit is your own entered loss.</li>
+<li>Results are estimates, not financial, tax or legal advice.</li>
+</ul>
+<p>Helpful reading: <a href="https://www.sba.gov/business-guide/plan-your-business/calculate-your-startup-costs" target="_blank" rel="noopener noreferrer">U.S. Small Business Administration – calculate your startup costs</a> and <a href="https://www.shopify.com/blog/wholesale-pricing" target="_blank" rel="noopener noreferrer">Shopify wholesale pricing guide</a>. They are for background only and do not feed the calculator.</p>
+
+<h2>Frequently asked questions</h2>
+<h3>What is a wholesale minimum order quantity (MOQ)?</h3><p>It is the smallest number of units a supplier will sell in one order.</p>
+<h3>How do I calculate wholesale break-even quantity?</h3><p>Divide fixed order costs by contribution per unit, which is selling price minus variable cost per unit, then round up.</p>
+<h3>What is the difference between MOQ and break-even quantity?</h3><p>MOQ is the supplier's minimum order. Break-even quantity is the sales volume you need to cover your costs.</p>
+<h3>How do I calculate the minimum profitable order quantity?</h3><p>Find the smallest valid quantity where total revenue exceeds total costs. The calculator checks quantities in your pack and carton steps.</p>
+<h3>How do I calculate wholesale landed cost per unit?</h3><p>Add product, freight, insurance, duties, non-recoverable taxes and handling, then divide by the units ordered.</p>
+<h3>How do bulk discounts affect wholesale profit?</h3><p>They lower unit cost but raise upfront investment and inventory risk, so compare profit and unsold stock before ordering more.</p>
+<h3>How many units should I order from a wholesale supplier?</h3><p>Order at least the MOQ and enough to be profitable, but stay within your budget, storage space and expected demand.</p>
+<h3>Can a supplier MOQ be higher than the break-even quantity?</h3><p>Yes. Then you must buy more than you need to break even, so you may hold unsold stock.</p>
+<h3>How do I calculate wholesale order profit margin?</h3><p>Divide net profit by net revenue and multiply by 100.</p>
+<h3>Can I use this calculator for both wholesale buyers and suppliers?</h3><p>Yes. Buyer Mode and Supplier Mode each have their own inputs and formulas.</p>
+
+<h2>Related financial calculators</h2>
+<p><a href="https://my-tool-app.pages.dev/dividend-reinvestment-growth-calculator">Dividend Reinvestment Growth Calculator</a> – explore this calculator to estimate how reinvested dividends may affect long-term investment growth. It is a separate tool and not part of wholesale calculations.</p>
+<p class="whmoq-nav"><a href="https://my-tool-app.pages.dev/">Home</a></p>
+</section>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+{"@type":"WebPage","name":"Wholesale MOQ Break-Even Calculator & Profit Tool","description":"Calculate wholesale MOQ, break-even quantity, landed costs, bulk discounts and order profit with this free wholesale calculator.","url":"https://my-tool-app.pages.dev/wholesale-order-moq-break-even-calculator","isPartOf":{"@type":"WebSite","name":"My Tool App","url":"https://my-tool-app.pages.dev/"}},
+{"@type":"SoftwareApplication","name":"Wholesale Order Minimum Quantity Break-Even Calculator","description":"Free browser-based calculator for wholesale MOQ, landed cost, break-even quantity and bulk order profit.","applicationCategory":"BusinessApplication","operatingSystem":"Web Browser","browserRequirements":"Requires JavaScript","url":"https://my-tool-app.pages.dev/wholesale-order-moq-break-even-calculator","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},
+{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://my-tool-app.pages.dev/"},{"@type":"ListItem","position":2,"name":"Wholesale Order Minimum Quantity Break-Even Calculator","item":"https://my-tool-app.pages.dev/wholesale-order-moq-break-even-calculator"}]},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a wholesale minimum order quantity (MOQ)?","acceptedAnswer":{"@type":"Answer","text":"It is the smallest number of units a supplier will sell in one order."}},
+{"@type":"Question","name":"How do I calculate wholesale break-even quantity?","acceptedAnswer":{"@type":"Answer","text":"Divide fixed order costs by contribution per unit, which is selling price minus variable cost per unit, then round up."}},
+{"@type":"Question","name":"What is the difference between MOQ and break-even quantity?","acceptedAnswer":{"@type":"Answer","text":"MOQ is the supplier's minimum order. Break-even quantity is the sales volume you need to cover your costs."}},
+{"@type":"Question","name":"How do I calculate the minimum profitable order quantity?","acceptedAnswer":{"@type":"Answer","text":"Find the smallest valid quantity where total revenue exceeds total costs. The calculator checks quantities in your pack and carton steps."}},
+{"@type":"Question","name":"How do I calculate wholesale landed cost per unit?","acceptedAnswer":{"@type":"Answer","text":"Add product, freight, insurance, duties, non-recoverable taxes and handling, then divide by the units ordered."}},
+{"@type":"Question","name":"How do bulk discounts affect wholesale profit?","acceptedAnswer":{"@type":"Answer","text":"They lower unit cost but raise upfront investment and inventory risk, so compare profit and unsold stock before ordering more."}},
+{"@type":"Question","name":"How many units should I order from a wholesale supplier?","acceptedAnswer":{"@type":"Answer","text":"Order at least the MOQ and enough to be profitable, but stay within your budget, storage space and expected demand."}},
+{"@type":"Question","name":"Can a supplier MOQ be higher than the break-even quantity?","acceptedAnswer":{"@type":"Answer","text":"Yes. Then you must buy more than you need to break even, so you may hold unsold stock."}},
+{"@type":"Question","name":"How do I calculate wholesale order profit margin?","acceptedAnswer":{"@type":"Answer","text":"Divide net profit by net revenue and multiply by 100."}},
+{"@type":"Question","name":"Can I use this calculator for both wholesale buyers and suppliers?","acceptedAnswer":{"@type":"Answer","text":"Yes. Buyer Mode and Supplier Mode each have their own inputs and formulas."}}
+]}]}</script>
+
+<script>
+(function(){
+function init(){
+var R=document.getElementById('wholesale-moq-calculator');if(!R||R.getAttribute('data-ready'))return;R.setAttribute('data-ready','1');
+var $=function(i){return document.getElementById('whmoq-'+i)};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+var SYM={USD:'$',INR:'₹',GBP:'£',EUR:'€',CAD:'C$',AUD:'A$',AED:'AED '};
+var SH=[['frt','Freight cost'],['sup','Supplier shipping cost'],['inb','Inbound transportation'],['dlv','Delivery charges'],['ins','Cargo insurance'],['lod','Loading and unloading'],['hnd','Handling charges'],['pkg','Packaging charges'],['osh','Other transportation']];
+var FX=[['mset','Machine setup'],['pset','Production setup'],['ovh','Factory overhead'],['lset','Labor setup'],['tool','Design / tooling'],['adm','Administrative'],['ofx','Other fixed']];
+var PC=['dpct','dutyp','taxp','pp','rr','comm','tmar','bd','spp','scomm','otshare'];
+function shf(){var a=[];SH.forEach(function(x){a.push({i:'sh_'+x[0],l:x[1]+' (amount)',t:'n',d:''});a.push({i:'shb_'+x[0],l:x[1]+' – charged',t:'s',o:[['order','Per order'],['unit','Per unit'],['carton','Per carton']]})});return a}
+function fxf(){var a=[];FX.forEach(function(x){a.push({i:'fx_'+x[0],l:x[1]+' (amount)',t:'n',d:''});a.push({i:'fxc_'+x[0],l:x[1]+' – treat as',t:'s',o:[['order','Per-order fixed cost'],['onetime','One-time fixed cost'],['var','Variable cost per unit']]})});return a}
+var N=function(i,l,d){return{i:i,l:l,t:'n',d:d==null?'':d}};
+var D=[
+{m:'b',o:1,t:'Product, supplier and quantity',f:[
+{i:'pn',l:'Product name (optional)',t:'t'},{i:'sup',l:'Supplier name (optional)',t:'t'},{i:'sku',l:'SKU (optional)',t:'t'},
+{i:'cat',l:'Product category',t:'s',o:['General','Apparel','Electronics','Home and kitchen','Beauty','Food and beverage','Toys','Other']},
+{i:'cur',l:'Currency (no conversion is done)',t:'s',d:'USD',o:[['USD','USD'],['INR','INR'],['GBP','GBP'],['EUR','EUR'],['CAD','CAD'],['AUD','AUD'],['AED','AED'],['CUS','Custom Currency']]},
+{i:'csym',l:'Custom currency symbol',t:'t'},
+{i:'unit',l:'Unit',t:'s',o:['units','pieces','kg','metres','boxes','pairs']},
+N('moq','Supplier MOQ'),N('upc','Units per carton','1'),{i:'reqc',l:'Order must be in full cartons',t:'c'},
+N('qty','Order quantity'),N('step','Quantity step / pack multiple','1')]},
+{m:'b',o:1,t:'Purchase price and discounts',f:[N('base','Base purchase price per unit'),N('neg','Negotiated supplier price per unit (replaces base if above 0)'),N('dpct','Supplier discount %'),N('dfix','Fixed discount per unit'),N('odisc','Additional order-level discount (total)')],x:'tiers'},
+{m:'b',t:'Shipping and freight',f:shf()},
+{m:'b',t:'Customs, duties and taxes',f:[N('dutyp','Import duty % (on purchase + shipping)'),N('dutyf','Customs duty fixed amount'),N('clr','Customs clearance fees'),N('imp','Import processing fees'),N('oimp','Other import charges'),N('taxp','Tax % (on purchase + shipping + duty)'),{i:'taxrec',l:'Tax is recoverable (exclude from landed cost)',t:'c'}]},
+{m:'b',t:'Storage and handling',f:[{i:'stOn',l:'Include storage and handling costs',t:'c'},N('su','Warehouse storage per unit'),N('sm','Monthly storage cost'),N('smo','Storage duration (months)'),N('sh2','Inventory handling per unit'),N('rp','Repacking per unit'),N('lb','Labeling per unit'),N('qc','Quality inspection per unit'),N('oinv','Other inventory expenses (total)')]},
+{m:'b',t:'Payment and financial charges',f:[{i:'payOn',l:'Include payment and financing charges',t:'c'},N('pp','Payment processing %'),N('pf','Fixed payment fee'),N('bank','Bank transfer charges'),N('fxc','Currency conversion charges (manual amount)'),N('fin','Financing cost (total)'),N('opay','Other payment expenses')]},
+{m:'b',o:1,t:'Reselling information',f:[N('retail','Resale price per unit (retail or wholesale)'),N('s','Expected sales quantity'),N('rr','Estimated return %'),N('rc','Return processing cost per returned unit'),N('mk','Marketing cost per unit sold'),N('comm','Sales commission %'),N('osell','Other selling expense per unit sold')]},
+{m:'b',t:'Constraints and targets',f:[N('bud','Budget limit (total investment)'),N('stcap','Available storage capacity (units)'),N('maxinv','Maximum acceptable inventory (units)'),N('ptar','Desired profit (total)'),N('tmar','Target profit margin %')]},
+{m:'s',o:1,t:'Manufacturing cost per unit',f:[{i:'spn',l:'Product name (optional)',t:'t'},N('raw','Raw material'),N('lab','Direct labor'),N('mfg','Manufacturing'),N('spk','Packaging'),N('sqc','Quality control'),N('sopr','Other production cost')]},
+{m:'s',o:1,t:'Fixed production expenses',f:fxf().concat([N('otshare','Share of one-time costs charged to this order %','100')])},
+{m:'s',o:1,t:'Wholesale selling',f:[N('sp','Wholesale selling price per unit'),N('smoq','Supplier MOQ'),N('sminp','Minimum production quantity'),N('sbatch','Production batch size'),N('supc','Units per carton','1'),N('sstep','Quantity step','1'),N('bd','Bulk discount %'),N('bmin','Bulk discount applies from quantity'),N('spp','Payment processing %'),N('scomm','Sales commission %'),N('sship','Shipping paid by supplier (per order)'),N('sosell','Other selling expense per unit')]},
+{m:'s',o:1,t:'Order, capacity and targets',f:[N('sq','Order quantity'),N('cap','Available production capacity (units)'),N('smax','Maximum order quantity'),N('sptar','Target profit (total)')]}
+];
+var FL=[],DEF={};
+function mk(x){var w=el('div','whmoq-f'+(x.t==='c'?' whmoq-ck':'')),id='whmoq-'+x.i,l=el('label',null,x.l),c;l.htmlFor=id;
+if(x.t==='s'){c=el('select');x.o.forEach(function(o){o=Array.isArray(o)?o:[o,o];var e=el('option',null,o[1]);e.value=o[0];c.appendChild(e)});DEF[x.i]=x.d!=null?x.d:(Array.isArray(x.o[0])?x.o[0][0]:x.o[0]);c.value=DEF[x.i]}
+else{c=el('input');if(x.t==='c'){c.type='checkbox';DEF[x.i]=false}else{if(x.t==='n'){c.type='number';c.step='any';c.min='0';c.setAttribute('inputmode','decimal')}else{c.type='text';c.maxLength=40}c.value=x.d!=null?x.d:'';DEF[x.i]=c.value}}
+c.id=id;c.className='whmoq-in';if(x.t==='c'){w.appendChild(c);w.appendChild(l)}else{w.appendChild(l);w.appendChild(c)}FL.push(x);return w}
+D.forEach(function(g){var h=el('details','whmoq-card whmoq-'+g.m);h.open=!!g.o;h.appendChild(el('summary',null,g.t));var b=el('div','whmoq-two');h.appendChild(b);
+g.f.forEach(function(f){b.appendChild(mk(f));if(f.i==='s'){var w=el('div','whmoq-f'),l=el('label',null,'Sales quantity slider'),r=el('input');l.htmlFor='whmoq-sl';r.type='range';r.id='whmoq-sl';r.min='0';r.max='1000';r.value='0';r.className='whmoq-x';w.appendChild(l);w.appendChild(r);b.appendChild(w)}});
+if(g.x==='tiers'){h.appendChild(el('h3',null,'Quantity-based discount tiers (editable)'));h.appendChild(el('p','whmoq-note','Each tier adds its discount % when your order quantity reaches the “from quantity”. Enter your supplier\'s own tiers.'));var tt=el('div');tt.id='whmoq-tiers';h.appendChild(tt);var ab=el('button','whmoq-btn','Add discount tier');ab.type='button';ab.id='whmoq-addt';h.appendChild(ab)}
+$('left').appendChild(h)});
+var TD=[{k:'min',l:'From quantity'},{k:'pct',l:'Discount %'}];
+function addT(d){var r=el('div','whmoq-row');TD.forEach(function(x){var w=el('div','whmoq-f'),l=el('label',null,x.l),c=el('input');c.type='number';c.min='0';c.step='any';c.setAttribute('data-k',x.k);c.id='whmoq-t'+Math.random().toString(36).slice(2,8);l.htmlFor=c.id;if(d)c.value=d[x.k];w.appendChild(l);w.appendChild(c);r.appendChild(w)});var b=el('button','whmoq-btn whmoq-d','Remove');b.type='button';b.addEventListener('click',function(){r.parentNode.removeChild(r);render()});r.appendChild(b);$('tiers').appendChild(r)}
+function tiers(){var o=[];[].forEach.call($('tiers').children,function(r){var a={};[].forEach.call(r.querySelectorAll('input'),function(c){a[c.getAttribute('data-k')]=Math.max(0,parseFloat(c.value)||0)});o.push(a)});return o}
+function say(t){$('msg').textContent=t}
+
+function read(){var o={},er=[];FL.forEach(function(x){var c=$(x.i);
+if(x.t==='n'){var v=parseFloat(c.value);if(!isFinite(v))v=0;if(v<0){er.push(x.l+' cannot be negative.');v=0}if(PC.indexOf(x.i)>-1&&v>100){er.push(x.l+' cannot exceed 100%.');v=100}o[x.i]=v}
+else if(x.t==='c')o[x.i]=c.checked;else o[x.i]=c.value});
+o.T=tiers();o.mode=R.getAttribute('data-mode');return{o:o,er:er}}
+
+function gcd(a,b){return b?gcd(b,a%b):a}function lcm(a,b){return a/gcd(a,b)*b}
+function ru(x,m){return Math.ceil(x/m-1e-9)*m}function rd2(x,m){return Math.floor(x/m+1e-9)*m}
+function tierPct(q,T){var p=0,mn=-1;T.forEach(function(t){if(q>=t.min&&t.min>mn){mn=t.min;p=t.pct}});return p}
+function findQ(pred,start,mul){for(var i=0;i<4000;i++){var q=start+i*mul;if(pred(q))return q}return null}
+function lastQ(pred,start,mul){var last=null;for(var i=0;i<4000;i++){var q=start+i*mul;if(!pred(q))break;last=q}return last}
+
+function calcB(o,q,s){var upc=o.upc>0?o.upc:1,car=Math.ceil(q/upc),base=o.neg>0?o.neg:o.base,tp=tierPct(q,o.T);
+var du=Math.min(base,base*(o.dpct+tp)/100+o.dfix),P=base-du,orig=base*q,purch=Math.max(0,P*q-o.odisc),sh=0;
+SH.forEach(function(x){var b=o['shb_'+x[0]];sh+=o['sh_'+x[0]]*(b==='unit'?q:b==='carton'?car:1)});
+var duty=(purch+sh)*o.dutyp/100+o.dutyf+o.clr+o.imp+o.oimp,tax=(purch+sh+duty)*o.taxp/100,taxC=o.taxrec?0:tax;
+var sto=o.stOn?(o.su*q+o.sm*o.smo+(o.sh2+o.rp+o.lb+o.qc)*q+o.oinv):0;
+var land=purch+sh+duty+taxC+sto,pay=o.payOn?purch*o.pp/100+o.pf+o.bank+o.fxc+o.fin+o.opay:0,inv=land+pay;
+s=Math.min(s,q);var ret=s*o.rr/100,ns=s-ret,rev=o.retail*ns,cpu=q>0?inv/q:0,cogs=cpu*ns;
+var sell=(o.mk+o.osell)*s+rev*o.comm/100+o.rc*ret,profit=rev-cogs-sell,unsold=q-ns;
+var cpus=o.retail*(1-o.rr/100)*(1-o.comm/100)-o.mk-o.osell-o.rc*o.rr/100;
+var be=cpus>0&&inv>0?Math.ceil(inv/cpus-1e-9):null;
+return{q:q,orig:orig,purch:purch,sh:sh,duty:duty,taxC:taxC,sto:sto,land:land,pay:pay,inv:inv,lpu:q>0?land/q:null,ns:ns,rev:rev,cogs:cogs,sell:sell,profit:profit,ppu:ns>0?profit/ns:null,
+margin:rev>0?profit/rev*100:null,roi:inv>0?profit/inv*100:null,be:be,beRev:be==null?null:be*o.retail,cpus:cpus,sav:orig-purch,unsold:unsold,invVal:cpu*unsold,shp:sh}}
+
+function calcS(o,q){var net=o.sp*(o.bmin>0&&q>=o.bmin?1-o.bd/100:1),batch=o.sbatch>0?Math.ceil(q/o.sbatch-1e-9)*o.sbatch:q;
+var vm=o.raw+o.lab+o.mfg+o.spk+o.sqc+o.sopr,ofx=0,otf=0;
+FX.forEach(function(x){var a=o['fx_'+x[0]],c=o['fxc_'+x[0]];if(c==='var')vm+=a;else if(c==='onetime')otf+=a*o.otshare/100;else ofx+=a});
+var vs=net*(o.spp+o.scomm)/100+o.sosell,fixed=ofx+otf+o.sship,cpu=net-vm-vs;
+var rev=net*q,profit=q*cpu-fixed-(batch-q)*vm,pcost=vm*batch+fixed;
+return{q:q,net:net,batch:batch,vm:vm,vs:vs,fixed:fixed,cpu:cpu,rev:rev,profit:profit,pcost:pcost,margin:rev>0?profit/rev*100:null,roi:pcost>0?profit/pcost*100:null,be:cpu>0?Math.ceil(fixed/cpu-1e-9):null}}
+
+function sym(){var c=$('cur').value;return c==='CUS'?($('csym').value||''):SYM[c]}
+function m(v){if(v==null||!isFinite(v))return 'N/A';return(v<-0.005?'-':'')+sym()+Math.abs(v).toLocaleString($('cur').value==='INR'?'en-IN':'en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function pc(v){return v==null||!isFinite(v)?'N/A':v.toFixed(2)+'%'}
+function nu(v){return v==null||!isFinite(v)?'N/A':Math.round(v).toLocaleString('en-US')}
+var LAST=null;
+
+function bars(host,title,items){host.appendChild(el('h3',null,title));var mx=Math.max.apply(null,items.map(function(i){return Math.abs(i[1])}))||1;
+items.forEach(function(i){var r=el('div','whmoq-bar');r.appendChild(el('span',null,i[0]));var b=el('div'),f=el('i',i[2]||'');f.style.width=Math.max(1,Math.abs(i[1])/mx*100)+'%';b.appendChild(f);r.appendChild(b);r.appendChild(el('span',null,i[3]||m(i[1])));host.appendChild(r)})}
+function lineChart(host,fn,q,mark,markLabel){host.appendChild(el('h3',null,'Quantity vs profit (assumes every unit is sold)'));
+var qmax=Math.max(10,q*2,(mark||0)*2),pts=[],mn=0,mx=0;for(var i=0;i<=24;i++){var x=qmax*i/24,y=fn(x);pts.push([x,y]);mn=Math.min(mn,y);mx=Math.max(mx,y)}
+if(mx===mn)mx=mn+1;var NS='http://www.w3.org/2000/svg',s=document.createElementNS(NS,'svg');s.setAttribute('viewBox','0 0 600 220');s.setAttribute('class','whmoq-svg');s.setAttribute('role','img');s.setAttribute('aria-label','Line chart of profit versus order quantity');
+var X=function(v){return 40+v/qmax*540},Y=function(v){return 200-(v-mn)/(mx-mn)*180};
+function ln(x1,y1,x2,y2,c,d){var l=document.createElementNS(NS,'line');l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.setAttribute('stroke',c);if(d)l.setAttribute('stroke-dasharray',d);s.appendChild(l)}
+function tx(x,y,t,a){var e=document.createElementNS(NS,'text');e.setAttribute('x',x);e.setAttribute('y',y);e.setAttribute('font-size','11');e.setAttribute('fill','#475569');if(a)e.setAttribute('text-anchor',a);e.textContent=t;s.appendChild(e)}
+ln(40,Y(0),580,Y(0),'#94a3b8');ln(40,20,40,200,'#94a3b8');
+var p=document.createElementNS(NS,'polyline');p.setAttribute('points',pts.map(function(a){return X(a[0]).toFixed(1)+','+Y(a[1]).toFixed(1)}).join(' '));p.setAttribute('fill','none');p.setAttribute('stroke','#1d4ed8');p.setAttribute('stroke-width','2');s.appendChild(p);
+ln(X(q),20,X(q),200,'#15803d','4 3');tx(X(q)+3,32,'Order '+nu(q));
+if(mark){ln(X(mark),20,X(mark),200,'#c2410c','4 3');tx(X(mark)+3,60,markLabel+' '+nu(mark))}
+tx(42,214,'0');tx(580,214,nu(qmax)+' units','end');tx(44,16,'Profit '+m(mx));host.appendChild(s);
+host.appendChild(el('p','whmoq-note','Text summary: profit at 0 units is '+m(fn(0))+', at your order of '+nu(q)+' units is '+m(fn(q))+(mark?', and the '+markLabel.toLowerCase()+' point is '+nu(mark)+' units.':'.')))}
+
+function render(){var s=read(),o=s.o,msgs=[],K=[],rows=[],ch=$('ch');ch.textContent='';var B=o.mode==='b';
+function W(t){msgs.push(['w',t])}function E(t){msgs.push(['e',t])}
+s.er.forEach(function(t){E(t)});
+var recHost=$('rec');recHost.textContent='';var sct=$('sct');sct.textContent='';
+var pos=function(v){return v>0.004?'whmoq-pos':v<-0.004?'whmoq-neg':''};
+var tag=function(v){return v>0.004?' (profit ▲)':v<-0.004?' (loss ▼)':''};
+if(B){var q=o.qty,sl=$('sl');
+if(o.upc<=0){E('Units per carton must be above zero.');o.upc=1}
+var step=Math.max(1,Math.round(o.step||1)),mul=o.reqc?lcm(step,Math.max(1,Math.round(o.upc))):step,start=ru(Math.max(o.moq,1),mul);
+$('title').textContent='Buyer results'+(o.pn?' – '+o.pn:'')+(o.sup?' ('+o.sup+')':'');
+var ok=q>0;if(!ok)E('Enter an order quantity above zero to see results.');
+if(ok&&o.base<=0&&o.neg<=0)E('Enter a valid product purchase price.');
+if(ok&&q<o.moq)W('Order quantity must be at least equal to supplier MOQ ('+nu(o.moq)+').');
+if(ok&&o.reqc&&q%Math.max(1,Math.round(o.upc))!==0)W('Order quantity must follow the selected carton multiple ('+nu(o.upc)+').');
+if(ok&&q%step!==0)W('Order quantity must follow the quantity step ('+step+').');
+if(ok&&o.s>q)W('Expected sales quantity is above the order quantity. Sales are capped at '+nu(q)+'.');
+sl.max=Math.max(q,o.s,1);sl.value=Math.min(o.s,sl.max);
+var r=calcB(o,Math.max(q,0),o.s);
+var minP=findQ(function(x){return calcB(o,x,x).profit>0.005},start,mul);
+var tarP=o.ptar>0?findQ(function(x){return calcB(o,x,x).profit>=o.ptar},start,mul):null;
+var tarM=o.tmar>0?findQ(function(x){var b=calcB(o,x,x);return b.margin!=null&&b.margin>=o.tmar},start,mul):null;
+var dem=o.s,demQ=dem>0?ru(dem,mul):null;
+var bud=o.bud>0?(lastQ(function(x){return calcB(o,x,Math.min(dem||x,x)).inv<=o.bud},start,mul)||0):null;
+var cap=[o.stcap,o.maxinv].filter(function(v){return v>0}),stoMax=cap.length?rd2(Math.min.apply(null,cap),mul):null;
+var profMin=o.ptar>0?findQ(function(x){return calcB(o,x,Math.min(dem||x,x)).profit>=o.ptar},start,mul):null;
+var lo=Math.max(start,profMin||0),hi=Math.min(bud==null?Infinity:bud,stoMax==null?Infinity:stoMax),rec=null,why='';
+if(hi>=lo)rec=Math.min(hi,Math.max(lo,demQ||lo));
+else if(bud!=null&&bud<start)why='Your budget is too low for the supplier MOQ.';
+else if(stoMax!=null&&stoMax<start)why='Your storage or inventory limit is below the supplier MOQ.';
+else if(o.ptar>0&&profMin==null)why='The desired profit cannot be reached at any quantity checked.';
+else why='The quantity needed for your desired profit ('+nu(profMin)+') is above your budget or storage limit.';
+var ms=q<=0?'Enter quantity':o.moq<=0?'No MOQ entered':q<o.moq?'Below Supplier MOQ':q===o.moq?'Supplier MOQ Met':'Supplier MOQ Exceeded';
+K=[['Supplier MOQ status',ms,q>0&&o.moq>0&&q<o.moq?'whmoq-warn':'','Compares your order with the supplier minimum.'],
+['Recommended order quantity',rec==null?'No feasible order quantity under the current constraints.':nu(rec),rec==null?'whmoq-warn':'','Valid quantity within MOQ, budget, storage and profit limits, nearest your demand.'],
+['Total units ordered',nu(q)],['Total purchase cost',m(r.purch),'','Product cost after discounts.'],['Total landed order cost',m(r.land),'','Purchase + shipping + import + non-recoverable tax + storage.'],['Landed cost per unit',m(r.lpu),'','What each unit really costs you on arrival.'],
+['Total expected revenue',m(o.retail*Math.min(o.s,q))+' gross / '+m(r.rev)+' net','','Net is after expected returns.'],['Expected net profit',m(r.profit)+tag(r.profit),pos(r.profit),'Profit on units sold only.'],['Profit per unit sold',m(r.ppu)],['Profit margin',pc(r.margin)],['ROI (profit ÷ total investment)',pc(r.roi)],
+['Break-even units (cash recovery)',r.be==null?'Not reachable':nu(r.be),r.be==null?'whmoq-warn':'','Units to sell to recover total investment and selling costs.'],['Break-even revenue',m(r.beRev)],
+['Bulk discount savings',m(r.sav)+(r.q>0?' ('+m(r.sav/r.q)+'/unit)':''),'','List price cost minus discounted cost.'],['Unsold inventory quantity',nu(r.unsold),'','Units still in stock after sales and returns.'],['Estimated inventory value (at cost)',m(r.invVal)],
+['Total investment (cash basis)',m(r.inv)],['Minimum profitable order qty (all sold)',minP==null?'None found':nu(minP),'','Smallest valid quantity with profit above zero.'],['Qty for target profit / margin',(o.ptar>0?nu(tarP):'–')+' / '+(o.tmar>0?nu(tarM):'–')]];
+if(r.cpus<=0&&q>0)E('Your contribution margin is zero or negative. Break-even cannot be achieved with these assumptions.');
+var dq=Math.max(q,1);
+rows=[['Product cost at list price',r.orig],['Less: discounts',-r.sav],['Purchase cost',r.purch,1],['Shipping and freight',r.sh],['Customs, duties and import charges',r.duty],['Non-recoverable tax',r.taxC],['Storage and handling',r.sto],['Total landed order cost',r.land,1],['Payment and financing charges',r.pay],['Total investment (cash basis)',r.inv,1],['Net resale revenue (after returns)',r.rev],['Less: cost of units sold',-r.cogs],['Less: selling expenses',-r.sell],['Estimated profit on units sold',r.profit,1]].map(function(a){return{l:a[0],v:a[1],t:a[2],u:q>0?a[1]/dq:null}});
+/* charts */
+var cc=el('div');ch.appendChild(cc);
+bars(cc,'Cost breakdown',[['Purchase',r.purch],['Shipping and freight',r.sh],['Duties and tax',r.duty+r.taxC],['Storage and handling',r.sto],['Payment and financing',r.pay]]);
+bars(cc,'Revenue vs expense vs profit',[['Net revenue',r.rev],['Cost of units sold + selling',r.cogs+r.sell,'whmoq-ri'],['Profit',r.profit,r.profit>=0?'whmoq-gi':'whmoq-ri']]);
+bars(cc,'Break-even indicator',[['Expected units sold',Math.min(o.s,q),'',nu(Math.min(o.s,q))+' units'],['Break-even units',r.be||0,'whmoq-ri',r.be==null?'N/A':nu(r.be)+' units']]);
+lineChart(cc,function(x){x=Math.max(x,0.0001);return calcB(o,x,x).profit},q,minP,'Min profitable qty');
+/* scenarios */
+var sc=[['A: Supplier MOQ',start],['B: Recommended',rec!=null?rec:(demQ||start)],['C: Larger bulk order',0]];sc[2][1]=ru(Math.max(2*sc[1][1],sc[1][1]+mul),mul);
+var ov=['sa','sb','sc'].map(function(k){return parseFloat($(k).value)||0});ov.forEach(function(v,i){if(v>0)sc[i][1]=v});
+var res=sc.map(function(a){return calcB(o,a[1],Math.min(dem||a[1],a[1]))});
+var obj=$('obj').value,key={inv:function(x){return x.inv},lpu:function(x){return x.lpu},profit:function(x){return -x.profit},roi:function(x){return -(x.roi==null?-1e9:x.roi)},risk:function(x){return x.invVal}}[obj];
+var bi=0;res.forEach(function(x,i){if(key(x)<key(res[bi])-1e-9)bi=i});
+var h=el('tr');h.appendChild(el('th',null,'Metric'));sc.forEach(function(a){h.appendChild(el('th',null,a[0]+' ('+nu(a[1])+')'))});sct.appendChild(h);
+[['Total investment',function(x){return m(x.inv)}],['Purchase cost',function(x){return m(x.purch)}],['Landed cost per unit',function(x){return m(x.lpu)}],['Total shipping cost',function(x){return m(x.sh)}],['Total discounts',function(x){return m(x.sav)}],['Break-even quantity',function(x){return x.be==null?'N/A':nu(x.be)}],['Expected revenue (net)',function(x){return m(x.rev)}],['Expected profit',function(x){return m(x.profit)}],['Profit margin',function(x){return pc(x.margin)}],['ROI',function(x){return pc(x.roi)}],['Unsold inventory risk (value)',function(x){return m(x.invVal)+' / '+nu(x.unsold)+' units'}]].forEach(function(a){var t=el('tr');t.appendChild(el('td',null,a[0]));res.forEach(function(x,i){t.appendChild(el('td',i===bi?'whmoq-best':'',a[1](x)))});sct.appendChild(t)});
+var bt=el('tr');bt.appendChild(el('td',null,'Best for selected objective'));res.forEach(function(x,i){bt.appendChild(el('td',i===bi?'whmoq-best':'',i===bi?'★ Best':'–'))});sct.appendChild(bt);
+bars(cc,'Order quantity comparison (expected profit)',sc.map(function(a,i){return[a[0]+' – '+nu(a[1]),res[i].profit,res[i].profit>=0?'whmoq-gi':'whmoq-ri']}));
+/* recommendation */
+var L=['Supplier minimum quantity (valid): '+nu(start),'Budget-based maximum: '+(bud==null?'no budget entered':nu(bud)),'Demand-based quantity: '+(demQ==null?'enter expected sales quantity':nu(demQ)),'Storage-based maximum: '+(stoMax==null?'no limit entered':nu(stoMax)),'Profit-based minimum: '+(o.ptar>0?nu(profMin):'no desired profit entered'),
+rec==null?'No feasible order quantity under the current constraints. '+why:'Valid recommended quantity: '+nu(rec)+' (a multiple of '+mul+').',
+'Trade-off: ordering '+nu(sc[0][1])+' units costs '+m(res[0].lpu)+' per unit with '+m(res[0].inv)+' invested. Ordering '+nu(sc[2][1])+' units costs '+m(res[2].lpu)+' per unit with '+m(res[2].inv)+' invested and leaves '+nu(res[2].unsold)+' unsold units ('+m(res[2].invVal)+' at cost).'];
+L.forEach(function(t){recHost.appendChild(el('p',null,t))});
+LAST={t:'Wholesale Buyer Report',K:K,rows:rows};
+}else{
+var q2=o.sq,st=Math.max(1,Math.round(o.sstep||1));
+$('title').textContent='Supplier results'+(o.spn?' – '+o.spn:'');
+if(q2<=0)E('Enter an order quantity above zero to see results.');
+if(o.sp<=0&&q2>0)E('Enter a valid wholesale selling price.');
+if(q2>0&&q2<o.smoq)W('Order quantity is below the supplier MOQ ('+nu(o.smoq)+').');
+if(q2>0&&q2<o.sminp)W('Order quantity is below the minimum production quantity ('+nu(o.sminp)+').');
+if(o.smax>0&&q2>o.smax)W('Order quantity exceeds the maximum order quantity ('+nu(o.smax)+').');
+if(o.cap>0&&q2>o.cap)W('Order quantity exceeds available production capacity ('+nu(o.cap)+').');
+if(q2>0&&q2%st!==0)W('Order quantity must follow the quantity step ('+st+').');
+var r2=calcS(o,Math.max(q2,0)),s0=ru(Math.max(o.smoq,o.sminp,1),st);
+if(r2.cpu<=0&&q2>0)E('Your contribution margin is zero or negative. Break-even cannot be achieved with these assumptions.');
+var minQ=findQ(function(x){return calcS(o,x).profit>0.005},s0,st),tq=o.sptar>0?findQ(function(x){return calcS(o,x).profit>=o.sptar},s0,st):null;
+if(o.cap>0&&minQ!=null&&minQ>o.cap)W('The minimum profitable quantity ('+nu(minQ)+') is above your production capacity.');
+K=[['Minimum profitable order quantity',minQ==null?'None found':nu(minQ),minQ==null?'whmoq-warn':'','Smallest valid quantity with profit above zero (includes MOQ and minimum production).'],['Supplier MOQ',nu(o.smoq)],['Total fixed costs',m(r2.fixed),'','One-time share + per-order fixed + supplier-paid shipping.'],['Variable cost per unit',m(r2.vm+r2.vs),'','Manufacturing + selling cost per unit.'],
+['Contribution per unit',m(r2.cpu),r2.cpu<=0?'whmoq-neg':'','Net price minus variable costs.'],['Break-even quantity',r2.be==null?'Not reachable':nu(r2.be),r2.be==null?'whmoq-warn':'','Fixed costs ÷ contribution per unit, rounded up.'],['Break-even revenue',r2.be==null?'N/A':m(r2.be*r2.net)],
+['Total production cost',m(r2.pcost),'','Variable cost of produced units + fixed costs.'],['Total order revenue',m(r2.rev)],['Estimated order profit',m(r2.profit)+tag(r2.profit),pos(r2.profit)],['Profit per unit',m(q2>0?r2.profit/q2:null)],['Profit margin',pc(r2.margin)],['ROI (profit ÷ production cost)',pc(r2.roi)],
+['Target profit quantity',o.sptar>0?(tq==null?'Not reachable':nu(tq)):'Enter target profit'],['Available production capacity',o.cap>0?nu(o.cap):'Not entered',o.cap>0&&q2>o.cap?'whmoq-warn':'']];
+var d2=Math.max(q2,1);
+rows=[['Order revenue',r2.rev],['Less: variable manufacturing (produced units)',-r2.vm*r2.batch],['Less: variable selling expenses',-r2.vs*q2],['Less: fixed order costs',-r2.fixed],['Estimated order profit',r2.profit,1]].map(function(a){return{l:a[0],v:a[1],t:a[2],u:q2>0?a[1]/d2:null}});
+var cc2=el('div');ch.appendChild(cc2);
+bars(cc2,'Cost breakdown',[['Variable manufacturing',r2.vm*r2.batch],['Variable selling',r2.vs*q2],['Fixed order costs',r2.fixed]]);
+bars(cc2,'Revenue vs expense vs profit',[['Revenue',r2.rev],['Total costs',r2.rev-r2.profit,'whmoq-ri'],['Profit',r2.profit,r2.profit>=0?'whmoq-gi':'whmoq-ri']]);
+bars(cc2,'Break-even indicator',[['Order quantity',q2,'',nu(q2)+' units'],['Break-even quantity',r2.be||0,'whmoq-ri',r2.be==null?'N/A':nu(r2.be)+' units']]);
+lineChart(cc2,function(x){return calcS(o,x).profit},q2,r2.be,'Break-even');
+LAST={t:'Wholesale Supplier Report',K:K,rows:rows}}
+var mh=$('msgs');mh.textContent='';msgs.forEach(function(a){mh.appendChild(el('div','whmoq-msg whmoq-'+a[0],(a[0]==='e'?'Error: ':'Warning: ')+a[1]))});
+var kp=$('kpis');kp.textContent='';K.forEach(function(a){var d=el('div','whmoq-kpi '+(a[2]||''));d.appendChild(el('span',null,a[0]));d.appendChild(el('b',null,a[1]));if(a[3])d.appendChild(el('small',null,a[3]));kp.appendChild(d)});
+var bd=$('bd');bd.textContent='';var hh=el('tr');['Item','Total','Per unit ordered'].forEach(function(x){hh.appendChild(el('th',null,x))});bd.appendChild(hh);
+rows.forEach(function(x){var t=el('tr',x.t?'whmoq-tot':'');t.appendChild(el('td',null,x.l));t.appendChild(el('td',null,m(x.v)));t.appendChild(el('td',null,m(x.u)));bd.appendChild(t)});
+LAST.rows=rows}
+
+/* exports */
+function cs(v){v=String(v);if(/^[=+\-@\t\r]/.test(v))v="'"+v;return'"'+v.replace(/"/g,'""')+'"'}
+function dl(name,txt){var b=new Blob(['\ufeff'+txt],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(a.href)},500)}
+function plain(){var t=LAST.t+'\n';LAST.K.forEach(function(a){t+=a[0]+': '+a[1]+'\n'});t+='\nBreakdown (total | per unit)\n';LAST.rows.forEach(function(x){t+=x.l+': '+m(x.v)+' | '+m(x.u)+'\n'});return t}
+$('copy').addEventListener('click',function(){var t=plain();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){say('Results copied.')},function(){say('Copy failed.')})}else{var a=el('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');say('Results copied.')}catch(e){say('Copy failed.')}document.body.removeChild(a)}});
+$('csv').addEventListener('click',function(){var t=['Item','Total','Per unit'].map(cs).join(',')+'\n';LAST.rows.forEach(function(x){t+=cs(x.l)+','+(+x.v.toFixed(4))+','+(x.u==null?'':+x.u.toFixed(4))+'\n'});LAST.K.forEach(function(a){t+=cs(a[0])+','+cs(a[1])+',\n'});dl('wholesale-moq-report.csv',t);say('CSV downloaded.')});
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+$('print').addEventListener('click',function(){var w=window.open('','_blank');if(!w){say('Allow pop-ups to print the report.');return}
+var h='<!doctype html><title>Wholesale report</title><body style="font-family:Arial,sans-serif;max-width:720px;margin:20px auto"><h2>'+esc(LAST.t)+'</h2><p>Estimates only. All values were entered manually.</p><table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%">';
+LAST.K.forEach(function(a){h+='<tr><td>'+esc(a[0])+'</td><td>'+esc(a[1])+'</td></tr>'});h+='</table><h3>Breakdown</h3><table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%"><tr><th>Item</th><th>Total</th><th>Per unit</th></tr>';
+LAST.rows.forEach(function(x){h+='<tr><td>'+esc(x.l)+'</td><td align="right">'+esc(m(x.v))+'</td><td align="right">'+esc(m(x.u))+'</td></tr>'});h+='</table></body>';
+w.document.open();w.document.write(h);w.document.close();w.focus();w.print()});
+
+/* state */
+function apply(S){Object.keys(DEF).forEach(function(k){var c=$(k),v=S&&S[k]!=null?S[k]:DEF[k];if(c.type==='checkbox')c.checked=!!v;else c.value=v});
+['sa','sb','sc'].forEach(function(k){$(k).value=S&&S[k]!=null?S[k]:''});$('obj').value=S&&S.obj||'profit';
+$('tiers').textContent='';((S&&S.T)||[]).slice(0,10).forEach(addT);render()}
+function state(){var S={};Object.keys(DEF).forEach(function(k){var c=$(k);S[k]=c.type==='checkbox'?c.checked:c.value});['sa','sb','sc'].forEach(function(k){S[k]=$(k).value});S.obj=$('obj').value;S.T=tiers();return S}
+$('reset').addEventListener('click',function(){apply(null);say('All inputs cleared.')});
+$('sample').addEventListener('click',function(){var b=R.getAttribute('data-mode')==='b';
+apply(b?{qty:'500',moq:'100',base:'10',sh_frt:'500',retail:'18',s:'500',pn:'Sample product'}:{raw:'4',lab:'2',mfg:'1',spk:'0.5',sqc:'0.5',fx_pset:'1000',sp:'12',smoq:'500',sq:'1000',spn:'Sample product'});say('Sample data loaded (illustrative values only).')});
+var KEY='whmoq_saved_v1';
+function store(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function fillList(){var s=store(),L=$('slist');L.textContent='';var n=Object.keys(s);if(!n.length){var e=el('option',null,'No saved scenarios');e.value='';L.appendChild(e)}n.forEach(function(k){var e=el('option',null,k);e.value=k;L.appendChild(e)})}
+$('save').addEventListener('click',function(){var n=$('sname').value.trim().slice(0,40);if(!n){say('Enter a name to save.');return}try{var s=store();s[n]=state();localStorage.setItem(KEY,JSON.stringify(s));fillList();$('slist').value=n;say('Saved in this browser only.')}catch(e){say('Saving is unavailable or storage is full.')}});
+$('load').addEventListener('click',function(){var s=store(),k=$('slist').value;if(!k||!s[k]){say('Nothing to load.');return}apply(s[k]);say('Loaded "'+k+'".')});
+$('del').addEventListener('click',function(){var s=store(),k=$('slist').value;if(!k||!s[k]){say('Nothing to delete.');return}delete s[k];try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}fillList();say('Deleted.')});
+
+/* scenario inputs */
+var sci=$('sc-in');
+[['sa','Scenario A quantity (blank = supplier MOQ)'],['sb','Scenario B quantity (blank = recommended)'],['sc','Scenario C quantity (blank = larger bulk order)']].forEach(function(a){var w=el('div','whmoq-f'),l=el('label',null,a[1]),c=el('input');c.type='number';c.min='0';c.step='any';c.id='whmoq-'+a[0];c.className='whmoq-in';l.htmlFor=c.id;w.appendChild(l);w.appendChild(c);sci.appendChild(w)});
+(function(){var w=el('div','whmoq-f'),l=el('label',null,'Best scenario objective'),c=el('select');c.id='whmoq-obj';c.className='whmoq-in';l.htmlFor=c.id;[['profit','Highest estimated profit'],['inv','Lowest initial investment'],['lpu','Lowest landed cost per unit'],['roi','Best ROI'],['risk','Lowest inventory risk']].forEach(function(o){var e=el('option',null,o[1]);e.value=o[0];c.appendChild(e)});w.appendChild(l);w.appendChild(c);sci.appendChild(w)})();
+
+[].forEach.call(R.querySelectorAll('.whmoq-tab'),function(b){b.addEventListener('click',function(){R.setAttribute('data-mode',b.getAttribute('data-m'));[].forEach.call(R.querySelectorAll('.whmoq-tab'),function(x){x.setAttribute('aria-selected',x===b?'true':'false')});render()})});
+$('addt').addEventListener('click',function(){if($('tiers').children.length>=10){say('Maximum 10 tiers.');return}addT();render()});
+$('sl').addEventListener('input',function(){$('s').value=this.value;render()});
+var tm=null;
+R.addEventListener('input',function(e){if(e.target.classList.contains('whmoq-x'))return;clearTimeout(tm);tm=setTimeout(render,120)});
+R.addEventListener('change',function(e){if(e.target.classList.contains('whmoq-x'))return;render()});
+fillList();render();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+</div>
