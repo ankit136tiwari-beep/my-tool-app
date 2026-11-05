@@ -1,0 +1,1935 @@
+<!-- ==========================================================================
+     SUBSCRIPTION CHURN REVENUE LOSS CALCULATOR
+     Target Compatibility: Blogger / Blogspot HTML View & Cloudflare Pages
+     Namespace: #sc-calc-app / .sc-calc-*
+     ========================================================================== -->
+
+<!-- JSON-LD Structured Data for WebApplication and FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://my-tool-app.pages.dev/subscription-churn-revenue-loss-calculator#webapp",
+      "url": "https://my-tool-app.pages.dev/subscription-churn-revenue-loss-calculator",
+      "name": "Subscription Churn Revenue Loss Calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5 support.",
+      "description": "Professional SaaS and subscription analytics calculator to measure customer churn rate, lost MRR, ARR exposure, gross and net revenue churn, GRR, NRR, and future revenue projections.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://my-tool-app.pages.dev/subscription-churn-revenue-loss-calculator#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a subscription churn revenue loss calculator?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A subscription churn revenue loss calculator is a specialized financial analytics tool designed to calculate customer cancellations, lost Monthly Recurring Revenue (MRR), annualized revenue at risk (ARR), gross revenue churn, net revenue retention (NRR), and the compounded financial impact of customer attrition on recurring business models."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate monthly subscription churn rate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Monthly customer churn rate is calculated by dividing the number of customers who cancelled during the month by the total number of active customers at the start of that month, multiplied by 100. New customers acquired during that month are excluded from the denominator."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate MRR loss from cancelled subscriptions?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Actual MRR loss is calculated by summing the recurring subscription revenue of all accounts that terminated during the period. Alternatively, it can be estimated by multiplying the number of cancelled customers by the average monthly revenue per account (ARPA)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between customer churn and revenue churn?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Customer churn (logo churn) measures the percentage of customer accounts lost during a period. Revenue churn measures the percentage of recurring revenue lost. If high-tier enterprise clients cancel while low-cost accounts remain, revenue churn will exceed customer churn."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between gross revenue churn and net revenue churn?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Gross revenue churn considers only recurring revenue lost from cancellations and plan downgrades relative to starting MRR. Net revenue churn subtracts expansion MRR (upgrades) and reactivation MRR from those losses, reflecting the net movement of the existing customer cohort."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate annual recurring revenue loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Annualized recurring revenue loss is calculated by multiplying monthly churned MRR by 12. For compounding customer loss over 12 months, the formula is: Annual Churn = (1 - (1 - Monthly Churn Rate)^12) * 100."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can a subscription business have negative net revenue churn?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Negative net revenue churn occurs when expansion revenue (upgrades, cross-sells, add-ons) and reactivations from existing customers surpass the revenue lost to cancellations and downgrades. This corresponds to a Net Revenue Retention (NRR) rate exceeding 100%."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this subscription churn calculator free and private?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, this calculator is completely free, does not require an account or login, and processes all financial equations client-side within your browser. No sensitive financial information or customer figures are ever transmitted to an external server."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<div id="sc-calc-app" class="sc-calc-wrapper">
+  <style>
+    /* Scoped CSS for Blogger / Cloudflare Pages Isolation */
+    #sc-calc-app {
+      --sc-bg: #f8fafc;
+      --sc-card-bg: #ffffff;
+      --sc-text-main: #0f172a;
+      --sc-text-muted: #475569;
+      --sc-primary: #2563eb;
+      --sc-primary-hover: #1d4ed8;
+      --sc-success: #16a34a;
+      --sc-danger: #dc2626;
+      --sc-warning: #ea580c;
+      --sc-border: #e2e8f0;
+      --sc-border-focus: #3b82f6;
+      --sc-radius: 10px;
+      --sc-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --sc-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      
+      font-family: var(--sc-font);
+      color: var(--sc-text-main);
+      background-color: var(--sc-bg);
+      line-height: 1.5;
+      padding: 16px;
+      margin: 0 auto;
+      max-width: 1200px;
+      box-sizing: border-box;
+    }
+
+    #sc-calc-app *, #sc-calc-app *::before, #sc-calc-app *::after {
+      box-sizing: border-box;
+    }
+
+    /* Header & Descriptions */
+    #sc-calc-app .sc-calc-header {
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    #sc-calc-app .sc-calc-h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--sc-text-main);
+      margin: 0 0 10px 0;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+    #sc-calc-app .sc-calc-lead {
+      font-size: 1.05rem;
+      color: var(--sc-text-muted);
+      margin: 0;
+      max-width: 900px;
+    }
+
+    /* Global Controls Bar */
+    #sc-calc-app .sc-calc-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--sc-card-bg);
+      padding: 14px 18px;
+      border: 1px solid var(--sc-border);
+      border-radius: var(--sc-radius);
+      margin-bottom: 24px;
+      box-shadow: var(--sc-shadow);
+    }
+    #sc-calc-app .sc-calc-toolbar-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Grid Layout */
+    #sc-calc-app .sc-calc-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    @media (min-width: 1024px) {
+      #sc-calc-app .sc-calc-grid {
+        grid-template-columns: 460px 1fr;
+      }
+    }
+
+    /* Panels & Cards */
+    #sc-calc-app .sc-calc-card {
+      background: var(--sc-card-bg);
+      border: 1px solid var(--sc-border);
+      border-radius: var(--sc-radius);
+      padding: 20px;
+      box-shadow: var(--sc-shadow);
+      margin-bottom: 20px;
+    }
+    #sc-calc-app .sc-calc-card:last-child {
+      margin-bottom: 0;
+    }
+    #sc-calc-app .sc-calc-card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--sc-text-main);
+      border-bottom: 1px solid var(--sc-border);
+      padding-bottom: 10px;
+    }
+
+    /* Form Controls */
+    #sc-calc-app .sc-calc-form-group {
+      margin-bottom: 14px;
+    }
+    #sc-calc-app .sc-calc-form-group:last-child {
+      margin-bottom: 0;
+    }
+    #sc-calc-app .sc-calc-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--sc-text-main);
+      margin-bottom: 4px;
+    }
+    #sc-calc-app .sc-calc-label-desc {
+      display: block;
+      font-size: 0.775rem;
+      color: var(--sc-text-muted);
+      margin-bottom: 6px;
+      font-weight: 400;
+    }
+    #sc-calc-app .sc-calc-input,
+    #sc-calc-app .sc-calc-select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--sc-border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      color: var(--sc-text-main);
+      background-color: #ffffff;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+    #sc-calc-app .sc-calc-input:focus,
+    #sc-calc-app .sc-calc-select:focus {
+      border-color: var(--sc-border-focus);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    #sc-calc-app .sc-calc-input-prefix-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    #sc-calc-app .sc-calc-prefix {
+      position: absolute;
+      left: 10px;
+      font-size: 0.9rem;
+      color: var(--sc-text-muted);
+      pointer-events: none;
+      font-weight: 600;
+    }
+    #sc-calc-app .sc-calc-input.has-prefix {
+      padding-left: 28px;
+    }
+    #sc-calc-app .sc-calc-error-msg {
+      color: var(--sc-danger);
+      font-size: 0.75rem;
+      margin-top: 4px;
+      display: none;
+      font-weight: 500;
+    }
+    #sc-calc-app .has-error .sc-calc-error-msg {
+      display: block;
+    }
+    #sc-calc-app .has-error input {
+      border-color: var(--sc-danger);
+      background-color: #fef2f2;
+    }
+
+    /* Buttons */
+    #sc-calc-app .sc-calc-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      font-family: inherit;
+    }
+    #sc-calc-app .sc-calc-btn-primary {
+      background-color: var(--sc-primary);
+      color: #ffffff;
+    }
+    #sc-calc-app .sc-calc-btn-primary:hover {
+      background-color: var(--sc-primary-hover);
+    }
+    #sc-calc-app .sc-calc-btn-secondary {
+      background-color: #ffffff;
+      border-color: var(--sc-border);
+      color: var(--sc-text-main);
+    }
+    #sc-calc-app .sc-calc-btn-secondary:hover {
+      background-color: #f1f5f9;
+    }
+    #sc-calc-app .sc-calc-btn-outline {
+      border: 1px dashed var(--sc-border);
+      background: transparent;
+      color: var(--sc-text-muted);
+    }
+    #sc-calc-app .sc-calc-btn-outline:hover {
+      border-color: var(--sc-primary);
+      color: var(--sc-primary);
+    }
+    #sc-calc-app .sc-calc-btn-sm {
+      padding: 5px 10px;
+      font-size: 0.8rem;
+    }
+
+    /* Accordion Details */
+    #sc-calc-app details.sc-calc-details {
+      border: 1px solid var(--sc-border);
+      border-radius: 6px;
+      margin-top: 14px;
+      overflow: hidden;
+      background: #fafafa;
+    }
+    #sc-calc-app details.sc-calc-details summary {
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: #f1f5f9;
+      user-select: none;
+      outline: none;
+    }
+    #sc-calc-app details.sc-calc-details .sc-calc-details-content {
+      padding: 14px;
+      background: #ffffff;
+    }
+
+    /* KPI Cards Grid */
+    #sc-calc-app .sc-calc-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    #sc-calc-app .sc-calc-kpi-card {
+      background: var(--sc-card-bg);
+      border: 1px solid var(--sc-border);
+      border-radius: var(--sc-radius);
+      padding: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-left: 4px solid var(--sc-primary);
+    }
+    #sc-calc-app .sc-calc-kpi-card.kpi-danger {
+      border-left-color: var(--sc-danger);
+    }
+    #sc-calc-app .sc-calc-kpi-card.kpi-success {
+      border-left-color: var(--sc-success);
+    }
+    #sc-calc-app .sc-calc-kpi-card.kpi-warning {
+      border-left-color: var(--sc-warning);
+    }
+    #sc-calc-app .sc-calc-kpi-label {
+      font-size: 0.775rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--sc-text-muted);
+      margin-bottom: 6px;
+    }
+    #sc-calc-app .sc-calc-kpi-val {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--sc-text-main);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    #sc-calc-app .sc-calc-kpi-sub {
+      font-size: 0.75rem;
+      color: var(--sc-text-muted);
+      line-height: 1.3;
+    }
+
+    /* Reconciliation Notification Banners */
+    #sc-calc-app .sc-calc-alert {
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+    #sc-calc-app .sc-calc-alert-warning {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+    #sc-calc-app .sc-calc-alert-info {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+    }
+
+    /* Charts Container */
+    #sc-calc-app .sc-calc-chart-box {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid var(--sc-border);
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    #sc-calc-app .sc-calc-chart-header {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #sc-calc-app .sc-calc-svg-wrap {
+      width: 100%;
+      overflow-x: auto;
+      text-align: center;
+    }
+    #sc-calc-app svg {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
+    }
+
+    /* Table Styles */
+    #sc-calc-app .sc-calc-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 12px;
+    }
+    #sc-calc-app .sc-calc-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+    #sc-calc-app .sc-calc-table th {
+      background: #f8fafc;
+      padding: 10px 12px;
+      font-weight: 700;
+      border-bottom: 2px solid var(--sc-border);
+      color: var(--sc-text-main);
+    }
+    #sc-calc-app .sc-calc-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--sc-border);
+      color: var(--sc-text-main);
+    }
+    #sc-calc-app .sc-calc-table tr:hover td {
+      background-color: #f8fafc;
+    }
+
+    /* Insights Box */
+    #sc-calc-app .sc-calc-insights-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    #sc-calc-app .sc-calc-insights-list li {
+      position: relative;
+      padding-left: 26px;
+      margin-bottom: 10px;
+      font-size: 0.875rem;
+      color: var(--sc-text-main);
+      line-height: 1.45;
+    }
+    #sc-calc-app .sc-calc-insights-list li::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--sc-primary);
+    }
+
+    /* Copy & Export Notification */
+    #sc-calc-app .sc-calc-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+      z-index: 999999;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      pointer-events: none;
+    }
+    #sc-calc-app .sc-calc-toast.show {
+      opacity: 1;
+    }
+
+    /* Educational and SEO Long-Form Layout */
+    #sc-calc-app .sc-calc-content-block {
+      background: var(--sc-card-bg);
+      border: 1px solid var(--sc-border);
+      border-radius: var(--sc-radius);
+      padding: 24px;
+      margin-top: 28px;
+      box-shadow: var(--sc-shadow);
+    }
+    #sc-calc-app .sc-calc-content-block h2 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--sc-text-main);
+      margin: 24px 0 12px 0;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 6px;
+    }
+    #sc-calc-app .sc-calc-content-block h2:first-child {
+      margin-top: 0;
+    }
+    #sc-calc-app .sc-calc-content-block h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--sc-text-main);
+      margin: 18px 0 8px 0;
+    }
+    #sc-calc-app .sc-calc-content-block p, 
+    #sc-calc-app .sc-calc-content-block li {
+      font-size: 0.925rem;
+      color: var(--sc-text-muted);
+      line-height: 1.65;
+    }
+    #sc-calc-app .sc-calc-content-block ul,
+    #sc-calc-app .sc-calc-content-block ol {
+      padding-left: 24px;
+      margin-bottom: 16px;
+    }
+    #sc-calc-app .sc-calc-code-formula {
+      background: #f1f5f9;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.875rem;
+      color: #0f172a;
+      display: inline-block;
+      margin: 4px 0;
+    }
+    #sc-calc-app .sc-calc-link {
+      color: var(--sc-primary);
+      text-decoration: underline;
+      font-weight: 500;
+    }
+    #sc-calc-app .sc-calc-link:hover {
+      color: var(--sc-primary-hover);
+    }
+
+    /* Print Styles */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #sc-calc-app, #sc-calc-app * {
+        visibility: visible;
+      }
+      #sc-calc-app {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        background: #ffffff;
+        padding: 0;
+        margin: 0;
+      }
+      #sc-calc-app .sc-calc-toolbar,
+      #sc-calc-app .sc-calc-form-container,
+      #sc-calc-app .sc-calc-btn,
+      #sc-calc-app .sc-calc-toast {
+        display: none !important;
+      }
+      #sc-calc-app .sc-calc-grid {
+        display: block;
+      }
+    }
+  </style>
+
+  <!-- MAIN APP CONTAINER -->
+  <header class="sc-calc-header">
+    <h1 class="sc-calc-h1">Subscription Churn Revenue Loss Calculator</h1>
+    <p class="sc-calc-lead">
+      Analyze customer and logo churn, calculate lost Monthly Recurring Revenue (MRR), examine gross vs. net revenue churn, model retention improvements, and project annualized recurring revenue (ARR) exposure.
+    </p>
+  </header>
+
+  <!-- Global Action Toolbar -->
+  <div class="sc-calc-toolbar" role="region" aria-label="Calculator Settings and Global Controls">
+    <div class="sc-calc-toolbar-group">
+      <div>
+        <label for="sc_currency_select" class="sc-calc-label" style="margin-bottom:2px;">Currency</label>
+        <select id="sc_currency_select" class="sc-calc-select" style="width: auto;">
+          <option value="USD" selected>USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="INR">INR (₹)</option>
+          <option value="CAD">CAD (C$)</option>
+          <option value="AUD">AUD (A$)</option>
+          <option value="SGD">SGD (S$)</option>
+          <option value="CUSTOM">Custom Code</option>
+        </select>
+      </div>
+      <div>
+        <label for="sc_period_select" class="sc-calc-label" style="margin-bottom:2px;">Reporting Interval</label>
+        <select id="sc_period_select" class="sc-calc-select" style="width: auto;">
+          <option value="monthly" selected>Monthly Period</option>
+          <option value="quarterly">Quarterly Period</option>
+          <option value="yearly">Annual Period</option>
+        </select>
+      </div>
+      <div style="display: flex; align-items: flex-end; padding-bottom: 2px;">
+        <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; font-weight:600; cursor:pointer;">
+          <input type="checkbox" id="sc_live_mode" checked> Live Calculation
+        </label>
+      </div>
+    </div>
+    <div class="sc-calc-toolbar-group">
+      <button type="button" id="sc_btn_load_example" class="sc-calc-btn sc-calc-btn-secondary sc-calc-btn-sm" title="Populate with reference SaaS metrics">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        Load Example Data
+      </button>
+      <button type="button" id="sc_btn_reset" class="sc-calc-btn sc-calc-btn-secondary sc-calc-btn-sm" title="Clear inputs">
+        Reset
+      </button>
+      <button type="button" id="sc_btn_save_local" class="sc-calc-btn sc-calc-btn-outline sc-calc-btn-sm" title="Save inputs locally in browser">
+        Save Inputs
+      </button>
+      <button type="button" id="sc_btn_clear_local" class="sc-calc-btn sc-calc-btn-outline sc-calc-btn-sm" style="display:none;">
+        Clear Saved
+      </button>
+    </div>
+  </div>
+
+  <div class="sc-calc-grid">
+    <!-- LEFT COLUMN: INPUT SYSTEM -->
+    <div class="sc-calc-form-container">
+      <div class="sc-calc-card">
+        <div class="sc-calc-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          Customer Subscriptions
+        </div>
+
+        <div class="sc-calc-form-group" id="grp_cust_start">
+          <label class="sc-calc-label" for="sc_cust_start">Customers at Beginning of Period <span style="color:var(--sc-danger)">*</span></label>
+          <span class="sc-calc-label-desc">Active subscriber accounts at day 1 of the period.</span>
+          <input type="number" id="sc_cust_start" class="sc-calc-input" min="0" step="1" placeholder="e.g. 1000">
+          <div class="sc-calc-error-msg" id="err_cust_start">Please enter a valid whole number &ge; 0.</div>
+        </div>
+
+        <div class="sc-calc-form-group" id="grp_cust_churned">
+          <label class="sc-calc-label" for="sc_cust_churned">Customers Cancelled During Period <span style="color:var(--sc-danger)">*</span></label>
+          <span class="sc-calc-label-desc">Subscriber accounts lost to full cancellation.</span>
+          <input type="number" id="sc_cust_churned" class="sc-calc-input" min="0" step="1" placeholder="e.g. 50">
+          <div class="sc-calc-error-msg" id="err_cust_churned">Cancelled accounts cannot exceed beginning accounts.</div>
+        </div>
+
+        <div class="sc-calc-form-group" id="grp_cust_new">
+          <label class="sc-calc-label" for="sc_cust_new">New Customers Acquired</label>
+          <span class="sc-calc-label-desc">New accounts joining during this interval.</span>
+          <input type="number" id="sc_cust_new" class="sc-calc-input" min="0" step="1" placeholder="e.g. 100">
+          <div class="sc-calc-error-msg" id="err_cust_new">Must be a whole non-negative number.</div>
+        </div>
+
+        <div class="sc-calc-form-group" id="grp_cust_reactivated">
+          <label class="sc-calc-label" for="sc_cust_reactivated">Reactivated Customers</label>
+          <span class="sc-calc-label-desc">Past subscribers who returned during this interval.</span>
+          <input type="number" id="sc_cust_reactivated" class="sc-calc-input" min="0" step="1" placeholder="e.g. 10">
+          <div class="sc-calc-error-msg" id="err_cust_reactivated">Must be a whole non-negative number.</div>
+        </div>
+
+        <div class="sc-calc-form-group">
+          <label class="sc-calc-label" for="sc_cust_end_verify">Reported Ending Customers (Optional Verification)</label>
+          <span class="sc-calc-label-desc">Used solely to test your external ledger reconciliation.</span>
+          <input type="number" id="sc_cust_end_verify" class="sc-calc-input" min="0" step="1" placeholder="Leave empty if calculating">
+        </div>
+      </div>
+
+      <div class="sc-calc-card">
+        <div class="sc-calc-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          Recurring Revenue Movements (MRR)
+        </div>
+
+        <div class="sc-calc-form-group" id="grp_mrr_start">
+          <label class="sc-calc-label" for="sc_mrr_start">Starting MRR <span style="color:var(--sc-danger)">*</span></label>
+          <span class="sc-calc-label-desc">Total contracted monthly recurring revenue at start of period.</span>
+          <div class="sc-calc-input-prefix-wrap">
+            <span class="sc-calc-prefix" data-currency-symbol>$</span>
+            <input type="number" id="sc_mrr_start" class="sc-calc-input has-prefix" min="0" step="0.01" placeholder="50000">
+          </div>
+          <div class="sc-calc-error-msg" id="err_mrr_start">Must be a valid positive amount.</div>
+        </div>
+
+        <div class="sc-calc-form-group">
+          <label class="sc-calc-label">Churned MRR Entry Method</label>
+          <div style="display:flex; gap:16px; margin: 4px 0 10px 0;">
+            <label style="font-size:0.85rem; cursor:pointer;">
+              <input type="radio" name="sc_churn_mrr_mode" value="actual" checked> Actual Lost MRR
+            </label>
+            <label style="font-size:0.85rem; cursor:pointer;">
+              <input type="radio" name="sc_churn_mrr_mode" value="estimated"> Estimate via ARPA
+            </label>
+          </div>
+        </div>
+
+        <div class="sc-calc-form-group" id="wrap_churn_actual">
+          <label class="sc-calc-label" for="sc_mrr_churned">Actual Churned MRR <span style="color:var(--sc-danger)">*</span></label>
+          <span class="sc-calc-label-desc">Exact monthly value lost from fully cancelled subscribers.</span>
+          <div class="sc-calc-input-prefix-wrap">
+            <span class="sc-calc-prefix" data-currency-symbol>$</span>
+            <input type="number" id="sc_mrr_churned" class="sc-calc-input has-prefix" min="0" step="0.01" placeholder="2500">
+          </div>
+          <div class="sc-calc-error-msg" id="err_mrr_churned">Cannot exceed starting MRR.</div>
+        </div>
+
+        <div class="sc-calc-form-group" id="wrap_churn_est" style="display:none;">
+          <label class="sc-calc-label" for="sc_arpa_churned_est">Avg Monthly Revenue per Churned Account</label>
+          <span class="sc-calc-label-desc">Estimated lost MRR = Cancelled Customers &times; Avg Price.</span>
+          <div class="sc-calc-input-prefix-wrap">
+            <span class="sc-calc-prefix" data-currency-symbol>$</span>
+            <input type="number" id="sc_arpa_churned_est" class="sc-calc-input has-prefix" min="0" step="0.01" placeholder="50.00">
+          </div>
+        </div>
+
+        <div class="sc-calc-form-group" id="grp_mrr_contraction">
+          <label class="sc-calc-label" for="sc_mrr_contraction">Contraction MRR (Downgrades)</label>
+          <span class="sc-calc-label-desc">MRR reduction from active customers downgrading tiers.</span>
+          <div class="sc-calc-input-prefix-wrap">
+            <span class="sc-calc-prefix" data-currency-symbol>$</span>
+            <input type="number" id="sc_mrr_contraction" class="sc-calc-input has-prefix" min="0" step="0.01" placeholder="500">
+          </div>
+        </div>
+
+        <div class="sc-calc-form-group" id="grp_mrr_expansion">
+          <label class="sc-calc-label" for="sc_mrr_expansion">Expansion MRR (Upgrades / Add-ons)</label>
+          <span class="sc-calc-label-desc">Additional MRR generated from existing subscriber upgrades.</span>
+          <div class="sc-calc-input-prefix-wrap">
+            <span class="sc-calc-prefix" data-currency-symbol>$</span>
+            <input type="number" id="sc_mrr_expansion" class="sc-calc-input has-prefix" min="0" step="0.01" placeholder="1500">
+          </div>
+        </div>
+
+        <div class="sc-calc-form-group" id="grp_mrr_reactivation">
+          <label class="sc-calc-label" for="sc_mrr_reactivation">Reactivation MRR</label>
+          <span class="sc-calc-label-desc">Monthly revenue from previously churned customers returning.</span>
+          <div class="sc-calc-input-prefix-wrap">
+            <span class="sc-calc-prefix" data-currency-symbol>$</span>
+            <input type="number" id="sc_mrr_reactivation" class="sc-calc-input has-prefix" min="0" step="0.01" placeholder="500">
+          </div>
+        </div>
+
+        <div class="sc-calc-form-group" id="grp_mrr_new">
+          <label class="sc-calc-label" for="sc_mrr_new">New Customer MRR</label>
+          <span class="sc-calc-label-desc">Recurring revenue from newly acquired accounts.</span>
+          <div class="sc-calc-input-prefix-wrap">
+            <span class="sc-calc-prefix" data-currency-symbol>$</span>
+            <input type="number" id="sc_mrr_new" class="sc-calc-input has-prefix" min="0" step="0.01" placeholder="5000">
+          </div>
+        </div>
+
+        <div class="sc-calc-form-group">
+          <label class="sc-calc-label" for="sc_mrr_end_verify">Reported Ending MRR (Optional Verification)</label>
+          <div class="sc-calc-input-prefix-wrap">
+            <span class="sc-calc-prefix" data-currency-symbol>$</span>
+            <input type="number" id="sc_mrr_end_verify" class="sc-calc-input has-prefix" min="0" step="0.01" placeholder="Leave empty if calculating">
+          </div>
+        </div>
+
+        <div style="margin-top: 18px;">
+          <button type="button" id="sc_btn_calculate" class="sc-calc-btn sc-calc-btn-primary" style="width: 100%;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+            Calculate Metrics &amp; Forecasts
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: RESULTS & ANALYTICS DASHBOARD -->
+    <div class="sc-calc-results-container">
+      
+      <!-- Reconciliation Warnings if Mismatched -->
+      <div id="sc_cust_recon_alert" class="sc-calc-alert sc-calc-alert-warning" role="alert"></div>
+      <div id="sc_mrr_recon_alert" class="sc-calc-alert sc-calc-alert-warning" role="alert"></div>
+
+      <!-- PRIMARY KPI CARDS -->
+      <div class="sc-calc-kpi-grid" aria-live="polite">
+        <div class="sc-calc-kpi-card kpi-danger">
+          <div class="sc-calc-kpi-label">Customer Churn Rate</div>
+          <div class="sc-calc-kpi-val" id="disp_cust_churn_pct">0.00%</div>
+          <div class="sc-calc-kpi-sub" id="disp_cust_churn_sub">Logo attrition for selected period</div>
+        </div>
+
+        <div class="sc-calc-kpi-card kpi-success">
+          <div class="sc-calc-kpi-label">Customer Retention Rate</div>
+          <div class="sc-calc-kpi-val" id="disp_cust_ret_pct">100.00%</div>
+          <div class="sc-calc-kpi-sub">Percentage of logos retained</div>
+        </div>
+
+        <div class="sc-calc-kpi-card kpi-danger">
+          <div class="sc-calc-kpi-label">Lost MRR (Cancellations)</div>
+          <div class="sc-calc-kpi-val" id="disp_mrr_churned">$0.00</div>
+          <div class="sc-calc-kpi-sub" id="disp_arr_exposure">ARR Exposure: $0.00</div>
+        </div>
+
+        <div class="sc-calc-kpi-card kpi-warning">
+          <div class="sc-calc-kpi-label">Gross Revenue Churn</div>
+          <div class="sc-calc-kpi-val" id="disp_gross_rev_churn">0.00%</div>
+          <div class="sc-calc-kpi-sub">Loss from Churn + Contraction</div>
+        </div>
+
+        <div class="sc-calc-kpi-card" id="card_net_churn">
+          <div class="sc-calc-kpi-label">Net Revenue Churn</div>
+          <div class="sc-calc-kpi-val" id="disp_net_rev_churn">0.00%</div>
+          <div class="sc-calc-kpi-sub" id="disp_net_churn_desc">Net attrition of cohort MRR</div>
+        </div>
+
+        <div class="sc-calc-kpi-card kpi-success">
+          <div class="sc-calc-kpi-label">Net Revenue Retention (NRR)</div>
+          <div class="sc-calc-kpi-val" id="disp_nrr_pct">100.00%</div>
+          <div class="sc-calc-kpi-sub">Cohort growth with upgrades</div>
+        </div>
+
+        <div class="sc-calc-kpi-card">
+          <div class="sc-calc-kpi-label">Gross Revenue Retention (GRR)</div>
+          <div class="sc-calc-kpi-val" id="disp_grr_pct">100.00%</div>
+          <div class="sc-calc-kpi-sub">Baseline retention before upgrades</div>
+        </div>
+
+        <div class="sc-calc-kpi-card">
+          <div class="sc-calc-kpi-label">Calculated Ending MRR</div>
+          <div class="sc-calc-kpi-val" id="disp_ending_mrr">$0.00</div>
+          <div class="sc-calc-kpi-sub" id="disp_ending_arr">Ending ARR: $0.00</div>
+        </div>
+      </div>
+
+      <!-- ACTION BUTTONS: EXPORT, PRINT, COPY -->
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;">
+        <button type="button" id="sc_btn_copy_summary" class="sc-calc-btn sc-calc-btn-secondary sc-calc-btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          Copy Results Summary
+        </button>
+        <button type="button" id="sc_btn_export_csv" class="sc-calc-btn sc-calc-btn-secondary sc-calc-btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export CSV Analysis
+        </button>
+        <button type="button" id="sc_btn_print" class="sc-calc-btn sc-calc-btn-secondary sc-calc-btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          Print / PDF Report
+        </button>
+      </div>
+
+      <!-- REVENUE WATERFALL BRIDGE CHART -->
+      <div class="sc-calc-chart-box">
+        <div class="sc-calc-chart-header">
+          <span>MRR Bridge Waterfall (Revenues &amp; Losses)</span>
+          <span style="font-size:0.75rem; color:var(--sc-text-muted); font-weight:normal;">Starting to Ending MRR</span>
+        </div>
+        <div class="sc-calc-svg-wrap" id="sc_svg_bridge_container">
+          <!-- Dynamically injected SVG Waterfall -->
+        </div>
+      </div>
+
+      <!-- CHURN BREAKDOWN & RATIOS CHART -->
+      <div style="display:grid; grid-template-columns: 1fr; gap: 16px;">
+        <div class="sc-calc-chart-box">
+          <div class="sc-calc-chart-header">
+            <span>Customer Retention vs Churn Breakdown</span>
+          </div>
+          <div class="sc-calc-svg-wrap" id="sc_svg_donut_container">
+            <!-- Dynamically injected SVG Donut -->
+          </div>
+        </div>
+      </div>
+
+      <!-- BUSINESS HEALTH INSIGHTS -->
+      <div class="sc-calc-card">
+        <div class="sc-calc-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+          Automated Cohort &amp; Health Insights
+        </div>
+        <ul class="sc-calc-insights-list" id="sc_insights_list">
+          <li>Enter your active subscription counts and recurring billing figures to generate cohort health diagnostics.</li>
+        </ul>
+      </div>
+
+      <!-- INTERACTIVE RETENTION IMPROVEMENT SIMULATOR -->
+      <div class="sc-calc-card">
+        <div class="sc-calc-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m16 12-4-4-4 4M12 16V8"></path></svg>
+          Retention Improvement Financial Simulator
+        </div>
+        <p style="font-size:0.85rem; color:var(--sc-text-muted); margin-top:0;">
+          Simulate preserved recurring revenue and protected subscribers by decreasing your monthly logo attrition rate over a forward timeline.
+        </p>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:14px;">
+          <div>
+            <label class="sc-calc-label" for="sc_sim_target_rate">Target Monthly Churn (%)</label>
+            <input type="number" id="sc_sim_target_rate" class="sc-calc-input" min="0" max="100" step="0.1" value="2.5">
+          </div>
+          <div>
+            <label class="sc-calc-label" for="sc_sim_duration">Simulation Months</label>
+            <select id="sc_sim_duration" class="sc-calc-select">
+              <option value="6">6 Months</option>
+              <option value="12" selected>12 Months</option>
+              <option value="24">24 Months</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sc-calc-kpi-grid" style="margin-bottom: 14px;">
+          <div class="sc-calc-kpi-card kpi-success">
+            <div class="sc-calc-kpi-label">Accounts Preserved</div>
+            <div class="sc-calc-kpi-val" id="disp_sim_cust_saved">0</div>
+            <div class="sc-calc-kpi-sub">Customers saved vs current rate</div>
+          </div>
+          <div class="sc-calc-kpi-card kpi-success">
+            <div class="sc-calc-kpi-label">Preserved Monthly MRR</div>
+            <div class="sc-calc-kpi-val" id="disp_sim_mrr_saved">$0.00</div>
+            <div class="sc-calc-kpi-sub">Preserved monthly run-rate</div>
+          </div>
+          <div class="sc-calc-kpi-card kpi-success">
+            <div class="sc-calc-kpi-label">Annualized ARR Preserved</div>
+            <div class="sc-calc-kpi-val" id="disp_sim_arr_saved">$0.00</div>
+            <div class="sc-calc-kpi-sub">Compounded annual savings</div>
+          </div>
+        </div>
+
+        <div class="sc-calc-svg-wrap" id="sc_svg_sim_container">
+          <!-- Simulation SVG Chart -->
+        </div>
+      </div>
+
+      <!-- FORWARD MULTI-MONTH REVENUE PROJECTION -->
+      <div class="sc-calc-card">
+        <div class="sc-calc-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
+          Scenario Projections (Base, Conservative, Improved)
+        </div>
+        <p style="font-size:0.85rem; color:var(--sc-text-muted); margin-top:0;">
+          Scenario projection based strictly on current recurring churn rates and baseline expansion.
+        </p>
+
+        <div class="sc-calc-table-wrap">
+          <table class="sc-calc-table" id="sc_forecast_table">
+            <thead>
+              <tr>
+                <th>Horizon</th>
+                <th>Projected Customers</th>
+                <th>Base Case MRR</th>
+                <th>Conservative (-20%)</th>
+                <th>Improved (+20%)</th>
+                <th>Cumulative Lost MRR</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="6" style="text-align:center; color:var(--sc-text-muted);">Run calculation to view forecast projections.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="sc_toast" class="sc-calc-toast" role="status" aria-live="assertive">Notification</div>
+
+  <!-- COMPREHENSIVE SEO CONTENT & REFERENCE MANUAL -->
+  <article class="sc-calc-content-block">
+    <h2>Subscription Churn &amp; SaaS Revenue Analysis Guide</h2>
+    <p>
+      Managing customer retention and preventing Monthly Recurring Revenue (MRR) loss is fundamental to building a sustainable recurring billing business. This comprehensive <strong>Subscription Churn Revenue Loss Calculator</strong> computes logo attrition, gross and net revenue churn, and tracks cohort degradation to assist finance managers, SaaS founders, and subscription operators in optimizing customer lifetime value.
+    </p>
+
+    <h2>Essential Features of This Calculator</h2>
+    <ul>
+      <li><strong>Customer (Logo) Churn Calculation:</strong> Computes the exact percentage of subscriber accounts cancelled during the reporting interval relative to the starting cohort.</li>
+      <li><strong>Revenue Churn vs. Logo Churn Comparison:</strong> Distinguishes account cancellations from dollar contractions, preventing skewed metrics caused by varying plan prices.</li>
+      <li><strong>Gross Revenue Retention (GRR) &amp; Net Revenue Retention (NRR):</strong> Calculates GRR (floor baseline excluding expansion) and NRR (net cohort expansion including upgrades).</li>
+      <li><strong>Full MRR Waterfall Bridge:</strong> Maps starting MRR, new business, upgrade expansions, reactivations, cancellations, and downgrade contractions to calculated ending MRR.</li>
+      <li><strong>Retention Simulator:</strong> Visualizes the immediate and long-term financial yield of reducing customer attrition.</li>
+      <li><strong>Print, PDF &amp; CSV Export:</strong> Exports audit-ready CSV models and produces clean, print-formatted executive summaries without external dependencies.</li>
+    </ul>
+
+    <h2>How to Use This Calculator Step-by-Step</h2>
+    <ol>
+      <li><strong>Select Currency and Reporting Period:</strong> Choose your operating currency (USD, EUR, GBP, INR, CAD, AUD, SGD, or custom) and specify whether your data reflects monthly, quarterly, or annual billing.</li>
+      <li><strong>Enter Customer Accounts:</strong> Input your active subscribers at the start of the period and enter the count of accounts that cancelled during the window. Add new and reactivated accounts for complete customer reconciliation.</li>
+      <li><strong>Input Recurring Billing Figures (MRR):</strong> Input your starting MRR, actual lost MRR from cancellations, contractions from downgrades, and expansion from existing customer upgrades.</li>
+      <li><strong>Review Automated Diagnostics:</strong> Examine KPI cards, the MRR bridge waterfall, and automated health insights to evaluate tier vulnerabilities.</li>
+      <li><strong>Run Scenario Simulations:</strong> Adjust the Target Churn slider to test the capital-preservation impact of customer retention initiatives over 6, 12, or 24 months.</li>
+      <li><strong>Export Your Analysis:</strong> Click <em>Copy Results Summary</em>, <em>Export CSV Analysis</em>, or <em>Print / PDF Report</em> to share findings with stakeholders.</li>
+    </ol>
+
+    <h2>Primary Use Cases Across Subscription Sectors</h2>
+    <ul>
+      <li><strong>SaaS &amp; Cloud Platforms:</strong> Measure enterprise account retention, track contract downgrade attrition, and calculate NRR targets.</li>
+      <li><strong>Digital Memberships &amp; Media:</strong> Evaluate high-volume B2C customer drop-off curves and calculate the ROI of subscriber retention campaigns.</li>
+      <li><strong>Recurring Billing &amp; Physical Subscriptions:</strong> Forecast supply inventory and evaluate packaging adjustments by combining recurring order attrition analysis with manufacturing parameters. Learn more about inventory order volume constraints using our <a href="https://my-tool-app.pages.dev/wholesale-order-moq-break-even-calculator" class="sc-calc-link">Wholesale Order MOQ Break-Even Calculator</a>.</li>
+      <li><strong>Venture &amp; Angel Due Diligence:</strong> Assess product-market fit by auditing whether gross logo attrition is masked by hyper-expansion in a small tier of enterprise clients.</li>
+    </ul>
+
+    <h2>Governing Financial Formulas &amp; Definitions</h2>
+    <p>This analytics engine strictly follows standard recurring billing accounting rules:</p>
+    
+    <h3>1. Customer Churn Rate (%)</h3>
+    <div class="sc-calc-code-formula">Customer Churn Rate = (Cancelled Customers / Beginning Customers) &times; 100</div>
+    <p><em>Note:</em> Customers acquired during the period are strictly excluded from the denominator to measure cohort survival accurately.</p>
+
+    <h3>2. Customer Retention Rate (%)</h3>
+    <div class="sc-calc-code-formula">Customer Retention Rate = ((Beginning Customers - Cancelled Customers) / Beginning Customers) &times; 100</div>
+
+    <h3>3. Gross Revenue Churn Rate (%)</h3>
+    <div class="sc-calc-code-formula">Gross Revenue Churn = ((Churned MRR + Contraction MRR) / Starting MRR) &times; 100</div>
+    <p>Measures absolute recurring dollar loss from existing customers before upgrades or new sign-ups are factored in.</p>
+
+    <h3>4. Net Revenue Churn Rate (%)</h3>
+    <div class="sc-calc-code-formula">Net Revenue Churn = ((Churned MRR + Contraction MRR - Expansion MRR - Reactivation MRR) / Starting MRR) &times; 100</div>
+    <p>When expansion and reactivation revenue exceed cancellations and downgrades, Net Revenue Churn is negative, indicating organic cohort expansion.</p>
+
+    <h3>5. Net Revenue Retention (NRR) (%)</h3>
+    <div class="sc-calc-code-formula">NRR = ((Starting MRR + Expansion MRR + Reactivation MRR - Churned MRR - Contraction MRR) / Starting MRR) &times; 100</div>
+
+    <h3>6. Gross Revenue Retention (GRR) (%)</h3>
+    <div class="sc-calc-code-formula">GRR = ((Starting MRR - Churned MRR - Contraction MRR) / Starting MRR) &times; 100</div>
+    <p>GRR can never exceed 100% and reflects the baseline retention of your starting MRR cohort without reliance on account expansions.</p>
+
+    <h3>7. Ending MRR &amp; ARR Reconciliation</h3>
+    <div class="sc-calc-code-formula">Ending MRR = Starting MRR + New MRR + Expansion MRR + Reactivation MRR - Churned MRR - Contraction MRR</div>
+    <div class="sc-calc-code-formula">Ending ARR = Ending MRR &times; 12</div>
+
+    <h2>Standard Baseline Benchmark Example Walkthrough</h2>
+    <p>Consider the following representative enterprise baseline:</p>
+    <ul>
+      <li>Beginning Customers: <strong>1,000</strong></li>
+      <li>New Customers: <strong>100</strong> | Cancelled: <strong>50</strong> | Reactivated: <strong>10</strong></li>
+      <li>Starting MRR: <strong>$50,000</strong></li>
+      <li>New MRR: <strong>$5,000</strong> | Churned MRR: <strong>$2,500</strong></li>
+      <li>Expansion MRR: <strong>$1,500</strong> | Contraction MRR: <strong>$500</strong> | Reactivation MRR: <strong>$500</strong></li>
+    </ul>
+    <p><strong>Derived Calculations:</strong></p>
+    <ul>
+      <li><strong>Customer Churn Rate:</strong> 50 / 1,000 = <strong>5.00%</strong></li>
+      <li><strong>Customer Retention Rate:</strong> 950 / 1,000 = <strong>95.00%</strong></li>
+      <li><strong>Ending Customers:</strong> 1,000 + 100 + 10 - 50 = <strong>1,060</strong></li>
+      <li><strong>Gross Revenue Churn:</strong> ($2,500 + $500) / $50,000 = <strong>6.00%</strong></li>
+      <li><strong>Net Revenue Churn:</strong> ($3,000 - $2,000) / $50,000 = <strong>2.00%</strong></li>
+      <li><strong>GRR:</strong> ($50,000 - $3,000) / $50,000 = <strong>94.00%</strong></li>
+      <li><strong>NRR:</strong> ($50,000 + $2,000 - $3,000) / $50,000 = <strong>98.00%</strong></li>
+      <li><strong>Ending MRR:</strong> $50,000 + $5,000 + $1,500 + $500 - $2,500 - $500 = <strong>$54,000</strong></li>
+      <li><strong>Ending ARR:</strong> $54,000 &times; 12 = <strong>$648,000</strong></li>
+    </ul>
+
+    <h2>Assumptions and Analytical Limitations</h2>
+    <p>
+      Calculations assume that billing intervals and revenues are normalized to a consistent monthly base. Annual contracts must be prorated across twelve months (MRR = Contract Value / 12). Transaction gateway fees, variable sales taxes, non-recurring setup fees, and uncollectible write-offs are excluded unless entered as manual contraction adjustments. Multi-year forward forecasts assume constant churn parameters and should be treated as hypothetical scenarios rather than contractual forecasts.
+    </p>
+
+    <h2>Frequently Asked Questions (FAQ)</h2>
+    <div class="sc-calc-faq-block">
+      <h3>What is a subscription churn revenue loss calculator?</h3>
+      <p>It is an analytical financial instrument built to calculate subscriber cancellations, determine monthly recurring revenue losses, assess annual recurring revenue exposure, compute retention metrics (GRR and NRR), and project future recurring revenue under varying customer attrition rates.</p>
+
+      <h3>How do I calculate monthly subscription churn rate?</h3>
+      <p>Divide the total customer accounts that terminated during the calendar month by the active subscriber count at the beginning of that month, then multiply by 100. Accounts acquired during the month are excluded from the initial cohort denominator.</p>
+
+      <h3>How do I calculate MRR loss from cancelled subscriptions?</h3>
+      <p>Sum the individual recurring subscription values of all accounts that cancelled during the period. If itemized account values are not available, multiply the total cancelled subscribers by your Average Revenue Per Account (ARPA).</p>
+
+      <h3>What is the difference between customer churn and revenue churn?</h3>
+      <p>Customer churn tracks the percentage of subscriber accounts lost. Revenue churn calculates the percentage of recurring dollars lost. If a few enterprise customers on high-tier plans cancel, revenue churn can be high even if customer churn remains low.</p>
+
+      <h3>What is the difference between gross revenue churn and net revenue churn?</h3>
+      <p>Gross revenue churn measures only lost dollars (cancellations plus plan downgrades) against starting MRR. Net revenue churn offsets these losses with expansion revenue (tier upgrades, cross-sells) and customer reactivations.</p>
+
+      <h3>How do I calculate annual recurring revenue loss?</h3>
+      <p>To calculate immediate run-rate exposure, multiply monthly churned MRR by 12. For compounding customer loss over 12 months, use the formula: Compounded Annual Churn = (1 - (1 - Monthly Churn Rate)^12) &times; 100.</p>
+
+      <h3>Can a subscription business have negative net revenue churn?</h3>
+      <p>Yes. When expansion revenue and reactivations exceed revenue lost to cancellations and contractions, net revenue churn becomes negative. This indicates that your customer cohort generates net revenue growth over time without counting new acquisitions (NRR &gt; 100%).</p>
+
+      <h3>Is this subscription churn calculator free and private?</h3>
+      <p>Yes. This application operates entirely within your web browser using client-side JavaScript. No subscriber counts, pricing data, or financial metrics are ever transferred to external servers or third-party tracking databases.</p>
+    </div>
+
+    <h2>Related Financial &amp; Billing Resources</h2>
+    <p>
+      To deepen your subscription metrics understanding and explore adjacent operational calculations:
+    </p>
+    <ul>
+      <li><a href="https://my-tool-app.pages.dev/" class="sc-calc-link">Explore More Free Online Tools</a> &ndash; Full catalog of web-based calculation and modeling software.</li>
+      <li><a href="https://my-tool-app.pages.dev/wholesale-order-moq-break-even-calculator" class="sc-calc-link">Wholesale Order MOQ Break-Even Calculator</a> &ndash; Analyze production minimums, fixed run costs, and break-even thresholds for subscription box and physical goods fulfillment.</li>
+      <li><a href="https://docs.stripe.com/billing" class="sc-calc-link" target="_blank" rel="noopener noreferrer">Stripe Billing Documentation</a> &ndash; Authoritative technical guide on recurring webhooks, proration, and subscription lifecycle handling.</li>
+      <li><a href="https://chartmogul.com/blog/" class="sc-calc-link" target="_blank" rel="noopener noreferrer">ChartMogul SaaS Metrics Guides</a> &ndash; Industry definitions covering NRR, GRR, ARPA, and cohort retention benchmarking.</li>
+      <li><a href="https://www.saas-capital.com/blog/" class="sc-calc-link" target="_blank" rel="noopener noreferrer">SaaS Capital Research</a> &ndash; Private SaaS growth benchmarks, valuation multiples, and capital retention impact studies.</li>
+      <li><a href="https://developers.google.com/search/docs/fundamentals/seo-starter-guide" class="sc-calc-link" target="_blank" rel="noopener noreferrer">Google Search Central SEO Guide</a> &ndash; Best practices for search visibility, technical optimization, and structured metadata.</li>
+    </ul>
+  </article>
+
+  <!-- JAVASCRIPT ENGINE -->
+  <script>
+  (function() {
+    'use strict';
+
+    // Unique project state object
+    const scState = {
+      currency: 'USD',
+      currencySymbol: '$',
+      period: 'monthly',
+      liveMode: true,
+      data: {
+        custStart: 1000,
+        custChurned: 50,
+        custNew: 100,
+        custReactivated: 10,
+        custEndVerify: null,
+        mrrStart: 50000,
+        churnMode: 'actual',
+        mrrChurned: 2500,
+        arpaChurnedEst: 50,
+        mrrContraction: 500,
+        mrrExpansion: 1500,
+        mrrReactivation: 500,
+        mrrNew: 5000,
+        mrrEndVerify: null,
+        simTargetChurn: 2.5,
+        simMonths: 12
+      },
+      results: {}
+    };
+
+    const currencyMap = {
+      USD: '$',
+      EUR: '€',
+      GBP: '£',
+      INR: '₹',
+      CAD: 'C$',
+      AUD: 'A$',
+      SGD: 'S$',
+      CUSTOM: '¤'
+    };
+
+    // Safe DOM querying scoped to calculator wrapper
+    const root = document.getElementById('sc-calc-app');
+    if (!root) return;
+
+    function getEl(id) {
+      return root.querySelector('#' + id);
+    }
+
+    function showToast(msg) {
+      const toast = getEl('sc_toast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function formatCurrency(val) {
+      if (isNaN(val) || val === null) return 'N/A';
+      try {
+        if (scState.currency !== 'CUSTOM') {
+          return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: scState.currency,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }).format(val);
+        }
+      } catch (e) {}
+      return scState.currencySymbol + Number(val).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function formatPercent(val) {
+      if (isNaN(val) || val === null || !isFinite(val)) return 'N/A';
+      return (val >= 0 ? '' : '') + Number(val).toFixed(2) + '%';
+    }
+
+    function formatNumber(val) {
+      if (isNaN(val) || val === null) return '0';
+      return Number(val).toLocaleString('en-US');
+    }
+
+    // Input Reading & Validation
+    function syncInputsFromDOM() {
+      scState.currency = getEl('sc_currency_select').value;
+      scState.currencySymbol = currencyMap[scState.currency] || '$';
+      scState.period = getEl('sc_period_select').value;
+      scState.liveMode = getEl('sc_live_mode').checked;
+
+      // Update prefixes throughout DOM
+      root.querySelectorAll('[data-currency-symbol]').forEach(el => {
+        el.textContent = scState.currencySymbol;
+      });
+
+      const churnModeRadio = root.querySelector('input[name="sc_churn_mrr_mode"]:checked');
+      scState.data.churnMode = churnModeRadio ? churnModeRadio.value : 'actual';
+
+      // Numerical parsings
+      const parseVal = (id, isFloat = false) => {
+        const val = getEl(id).value.trim();
+        if (val === '') return null;
+        return isFloat ? parseFloat(val) : parseInt(val, 10);
+      };
+
+      scState.data.custStart = parseVal('sc_cust_start');
+      scState.data.custChurned = parseVal('sc_cust_churned');
+      scState.data.custNew = parseVal('sc_cust_new') || 0;
+      scState.data.custReactivated = parseVal('sc_cust_reactivated') || 0;
+      scState.data.custEndVerify = parseVal('sc_cust_end_verify');
+
+      scState.data.mrrStart = parseVal('sc_mrr_start', true);
+      scState.data.mrrChurned = parseVal('sc_mrr_churned', true);
+      scState.data.arpaChurnedEst = parseVal('sc_arpa_churned_est', true) || 0;
+      scState.data.mrrContraction = parseVal('sc_mrr_contraction', true) || 0;
+      scState.data.mrrExpansion = parseVal('sc_mrr_expansion', true) || 0;
+      scState.data.mrrReactivation = parseVal('sc_mrr_reactivation', true) || 0;
+      scState.data.mrrNew = parseVal('sc_mrr_new', true) || 0;
+      scState.data.mrrEndVerify = parseVal('sc_mrr_end_verify', true);
+
+      scState.data.simTargetChurn = parseFloat(getEl('sc_sim_target_rate').value) || 0;
+      scState.data.simMonths = parseInt(getEl('sc_sim_duration').value, 10) || 12;
+    }
+
+    function validateInputs() {
+      let isValid = true;
+      const d = scState.data;
+
+      // Reset error displays
+      root.querySelectorAll('.sc-calc-form-group').forEach(el => el.classList.remove('has-error'));
+
+      if (d.custStart === null || isNaN(d.custStart) || d.custStart < 0) {
+        getEl('grp_cust_start').classList.add('has-error');
+        isValid = false;
+      }
+
+      if (d.custChurned === null || isNaN(d.custChurned) || d.custChurned < 0) {
+        getEl('grp_cust_churned').classList.add('has-error');
+        isValid = false;
+      } else if (d.custStart !== null && d.custChurned > d.custStart) {
+        getEl('grp_cust_churned').classList.add('has-error');
+        isValid = false;
+      }
+
+      if (d.mrrStart === null || isNaN(d.mrrStart) || d.mrrStart < 0) {
+        getEl('grp_mrr_start').classList.add('has-error');
+        isValid = false;
+      }
+
+      if (d.churnMode === 'actual') {
+        if (d.mrrChurned === null || isNaN(d.mrrChurned) || d.mrrChurned < 0) {
+          getEl('wrap_churn_actual').classList.add('has-error');
+          isValid = false;
+        } else if (d.mrrStart !== null && d.mrrChurned > d.mrrStart) {
+          getEl('wrap_churn_actual').classList.add('has-error');
+          isValid = false;
+        }
+      }
+
+      return isValid;
+    }
+
+    // Mathematical Calculation Core
+    function executeCalculations() {
+      if (!validateInputs()) return;
+
+      const d = scState.data;
+
+      // 1. Customer Metrics
+      const custStart = d.custStart;
+      const custChurned = d.custChurned;
+      const custNew = d.custNew;
+      const custReactivated = d.custReactivated;
+
+      const endingCustCalc = custStart + custNew + custReactivated - custChurned;
+      const netCustChange = custNew + custReactivated - custChurned;
+      const custChurnRate = custStart > 0 ? (custChurned / custStart) * 100 : null;
+      const custRetentionRate = custStart > 0 ? ((custStart - custChurned) / custStart) * 100 : null;
+
+      // 2. Revenue Metrics
+      const mrrStart = d.mrrStart;
+      let effectiveChurnedMRR = d.mrrChurned;
+      if (d.churnMode === 'estimated') {
+        effectiveChurnedMRR = custChurned * d.arpaChurnedEst;
+      }
+
+      const mrrContraction = d.mrrContraction;
+      const mrrExpansion = d.mrrExpansion;
+      const mrrReactivation = d.mrrReactivation;
+      const mrrNew = d.mrrNew;
+
+      const grossRevChurnRate = mrrStart > 0 ? ((effectiveChurnedMRR + mrrContraction) / mrrStart) * 100 : null;
+      const netRevChurnRate = mrrStart > 0 ? ((effectiveChurnedMRR + mrrContraction - mrrExpansion - mrrReactivation) / mrrStart) * 100 : null;
+      const grrPct = mrrStart > 0 ? ((mrrStart - effectiveChurnedMRR - mrrContraction) / mrrStart) * 100 : null;
+      const nrrPct = mrrStart > 0 ? ((mrrStart + mrrExpansion + mrrReactivation - effectiveChurnedMRR - mrrContraction) / mrrStart) * 100 : null;
+
+      const endingMRRCalc = mrrStart + mrrNew + mrrExpansion + mrrReactivation - effectiveChurnedMRR - mrrContraction;
+      const endingARRCalc = endingMRRCalc * 12;
+      const annualizedLostMRR = effectiveChurnedMRR * 12;
+      const arpa = custStart > 0 ? mrrStart / custStart : 0;
+
+      // Store in results state
+      scState.results = {
+        custStart,
+        custChurned,
+        custNew,
+        custReactivated,
+        endingCustCalc,
+        netCustChange,
+        custChurnRate,
+        custRetentionRate,
+        mrrStart,
+        effectiveChurnedMRR,
+        mrrContraction,
+        mrrExpansion,
+        mrrReactivation,
+        mrrNew,
+        grossRevChurnRate,
+        netRevChurnRate,
+        grrPct,
+        nrrPct,
+        endingMRRCalc,
+        endingARRCalc,
+        annualizedLostMRR,
+        arpa
+      };
+
+      renderResultsToDOM();
+      renderWaterfallBridgeSVG();
+      renderDonutSVG();
+      renderSimulation();
+      renderForecastTable();
+      renderAutomatedInsights();
+    }
+
+    // Render Outputs
+    function renderResultsToDOM() {
+      const r = scState.results;
+
+      getEl('disp_cust_churn_pct').textContent = formatPercent(r.custChurnRate);
+      getEl('disp_cust_ret_pct').textContent = formatPercent(r.custRetentionRate);
+      getEl('disp_mrr_churned').textContent = formatCurrency(r.effectiveChurnedMRR);
+      getEl('disp_arr_exposure').textContent = 'Annual Run-Rate Exposure: ' + formatCurrency(r.annualizedLostMRR);
+
+      getEl('disp_gross_rev_churn').textContent = formatPercent(r.grossRevChurnRate);
+      getEl('disp_net_rev_churn').textContent = formatPercent(r.netRevChurnRate);
+
+      const netChurnCard = getEl('card_net_churn');
+      if (r.netRevChurnRate !== null && r.netRevChurnRate < 0) {
+        netChurnCard.className = 'sc-calc-kpi-card kpi-success';
+        getEl('disp_net_churn_desc').textContent = 'Net Expansion (Cohort Growing)';
+      } else {
+        netChurnCard.className = 'sc-calc-kpi-card kpi-warning';
+        getEl('disp_net_churn_desc').textContent = 'Net cohort revenue contraction';
+      }
+
+      getEl('disp_nrr_pct').textContent = formatPercent(r.nrrPct);
+      getEl('disp_grr_pct').textContent = formatPercent(r.grrPct);
+      getEl('disp_ending_mrr').textContent = formatCurrency(r.endingMRRCalc);
+      getEl('disp_ending_arr').textContent = 'Ending ARR: ' + formatCurrency(r.endingARRCalc);
+
+      // Customer count reconciliation check
+      const custAlert = getEl('sc_cust_recon_alert');
+      if (scState.data.custEndVerify !== null) {
+        const diff = scState.data.custEndVerify - r.endingCustCalc;
+        if (diff !== 0) {
+          custAlert.style.display = 'block';
+          custAlert.textContent = `Reconciliation Notice: Reported ending customer count (${scState.data.custEndVerify}) differs from calculated ledger balance (${r.endingCustCalc}) by ${diff > 0 ? '+' : ''}${diff} accounts.`;
+        } else {
+          custAlert.style.display = 'none';
+        }
+      } else {
+        custAlert.style.display = 'none';
+      }
+
+      // MRR count reconciliation check
+      const mrrAlert = getEl('sc_mrr_recon_alert');
+      if (scState.data.mrrEndVerify !== null) {
+        const diff = scState.data.mrrEndVerify - r.endingMRRCalc;
+        if (Math.abs(diff) > 0.01) {
+          mrrAlert.style.display = 'block';
+          mrrAlert.textContent = `Reconciliation Notice: Reported ending MRR (${formatCurrency(scState.data.mrrEndVerify)}) differs from calculated balance (${formatCurrency(r.endingMRRCalc)}) by ${diff > 0 ? '+' : ''}${formatCurrency(diff)}.`;
+        } else {
+          mrrAlert.style.display = 'none';
+        }
+      } else {
+        mrrAlert.style.display = 'none';
+      }
+    }
+
+    // SVG Waterfall Chart Generator
+    function renderWaterfallBridgeSVG() {
+      const container = getEl('sc_svg_bridge_container');
+      const r = scState.results;
+      if (!container || !r.mrrStart) return;
+
+      const items = [
+        { label: 'Start MRR', val: r.mrrStart, type: 'base' },
+        { label: '+New', val: r.mrrNew, type: 'pos' },
+        { label: '+Expansion', val: r.mrrExpansion, type: 'pos' },
+        { label: '+Reactivate', val: r.mrrReactivation, type: 'pos' },
+        { label: '-Churn', val: -r.effectiveChurnedMRR, type: 'neg' },
+        { label: '-Contraction', val: -r.mrrContraction, type: 'neg' },
+        { label: 'Ending MRR', val: r.endingMRRCalc, type: 'total' }
+      ];
+
+      const width = 640;
+      const height = 240;
+      const padding = { top: 25, right: 20, bottom: 45, left: 60 };
+      const chartW = width - padding.left - padding.right;
+      const chartH = height - padding.top - padding.bottom;
+
+      let maxVal = Math.max(r.mrrStart, r.endingMRRCalc, (r.mrrStart + r.mrrNew + r.mrrExpansion + r.mrrReactivation)) * 1.15;
+      if (maxVal <= 0) maxVal = 1000;
+
+      const yScale = (v) => chartH - (v / maxVal) * chartH;
+      const colWidth = (chartW / items.length) * 0.72;
+      const colGap = chartW / items.length;
+
+      let running = 0;
+      let rects = '';
+
+      items.forEach((item, i) => {
+        const x = padding.left + i * colGap + (colGap - colWidth) / 2;
+        let y, h, fill;
+
+        if (item.type === 'base' || item.type === 'total') {
+          y = padding.top + yScale(item.val);
+          h = chartH - yScale(item.val);
+          fill = item.type === 'base' ? '#2563eb' : '#0f172a';
+          if (item.type === 'base') running = item.val;
+        } else if (item.type === 'pos') {
+          const next = running + item.val;
+          y = padding.top + yScale(next);
+          h = Math.abs(yScale(next) - yScale(running));
+          running = next;
+          fill = '#16a34a';
+        } else if (item.type === 'neg') {
+          const next = running + item.val;
+          y = padding.top + yScale(running);
+          h = Math.abs(yScale(running) - yScale(next));
+          running = next;
+          fill = '#dc2626';
+        }
+
+        const displayLabel = item.val >= 0 ? '+' + (item.val/1000).toFixed(1) + 'k' : (item.val/1000).toFixed(1) + 'k';
+        const formattedVal = (item.type === 'base' || item.type === 'total') ? (item.val/1000).toFixed(1) + 'k' : displayLabel;
+
+        rects += `
+          <g>
+            <rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${colWidth.toFixed(1)}" height="${Math.max(h, 2).toFixed(1)}" rx="3" fill="${fill}" />
+            <text x="${(x + colWidth/2).toFixed(1)}" y="${(y - 6).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="600" fill="#334155">${formattedVal}</text>
+            <text x="${(x + colWidth/2).toFixed(1)}" y="${(height - 14).toFixed(1)}" text-anchor="middle" font-size="10" fill="#64748b">${item.label}</text>
+          </g>
+        `;
+      });
+
+      // Axis lines
+      const baselineY = padding.top + chartH;
+      const svg = `
+        <svg viewBox="0 0 ${width} ${height}" width="100%" height="220" preserveAspectRatio="xMidYMid meet">
+          <line x1="${padding.left}" y1="${baselineY}" x2="${width - padding.right}" y2="${baselineY}" stroke="#cbd5e1" stroke-width="1" />
+          ${rects}
+        </svg>
+      `;
+      container.innerHTML = svg;
+    }
+
+    // SVG Donut Chart Generator
+    function renderDonutSVG() {
+      const container = getEl('sc_svg_donut_container');
+      const r = scState.results;
+      if (!container || !r.custStart) return;
+
+      const retained = Math.max(0, r.custStart - r.custChurned);
+      const churned = r.custChurned;
+      const total = retained + churned;
+
+      const pctRetained = total > 0 ? (retained / total) * 100 : 100;
+      const pctChurned = total > 0 ? (churned / total) * 100 : 0;
+
+      const radius = 60;
+      const circ = 2 * Math.PI * radius;
+      const strokeRetained = (pctRetained / 100) * circ;
+      const strokeChurned = (pctChurned / 100) * circ;
+
+      const svg = `
+        <svg viewBox="0 0 280 160" width="100%" height="150" preserveAspectRatio="xMidYMid meet">
+          <g transform="translate(80, 80) rotate(-90)">
+            <circle cx="0" cy="0" r="${radius}" fill="none" stroke="#dc2626" stroke-width="20" stroke-dasharray="${strokeChurned} ${circ}" stroke-dashoffset="0" />
+            <circle cx="0" cy="0" r="${radius}" fill="none" stroke="#16a34a" stroke-width="20" stroke-dasharray="${strokeRetained} ${circ}" stroke-dashoffset="${-strokeChurned}" />
+          </g>
+          <!-- Center Text -->
+          <text x="80" y="76" text-anchor="middle" font-size="16" font-weight="800" fill="#0f172a">${pctRetained.toFixed(1)}%</text>
+          <text x="80" y="92" text-anchor="middle" font-size="9" fill="#64748b">Retained</text>
+          
+          <!-- Legend -->
+          <g transform="translate(170, 50)">
+            <circle cx="0" cy="0" r="5" fill="#16a34a" />
+            <text x="12" y="4" font-size="11" font-weight="600" fill="#0f172a">Retained Logos</text>
+            <text x="12" y="18" font-size="10" fill="#64748b">${formatNumber(retained)} (${pctRetained.toFixed(1)}%)</text>
+
+            <circle cx="0" cy="38" r="5" fill="#dc2626" />
+            <text x="12" y="42" font-size="11" font-weight="600" fill="#0f172a">Cancelled Logos</text>
+            <text x="12" y="56" font-size="10" fill="#64748b">${formatNumber(churned)} (${pctChurned.toFixed(1)}%)</text>
+          </g>
+        </svg>
+      `;
+      container.innerHTML = svg;
+    }
+
+    // Retention Improvement Simulator Calculations & SVG
+    function renderSimulation() {
+      const r = scState.results;
+      const currentRate = r.custChurnRate !== null ? r.custChurnRate / 100 : 0.05;
+      const targetRate = Math.max(0, scState.data.simTargetChurn / 100);
+      const months = scState.data.simMonths;
+      const startCust = r.custStart || 1000;
+      const arpa = r.arpa || (r.mrrStart / startCust) || 50;
+
+      // Compound survival: Retained = Start * (1 - rate)^months
+      const currSurvivors = startCust * Math.pow(Math.max(0, 1 - currentRate), months);
+      const targetSurvivors = startCust * Math.pow(Math.max(0, 1 - targetRate), months);
+
+      const custPreserved = Math.max(0, Math.round(targetSurvivors - currSurvivors));
+      const mrrPreserved = custPreserved * arpa;
+      const arrPreserved = mrrPreserved * 12;
+
+      getEl('disp_sim_cust_saved').textContent = formatNumber(custPreserved);
+      getEl('disp_sim_mrr_saved').textContent = formatCurrency(mrrPreserved);
+      getEl('disp_sim_arr_saved').textContent = formatCurrency(arrPreserved);
+
+      // Render Comparison SVG Bar
+      const simContainer = getEl('sc_svg_sim_container');
+      if (!simContainer) return;
+
+      const w = 480;
+      const h = 100;
+      const maxC = Math.max(startCust, 1);
+      const currW = (currSurvivors / maxC) * 320;
+      const targetW = (targetSurvivors / maxC) * 320;
+
+      const svg = `
+        <svg viewBox="0 0 ${w} ${h}" width="100%" height="90" preserveAspectRatio="xMidYMid meet">
+          <!-- Baseline Scenario -->
+          <text x="10" y="24" font-size="11" font-weight="600" fill="#475569">Current Rate (${(currentRate*100).toFixed(1)}%):</text>
+          <rect x="140" y="12" width="320" height="16" rx="4" fill="#f1f5f9" />
+          <rect x="140" y="12" width="${Math.max(currW, 4)}" height="16" rx="4" fill="#94a3b8" />
+          <text x="${145 + currW}" y="24" font-size="10" font-weight="700" fill="#0f172a"> ${Math.round(currSurvivors)} accounts</text>
+
+          <!-- Improved Target -->
+          <text x="10" y="64" font-size="11" font-weight="600" fill="#16a34a">Target Rate (${(targetRate*100).toFixed(1)}%):</text>
+          <rect x="140" y="52" width="320" height="16" rx="4" fill="#f1f5f9" />
+          <rect x="140" y="52" width="${Math.max(targetW, 4)}" height="16" rx="4" fill="#16a34a" />
+          <text x="${145 + targetW}" y="64" font-size="10" font-weight="700" fill="#16a34a"> ${Math.round(targetSurvivors)} accounts (+${custPreserved})</text>
+        </svg>
+      `;
+      simContainer.innerHTML = svg;
+    }
+
+    // Forward Scenario Forecast Table
+    function renderForecastTable() {
+      const tableBody = root.querySelector('#sc_forecast_table tbody');
+      if (!tableBody) return;
+
+      const r = scState.results;
+      const horizons = [3, 6, 12, 24];
+      const monthlyChurn = r.custChurnRate !== null ? (r.custChurnRate / 100) : 0.05;
+      const baseMRR = r.mrrStart || 50000;
+      const monthlyNetRevGrowthRate = baseMRR > 0 ? ((r.endingMRRCalc - baseMRR) / baseMRR) : 0;
+
+      let html = '';
+      horizons.forEach(h => {
+        const retainedCust = Math.round((r.custStart || 1000) * Math.pow(Math.max(0, 1 - monthlyChurn), h));
+        const baseProjectedMRR = baseMRR * Math.pow(1 + monthlyNetRevGrowthRate, h);
+        const consProjectedMRR = baseMRR * Math.pow(1 + (monthlyNetRevGrowthRate * 0.8 - (monthlyChurn * 0.2)), h);
+        const imprProjectedMRR = baseMRR * Math.pow(1 + (monthlyNetRevGrowthRate * 1.2 + (monthlyChurn * 0.2)), h);
+        const cumLost = (r.effectiveChurnedMRR || 0) * h;
+
+        html += `
+          <tr>
+            <td><strong>${h} Months</strong></td>
+            <td>${formatNumber(retainedCust)}</td>
+            <td><strong>${formatCurrency(baseProjectedMRR)}</strong></td>
+            <td style="color:var(--sc-warning);">${formatCurrency(consProjectedMRR)}</td>
+            <td style="color:var(--sc-success);">${formatCurrency(imprProjectedMRR)}</td>
+            <td style="color:var(--sc-danger);">${formatCurrency(cumLost)}</td>
+          </tr>
+        `;
+      });
+
+      tableBody.innerHTML = html;
+    }
+
+    // Automated Cohort Health Diagnostics
+    function renderAutomatedInsights() {
+      const list = getEl('sc_insights_list');
+      if (!list) return;
+
+      const r = scState.results;
+      const insights = [];
+
+      // Logo vs Dollar Churn divergence
+      if (r.grossRevChurnRate !== null && r.custChurnRate !== null) {
+        if (r.grossRevChurnRate > r.custChurnRate * 1.25) {
+          insights.push(`<strong>High-Value Contraction Risk:</strong> Gross revenue churn (${formatPercent(r.grossRevChurnRate)}) outpaces logo churn (${formatPercent(r.custChurnRate)}). Larger tier subscriptions or enterprise customers are leaving or downgrading.`);
+        } else if (r.custChurnRate > r.grossRevChurnRate * 1.25) {
+          insights.push(`<strong>Low-Tier Vulnerability:</strong> Logo churn (${formatPercent(r.custChurnRate)}) is significantly higher than revenue churn (${formatPercent(r.grossRevChurnRate)}). Churn is concentrated in entry-tier accounts with lower average revenue.`);
+        } else {
+          insights.push(`<strong>Balanced Attrition:</strong> Logo churn (${formatPercent(r.custChurnRate)}) and revenue churn (${formatPercent(r.grossRevChurnRate)}) are closely aligned, showing uniform cancellation patterns across pricing tiers.`);
+        }
+      }
+
+      // Net Revenue Retention Health
+      if (r.nrrPct !== null) {
+        if (r.nrrPct >= 100) {
+          insights.push(`<strong>Net Expansion Cohort (NRR: ${formatPercent(r.nrrPct)}):</strong> Your expansion and reactivation MRR surpass gross losses. The customer cohort naturally expands over time without factoring in new customer acquisition.`);
+        } else if (r.nrrPct >= 90) {
+          insights.push(`<strong>Stable Baseline Cohort (NRR: ${formatPercent(r.nrrPct)}):</strong> Moderate net contraction. Expansion partially mitigates cancellations, maintaining a manageable foundation for growth.`);
+        } else {
+          insights.push(`<strong>Leaky Cohort Alert (NRR: ${formatPercent(r.nrrPct)}):</strong> Existing cohort revenue is contracting rapidly. New sales must overcome significant recurring losses to generate net company growth.`);
+        }
+      }
+
+      // GRR Check
+      if (r.grrPct !== null) {
+        if (r.grrPct >= 95) {
+          insights.push(`<strong>Resilient Baseline (GRR: ${formatPercent(r.grrPct)}):</strong> Exceptional revenue defense before accounting for upsells or seat expansions.`);
+        } else if (r.grrPct < 85) {
+          insights.push(`<strong>Downgrade &amp; Churn Exposure (GRR: ${formatPercent(r.grrPct)}):</strong> High core revenue attrition. Review pricing models, onboarding, and customer success touchpoints.`);
+        }
+      }
+
+      // Annualized ARR exposure summary
+      if (r.annualizedLostMRR > 0) {
+        insights.push(`<strong>Annualized Risk Exposure:</strong> At the current churn rate of ${formatCurrency(r.effectiveChurnedMRR)}/month, you face an annualized recurring revenue loss of <strong>${formatCurrency(r.annualizedLostMRR)}</strong> if unaddressed.`);
+      }
+
+      list.innerHTML = insights.map(item => `<li>${item}</li>`).join('');
+    }
+
+    // Populate Reference Example
+    function loadExampleData() {
+      getEl('sc_cust_start').value = 1000;
+      getEl('sc_cust_new').value = 100;
+      getEl('sc_cust_churned').value = 50;
+      getEl('sc_cust_reactivated').value = 10;
+      getEl('sc_cust_end_verify').value = '';
+
+      getEl('sc_mrr_start').value = 50000;
+      getEl('sc_mrr_new').value = 5000;
+      getEl('sc_mrr_churned').value = 2500;
+      getEl('sc_mrr_expansion').value = 1500;
+      getEl('sc_mrr_contraction').value = 500;
+      getEl('sc_mrr_reactivation').value = 500;
+      getEl('sc_mrr_end_verify').value = '';
+
+      const actualRadio = root.querySelector('input[name="sc_churn_mrr_mode"][value="actual"]');
+      if (actualRadio) actualRadio.checked = true;
+      getEl('wrap_churn_actual').style.display = 'block';
+      getEl('wrap_churn_est').style.display = 'none';
+
+      getEl('sc_sim_target_rate').value = 2.5;
+      getEl('sc_sim_duration').value = '12';
+
+      syncInputsFromDOM();
+      executeCalculations();
+      showToast('Loaded standard SaaS benchmark reference dataset.');
+    }
+
+    // Reset All Inputs
+    function resetCalculator() {
+      if (confirm('Reset all values to default empty inputs?')) {
+        root.querySelectorAll('.sc-calc-input').forEach(input => input.value = '');
+        getEl('sc_sim_target_rate').value = 2.5;
+        getEl('sc_sim_duration').value = '12';
+        syncInputsFromDOM();
+        executeCalculations();
+        showToast('All fields have been reset.');
+      }
+    }
+
+    // Local Storage Data Persistence
+    function saveToLocalStorage() {
+      try {
+        syncInputsFromDOM();
+        localStorage.setItem('sc_calc_saved_data', JSON.stringify(scState.data));
+        getEl('sc_btn_clear_local').style.display = 'inline-flex';
+        showToast('Inputs securely saved to local browser storage.');
+      } catch (e) {
+        showToast('Unable to access browser localStorage.');
+      }
+    }
+
+    function loadFromLocalStorage() {
+      try {
+        const saved = localStorage.getItem('sc_calc_saved_data');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          Object.assign(scState.data, parsed);
+
+          getEl('sc_cust_start').value = parsed.custStart || '';
+          getEl('sc_cust_churned').value = parsed.custChurned || '';
+          getEl('sc_cust_new').value = parsed.custNew || '';
+          getEl('sc_cust_reactivated').value = parsed.custReactivated || '';
+          getEl('sc_mrr_start').value = parsed.mrrStart || '';
+          getEl('sc_mrr_churned').value = parsed.mrrChurned || '';
+          getEl('sc_mrr_contraction').value = parsed.mrrContraction || '';
+          getEl('sc_mrr_expansion').value = parsed.mrrExpansion || '';
+          getEl('sc_mrr_reactivation').value = parsed.mrrReactivation || '';
+          getEl('sc_mrr_new').value = parsed.mrrNew || '';
+          
+          getEl('sc_btn_clear_local').style.display = 'inline-flex';
+        }
+      } catch (e) {}
+    }
+
+    function clearLocalStorage() {
+      try {
+        localStorage.removeItem('sc_calc_saved_data');
+        getEl('sc_btn_clear_local').style.display = 'none';
+        showToast('Local browser storage cleared.');
+      } catch (e) {}
+    }
+
+    // Copy Results Summary
+    function copyResultsSummary() {
+      const r = scState.results;
+      if (!r.custStart) {
+        showToast('Please calculate results before copying.');
+        return;
+      }
+
+      const summary = [
+        `--- SUBSCRIPTION CHURN & REVENUE LOSS ANALYSIS ---`,
+        `Reporting Period: ${scState.period.toUpperCase()} (${scState.currency})`,
+        `Customer Churn Rate: ${formatPercent(r.custChurnRate)}`,
+        `Customer Retention Rate: ${formatPercent(r.custRetentionRate)}`,
+        `Active Customers: ${formatNumber(r.custStart)} Start -> ${formatNumber(r.endingCustCalc)} Ending`,
+        `--------------------------------------------------`,
+        `Starting MRR: ${formatCurrency(r.mrrStart)}`,
+        `Lost MRR (Cancellations): ${formatCurrency(r.effectiveChurnedMRR)}`,
+        `Gross Revenue Churn: ${formatPercent(r.grossRevChurnRate)}`,
+        `Net Revenue Churn: ${formatPercent(r.netRevChurnRate)}`,
+        `Gross Revenue Retention (GRR): ${formatPercent(r.grrPct)}`,
+        `Net Revenue Retention (NRR): ${formatPercent(r.nrrPct)}`,
+        `Ending MRR: ${formatCurrency(r.endingMRRCalc)} | ARR: ${formatCurrency(r.endingARRCalc)}`,
+        `Annualized Lost Revenue Exposure: ${formatCurrency(r.annualizedLostMRR)}`,
+        `Generated via https://my-tool-app.pages.dev/subscription-churn-revenue-loss-calculator`
+      ].join('\n');
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(summary).then(() => {
+          showToast('Results summary copied to clipboard.');
+        }).catch(() => {
+          fallbackCopyText(summary);
+        });
+      } else {
+        fallbackCopyText(summary);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('Results summary copied to clipboard.');
+      } catch (err) {
+        showToast('Failed to copy. Please manually copy results.');
+      }
+      document.body.removeChild(ta);
+    }
+
+    // Export CSV Analysis
+    function exportCSVAnalysis() {
+      const r = scState.results;
+      if (!r.custStart) {
+        showToast('Calculate metrics prior to export.');
+        return;
+      }
+
+      const rows = [
+        ['Metric Category', 'Parameter', 'Calculated Value', 'Currency/Unit'],
+        ['Account Cohort', 'Beginning Customers', r.custStart, 'Accounts'],
+        ['Account Cohort', 'New Customers Acquired', r.custNew, 'Accounts'],
+        ['Account Cohort', 'Cancelled Customers', r.custChurned, 'Accounts'],
+        ['Account Cohort', 'Reactivated Customers', r.custReactivated, 'Accounts'],
+        ['Account Cohort', 'Calculated Ending Customers', r.endingCustCalc, 'Accounts'],
+        ['Account Cohort', 'Customer Churn Rate', (r.custChurnRate || 0).toFixed(4), '%'],
+        ['Account Cohort', 'Customer Retention Rate', (r.custRetentionRate || 0).toFixed(4), '%'],
+        ['Recurring Revenue', 'Starting MRR', (r.mrrStart || 0).toFixed(2), scState.currency],
+        ['Recurring Revenue', 'Lost Churned MRR', (r.effectiveChurnedMRR || 0).toFixed(2), scState.currency],
+        ['Recurring Revenue', 'Contraction MRR (Downgrades)', (r.mrrContraction || 0).toFixed(2), scState.currency],
+        ['Recurring Revenue', 'Expansion MRR (Upgrades)', (r.mrrExpansion || 0).toFixed(2), scState.currency],
+        ['Recurring Revenue', 'Reactivation MRR', (r.mrrReactivation || 0).toFixed(2), scState.currency],
+        ['Recurring Revenue', 'New Customer MRR', (r.mrrNew || 0).toFixed(2), scState.currency],
+        ['Recurring Revenue', 'Calculated Ending MRR', (r.endingMRRCalc || 0).toFixed(2), scState.currency],
+        ['Recurring Revenue', 'Calculated Ending ARR', (r.endingARRCalc || 0).toFixed(2), scState.currency],
+        ['SaaS Retention Ratios', 'Gross Revenue Churn Rate', (r.grossRevChurnRate || 0).toFixed(4), '%'],
+        ['SaaS Retention Ratios', 'Net Revenue Churn Rate', (r.netRevChurnRate || 0).toFixed(4), '%'],
+        ['SaaS Retention Ratios', 'Gross Revenue Retention (GRR)', (r.grrPct || 0).toFixed(4), '%'],
+        ['SaaS Retention Ratios', 'Net Revenue Retention (NRR)', (r.nrrPct || 0).toFixed(4), '%'],
+        ['Exposure Risk', 'Annualized Lost MRR Exposure', (r.annualizedLostMRR || 0).toFixed(2), scState.currency]
+      ];
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + rows.map(e => e.map(item => `"${String(item).replace(/"/g, '""')}"`).join(',')).join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `subscription-churn-analysis-${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('CSV export downloaded successfully.');
+    }
+
+    // Attach Event Listeners Safely
+    function initEvents() {
+      getEl('sc_btn_calculate').addEventListener('click', () => {
+        syncInputsFromDOM();
+        executeCalculations();
+      });
+
+      getEl('sc_btn_load_example').addEventListener('click', loadExampleData);
+      getEl('sc_btn_reset').addEventListener('click', resetCalculator);
+      getEl('sc_btn_save_local').addEventListener('click', saveToLocalStorage);
+      getEl('sc_btn_clear_local').addEventListener('click', clearLocalStorage);
+      getEl('sc_btn_copy_summary').addEventListener('click', copyResultsSummary);
+      getEl('sc_btn_export_csv').addEventListener('click', exportCSVAnalysis);
+      getEl('sc_btn_print').addEventListener('click', () => window.print());
+
+      getEl('sc_currency_select').addEventListener('change', () => {
+        syncInputsFromDOM();
+        if (scState.liveMode) executeCalculations();
+      });
+
+      getEl('sc_period_select').addEventListener('change', () => {
+        syncInputsFromDOM();
+        if (scState.liveMode) executeCalculations();
+      });
+
+      getEl('sc_live_mode').addEventListener('change', (e) => {
+        scState.liveMode = e.target.checked;
+      });
+
+      // Churn Mode Radio Toggle
+      root.querySelectorAll('input[name="sc_churn_mrr_mode"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          if (e.target.value === 'actual') {
+            getEl('wrap_churn_actual').style.display = 'block';
+            getEl('wrap_churn_est').style.display = 'none';
+          } else {
+            getEl('wrap_churn_actual').style.display = 'none';
+            getEl('wrap_churn_est').style.display = 'block';
+          }
+          syncInputsFromDOM();
+          if (scState.liveMode) executeCalculations();
+        });
+      });
+
+      // Simulator dynamic update
+      getEl('sc_sim_target_rate').addEventListener('input', () => {
+        syncInputsFromDOM();
+        renderSimulation();
+      });
+      getEl('sc_sim_duration').addEventListener('change', () => {
+        syncInputsFromDOM();
+        renderSimulation();
+      });
+
+      // Live Calculation input listener (debounced)
+      let debounceTimer = null;
+      root.querySelectorAll('.sc-calc-input').forEach(input => {
+        input.addEventListener('input', () => {
+          if (!scState.liveMode) return;
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => {
+            syncInputsFromDOM();
+            executeCalculations();
+          }, 150);
+        });
+      });
+    }
+
+    // Initialize application safely
+    function init() {
+      initEvents();
+      loadFromLocalStorage();
+      // Auto-load reference standard baseline on first launch
+      loadExampleData();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+  </script>
+</div>
