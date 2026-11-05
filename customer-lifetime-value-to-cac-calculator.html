@@ -1,0 +1,2076 @@
+<!-- ==========================================================================
+     CUSTOMER LIFETIME VALUE TO CUSTOMER ACQUISITION COST (CLV:CAC) CALCULATOR
+     Fully Self-Contained Web Utility Tool for Google Blogger / Web Embedding
+     ========================================================================== -->
+
+<div id="clvcac-app-root" class="clvcac-container">
+
+  <!-- ==================== HEADER SECTION ==================== -->
+  <header class="clvcac-header">
+    <h1 class="clvcac-main-title">Customer Lifetime Value to CAC Calculator</h1>
+    <p class="clvcac-subtitle">
+      Analyze customer unit economics, acquisition payback periods, gross margin efficiency, and multi-channel acquisition ROI.
+    </p>
+  </header>
+
+  <!-- ==================== TOP CONTROLS BAR ==================== -->
+  <section class="clvcac-top-bar" aria-label="Calculator Settings">
+    <div class="clvcac-control-group">
+      <label for="clvcac-business-model" class="clvcac-label">Business Model</label>
+      <select id="clvcac-business-model" class="clvcac-select">
+        <option value="ecommerce" selected>eCommerce / DTC</option>
+        <option value="saas">SaaS (Software as a Service)</option>
+        <option value="subscription">Subscription Business</option>
+        <option value="marketplace">Marketplace</option>
+        <option value="service">Agency / Professional Service</option>
+        <option value="other">Other / Custom</option>
+      </select>
+    </div>
+
+    <div class="clvcac-control-group">
+      <label for="clvcac-currency" class="clvcac-label">Currency Symbol</label>
+      <select id="clvcac-currency" class="clvcac-select">
+        <option value="$" selected>USD ($)</option>
+        <option value="₹">INR (₹)</option>
+        <option value="€">EUR (€)</option>
+        <option value="£">GBP (£)</option>
+        <option value="CA$">CAD (CA$)</option>
+        <option value="A$">AUD (A$)</option>
+        <option value="د.إ">AED (د.إ)</option>
+        <option value="S$">SGD (S$)</option>
+        <option value="custom">Custom...</option>
+      </select>
+    </div>
+
+    <div class="clvcac-control-group clvcac-hidden" id="clvcac-custom-currency-wrap">
+      <label for="clvcac-custom-currency" class="clvcac-label">Symbol</label>
+      <input type="text" id="clvcac-custom-currency" class="clvcac-input" maxlength="4" placeholder="$" value="$">
+    </div>
+
+    <div class="clvcac-control-group">
+      <label class="clvcac-label">Analysis Mode</label>
+      <div class="clvcac-toggle-pills" role="radiogroup" aria-label="Analysis Mode Toggle">
+        <button type="button" class="clvcac-pill clvcac-pill-active" id="clvcac-mode-simple" aria-checked="true" role="radio">Simple</button>
+        <button type="button" class="clvcac-pill" id="clvcac-mode-advanced" aria-checked="false" role="radio">Advanced</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MAIN WORKSPACE GRID ==================== -->
+  <div class="clvcac-workspace-grid">
+
+    <!-- LEFT COLUMN: INPUT FORMS -->
+    <main class="clvcac-form-column" aria-label="Calculator Inputs">
+
+      <!-- Action Buttons -->
+      <div class="clvcac-action-row">
+        <button type="button" class="clvcac-btn clvcac-btn-primary" id="clvcac-btn-calculate">
+          <svg class="clvcac-btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2h6v2H7V4zm0 4h6v2H7V8zm0 4h6v2H7v-2z" clip-rule="evenodd"/></svg>
+          Calculate Results
+        </button>
+        <button type="button" class="clvcac-btn clvcac-btn-outline" id="clvcac-btn-example">Load Example</button>
+        <button type="button" class="clvcac-btn clvcac-btn-outline" id="clvcac-btn-reset">Reset</button>
+      </div>
+
+      <!-- Section 1: Customer Acquisition Costs (CAC) -->
+      <fieldset class="clvcac-card clvcac-input-card">
+        <legend class="clvcac-card-header">
+          <span class="clvcac-step-badge">1</span>
+          Customer Acquisition Costs (CAC)
+        </legend>
+        
+        <div class="clvcac-form-grid">
+          <div class="clvcac-field">
+            <label for="clvcac-ad-spend" class="clvcac-label">Advertising Spend (<span class="clvcac-curr-sym">$</span>)</label>
+            <input type="number" id="clvcac-ad-spend" class="clvcac-input clvcac-calc-trigger" min="0" step="any" placeholder="0" value="12000">
+            <div class="clvcac-error-msg" id="clvcac-err-ad-spend"></div>
+          </div>
+
+          <div class="clvcac-field">
+            <label for="clvcac-customers-acquired" class="clvcac-label">New Customers Acquired <span class="clvcac-req">*</span></label>
+            <input type="number" id="clvcac-customers-acquired" class="clvcac-input clvcac-calc-trigger" min="1" step="1" placeholder="e.g. 200" value="200">
+            <div class="clvcac-error-msg" id="clvcac-err-customers-acquired"></div>
+          </div>
+        </div>
+
+        <!-- Advanced CAC Cost Items (Visible in Advanced Mode) -->
+        <div class="clvcac-advanced-only">
+          <div class="clvcac-sub-heading">Fully Loaded Cost Components (Optional)</div>
+          <div class="clvcac-form-grid">
+            <div class="clvcac-field">
+              <label for="clvcac-team-cost" class="clvcac-label">Marketing &amp; Sales Wages (<span class="clvcac-curr-sym">$</span>)</label>
+              <input type="number" id="clvcac-team-cost" class="clvcac-input clvcac-calc-trigger" min="0" step="any" placeholder="0" value="0">
+            </div>
+            <div class="clvcac-field">
+              <label for="clvcac-agency-cost" class="clvcac-label">Agency &amp; Contractor Fees (<span class="clvcac-curr-sym">$</span>)</label>
+              <input type="number" id="clvcac-agency-cost" class="clvcac-input clvcac-calc-trigger" min="0" step="any" placeholder="0" value="0">
+            </div>
+            <div class="clvcac-field">
+              <label for="clvcac-software-cost" class="clvcac-label">MarTech &amp; CRM Tools (<span class="clvcac-curr-sym">$</span>)</label>
+              <input type="number" id="clvcac-software-cost" class="clvcac-input clvcac-calc-trigger" min="0" step="any" placeholder="0" value="0">
+            </div>
+            <div class="clvcac-field">
+              <label for="clvcac-creative-cost" class="clvcac-label">Creative &amp; Production (<span class="clvcac-curr-sym">$</span>)</label>
+              <input type="number" id="clvcac-creative-cost" class="clvcac-input clvcac-calc-trigger" min="0" step="any" placeholder="0" value="0">
+            </div>
+            <div class="clvcac-field">
+              <label for="clvcac-other-cost" class="clvcac-label">Other Acquisition Expenses (<span class="clvcac-curr-sym">$</span>)</label>
+              <input type="number" id="clvcac-other-cost" class="clvcac-input clvcac-calc-trigger" min="0" step="any" placeholder="0" value="0">
+            </div>
+          </div>
+          <div class="clvcac-inline-info">
+            <strong>CAC Type in Evaluation:</strong>
+            <label class="clvcac-radio-label">
+              <input type="radio" name="clvcac-cac-type" value="loaded" checked class="clvcac-calc-trigger"> Fully Loaded CAC
+            </label>
+            <label class="clvcac-radio-label">
+              <input type="radio" name="clvcac-cac-type" value="paid" class="clvcac-calc-trigger"> Paid Ad CAC Only
+            </label>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Section 2: Revenue & Lifetime Value (CLV) Inputs -->
+      <fieldset class="clvcac-card clvcac-input-card">
+        <legend class="clvcac-card-header">
+          <span class="clvcac-step-badge">2</span>
+          Customer Revenue &amp; Lifespan
+        </legend>
+
+        <div class="clvcac-form-grid">
+          <div class="clvcac-field">
+            <label for="clvcac-revenue-value" class="clvcac-label" id="clvcac-lbl-rev">Average Order Value (AOV) (<span class="clvcac-curr-sym">$</span>)</label>
+            <input type="number" id="clvcac-revenue-value" class="clvcac-input clvcac-calc-trigger" min="0.01" step="any" placeholder="e.g. 80" value="80">
+            <div class="clvcac-error-msg" id="clvcac-err-revenue-value"></div>
+          </div>
+
+          <div class="clvcac-field" id="clvcac-freq-wrap">
+            <label for="clvcac-freq-value" class="clvcac-label" id="clvcac-lbl-freq">Annual Purchase Frequency</label>
+            <input type="number" id="clvcac-freq-value" class="clvcac-input clvcac-calc-trigger" min="0.1" step="any" placeholder="e.g. 3" value="3">
+            <span class="clvcac-helper" id="clvcac-helper-freq">Number of purchases per customer each year</span>
+          </div>
+
+          <div class="clvcac-field">
+            <label for="clvcac-lifespan-method" class="clvcac-label">Lifespan Calculation Method</label>
+            <select id="clvcac-lifespan-method" class="clvcac-select clvcac-calc-trigger">
+              <option value="direct" selected>Direct Customer Lifespan (Years)</option>
+              <option value="monthly-churn">Monthly Churn Rate (%)</option>
+              <option value="monthly-retention">Monthly Retention Rate (%)</option>
+            </select>
+          </div>
+
+          <div class="clvcac-field" id="clvcac-lifespan-input-wrap">
+            <label for="clvcac-lifespan-val" class="clvcac-label" id="clvcac-lbl-lifespan">Customer Lifespan (Years)</label>
+            <input type="number" id="clvcac-lifespan-val" class="clvcac-input clvcac-calc-trigger" min="0.01" step="any" placeholder="e.g. 3" value="3">
+            <div class="clvcac-error-msg" id="clvcac-err-lifespan-val"></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Section 3: Margins & Contribution Costs -->
+      <fieldset class="clvcac-card clvcac-input-card">
+        <legend class="clvcac-card-header">
+          <span class="clvcac-step-badge">3</span>
+          Gross Margin &amp; Profitability
+        </legend>
+
+        <div class="clvcac-form-grid">
+          <div class="clvcac-field">
+            <label for="clvcac-gross-margin" class="clvcac-label">Gross Margin Percentage (%) <span class="clvcac-req">*</span></label>
+            <input type="number" id="clvcac-gross-margin" class="clvcac-input clvcac-calc-trigger" min="0" max="100" step="any" placeholder="e.g. 60" value="60">
+            <div class="clvcac-error-msg" id="clvcac-err-gross-margin"></div>
+          </div>
+
+          <div class="clvcac-field">
+            <label for="clvcac-target-ratio" class="clvcac-label">Target CLV:CAC Ratio (Benchmark)</label>
+            <input type="number" id="clvcac-target-ratio" class="clvcac-input clvcac-calc-trigger" min="0.5" max="20" step="0.1" value="3.0">
+            <span class="clvcac-helper">Industry default target is usually 3.0x</span>
+          </div>
+        </div>
+
+        <div class="clvcac-advanced-only">
+          <div class="clvcac-sub-heading">Variable Serving &amp; Retention Costs (For Contribution CLV)</div>
+          <div class="clvcac-form-grid">
+            <div class="clvcac-field">
+              <label for="clvcac-var-cost" class="clvcac-label">Additional Lifetime Variable Costs / Customer (<span class="clvcac-curr-sym">$</span>)</label>
+              <input type="number" id="clvcac-var-cost" class="clvcac-input clvcac-calc-trigger" min="0" step="any" placeholder="0" value="0">
+              <span class="clvcac-helper">Payment processing, customer support, server costs not in COGS</span>
+            </div>
+            <div class="clvcac-field">
+              <label for="clvcac-ratio-basis" class="clvcac-label">Primary Metric for Ratio &amp; Payback</label>
+              <select id="clvcac-ratio-basis" class="clvcac-select clvcac-calc-trigger">
+                <option value="gross" selected>Gross Profit CLV (Recommended standard)</option>
+                <option value="contribution">Contribution Profit CLV (Strictest)</option>
+                <option value="revenue">Revenue-Based CLV (Topline only)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Advanced Section 4: Channel CAC Comparison (Advanced Mode) -->
+      <fieldset class="clvcac-card clvcac-input-card clvcac-advanced-only">
+        <legend class="clvcac-card-header">
+          <span class="clvcac-step-badge">4</span>
+          Marketing Channel Acquisition Breakdown
+        </legend>
+        <p class="clvcac-card-desc">Compare performance across paid advertising, organic, and referral channels.</p>
+        
+        <div class="clvcac-table-responsive">
+          <table class="clvcac-table" id="clvcac-channel-table">
+            <thead>
+              <tr>
+                <th>Channel Name</th>
+                <th>Spend (<span class="clvcac-curr-sym">$</span>)</th>
+                <th>Customers</th>
+                <th>Channel CAC</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="clvcac-channel-tbody">
+              <!-- Dynamically populated rows -->
+            </tbody>
+          </table>
+        </div>
+        <button type="button" class="clvcac-btn clvcac-btn-sm clvcac-btn-outline" id="clvcac-btn-add-channel">+ Add Acquisition Channel</button>
+      </fieldset>
+
+      <!-- Advanced Section 5: Acquisition Budget Planner (Advanced Mode) -->
+      <fieldset class="clvcac-card clvcac-input-card clvcac-advanced-only">
+        <legend class="clvcac-card-header">
+          <span class="clvcac-step-badge">5</span>
+          Acquisition Budget &amp; Growth Planner
+        </legend>
+        <div class="clvcac-form-grid">
+          <div class="clvcac-field">
+            <label for="clvcac-planned-budget" class="clvcac-label">Planned Monthly Acquisition Budget (<span class="clvcac-curr-sym">$</span>)</label>
+            <input type="number" id="clvcac-planned-budget" class="clvcac-input clvcac-calc-trigger" min="0" step="any" placeholder="10000" value="10000">
+          </div>
+        </div>
+        <div class="clvcac-budget-results" id="clvcac-budget-summary">
+          <!-- Populated by JS -->
+        </div>
+      </fieldset>
+
+    </main>
+
+    <!-- RIGHT COLUMN: RESULTS DASHBOARD -->
+    <aside class="clvcac-results-column" aria-label="Results Dashboard">
+
+      <!-- Primary Health Banner -->
+      <div class="clvcac-card clvcac-hero-card" id="clvcac-health-card">
+        <div class="clvcac-hero-label">CLV to CAC Ratio</div>
+        <div class="clvcac-hero-value" id="clvcac-res-hero-ratio">7.20x</div>
+        <div class="clvcac-hero-badge" id="clvcac-hero-status-badge">Strong Unit Economics</div>
+        <p class="clvcac-hero-subtext" id="clvcac-hero-interpretation">
+          Modeled lifetime gross profit exceeds acquisition cost by 7.20x, well above the 3.00x target.
+        </p>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="clvcac-metrics-grid">
+        <div class="clvcac-metric-card">
+          <span class="clvcac-metric-title">Customer Acquisition Cost (CAC)</span>
+          <span class="clvcac-metric-num" id="clvcac-res-cac">$60.00</span>
+          <span class="clvcac-metric-desc" id="clvcac-res-cac-type-lbl">Fully Loaded Cost / Acquired Customer</span>
+        </div>
+
+        <div class="clvcac-metric-card">
+          <span class="clvcac-metric-title">Gross Profit CLV</span>
+          <span class="clvcac-metric-num" id="clvcac-res-gp-clv">$432.00</span>
+          <span class="clvcac-metric-desc">Lifetime Revenue × 60% Gross Margin</span>
+        </div>
+
+        <div class="clvcac-metric-card">
+          <span class="clvcac-metric-title">Revenue-Based CLV</span>
+          <span class="clvcac-metric-num" id="clvcac-res-rev-clv">$720.00</span>
+          <span class="clvcac-metric-desc">Total Cumulative Top-Line Revenue</span>
+        </div>
+
+        <div class="clvcac-metric-card">
+          <span class="clvcac-metric-title">CAC Payback Period</span>
+          <span class="clvcac-metric-num" id="clvcac-res-payback">5.0 Mos</span>
+          <span class="clvcac-metric-desc" id="clvcac-res-payback-desc">Time required to break even on CAC</span>
+        </div>
+
+        <div class="clvcac-metric-card">
+          <span class="clvcac-metric-title">Break-Even CAC</span>
+          <span class="clvcac-metric-num" id="clvcac-res-breakeven-cac">$432.00</span>
+          <span class="clvcac-metric-desc">Max CAC before lifetime profit becomes zero</span>
+        </div>
+
+        <div class="clvcac-metric-card">
+          <span class="clvcac-metric-title">Max Allowable CAC (at Target)</span>
+          <span class="clvcac-metric-num" id="clvcac-res-max-allowable-cac">$144.00</span>
+          <span class="clvcac-metric-desc">Upper limit to preserve a 3.0x return</span>
+        </div>
+
+        <div class="clvcac-metric-card">
+          <span class="clvcac-metric-title">Net Customer Value</span>
+          <span class="clvcac-metric-num" id="clvcac-res-net-val">$372.00</span>
+          <span class="clvcac-metric-desc">Profit CLV remaining after deducting CAC</span>
+        </div>
+
+        <div class="clvcac-metric-card">
+          <span class="clvcac-metric-title">Compound Annual Retention</span>
+          <span class="clvcac-metric-num" id="clvcac-res-retention">71.6%</span>
+          <span class="clvcac-metric-desc" id="clvcac-res-retention-desc">Calculated via (1 − Churn)^12</span>
+        </div>
+      </div>
+
+      <!-- Primary Native SVG Chart: CLV vs CAC Comparison -->
+      <div class="clvcac-card clvcac-chart-card">
+        <h3 class="clvcac-card-subhead">Unit Economics Comparison (CLV vs CAC)</h3>
+        <div class="clvcac-chart-wrapper" id="clvcac-chart-comparison">
+          <!-- Rendered by SVG engine -->
+        </div>
+      </div>
+
+      <!-- Secondary Chart: Cost Breakdown (Native SVG) -->
+      <div class="clvcac-card clvcac-chart-card">
+        <h3 class="clvcac-card-subhead">Acquisition Spend Breakdown</h3>
+        <div class="clvcac-chart-wrapper" id="clvcac-chart-breakdown">
+          <!-- Rendered by SVG engine -->
+        </div>
+      </div>
+
+      <!-- Advanced Mode: Scenario Analysis Cards -->
+      <div class="clvcac-card clvcac-advanced-only">
+        <h3 class="clvcac-card-subhead">Sensitivity &amp; Scenario Modeling</h3>
+        <p class="clvcac-card-desc">Simulate how churn, conversion, and market pressure shift your ratio.</p>
+        
+        <div class="clvcac-scenarios-grid">
+          <div class="clvcac-scenario-box clvcac-scenario-con">
+            <span class="clvcac-scenario-tag">Conservative (-20% Margin / +20% Churn)</span>
+            <div class="clvcac-scenario-val" id="clvcac-scen-con-ratio">4.80x</div>
+            <div class="clvcac-scenario-detail" id="clvcac-scen-con-detail">CLV: $345.60 | CAC: $72.00</div>
+          </div>
+          <div class="clvcac-scenario-box clvcac-scenario-base">
+            <span class="clvcac-scenario-tag">Base Case (Current Inputs)</span>
+            <div class="clvcac-scenario-val" id="clvcac-scen-base-ratio">7.20x</div>
+            <div class="clvcac-scenario-detail" id="clvcac-scen-base-detail">CLV: $432.00 | CAC: $60.00</div>
+          </div>
+          <div class="clvcac-scenario-box clvcac-scenario-opt">
+            <span class="clvcac-scenario-tag">Optimistic (+15% Retention / -10% CAC)</span>
+            <div class="clvcac-scenario-val" id="clvcac-scen-opt-ratio">9.20x</div>
+            <div class="clvcac-scenario-detail" id="clvcac-scen-opt-detail">CLV: $496.80 | CAC: $54.00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dynamic Algorithmic Business Insights -->
+      <div class="clvcac-card clvcac-insights-card">
+        <h3 class="clvcac-card-subhead">Strategic Unit Economics Insights</h3>
+        <ul class="clvcac-insights-list" id="clvcac-insights-container">
+          <!-- Populated by JS rule engine -->
+        </ul>
+      </div>
+
+      <!-- Export & Utility Actions -->
+      <div class="clvcac-export-actions">
+        <button type="button" class="clvcac-btn clvcac-btn-outline" id="clvcac-btn-copy">
+          <svg class="clvcac-btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"/><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"/></svg>
+          Copy Summary
+        </button>
+        <button type="button" class="clvcac-btn clvcac-btn-primary" id="clvcac-btn-csv">
+          <svg class="clvcac-btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          Download CSV Report
+        </button>
+      </div>
+
+      <div class="clvcac-privacy-note">
+        <strong>Privacy Assurance:</strong> Calculations are computed locally inside your browser's JavaScript engine. No financial numbers or business assumptions are transmitted to any server.
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- ==================== ON-PAGE SEO CONTENT SECTION ==================== -->
+  <article class="clvcac-article-section">
+
+    <section class="clvcac-seo-block">
+      <h2>Customer Lifetime Value to CAC Calculator</h2>
+      <p>
+        The <strong>Customer Lifetime Value to Customer Acquisition Cost (CLV:CAC) Calculator</strong> provides founders, performance marketers, and growth teams with a rigorous unit economics audit. Rather than relying on simple division, this utility synthesizes acquisition spend, product gross margins, retention curves, and operational variable costs to determine true acquisition profitability and cash payback velocity.
+      </p>
+    </section>
+
+    <section class="clvcac-seo-block">
+      <h2>Features of the Customer Lifetime Value Calculator</h2>
+      <ul class="clvcac-feature-bullets">
+        <li><strong>Dual Evaluation Modes:</strong> Switch instantly between streamlined Simple Mode and comprehensive Advanced Business Analysis.</li>
+        <li><strong>Multi-Dimensional CLV:</strong> Differentiate accurately between Top-Line Revenue CLV, Gross Profit CLV, and Variable Contribution CLV.</li>
+        <li><strong>Paid vs. Fully Loaded CAC:</strong> Account for direct media expenditures or include full operational overhead (sales salaries, agencies, tools).</li>
+        <li><strong>Empirical Payback Velocity:</strong> Determine the exact number of months needed to recover cash deployed into marketing.</li>
+        <li><strong>Compound Retention Modeling:</strong> Accurately calculate annual customer retention from monthly churn using continuous compounding $(1 - \text{Churn})^{12}$.</li>
+        <li><strong>Marketing Channel Attribution:</strong> Compare individual acquisition channels (Meta, Google, SEO, Affiliates) side-by-side.</li>
+        <li><strong>Dynamic Scenario Analysis:</strong> Stress-test your business against conservative, base-case, and optimistic churn/margin variations.</li>
+        <li><strong>Zero-Tracking Client-Side Architecture:</strong> All analysis executes securely within your browser with instant CSV and clipboard export.</li>
+      </ul>
+    </section>
+
+    <section class="clvcac-seo-block">
+      <h2>How to Use This CLV:CAC Calculator</h2>
+      <ol class="clvcac-ordered-steps">
+        <li><strong>Select Business Model:</strong> Choose between eCommerce, SaaS, Subscriptions, Marketplaces, or Service Businesses to automatically configure metrics.</li>
+        <li><strong>Set Currency:</strong> Choose your preferred reporting currency symbol (USD, EUR, INR, GBP, CAD, AUD, etc.).</li>
+        <li><strong>Input Acquisition Expenses:</strong> Enter media spend, team costs, and total new customers acquired during the measured cohort window.</li>
+        <li><strong>Enter Revenue &amp; Lifespan:</strong> Provide Average Order Value (AOV) or Monthly Recurring Revenue (MRR), purchase frequency, and expected retention or churn.</li>
+        <li><strong>Specify Gross Margin:</strong> Enter your product or service gross margin percentage to exclude Cost of Goods Sold (COGS).</li>
+        <li><strong>Evaluate Results:</strong> Review the ratio gauge, payback timeline, SVG distribution charts, and automated strategic recommendations.</li>
+      </ol>
+    </section>
+
+    <section class="clvcac-seo-block">
+      <h2>How to Calculate CLV to CAC Ratio</h2>
+      <p>
+        A reliable CLV:CAC ratio requires comparing customer value to acquisition cost using identical economic baselines. Comparing top-line revenue against acquisition costs causes businesses to dangerously overspend on advertising because it ignores production costs.
+      </p>
+
+      <div class="clvcac-formula-box">
+        <h4>Core Mathematical Formulations</h4>
+        <code>Customer Acquisition Cost (CAC) = Total Acquisition Expenditures / New Customers Acquired</code><br>
+        <code>Revenue-Based CLV = Revenue per Period &times; Expected Lifetime Periods</code><br>
+        <code>Gross Profit CLV = Revenue-Based CLV &times; Gross Margin %</code><br>
+        <code>Contribution CLV = Gross Profit CLV - Additional Lifetime Servicing Costs</code><br>
+        <code>CLV:CAC Ratio = Gross Profit CLV / Fully Loaded CAC</code><br>
+        <code>CAC Payback Period (Months) = CAC / Monthly Gross Profit per Customer</code><br>
+        <code>Maximum Allowable CAC = Gross Profit CLV / Target CLV:CAC Ratio</code>
+      </div>
+    </section>
+
+    <section class="clvcac-seo-block">
+      <h2>Customer Lifetime Value vs Customer Acquisition Cost</h2>
+      <p>
+        <strong>Customer Lifetime Value (CLV)</strong> reflects the total cumulative financial contribution an individual account delivers before terminating their relationship with your brand. <strong>Customer Acquisition Cost (CAC)</strong> captures the aggregate financial investment required to convince that customer to make their initial transaction.
+      </p>
+      <p>
+        The spread between these two metrics determines scalable viability. If CAC approaches or exceeds Gross Profit CLV, the company loses capital on every onboarding cohort regardless of top-line revenue growth.
+      </p>
+    </section>
+
+    <section class="clvcac-seo-block">
+      <h2>Understanding Your CLV:CAC Results</h2>
+      <div class="clvcac-bands-list">
+        <div class="clvcac-band-item">
+          <strong>Below 1.0x (Value Destruction):</strong> You lose direct cash on each acquired customer. Scale must be paused immediately to fix unit costs, pricing, or retention.
+        </div>
+        <div class="clvcac-band-item">
+          <strong>1.0x to 1.99x (High Risk):</strong> Margins are insufficient to absorb overhead, product development, and administrative burn.
+        </div>
+        <div class="clvcac-band-item">
+          <strong>2.0x to 2.99x (Sustainable Viability):</strong> Stable unit economics for established brands, though acquisition headroom remains tight.
+        </div>
+        <div class="clvcac-band-item">
+          <strong>3.0x to 4.99x (Optimal Growth Standard):</strong> Healthy unit economics providing rapid payback, allowing confident scaling of marketing budgets.
+        </div>
+        <div class="clvcac-band-item">
+          <strong>5.0x and Above (Under-Investment or Hyper-Efficiency):</strong> Highly profitable economics, but may indicate that you are bidding too conservatively and under-investing in potential market share.
+        </div>
+      </div>
+    </section>
+
+    <section class="clvcac-seo-block">
+      <h2>Use Cases of the CLV:CAC Calculator</h2>
+      <p>
+        This tool is designed for daily decision-making across several business stages:
+      </p>
+      <ul>
+        <li><strong>eCommerce Brands &amp; DTC:</strong> Modeling repeat order value against Meta and Google ad spend.</li>
+        <li><strong>B2B SaaS Companies:</strong> Calculating churn-derived lifespan and payback periods for venture capital board presentations.</li>
+        <li><strong>Subscription Box Providers:</strong> Gauging customer churn rates against physical fulfillment and packaging costs.</li>
+        <li><strong>Performance Marketing Agencies:</strong> Demonstrating profitable ceiling bid prices (Max Allowable CAC) for client ad accounts.</li>
+      </ul>
+    </section>
+
+    <section class="clvcac-seo-block">
+      <h2>Frequently Asked Questions</h2>
+      <div class="clvcac-faq-accordion">
+        <details class="clvcac-faq-item">
+          <summary class="clvcac-faq-q">What is the Customer Lifetime Value to CAC ratio?</summary>
+          <div class="clvcac-faq-a">
+            The CLV to CAC ratio is an efficiency metric that compares the total lifetime profit (or revenue) generated by a customer against the expense incurred to acquire them. It highlights whether your marketing and sales engines generate sustainable returns.
+          </div>
+        </details>
+        <details class="clvcac-faq-item">
+          <summary class="clvcac-faq-q">How do I calculate the CLV to CAC ratio?</summary>
+          <div class="clvcac-faq-a">
+            Divide your Gross Profit Customer Lifetime Value by your Customer Acquisition Cost. For example, if a customer yields $600 in lifetime gross profit and your CAC is $200, your ratio is $600 / $200 = 3.0x.
+          </div>
+        </details>
+        <details class="clvcac-faq-item">
+          <summary class="clvcac-faq-q">What is the difference between CLV and CAC?</summary>
+          <div class="clvcac-faq-a">
+            CLV represents the aggregate financial value a customer brings throughout their entire engagement with your company. CAC represents the upfront sales and marketing costs required to gain that customer.
+          </div>
+        </details>
+        <details class="clvcac-faq-item">
+          <summary class="clvcac-faq-q">What is considered a good CLV to CAC ratio?</summary>
+          <div class="clvcac-faq-a">
+            A ratio of 3.0x to 4.0x is widely accepted as the golden benchmark for venture-backed SaaS and digital commerce. Ratios below 2.0x typically strain operational cash flow, while ratios above 5.0x often indicate you could spend more aggressively to capture market share.
+          </div>
+        </details>
+        <details class="clvcac-faq-item">
+          <summary class="clvcac-faq-q">How do I calculate customer acquisition cost accurately?</summary>
+          <div class="clvcac-faq-a">
+            To determine fully loaded CAC, add all ad spend, marketing and sales payroll, external agency fees, and marketing software subscriptions across a specific time window, then divide that sum by the number of new customers acquired during the same window.
+          </div>
+        </details>
+        <details class="clvcac-faq-item">
+          <summary class="clvcac-faq-q">What is a CAC payback period?</summary>
+          <div class="clvcac-faq-a">
+            The CAC payback period is the time (usually measured in months) needed for a customer to generate sufficient gross profit to offset their initial acquisition cost. Healthy recurring-revenue companies target payback periods under 12 months.
+          </div>
+        </details>
+        <details class="clvcac-faq-item">
+          <summary class="clvcac-faq-q">How does customer churn affect lifetime value?</summary>
+          <div class="clvcac-faq-a">
+            Churn has an inverse relationship with customer lifespan. In a recurring model, expected lifetime equals 1 divided by the monthly churn rate. Higher churn reduces lifespan, which lowers CLV and compresses the CLV:CAC ratio.
+          </div>
+        </details>
+        <details class="clvcac-faq-item">
+          <summary class="clvcac-faq-q">Is this CLV CAC calculator suitable for SaaS and eCommerce businesses?</summary>
+          <div class="clvcac-faq-a">
+            Yes. The calculator includes specialized configurations for eCommerce (order value and frequency) and recurring-revenue SaaS (monthly churn and recurring margin economics).
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Contextual Links Sections -->
+    <section class="clvcac-seo-block clvcac-links-block">
+      <h2>Related Business &amp; Financial Tools</h2>
+      <p>
+        Explore our companion utilities to audit other aspects of your unit economics:
+      </p>
+      <ul>
+        <li>
+          <a href="https://my-tool-app.pages.dev/" class="clvcac-link">Business Calculators Hub</a> &ndash; Browse our suite of financial planning and growth utilities.
+        </li>
+        <li>
+          <a href="https://my-tool-app.pages.dev/marketplace-commission-fee-calculator" class="clvcac-link">Marketplace Commission Fee Calculator</a> &ndash; Calculate marketplace selling fees, commissions, and their impact on your product profitability.
+        </li>
+      </ul>
+    </section>
+
+    <section class="clvcac-seo-block clvcac-links-block">
+      <h2>Learn More About Customer Economics</h2>
+      <p>
+        For further study on customer economics, consider these authoritative industry guides:
+      </p>
+      <ul>
+        <li><a href="https://blog.hubspot.com/service/customer-acquisition-cost" target="_blank" rel="noopener noreferrer" class="clvcac-link">HubSpot &ndash; Customer Acquisition Cost Guide</a></li>
+        <li><a href="https://stripe.com/resources/more/customer-lifetime-value" target="_blank" rel="noopener noreferrer" class="clvcac-link">Stripe &ndash; Customer Lifetime Value Foundations</a></li>
+        <li><a href="https://www.shopify.com/blog/customer-lifetime-value" target="_blank" rel="noopener noreferrer" class="clvcac-link">Shopify &ndash; Customer Lifetime Value for Retailers</a></li>
+        <li><a href="https://support.google.com/analytics/answer/12923437" target="_blank" rel="noopener noreferrer" class="clvcac-link">Google Analytics &ndash; Understanding Acquisition Reports</a></li>
+      </ul>
+    </section>
+
+  </article>
+
+</div><!-- /#clvcac-app-root -->
+
+<!-- ==========================================================================
+     INLINE CSS STYLING (Scoped cleanly to #clvcac-app-root)
+     ========================================================================== -->
+<style>
+/* CSS VARIABLES FOR UNIFIED SaaS THEME */
+#clvcac-app-root {
+  --clv-primary: #4f46e5;
+  --clv-primary-hover: #4338ca;
+  --clv-primary-light: #eef2ff;
+  --clv-bg: #f8fafc;
+  --clv-card-bg: #ffffff;
+  --clv-text-main: #0f172a;
+  --clv-text-muted: #64748b;
+  --clv-border: #e2e8f0;
+  --clv-border-focus: #818cf8;
+  --clv-positive: #10b981;
+  --clv-positive-bg: #ecfdf5;
+  --clv-warning: #f59e0b;
+  --clv-warning-bg: #fffbeb;
+  --clv-negative: #ef4444;
+  --clv-negative-bg: #fef2f2;
+  --clv-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --clv-radius: 8px;
+  --clv-shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --clv-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -1px rgba(0,0,0,0.04);
+
+  font-family: var(--clv-font);
+  color: var(--clv-text-main);
+  background-color: var(--clv-bg);
+  line-height: 1.5;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+#clvcac-app-root *, #clvcac-app-root *::before, #clvcac-app-root *::after {
+  box-sizing: border-box;
+}
+
+/* TYPOGRAPHY */
+.clvcac-header {
+  margin-bottom: 24px;
+}
+.clvcac-main-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--clv-text-main);
+  margin: 0 0 8px 0;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+}
+.clvcac-subtitle {
+  font-size: 1.05rem;
+  color: var(--clv-text-muted);
+  margin: 0;
+}
+
+/* TOP TOOLBAR */
+.clvcac-top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: var(--clv-card-bg);
+  padding: 16px;
+  border-radius: var(--clv-radius);
+  border: 1px solid var(--clv-border);
+  box-shadow: var(--clv-shadow-sm);
+  margin-bottom: 24px;
+  align-items: flex-end;
+}
+.clvcac-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 140px;
+  flex: 1 1 180px;
+}
+.clvcac-label {
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--clv-text-main);
+}
+.clvcac-select, .clvcac-input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  color: var(--clv-text-main);
+  background-color: #ffffff;
+  border: 1px solid var(--clv-border);
+  border-radius: 6px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.clvcac-select:focus, .clvcac-input:focus {
+  outline: none;
+  border-color: var(--clv-border-focus);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+.clvcac-toggle-pills {
+  display: flex;
+  background: var(--clv-bg);
+  border: 1px solid var(--clv-border);
+  border-radius: 6px;
+  padding: 2px;
+}
+.clvcac-pill {
+  flex: 1;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  color: var(--clv-text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+.clvcac-pill-active {
+  background: #ffffff;
+  color: var(--clv-primary);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+
+/* WORKSPACE LAYOUT (2 Columns on Desktop) */
+.clvcac-workspace-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 900px) {
+  .clvcac-workspace-grid {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+/* CARDS */
+.clvcac-card {
+  background: var(--clv-card-bg);
+  border: 1px solid var(--clv-border);
+  border-radius: var(--clv-radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--clv-shadow-sm);
+}
+.clvcac-input-card {
+  border-left: 4px solid var(--clv-primary);
+}
+.clvcac-card-header {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--clv-text-main);
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.clvcac-card-subhead {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  color: var(--clv-text-main);
+}
+.clvcac-card-desc {
+  font-size: 0.85rem;
+  color: var(--clv-text-muted);
+  margin: 0 0 12px 0;
+}
+.clvcac-step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--clv-primary-light);
+  color: var(--clv-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.clvcac-sub-heading {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--clv-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 16px 0 8px 0;
+  border-top: 1px dashed var(--clv-border);
+  padding-top: 12px;
+}
+
+/* FORMS & GRIDS */
+.clvcac-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 500px) {
+  .clvcac-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.clvcac-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.clvcac-helper {
+  font-size: 0.75rem;
+  color: var(--clv-text-muted);
+}
+.clvcac-error-msg {
+  font-size: 0.75rem;
+  color: var(--clv-negative);
+  min-height: 16px;
+}
+.clvcac-req {
+  color: var(--clv-negative);
+}
+.clvcac-inline-info {
+  margin-top: 12px;
+  font-size: 0.825rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.clvcac-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+/* BUTTONS */
+.clvcac-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.clvcac-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+.clvcac-btn-icon {
+  width: 16px;
+  height: 16px;
+}
+.clvcac-btn-primary {
+  background-color: var(--clv-primary);
+  color: #ffffff;
+}
+.clvcac-btn-primary:hover {
+  background-color: var(--clv-primary-hover);
+}
+.clvcac-btn-outline {
+  background-color: #ffffff;
+  border-color: var(--clv-border);
+  color: var(--clv-text-main);
+}
+.clvcac-btn-outline:hover {
+  background-color: var(--clv-bg);
+}
+.clvcac-btn-sm {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+}
+.clvcac-btn-danger {
+  color: var(--clv-negative);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+/* TABLE STYLING */
+.clvcac-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 12px;
+}
+.clvcac-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.825rem;
+}
+.clvcac-table th, .clvcac-table td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--clv-border);
+}
+.clvcac-table th {
+  background-color: var(--clv-bg);
+  color: var(--clv-text-muted);
+  font-weight: 600;
+}
+
+/* RESULTS: HERO CARD */
+.clvcac-hero-card {
+  text-align: center;
+  border-top: 4px solid var(--clv-primary);
+  background: #ffffff;
+}
+.clvcac-hero-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--clv-text-muted);
+  letter-spacing: 0.05em;
+}
+.clvcac-hero-value {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--clv-primary);
+  margin: 6px 0;
+}
+.clvcac-hero-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.clvcac-status-pos { background: var(--clv-positive-bg); color: var(--clv-positive); }
+.clvcac-status-war { background: var(--clv-warning-bg); color: var(--clv-warning); }
+.clvcac-status-neg { background: var(--clv-negative-bg); color: var(--clv-negative); }
+.clvcac-hero-subtext {
+  font-size: 0.875rem;
+  color: var(--clv-text-muted);
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* RESULTS: METRICS GRID */
+.clvcac-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.clvcac-metric-card {
+  background: #ffffff;
+  border: 1px solid var(--clv-border);
+  border-radius: var(--clv-radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+}
+.clvcac-metric-title {
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--clv-text-muted);
+  margin-bottom: 4px;
+}
+.clvcac-metric-num {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--clv-text-main);
+  margin-bottom: 4px;
+}
+.clvcac-metric-desc {
+  font-size: 0.725rem;
+  color: var(--clv-text-muted);
+  line-height: 1.3;
+}
+
+/* CHARTS (Native SVG) */
+.clvcac-chart-card {
+  padding: 16px;
+}
+.clvcac-chart-wrapper {
+  width: 100%;
+  min-height: 180px;
+}
+.clvcac-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* SCENARIOS */
+.clvcac-scenarios-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+@media (min-width: 600px) {
+  .clvcac-scenarios-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+.clvcac-scenario-box {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--clv-border);
+}
+.clvcac-scenario-con { background: #fff5f5; border-color: #fed7d7; }
+.clvcac-scenario-base { background: #f8fafc; border-color: #cbd5e1; }
+.clvcac-scenario-opt { background: #f0fdf4; border-color: #bbf7d0; }
+.clvcac-scenario-tag {
+  font-size: 0.725rem;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 6px;
+}
+.clvcac-scenario-val {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+.clvcac-scenario-detail {
+  font-size: 0.725rem;
+  color: var(--clv-text-muted);
+  margin-top: 4px;
+}
+
+/* INSIGHTS */
+.clvcac-insights-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.clvcac-insight-item {
+  display: flex;
+  gap: 10px;
+  font-size: 0.85rem;
+  padding: 10px;
+  border-radius: 6px;
+  line-height: 1.4;
+}
+.clvcac-insight-pos { background: var(--clv-positive-bg); color: #065f46; border-left: 3px solid var(--clv-positive); }
+.clvcac-insight-war { background: var(--clv-warning-bg); color: #92400e; border-left: 3px solid var(--clv-warning); }
+.clvcac-insight-neg { background: var(--clv-negative-bg); color: #991b1b; border-left: 3px solid var(--clv-negative); }
+
+/* EXPORT BAR & PRIVACY */
+.clvcac-export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+.clvcac-privacy-note {
+  font-size: 0.75rem;
+  color: var(--clv-text-muted);
+  padding: 10px;
+  background: var(--clv-card-bg);
+  border: 1px solid var(--clv-border);
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
+/* SEO CONTENT & FAQ STYLES */
+.clvcac-article-section {
+  margin-top: 40px;
+  border-top: 2px solid var(--clv-border);
+  padding-top: 32px;
+}
+.clvcac-seo-block {
+  margin-bottom: 32px;
+}
+.clvcac-seo-block h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--clv-text-main);
+  margin-bottom: 12px;
+}
+.clvcac-seo-block p, .clvcac-seo-block li {
+  font-size: 0.95rem;
+  color: #334155;
+  line-height: 1.6;
+}
+.clvcac-feature-bullets, .clvcac-ordered-steps {
+  padding-left: 20px;
+}
+.clvcac-feature-bullets li, .clvcac-ordered-steps li {
+  margin-bottom: 8px;
+}
+.clvcac-formula-box {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 16px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  line-height: 1.8;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+.clvcac-formula-box h4 {
+  margin: 0 0 8px 0;
+  color: #818cf8;
+  font-family: var(--clv-font);
+  font-size: 0.95rem;
+}
+.clvcac-bands-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.clvcac-band-item {
+  background: #ffffff;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--clv-border);
+  font-size: 0.9rem;
+}
+.clvcac-faq-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.clvcac-faq-item {
+  background: #ffffff;
+  border: 1px solid var(--clv-border);
+  border-radius: 6px;
+  padding: 12px 16px;
+}
+.clvcac-faq-q {
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--clv-text-main);
+}
+.clvcac-faq-a {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.5;
+}
+.clvcac-link {
+  color: var(--clv-primary);
+  text-decoration: underline;
+  font-weight: 500;
+}
+.clvcac-link:hover {
+  color: var(--clv-primary-hover);
+}
+
+/* UTILITY CLASSES */
+.clvcac-hidden {
+  display: none !important;
+}
+</style>
+
+<!-- ==========================================================================
+     VANILLA JAVASCRIPT CALCULATION & INTERACTIVE ENGINE
+     ========================================================================== -->
+<script>
+(function() {
+  'use strict';
+
+  // Application State
+  const state = {
+    mode: 'simple', // 'simple' | 'advanced'
+    businessModel: 'ecommerce',
+    currencySymbol: '$',
+    channels: [
+      { id: 1, name: 'Google Ads', spend: 7000, customers: 110 },
+      { id: 2, name: 'Meta Ads', spend: 5000, customers: 90 }
+    ],
+    results: {}
+  };
+
+  // DOM Elements
+  const dom = {
+    root: document.getElementById('clvcac-app-root'),
+    bizModel: document.getElementById('clvcac-business-model'),
+    currency: document.getElementById('clvcac-currency'),
+    customCurrWrap: document.getElementById('clvcac-custom-currency-wrap'),
+    customCurrInput: document.getElementById('clvcac-custom-currency'),
+    modeSimple: document.getElementById('clvcac-mode-simple'),
+    modeAdvanced: document.getElementById('clvcac-mode-advanced'),
+    
+    // Inputs
+    adSpend: document.getElementById('clvcac-ad-spend'),
+    customersAcquired: document.getElementById('clvcac-customers-acquired'),
+    teamCost: document.getElementById('clvcac-team-cost'),
+    agencyCost: document.getElementById('clvcac-agency-cost'),
+    softwareCost: document.getElementById('clvcac-software-cost'),
+    creativeCost: document.getElementById('clvcac-creative-cost'),
+    otherCost: document.getElementById('clvcac-other-cost'),
+    
+    revValue: document.getElementById('clvcac-revenue-value'),
+    freqValue: document.getElementById('clvcac-freq-value'),
+    lifespanMethod: document.getElementById('clvcac-lifespan-method'),
+    lifespanVal: document.getElementById('clvcac-lifespan-val'),
+    grossMargin: document.getElementById('clvcac-gross-margin'),
+    targetRatio: document.getElementById('clvcac-target-ratio'),
+    varCost: document.getElementById('clvcac-var-cost'),
+    ratioBasis: document.getElementById('clvcac-ratio-basis'),
+    plannedBudget: document.getElementById('clvcac-planned-budget'),
+
+    // Labels & Wrappers
+    lblRev: document.getElementById('clvcac-lbl-rev'),
+    lblFreq: document.getElementById('clvcac-lbl-freq'),
+    lblLifespan: document.getElementById('clvcac-lbl-lifespan'),
+    freqWrap: document.getElementById('clvcac-freq-wrap'),
+    helperFreq: document.getElementById('clvcac-helper-freq'),
+
+    // Error Labels
+    errAdSpend: document.getElementById('clvcac-err-ad-spend'),
+    errCust: document.getElementById('clvcac-err-customers-acquired'),
+    errRev: document.getElementById('clvcac-err-revenue-value'),
+    errLifespan: document.getElementById('clvcac-err-lifespan-val'),
+    errMargin: document.getElementById('clvcac-err-gross-margin'),
+
+    // Outputs
+    heroRatio: document.getElementById('clvcac-res-hero-ratio'),
+    heroBadge: document.getElementById('clvcac-hero-status-badge'),
+    heroInterpretation: document.getElementById('clvcac-hero-interpretation'),
+    resCac: document.getElementById('clvcac-res-cac'),
+    resCacTypeLbl: document.getElementById('clvcac-res-cac-type-lbl'),
+    resGpClv: document.getElementById('clvcac-res-gp-clv'),
+    resRevClv: document.getElementById('clvcac-res-rev-clv'),
+    resPayback: document.getElementById('clvcac-res-payback'),
+    resPaybackDesc: document.getElementById('clvcac-res-payback-desc'),
+    resBreakevenCac: document.getElementById('clvcac-res-breakeven-cac'),
+    resMaxCac: document.getElementById('clvcac-res-max-allowable-cac'),
+    resNetVal: document.getElementById('clvcac-res-net-val'),
+    resRetention: document.getElementById('clvcac-res-retention'),
+    resRetentionDesc: document.getElementById('clvcac-res-retention-desc'),
+
+    // Charts & Dynamic Containers
+    chartComparison: document.getElementById('clvcac-chart-comparison'),
+    chartBreakdown: document.getElementById('clvcac-chart-breakdown'),
+    insightsContainer: document.getElementById('clvcac-insights-container'),
+    budgetSummary: document.getElementById('clvcac-budget-summary'),
+    channelTbody: document.getElementById('clvcac-channel-tbody'),
+
+    // Scenarios
+    scenConRatio: document.getElementById('clvcac-scen-con-ratio'),
+    scenConDetail: document.getElementById('clvcac-scen-con-detail'),
+    scenBaseRatio: document.getElementById('clvcac-scen-base-ratio'),
+    scenBaseDetail: document.getElementById('clvcac-scen-base-detail'),
+    scenOptRatio: document.getElementById('clvcac-scen-opt-ratio'),
+    scenOptDetail: document.getElementById('clvcac-scen-opt-detail'),
+
+    // Buttons
+    btnCalculate: document.getElementById('clvcac-btn-calculate'),
+    btnExample: document.getElementById('clvcac-btn-example'),
+    btnReset: document.getElementById('clvcac-btn-reset'),
+    btnAddChannel: document.getElementById('clvcac-btn-add-channel'),
+    btnCopy: document.getElementById('clvcac-btn-copy'),
+    btnCsv: document.getElementById('clvcac-btn-csv')
+  };
+
+  // Helper: Format Currency
+  function fmtCurr(num) {
+    if (isNaN(num) || !isFinite(num)) return state.currencySymbol + '0.00';
+    return state.currencySymbol + Number(num).toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  // Update Currency Symbols across UI
+  function updateCurrencySymbols() {
+    let sym = dom.currency.value;
+    if (sym === 'custom') {
+      sym = dom.customCurrInput.value.trim() || '$';
+      dom.customCurrWrap.classList.remove('clvcac-hidden');
+    } else {
+      dom.customCurrWrap.classList.add('clvcac-hidden');
+    }
+    state.currencySymbol = sym;
+    document.querySelectorAll('.clvcac-curr-sym').forEach(el => el.textContent = sym);
+    calculateAll();
+  }
+
+  // Mode Toggle
+  function setMode(newMode) {
+    state.mode = newMode;
+    const isAdv = newMode === 'advanced';
+    dom.modeSimple.classList.toggle('clvcac-pill-active', !isAdv);
+    dom.modeSimple.setAttribute('aria-checked', (!isAdv).toString());
+    dom.modeAdvanced.classList.toggle('clvcac-pill-active', isAdv);
+    dom.modeAdvanced.setAttribute('aria-checked', isAdv.toString());
+
+    document.querySelectorAll('.clvcac-advanced-only').forEach(el => {
+      el.classList.toggle('clvcac-hidden', !isAdv);
+    });
+    calculateAll();
+  }
+
+  // Business Model Changes
+  function handleBusinessModelChange() {
+    state.businessModel = dom.bizModel.value;
+    switch(state.businessModel) {
+      case 'saas':
+      case 'subscription':
+        dom.lblRev.textContent = 'Average Monthly Recurring Revenue (MRR) (' + state.currencySymbol + ')';
+        dom.lblFreq.textContent = 'Purchases / Billings per Year';
+        dom.freqValue.value = '12';
+        dom.freqWrap.classList.add('clvcac-hidden');
+        dom.lblLifespan.textContent = 'Monthly Customer Churn Rate (%)';
+        dom.lifespanMethod.value = 'monthly-churn';
+        dom.lifespanVal.value = '4'; // 4% monthly churn
+        break;
+      case 'ecommerce':
+        dom.lblRev.textContent = 'Average Order Value (AOV) (' + state.currencySymbol + ')';
+        dom.lblFreq.textContent = 'Annual Purchase Frequency';
+        dom.freqWrap.classList.remove('clvcac-hidden');
+        dom.helperFreq.textContent = 'Orders placed per customer each year';
+        dom.lifespanMethod.value = 'direct';
+        dom.lblLifespan.textContent = 'Customer Lifespan (Years)';
+        break;
+      default:
+        dom.lblRev.textContent = 'Average Revenue Per Account (' + state.currencySymbol + ')';
+        dom.lblFreq.textContent = 'Transactions per Period';
+        dom.freqWrap.classList.remove('clvcac-hidden');
+        dom.lblLifespan.textContent = 'Customer Lifespan (Years)';
+        dom.lifespanMethod.value = 'direct';
+    }
+    handleLifespanMethodChange();
+    calculateAll();
+  }
+
+  function handleLifespanMethodChange() {
+    const method = dom.lifespanMethod.value;
+    if (method === 'direct') {
+      dom.lblLifespan.textContent = 'Customer Lifespan (Years)';
+      if (Number(dom.lifespanVal.value) > 20) dom.lifespanVal.value = '3';
+    } else if (method === 'monthly-churn') {
+      dom.lblLifespan.textContent = 'Monthly Customer Churn Rate (%)';
+      if (Number(dom.lifespanVal.value) < 0.5) dom.lifespanVal.value = '5';
+    } else if (method === 'monthly-retention') {
+      dom.lblLifespan.textContent = 'Monthly Customer Retention Rate (%)';
+      if (Number(dom.lifespanVal.value) < 50) dom.lifespanVal.value = '95';
+    }
+  }
+
+  // Input Validation
+  function validateInputs() {
+    let isValid = true;
+    
+    // Clear errors
+    [dom.errAdSpend, dom.errCust, dom.errRev, dom.errLifespan, dom.errMargin].forEach(el => el.textContent = '');
+
+    const adSpend = parseFloat(dom.adSpend.value);
+    const customers = parseInt(dom.customersAcquired.value, 10);
+    const rev = parseFloat(dom.revValue.value);
+    const lifespanParam = parseFloat(dom.lifespanVal.value);
+    const margin = parseFloat(dom.grossMargin.value);
+
+    if (isNaN(adSpend) || adSpend < 0) {
+      dom.errAdSpend.textContent = 'Spend must be ≥ 0.';
+      isValid = false;
+    }
+    if (isNaN(customers) || customers <= 0) {
+      dom.errCust.textContent = 'Must acquire at least 1 customer.';
+      isValid = false;
+    }
+    if (isNaN(rev) || rev <= 0) {
+      dom.errRev.textContent = 'Revenue must be positive.';
+      isValid = false;
+    }
+    if (isNaN(margin) || margin < 0 || margin > 100) {
+      dom.errMargin.textContent = 'Enter margin between 0% and 100%.';
+      isValid = false;
+    }
+
+    const method = dom.lifespanMethod.value;
+    if (isNaN(lifespanParam) || lifespanParam <= 0) {
+      dom.errLifespan.textContent = 'Lifespan/rate must be greater than zero.';
+      isValid = false;
+    } else if (method === 'monthly-churn' && lifespanParam >= 100) {
+      dom.errLifespan.textContent = 'Monthly churn must be under 100%.';
+      isValid = false;
+    } else if (method === 'monthly-retention' && lifespanParam > 100) {
+      dom.errLifespan.textContent = 'Retention cannot exceed 100%.';
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  // Core Calculation Engine
+  function calculateAll() {
+    if (!validateInputs()) return;
+
+    // 1. Gather Inputs
+    const adSpend = Math.max(0, parseFloat(dom.adSpend.value) || 0);
+    const customers = Math.max(1, parseInt(dom.customersAcquired.value, 10) || 1);
+    
+    const teamCost = state.mode === 'advanced' ? Math.max(0, parseFloat(dom.teamCost.value) || 0) : 0;
+    const agencyCost = state.mode === 'advanced' ? Math.max(0, parseFloat(dom.agencyCost.value) || 0) : 0;
+    const softwareCost = state.mode === 'advanced' ? Math.max(0, parseFloat(dom.softwareCost.value) || 0) : 0;
+    const creativeCost = state.mode === 'advanced' ? Math.max(0, parseFloat(dom.creativeCost.value) || 0) : 0;
+    const otherCost = state.mode === 'advanced' ? Math.max(0, parseFloat(dom.otherCost.value) || 0) : 0;
+
+    const totalLoadedAcquisition = adSpend + teamCost + agencyCost + softwareCost + creativeCost + otherCost;
+    const paidCac = adSpend / customers;
+    const fullyLoadedCac = totalLoadedAcquisition / customers;
+
+    let selectedCacType = 'loaded';
+    const cacRadio = document.querySelector('input[name="clvcac-cac-type"]:checked');
+    if (cacRadio && state.mode === 'advanced') {
+      selectedCacType = cacRadio.value;
+    }
+    const evalCac = selectedCacType === 'paid' ? paidCac : fullyLoadedCac;
+
+    // 2. Lifespan Calculation
+    const lifespanMethod = dom.lifespanMethod.value;
+    const rawLifespanVal = parseFloat(dom.lifespanVal.value);
+    let customerLifespanYears = 0;
+    let monthlyChurn = 0;
+    let monthlyRetention = 0;
+
+    if (lifespanMethod === 'direct') {
+      customerLifespanYears = rawLifespanVal;
+      const totalMonths = customerLifespanYears * 12;
+      monthlyChurn = totalMonths > 0 ? (1 / totalMonths) : 0;
+      monthlyRetention = 1 - monthlyChurn;
+    } else if (lifespanMethod === 'monthly-churn') {
+      monthlyChurn = rawLifespanVal / 100;
+      monthlyRetention = 1 - monthlyChurn;
+      const expectedMonths = monthlyChurn > 0 ? (1 / monthlyChurn) : 0;
+      customerLifespanYears = expectedMonths / 12;
+    } else if (lifespanMethod === 'monthly-retention') {
+      monthlyRetention = rawLifespanVal / 100;
+      monthlyChurn = 1 - monthlyRetention;
+      const expectedMonths = monthlyChurn > 0 ? (1 / monthlyChurn) : 0;
+      customerLifespanYears = expectedMonths / 12;
+    }
+
+    // Compound Annual Retention: (1 - Monthly Churn)^12
+    const compoundAnnualRetention = monthlyChurn > 0 ? Math.pow(1 - monthlyChurn, 12) * 100 : 100;
+
+    // 3. Customer Lifetime Value (CLV)
+    const unitRevenue = parseFloat(dom.revValue.value) || 0;
+    let freqPerYear = parseFloat(dom.freqValue.value) || 1;
+    if (state.businessModel === 'saas' || state.businessModel === 'subscription') {
+      freqPerYear = 12; // Monthly recurring
+    }
+
+    const annualRevenuePerCustomer = unitRevenue * freqPerYear;
+    const revenueClv = annualRevenuePerCustomer * customerLifespanYears;
+
+    const grossMarginPct = (parseFloat(dom.grossMargin.value) || 0) / 100;
+    const grossProfitClv = revenueClv * grossMarginPct;
+
+    const extraVarCosts = state.mode === 'advanced' ? (parseFloat(dom.varCost.value) || 0) : 0;
+    const contributionProfitClv = Math.max(0, grossProfitClv - extraVarCosts);
+
+    // Selected CLV metric for ratio
+    const ratioBasis = state.mode === 'advanced' ? dom.ratioBasis.value : 'gross';
+    let chosenClvForRatio = grossProfitClv;
+    if (ratioBasis === 'revenue') chosenClvForRatio = revenueClv;
+    if (ratioBasis === 'contribution') chosenClvForRatio = contributionProfitClv;
+
+    const clvCacRatio = evalCac > 0 ? (chosenClvForRatio / evalCac) : 0;
+
+    // 4. Payback Period
+    const monthlyGrossProfitCustomer = (annualRevenuePerCustomer * grossMarginPct) / 12;
+    let paybackMonths = 0;
+    if (monthlyGrossProfitCustomer > 0) {
+      paybackMonths = evalCac / monthlyGrossProfitCustomer;
+    }
+
+    // 5. Break-Even & Allowable CAC
+    const breakEvenCac = chosenClvForRatio;
+    const targetRatioVal = Math.max(0.5, parseFloat(dom.targetRatio.value) || 3.0);
+    const maxAllowableCac = chosenClvForRatio / targetRatioVal;
+    const netCustomerValue = chosenClvForRatio - evalCac;
+
+    // Store in State
+    state.results = {
+      adSpend,
+      totalLoadedAcquisition,
+      customers,
+      paidCac,
+      fullyLoadedCac,
+      evalCac,
+      selectedCacType,
+      revenueClv,
+      grossProfitClv,
+      contributionProfitClv,
+      chosenClvForRatio,
+      ratioBasis,
+      clvCacRatio,
+      paybackMonths,
+      customerLifespanYears,
+      monthlyChurnPct: monthlyChurn * 100,
+      compoundAnnualRetention,
+      breakEvenCac,
+      maxAllowableCac,
+      netCustomerValue,
+      targetRatioVal,
+      grossMarginPct: grossMarginPct * 100,
+      costs: {
+        adSpend,
+        teamCost,
+        agencyCost,
+        softwareCost,
+        creativeCost,
+        otherCost
+      }
+    };
+
+    renderDashboard();
+  }
+
+  // Render All Outputs & Visuals
+  function renderDashboard() {
+    const r = state.results;
+
+    // Hero Ratio Card
+    dom.heroRatio.textContent = r.clvCacRatio.toFixed(2) + 'x';
+    
+    // Status interpretation bands
+    dom.heroBadge.className = 'clvcac-hero-badge';
+    if (r.clvCacRatio >= 5.0) {
+      dom.heroBadge.classList.add('clvcac-status-pos');
+      dom.heroBadge.textContent = 'High Efficiency (Opportunity to Scale)';
+      dom.heroInterpretation.textContent = `Modeled lifetime profit is ${r.clvCacRatio.toFixed(2)}x acquisition costs. Consider scaling acquisition budgets.`;
+    } else if (r.clvCacRatio >= 3.0) {
+      dom.heroBadge.classList.add('clvcac-status-pos');
+      dom.heroBadge.textContent = 'Strong Unit Economics';
+      dom.heroInterpretation.textContent = `Modeled lifetime profit exceeds CAC by ${r.clvCacRatio.toFixed(2)}x, satisfying the industry target.`;
+    } else if (r.clvCacRatio >= 2.0) {
+      dom.heroBadge.classList.add('clvcac-status-war');
+      dom.heroBadge.textContent = 'Moderate Viability';
+      dom.heroInterpretation.textContent = `At ${r.clvCacRatio.toFixed(2)}x, customer margins are modest. Focus on retention or reducing CAC.`;
+    } else if (r.clvCacRatio >= 1.0) {
+      dom.heroBadge.classList.add('clvcac-status-war');
+      dom.heroBadge.textContent = 'Constrained Headroom';
+      dom.heroInterpretation.textContent = `Customer value only marginally exceeds acquisition cost (${r.clvCacRatio.toFixed(2)}x). Operational burn poses a risk.`;
+    } else {
+      dom.heroBadge.classList.add('clvcac-status-neg');
+      dom.heroBadge.textContent = 'Unprofitable Unit Economics';
+      dom.heroInterpretation.textContent = `CAC (${fmtCurr(r.evalCac)}) exceeds lifetime value (${fmtCurr(r.chosenClvForRatio)}). Pause scale to fix unit economics.`;
+    }
+
+    // Metric Cards
+    dom.resCac.textContent = fmtCurr(r.evalCac);
+    dom.resCacTypeLbl.textContent = r.selectedCacType === 'paid' ? 'Paid Media Only' : 'Fully Loaded Cost / Acquired Customer';
+
+    dom.resGpClv.textContent = fmtCurr(r.grossProfitClv);
+    dom.resRevClv.textContent = fmtCurr(r.revenueClv);
+    
+    if (r.paybackMonths > 0 && isFinite(r.paybackMonths)) {
+      dom.resPayback.textContent = r.paybackMonths.toFixed(1) + ' Mos';
+      dom.resPaybackDesc.textContent = `Recovers ${fmtCurr(r.evalCac)} CAC in ${r.paybackMonths.toFixed(1)} months`;
+    } else {
+      dom.resPayback.textContent = 'N/A';
+      dom.resPaybackDesc.textContent = 'Cannot be recovered with zero or negative profit margin';
+    }
+
+    dom.resBreakevenCac.textContent = fmtCurr(r.breakEvenCac);
+    dom.resMaxCac.textContent = fmtCurr(r.maxAllowableCac);
+    dom.resNetVal.textContent = fmtCurr(r.netCustomerValue);
+    
+    dom.resRetention.textContent = r.compoundAnnualRetention.toFixed(1) + '%';
+    dom.resRetentionDesc.textContent = `Expected lifespan: ${(r.customerLifespanYears * 12).toFixed(0)} mos (${r.customerLifespanYears.toFixed(1)} yrs)`;
+
+    // Render SVG Charts
+    renderComparisonChart();
+    renderBreakdownChart();
+
+    // Render Scenarios & Insights
+    renderScenarios();
+    renderInsights();
+    renderBudgetPlanner();
+    renderChannelTable();
+  }
+
+  // NATIVE SVG CHART 1: CLV vs CAC Bar Comparison
+  function renderComparisonChart() {
+    const r = state.results;
+    const maxVal = Math.max(r.revenueClv, r.grossProfitClv, r.evalCac, 100);
+
+    const barHeight = 24;
+    const gap = 16;
+    const startY = 24;
+    const chartWidth = 420;
+    const labelWidth = 110;
+    const barAreaWidth = chartWidth - labelWidth - 90;
+
+    function getWidth(val) {
+      return Math.max(2, (val / maxVal) * barAreaWidth);
+    }
+
+    const svg = `
+      <svg class="clvcac-svg" viewBox="0 0 ${chartWidth} 150" role="img" aria-label="CLV vs CAC Unit Economics Comparison Bar Chart">
+        <!-- Revenue CLV Bar -->
+        <text x="0" y="${startY + 16}" fill="#64748b" font-size="12" font-weight="600">Revenue CLV</text>
+        <rect x="${labelWidth}" y="${startY}" width="${getWidth(r.revenueClv)}" height="${barHeight}" rx="4" fill="#cbd5e1" />
+        <text x="${labelWidth + getWidth(r.revenueClv) + 8}" y="${startY + 16}" fill="#0f172a" font-size="12" font-weight="700">${fmtCurr(r.revenueClv)}</text>
+
+        <!-- Gross Profit CLV Bar -->
+        <text x="0" y="${startY + barHeight + gap + 16}" fill="#4f46e5" font-size="12" font-weight="600">Gross Profit CLV</text>
+        <rect x="${labelWidth}" y="${startY + barHeight + gap}" width="${getWidth(r.grossProfitClv)}" height="${barHeight}" rx="4" fill="#4f46e5" />
+        <text x="${labelWidth + getWidth(r.grossProfitClv) + 8}" y="${startY + barHeight + gap + 16}" fill="#4f46e5" font-size="12" font-weight="700">${fmtCurr(r.grossProfitClv)}</text>
+
+        <!-- CAC Bar -->
+        <text x="0" y="${startY + (barHeight + gap)*2 + 16}" fill="#ef4444" font-size="12" font-weight="600">Acquisition CAC</text>
+        <rect x="${labelWidth}" y="${startY + (barHeight + gap)*2}" width="${getWidth(r.evalCac)}" height="${barHeight}" rx="4" fill="#ef4444" />
+        <text x="${labelWidth + getWidth(r.evalCac) + 8}" y="${startY + (barHeight + gap)*2 + 16}" fill="#ef4444" font-size="12" font-weight="700">${fmtCurr(r.evalCac)}</text>
+      </svg>
+    `;
+    dom.chartComparison.innerHTML = svg;
+  }
+
+  // NATIVE SVG CHART 2: Acquisition Cost Breakdown
+  function renderBreakdownChart() {
+    const costs = state.results.costs;
+    const total = state.results.totalLoadedAcquisition;
+
+    if (total <= 0) {
+      dom.chartBreakdown.innerHTML = '<p class="clvcac-card-desc">No acquisition expenses entered.</p>';
+      return;
+    }
+
+    const items = [
+      { name: 'Ads', val: costs.adSpend, color: '#4f46e5' },
+      { name: 'Wages', val: costs.teamCost, color: '#06b6d4' },
+      { name: 'Agency', val: costs.agencyCost, color: '#f59e0b' },
+      { name: 'Software', val: costs.softwareCost, color: '#10b981' },
+      { name: 'Creative', val: costs.creativeCost, color: '#8b5cf6' },
+      { name: 'Other', val: costs.otherCost, color: '#94a3b8' }
+    ].filter(i => i.val > 0);
+
+    let currentX = 0;
+    const chartWidth = 420;
+    const height = 24;
+
+    const segments = items.map(item => {
+      const segWidth = (item.val / total) * chartWidth;
+      const rect = `<rect x="${currentX}" y="20" width="${segWidth}" height="${height}" fill="${item.color}" />`;
+      currentX += segWidth;
+      return rect;
+    }).join('');
+
+    const legend = items.map((item, idx) => {
+      const pct = ((item.val / total) * 100).toFixed(0);
+      const colX = (idx % 3) * 140;
+      const rowY = 64 + Math.floor(idx / 3) * 20;
+      return `
+        <rect x="${colX}" y="${rowY - 8}" width="10" height="10" fill="${item.color}" rx="2" />
+        <text x="${colX + 16}" y="${rowY}" font-size="11" fill="#475569">${item.name}: ${pct}% (${fmtCurr(item.val)})</text>
+      `;
+    }).join('');
+
+    const svg = `
+      <svg class="clvcac-svg" viewBox="0 0 ${chartWidth} ${items.length > 3 ? 110 : 90}" role="img" aria-label="Acquisition Spend Stacked Distribution Bar">
+        <g rx="4" clip-path="url(#clvcac-clip-bd)">
+          ${segments}
+        </g>
+        ${legend}
+      </svg>
+    `;
+    dom.chartBreakdown.innerHTML = svg;
+  }
+
+  // Scenarios Simulation
+  function renderScenarios() {
+    const r = state.results;
+
+    // Conservative: -20% Margin, +20% CAC
+    const conCac = r.evalCac * 1.20;
+    const conGpClv = r.revenueClv * (Math.max(0.05, (r.grossMarginPct * 0.8) / 100));
+    const conRatio = conCac > 0 ? (conGpClv / conCac) : 0;
+    dom.scenConRatio.textContent = conRatio.toFixed(2) + 'x';
+    dom.scenConDetail.textContent = `CLV: ${fmtCurr(conGpClv)} | CAC: ${fmtCurr(conCac)}`;
+
+    // Base
+    dom.scenBaseRatio.textContent = r.clvCacRatio.toFixed(2) + 'x';
+    dom.scenBaseDetail.textContent = `CLV: ${fmtCurr(r.grossProfitClv)} | CAC: ${fmtCurr(r.evalCac)}`;
+
+    // Optimistic: +15% Retention/CLV, -10% CAC
+    const optCac = r.evalCac * 0.90;
+    const optGpClv = r.grossProfitClv * 1.15;
+    const optRatio = optCac > 0 ? (optGpClv / optCac) : 0;
+    dom.scenOptRatio.textContent = optRatio.toFixed(2) + 'x';
+    dom.scenOptDetail.textContent = `CLV: ${fmtCurr(optGpClv)} | CAC: ${fmtCurr(optCac)}`;
+  }
+
+  // Dynamic Rule-Based Algorithmic Insights
+  function renderInsights() {
+    const r = state.results;
+    const insights = [];
+
+    if (r.clvCacRatio < 1.0) {
+      insights.push({
+        type: 'neg',
+        text: `<strong>Negative Unit Economics:</strong> Each new customer acquired loses ${fmtCurr(Math.abs(r.netCustomerValue))} over their modeled lifetime. Reduce paid acquisition bids immediately and audit gross margins.`
+      });
+    } else if (r.clvCacRatio >= 3.0 && r.clvCacRatio <= 5.0) {
+      insights.push({
+        type: 'pos',
+        text: `<strong>Target Operating Efficiency:</strong> Your ${r.clvCacRatio.toFixed(2)}x ratio sits in the optimal target corridor. You have strong coverage for sales and marketing overhead.`
+      });
+    } else if (r.clvCacRatio > 5.0) {
+      insights.push({
+        type: 'pos',
+        text: `<strong>Scaling Opportunity:</strong> A ${r.clvCacRatio.toFixed(2)}x ratio indicates substantial unit margin. You could safely raise acquisition bids or enter competitive ad auctions to accelerate customer growth.`
+      });
+    }
+
+    if (r.paybackMonths > 12) {
+      insights.push({
+        type: 'war',
+        text: `<strong>Extended Payback Period:</strong> Recovering acquisition capital takes ${r.paybackMonths.toFixed(1)} months. Ensure sufficient working capital is available to bridge ad spend before cash flow returns.`
+      });
+    } else if (r.paybackMonths > 0 && r.paybackMonths <= 6) {
+      insights.push({
+        type: 'pos',
+        text: `<strong>Fast Payback Velocity:</strong> Capital spent on acquisition is recovered in ${r.paybackMonths.toFixed(1)} months, enabling you to reinvest operating cash flow back into marketing.`
+      });
+    }
+
+    if (r.grossMarginPct < 40) {
+      insights.push({
+        type: 'war',
+        text: `<strong>Margin Compression:</strong> Gross margin is ${r.grossMarginPct.toFixed(0)}%. Even modest increases in Cost of Goods Sold (COGS) will quickly compress your CLV:CAC ratio.`
+      });
+    }
+
+    if (r.monthlyChurnPct > 7) {
+      insights.push({
+        type: 'war',
+        text: `<strong>Elevated Monthly Churn (${r.monthlyChurnPct.toFixed(1)}%):</strong> Account turnover limits customer lifespan to ${(r.customerLifespanYears * 12).toFixed(1)} months. Reducing churn by 2% would expand lifetime value substantially.`
+      });
+    }
+
+    dom.insightsContainer.innerHTML = insights.map(item => `
+      <li class="clvcac-insight-item clvcac-insight-${item.type}">
+        <div>${item.text}</div>
+      </li>
+    `).join('');
+  }
+
+  // Budget Planner
+  function renderBudgetPlanner() {
+    const r = state.results;
+    const budget = parseFloat(dom.plannedBudget.value) || 0;
+    if (r.evalCac <= 0 || budget <= 0) {
+      dom.budgetSummary.innerHTML = '<span class="clvcac-helper">Enter a planned acquisition budget to simulate output.</span>';
+      return;
+    }
+
+    const estCust = Math.floor(budget / r.evalCac);
+    const estLifetimeRev = estCust * r.revenueClv;
+    const estLifetimeGp = estCust * r.grossProfitClv;
+
+    dom.budgetSummary.innerHTML = `
+      <div class="clvcac-metric-card" style="margin-top: 10px;">
+        <span class="clvcac-metric-title">Projected New Customers</span>
+        <span class="clvcac-metric-num">${estCust.toLocaleString()} Customers</span>
+        <span class="clvcac-metric-desc">
+          Yields <strong>${fmtCurr(estLifetimeRev)}</strong> in cumulative lifetime revenue and 
+          <strong>${fmtCurr(estLifetimeGp)}</strong> in lifetime gross profit.
+        </span>
+      </div>
+    `;
+  }
+
+  // Channel Table
+  function renderChannelTable() {
+    dom.channelTbody.innerHTML = state.channels.map(ch => {
+      const cac = ch.customers > 0 ? (ch.spend / ch.customers) : 0;
+      return `
+        <tr data-channel-id="${ch.id}">
+          <td><input type="text" class="clvcac-input clvcac-ch-name" value="${ch.name}"></td>
+          <td><input type="number" class="clvcac-input clvcac-ch-spend" value="${ch.spend}" min="0"></td>
+          <td><input type="number" class="clvcac-input clvcac-ch-cust" value="${ch.customers}" min="1"></td>
+          <td style="font-weight: 700;">${fmtCurr(cac)}</td>
+          <td><button type="button" class="clvcac-btn-danger clvcac-btn-del-channel" title="Remove">&times;</button></td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Add Channel
+  function addChannel() {
+    const newId = Date.now();
+    state.channels.push({
+      id: newId,
+      name: 'Channel ' + (state.channels.length + 1),
+      spend: 2000,
+      customers: 40
+    });
+    renderChannelTable();
+  }
+
+  // Event Listeners Initialization
+  function initEvents() {
+    // Top Controls
+    dom.bizModel.addEventListener('change', handleBusinessModelChange);
+    dom.currency.addEventListener('change', updateCurrencySymbols);
+    dom.customCurrInput.addEventListener('input', updateCurrencySymbols);
+    
+    dom.modeSimple.addEventListener('click', () => setMode('simple'));
+    dom.modeAdvanced.addEventListener('click', () => setMode('advanced'));
+
+    // Dynamic triggers for all inputs
+    dom.root.querySelectorAll('.clvcac-calc-trigger').forEach(input => {
+      input.addEventListener('input', calculateAll);
+      input.addEventListener('change', calculateAll);
+    });
+
+    // Lifespan dropdown
+    dom.lifespanMethod.addEventListener('change', () => {
+      handleLifespanMethodChange();
+      calculateAll();
+    });
+
+    // Main action buttons
+    dom.btnCalculate.addEventListener('click', calculateAll);
+
+    // Load standard prompt verified eCommerce example
+    dom.btnExample.addEventListener('click', () => {
+      dom.bizModel.value = 'ecommerce';
+      handleBusinessModelChange();
+      dom.adSpend.value = '12000';
+      dom.customersAcquired.value = '200';
+      dom.revValue.value = '80';
+      dom.freqValue.value = '3';
+      dom.lifespanMethod.value = 'direct';
+      dom.lifespanVal.value = '3';
+      dom.grossMargin.value = '60';
+      dom.teamCost.value = '0';
+      dom.agencyCost.value = '0';
+      dom.softwareCost.value = '0';
+      dom.creativeCost.value = '0';
+      dom.otherCost.value = '0';
+      dom.varCost.value = '0';
+      dom.targetRatio.value = '3.0';
+      calculateAll();
+    });
+
+    // Reset button
+    dom.btnReset.addEventListener('click', () => {
+      if (confirm('Reset all values to calculator defaults?')) {
+        dom.bizModel.value = 'ecommerce';
+        handleBusinessModelChange();
+        dom.adSpend.value = '10000';
+        dom.customersAcquired.value = '200';
+        dom.revValue.value = '100';
+        dom.freqValue.value = '2';
+        dom.lifespanMethod.value = 'direct';
+        dom.lifespanVal.value = '3';
+        dom.grossMargin.value = '65';
+        dom.teamCost.value = '0';
+        dom.agencyCost.value = '0';
+        dom.softwareCost.value = '0';
+        dom.creativeCost.value = '0';
+        dom.otherCost.value = '0';
+        dom.varCost.value = '0';
+        dom.targetRatio.value = '3.0';
+        calculateAll();
+      }
+    });
+
+    // Channels dynamic events (delegation)
+    dom.btnAddChannel.addEventListener('click', addChannel);
+    dom.channelTbody.addEventListener('input', (e) => {
+      const row = e.target.closest('tr');
+      if (!row) return;
+      const id = parseInt(row.dataset.channelId, 10);
+      const ch = state.channels.find(c => c.id === id);
+      if (ch) {
+        if (e.target.classList.contains('clvcac-ch-name')) ch.name = e.target.value;
+        if (e.target.classList.contains('clvcac-ch-spend')) ch.spend = Math.max(0, parseFloat(e.target.value) || 0);
+        if (e.target.classList.contains('clvcac-ch-cust')) ch.customers = Math.max(1, parseInt(e.target.value, 10) || 1);
+        renderChannelTable();
+      }
+    });
+
+    dom.channelTbody.addEventListener('click', (e) => {
+      if (e.target.classList.contains('clvcac-btn-del-channel')) {
+        const row = e.target.closest('tr');
+        if (!row) return;
+        const id = parseInt(row.dataset.channelId, 10);
+        state.channels = state.channels.filter(c => c.id !== id);
+        renderChannelTable();
+      }
+    });
+
+    // Copy to Clipboard
+    dom.btnCopy.addEventListener('click', () => {
+      const r = state.results;
+      const text = `--- CLV:CAC UNIT ECONOMICS SUMMARY ---
+Business Model: ${dom.bizModel.value}
+CLV to CAC Ratio: ${r.clvCacRatio.toFixed(2)}x
+Customer Acquisition Cost (CAC): ${fmtCurr(r.evalCac)}
+Gross Profit CLV: ${fmtCurr(r.grossProfitClv)}
+Revenue CLV: ${fmtCurr(r.revenueClv)}
+CAC Payback: ${r.paybackMonths.toFixed(1)} Months
+Expected Customer Lifespan: ${r.customerLifespanYears.toFixed(1)} Years
+Break-Even CAC: ${fmtCurr(r.breakEvenCac)}
+Max Allowable CAC (${r.targetRatioVal}x target): ${fmtCurr(r.maxAllowableCac)}
+Net Customer Value: ${fmtCurr(r.netCustomerValue)}
+-------------------------------------
+Calculated using Customer Lifetime Value to CAC Calculator`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Results summary successfully copied to clipboard!');
+      }).catch(() => {
+        alert('Failed to copy. Please allow clipboard permissions.');
+      });
+    });
+
+    // Export CSV Report
+    dom.btnCsv.addEventListener('click', () => {
+      const r = state.results;
+      const csvRows = [
+        ['Customer Lifetime Value to CAC Analysis Report'],
+        ['Generated Date', new Date().toISOString().split('T')[0]],
+        [],
+        ['Metric Category', 'Key Assumption / Metric', 'Value', 'Unit'],
+        ['Overview', 'Business Model', dom.bizModel.value, ''],
+        ['Overview', 'Currency Symbol', state.currencySymbol, ''],
+        ['CAC Inputs', 'Advertising Spend', r.adSpend, state.currencySymbol],
+        ['CAC Inputs', 'New Customers Acquired', r.customers, 'Accounts'],
+        ['CAC Inputs', 'Fully Loaded Costs', r.totalLoadedAcquisition, state.currencySymbol],
+        ['CAC Outputs', 'Customer Acquisition Cost (CAC)', r.evalCac.toFixed(2), state.currencySymbol],
+        ['CLV Outputs', 'Topline Revenue CLV', r.revenueClv.toFixed(2), state.currencySymbol],
+        ['CLV Outputs', 'Gross Profit CLV', r.grossProfitClv.toFixed(2), state.currencySymbol],
+        ['CLV Outputs', 'Contribution Profit CLV', r.contributionProfitClv.toFixed(2), state.currencySymbol],
+        ['Unit Economics', 'CLV:CAC Ratio', r.clvCacRatio.toFixed(2), 'x'],
+        ['Unit Economics', 'CAC Payback Period', r.paybackMonths.toFixed(2), 'Months'],
+        ['Retention', 'Expected Lifespan', r.customerLifespanYears.toFixed(2), 'Years'],
+        ['Retention', 'Monthly Churn Rate', r.monthlyChurnPct.toFixed(2), '%'],
+        ['Retention', 'Compound Annual Retention', r.compoundAnnualRetention.toFixed(2), '%'],
+        ['Planning', 'Break-Even CAC', r.breakEvenCac.toFixed(2), state.currencySymbol],
+        ['Planning', 'Max Allowable CAC', r.maxAllowableCac.toFixed(2), state.currencySymbol],
+        ['Planning', 'Net Lifetime Customer Value', r.netCustomerValue.toFixed(2), state.currencySymbol],
+        []
+      ];
+
+      if (state.channels.length > 0) {
+        csvRows.push(['Acquisition Channel Comparison']);
+        csvRows.push(['Channel Name', 'Spend', 'Customers', 'CAC']);
+        state.channels.forEach(ch => {
+          const chCac = ch.customers > 0 ? (ch.spend / ch.customers).toFixed(2) : '0';
+          csvRows.push([ch.name, ch.spend, ch.customers, chCac]);
+        });
+      }
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.map(e => e.map(cell => `"${cell}"`).join(',')).join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'customer-lifetime-value-cac-analysis.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  }
+
+  // Initial Boot
+  setMode('simple');
+  initEvents();
+  handleBusinessModelChange();
+  calculateAll();
+})();
+</script>
+
+<!-- ==========================================================================
+     JSON-LD STRUCTURED DATA (SEO & ACCESSIBILITY SCHEMA)
+     ========================================================================== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://my-tool-app.pages.dev/customer-lifetime-value-to-cac-calculator#software",
+      "name": "Customer Lifetime Value to CAC Calculator",
+      "description": "Professional web utility to calculate Customer Lifetime Value (CLV), Customer Acquisition Cost (CAC), unit payback periods, and multi-channel acquisition ROI.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All modern web browsers",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Revenue, Gross Profit, and Contribution CLV modeling",
+        "Fully loaded vs. paid ad CAC comparison",
+        "CAC payback velocity in months",
+        "Compound annual retention modeling",
+        "Marketing channel acquisition comparison",
+        "What-if scenario sensitivity simulation",
+        "CSV report export and summary copy"
+      ],
+      "url": "https://my-tool-app.pages.dev/customer-lifetime-value-to-cac-calculator"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://my-tool-app.pages.dev/customer-lifetime-value-to-cac-calculator#webpage",
+      "url": "https://my-tool-app.pages.dev/customer-lifetime-value-to-cac-calculator",
+      "name": "Customer Lifetime Value to CAC Calculator",
+      "description": "Calculate your CLV to CAC ratio, customer lifetime value, acquisition cost, payback period and customer profitability with this free tool.",
+      "mainEntity": {
+        "@id": "https://my-tool-app.pages.dev/customer-lifetime-value-to-cac-calculator#software"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://my-tool-app.pages.dev/customer-lifetime-value-to-cac-calculator#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://my-tool-app.pages.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Customer Lifetime Value to CAC Calculator",
+          "item": "https://my-tool-app.pages.dev/customer-lifetime-value-to-cac-calculator"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://my-tool-app.pages.dev/customer-lifetime-value-to-cac-calculator#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the Customer Lifetime Value to CAC ratio?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The CLV to CAC ratio is an efficiency metric that compares the total lifetime profit (or revenue) generated by a customer against the expense incurred to acquire them. It highlights whether your marketing and sales engines generate sustainable returns."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate CLV to CAC ratio?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Divide your Gross Profit Customer Lifetime Value by your Customer Acquisition Cost. For example, if a customer yields $600 in lifetime gross profit and your CAC is $200, your ratio is $600 / $200 = 3.0x."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between CLV and CAC?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "CLV represents the aggregate financial value a customer brings throughout their entire engagement with your company. CAC represents the upfront sales and marketing costs required to gain that customer."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a good CLV to CAC ratio?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A ratio of 3.0x to 4.0x is widely accepted as the golden benchmark for venture-backed SaaS and digital commerce. Ratios below 2.0x typically strain operational cash flow, while ratios above 5.0x often indicate you could spend more aggressively to capture market share."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate customer acquisition cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To determine fully loaded CAC, add all ad spend, marketing and sales payroll, external agency fees, and marketing software subscriptions across a specific time window, then divide that sum by the number of new customers acquired during the same window."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a CAC payback period?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The CAC payback period is the time (usually measured in months) needed for a customer to generate sufficient gross profit to offset their initial acquisition cost. Healthy recurring-revenue companies target payback periods under 12 months."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does customer churn affect lifetime value?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Churn has an inverse relationship with customer lifespan. In a recurring model, expected lifetime equals 1 divided by the monthly churn rate. Higher churn reduces lifespan, which lowers CLV and compresses the CLV:CAC ratio."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this CLV CAC calculator suitable for SaaS and eCommerce businesses?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The calculator includes specialized configurations for eCommerce (order value and frequency) and recurring-revenue SaaS (monthly churn and recurring margin economics)."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
