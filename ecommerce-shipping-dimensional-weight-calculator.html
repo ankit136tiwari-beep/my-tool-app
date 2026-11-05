@@ -1,0 +1,1412 @@
+<!-- ==========================================================================
+     ECOMMERCE SHIPPING DIMENSIONAL WEIGHT CALCULATOR (ALL-IN-ONE CODE)
+     Blogger / Cloudflare Pages Ready - HTML + CSS + JS + Schema
+     ========================================================================== -->
+
+<!-- 1. Google SEO & Rich Results Schema (JSON-LD) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://my-tool-app.pages.dev/ecommerce-shipping-dimensional-weight-calculator#webapp",
+      "url": "https://my-tool-app.pages.dev/ecommerce-shipping-dimensional-weight-calculator",
+      "name": "Ecommerce Shipping Dimensional Weight Calculator",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5 support.",
+      "description": "Professional logistics web utility for calculating package volumetric weight, chargeable shipping mass, carrier rounding tiers, multi-package consignments, and shipping cost estimates.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://my-tool-app.pages.dev/ecommerce-shipping-dimensional-weight-calculator#webpage",
+      "url": "https://my-tool-app.pages.dev/ecommerce-shipping-dimensional-weight-calculator",
+      "name": "Dimensional Weight Calculator for Ecommerce Shipping",
+      "description": "Calculate dimensional weight, volumetric weight and billable shipping weight. Compare package sizes, DIM divisors and shipping costs.",
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://my-tool-app.pages.dev/ecommerce-shipping-dimensional-weight-calculator#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is dimensional weight in ecommerce shipping?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Dimensional weight (volumetric weight) is an industry-standard pricing technique used by postal and commercial shipping carriers that calculates a package's billable weight based on its outer cubic volume rather than its gravitational weight on a scale."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate dimensional weight?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Multiply package Length x Width x Height to find cubic volume, then divide by the carrier's DIM divisor (e.g., 5000 for metric cm/kg or 139 for imperial in/lb)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between actual weight and dimensional weight?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Actual weight is the physical weight of a parcel on a scale. Dimensional weight represents cubic volume converted into an equivalent weight. Carriers bill at whichever value is higher."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a DIM divisor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A DIM divisor is a numerical constant established by shipping carriers representing cubic volume allocated per unit of weight (e.g., 5000 cm³/kg, 6000 cm³/kg, 139 in³/lb, or 166 in³/lb)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is chargeable shipping weight determined?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Chargeable weight equals the mathematical maximum between physical scale weight and calculated dimensional weight: max(Actual Weight, DIM Weight)."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<!-- 2. Tool Wrapper & Scoped CSS -->
+<div id="ewdc-tool" class="ewdc-app-wrapper">
+  <style>
+    #ewdc-tool {
+      --ewdc-primary: #1e40af;
+      --ewdc-primary-hover: #1d4ed8;
+      --ewdc-primary-light: #eff6ff;
+      --ewdc-accent: #0284c7;
+      --ewdc-success: #15803d;
+      --ewdc-success-bg: #f0fdf4;
+      --ewdc-warning: #b45309;
+      --ewdc-danger: #b91c1c;
+      --ewdc-danger-bg: #fef2f2;
+      --ewdc-slate-900: #0f172a;
+      --ewdc-slate-800: #1e293b;
+      --ewdc-slate-700: #334155;
+      --ewdc-slate-600: #475569;
+      --ewdc-slate-500: #64748b;
+      --ewdc-slate-200: #e2e8f0;
+      --ewdc-slate-100: #f1f5f9;
+      --ewdc-slate-50: #f8fafc;
+      --ewdc-white: #ffffff;
+      --ewdc-radius: 8px;
+      --ewdc-radius-lg: 12px;
+      --ewdc-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --ewdc-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+      font-family: var(--ewdc-font);
+      color: var(--ewdc-slate-800);
+      background-color: var(--ewdc-slate-50);
+      line-height: 1.5;
+      padding: 16px;
+      margin: 0 auto;
+      max-width: 1200px;
+      box-sizing: border-box;
+    }
+
+    #ewdc-tool *, #ewdc-tool *::before, #ewdc-tool *::after {
+      box-sizing: border-box;
+    }
+
+    #ewdc-tool .ewdc-h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--ewdc-slate-900);
+      margin: 0 0 8px 0;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+
+    #ewdc-tool .ewdc-lead {
+      font-size: 1rem;
+      color: var(--ewdc-slate-600);
+      margin: 0 0 20px 0;
+      max-width: 900px;
+    }
+
+    #ewdc-tool .ewdc-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--ewdc-white);
+      padding: 12px 16px;
+      border: 1px solid var(--ewdc-slate-200);
+      border-radius: var(--ewdc-radius-lg);
+      margin-bottom: 24px;
+      box-shadow: var(--ewdc-shadow-sm);
+    }
+
+    #ewdc-tool .ewdc-toolbar-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #ewdc-tool .ewdc-grid-main {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+    @media (min-width: 1024px) {
+      #ewdc-tool .ewdc-grid-main {
+        grid-template-columns: 460px 1fr;
+      }
+    }
+
+    #ewdc-tool .ewdc-card {
+      background: var(--ewdc-white);
+      border: 1px solid var(--ewdc-slate-200);
+      border-radius: var(--ewdc-radius-lg);
+      padding: 18px;
+      box-shadow: var(--ewdc-shadow-sm);
+      margin-bottom: 18px;
+    }
+    #ewdc-tool .ewdc-card:last-child {
+      margin-bottom: 0;
+    }
+
+    #ewdc-tool .ewdc-card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--ewdc-slate-900);
+      margin: 0 0 14px 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--ewdc-slate-200);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #ewdc-tool .ewdc-form-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    @media (min-width: 480px) {
+      #ewdc-tool .ewdc-form-row-3 { grid-template-columns: repeat(3, 1fr); }
+      #ewdc-tool .ewdc-form-row-2 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    #ewdc-tool .ewdc-form-group {
+      margin-bottom: 12px;
+    }
+    #ewdc-tool .ewdc-form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    #ewdc-tool .ewdc-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ewdc-slate-700);
+      margin-bottom: 4px;
+    }
+
+    #ewdc-tool .ewdc-hint {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--ewdc-slate-500);
+      margin-bottom: 6px;
+    }
+
+    #ewdc-tool .ewdc-input,
+    #ewdc-tool .ewdc-select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--ewdc-slate-200);
+      border-radius: var(--ewdc-radius);
+      font-size: 0.925rem;
+      color: var(--ewdc-slate-900);
+      background-color: var(--ewdc-white);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+    #ewdc-tool .ewdc-input:focus,
+    #ewdc-tool .ewdc-select:focus {
+      border-color: var(--ewdc-primary);
+      box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.15);
+    }
+
+    #ewdc-tool .ewdc-input-group {
+      display: flex;
+      align-items: stretch;
+    }
+    #ewdc-tool .ewdc-input-group .ewdc-input {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    #ewdc-tool .ewdc-input-group .ewdc-select {
+      width: auto;
+      min-width: 80px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-left: 0;
+      background-color: var(--ewdc-slate-50);
+    }
+
+    #ewdc-tool .ewdc-field-error {
+      color: var(--ewdc-danger);
+      font-size: 0.75rem;
+      margin-top: 4px;
+      display: none;
+      font-weight: 500;
+    }
+    #ewdc-tool .has-error .ewdc-input {
+      border-color: var(--ewdc-danger);
+      background-color: var(--ewdc-danger-bg);
+    }
+    #ewdc-tool .has-error .ewdc-field-error {
+      display: block;
+    }
+
+    #ewdc-tool .ewdc-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--ewdc-radius);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      text-decoration: none;
+    }
+    #ewdc-tool .ewdc-btn-primary {
+      background-color: var(--ewdc-primary);
+      color: var(--ewdc-white);
+    }
+    #ewdc-tool .ewdc-btn-primary:hover {
+      background-color: var(--ewdc-primary-hover);
+    }
+    #ewdc-tool .ewdc-btn-secondary {
+      background-color: var(--ewdc-white);
+      border-color: var(--ewdc-slate-200);
+      color: var(--ewdc-slate-700);
+    }
+    #ewdc-tool .ewdc-btn-secondary:hover {
+      background-color: var(--ewdc-slate-100);
+    }
+    #ewdc-tool .ewdc-btn-sm {
+      padding: 5px 10px;
+      font-size: 0.775rem;
+    }
+
+    #ewdc-tool .ewdc-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    #ewdc-tool .ewdc-kpi-card {
+      background: var(--ewdc-white);
+      border: 1px solid var(--ewdc-slate-200);
+      border-radius: var(--ewdc-radius-lg);
+      padding: 14px;
+      border-left: 4px solid var(--ewdc-primary);
+      box-shadow: var(--ewdc-shadow-sm);
+    }
+    #ewdc-tool .ewdc-kpi-card.kpi-active {
+      border-left-color: var(--ewdc-success);
+      background-color: #fcfdfc;
+    }
+    #ewdc-tool .ewdc-kpi-card.kpi-accent {
+      border-left-color: var(--ewdc-accent);
+    }
+    #ewdc-tool .ewdc-kpi-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--ewdc-slate-500);
+      margin-bottom: 4px;
+    }
+    #ewdc-tool .ewdc-kpi-value {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--ewdc-slate-900);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    #ewdc-tool .ewdc-kpi-sub {
+      font-size: 0.75rem;
+      color: var(--ewdc-slate-500);
+    }
+
+    #ewdc-tool .ewdc-status-banner {
+      padding: 12px 16px;
+      border-radius: var(--ewdc-radius);
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    #ewdc-tool .status-dim {
+      background-color: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+    }
+    #ewdc-tool .status-actual {
+      background-color: var(--ewdc-primary-light);
+      border: 1px solid #bfdbfe;
+      color: var(--ewdc-primary);
+    }
+    #ewdc-tool .status-equal {
+      background-color: var(--ewdc-slate-100);
+      border: 1px solid var(--ewdc-slate-200);
+      color: var(--ewdc-slate-700);
+    }
+
+    #ewdc-tool .ewdc-viz-wrap {
+      background: var(--ewdc-white);
+      border: 1px solid var(--ewdc-slate-200);
+      border-radius: var(--ewdc-radius);
+      padding: 14px;
+      margin-bottom: 18px;
+    }
+    #ewdc-tool .ewdc-bar-track {
+      height: 22px;
+      background-color: var(--ewdc-slate-100);
+      border-radius: 11px;
+      overflow: hidden;
+      display: flex;
+      margin-top: 8px;
+    }
+    #ewdc-tool .ewdc-bar-actual {
+      background-color: var(--ewdc-primary);
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    #ewdc-tool .ewdc-bar-dim {
+      background-color: #f97316;
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    #ewdc-tool details.ewdc-details {
+      background: var(--ewdc-white);
+      border: 1px solid var(--ewdc-slate-200);
+      border-radius: var(--ewdc-radius-lg);
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    #ewdc-tool details.ewdc-details summary {
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--ewdc-slate-800);
+      cursor: pointer;
+      background: var(--ewdc-slate-50);
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #ewdc-tool details.ewdc-details[open] summary {
+      border-bottom: 1px solid var(--ewdc-slate-200);
+    }
+    #ewdc-tool .ewdc-details-body {
+      padding: 14px;
+    }
+
+    #ewdc-tool .ewdc-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 10px;
+      border: 1px solid var(--ewdc-slate-200);
+      border-radius: var(--ewdc-radius);
+    }
+    #ewdc-tool .ewdc-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.825rem;
+      text-align: left;
+      background: var(--ewdc-white);
+      min-width: 600px;
+    }
+    #ewdc-tool .ewdc-table th {
+      background: var(--ewdc-slate-100);
+      color: var(--ewdc-slate-700);
+      font-weight: 700;
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--ewdc-slate-200);
+    }
+    #ewdc-tool .ewdc-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--ewdc-slate-200);
+      color: var(--ewdc-slate-800);
+    }
+    #ewdc-tool .ewdc-table tr:hover td {
+      background-color: var(--ewdc-slate-50);
+    }
+
+    #ewdc-tool .ewdc-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--ewdc-slate-900);
+      color: var(--ewdc-white);
+      padding: 10px 18px;
+      border-radius: var(--ewdc-radius);
+      font-size: 0.85rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+      z-index: 999999;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      pointer-events: none;
+    }
+    #ewdc-tool .ewdc-toast.show {
+      opacity: 1;
+    }
+
+    #ewdc-tool .ewdc-content-article {
+      background: var(--ewdc-white);
+      border: 1px solid var(--ewdc-slate-200);
+      border-radius: var(--ewdc-radius-lg);
+      padding: 22px;
+      margin-top: 28px;
+      box-shadow: var(--ewdc-shadow-sm);
+    }
+    #ewdc-tool .ewdc-content-article h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--ewdc-slate-900);
+      margin: 22px 0 10px 0;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--ewdc-slate-200);
+    }
+    #ewdc-tool .ewdc-content-article h2:first-child { margin-top: 0; }
+    #ewdc-tool .ewdc-content-article h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ewdc-slate-800);
+      margin: 16px 0 6px 0;
+    }
+    #ewdc-tool .ewdc-content-article p,
+    #ewdc-tool .ewdc-content-article li {
+      font-size: 0.9rem;
+      color: var(--ewdc-slate-600);
+      line-height: 1.65;
+    }
+    #ewdc-tool .ewdc-content-article ul,
+    #ewdc-tool .ewdc-content-article ol {
+      padding-left: 20px;
+      margin-bottom: 14px;
+    }
+    #ewdc-tool .ewdc-formula-box {
+      background: var(--ewdc-slate-100);
+      padding: 10px 14px;
+      border-radius: var(--ewdc-radius);
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: var(--ewdc-slate-900);
+      margin: 8px 0 14px 0;
+      border-left: 3px solid var(--ewdc-primary);
+    }
+    #ewdc-tool .ewdc-link {
+      color: var(--ewdc-primary);
+      text-decoration: underline;
+      font-weight: 500;
+    }
+
+    @media print {
+      #ewdc-tool { background: #ffffff !important; padding: 0 !important; }
+      #ewdc-tool .ewdc-toolbar,
+      #ewdc-tool .ewdc-btn,
+      #ewdc-tool .ewdc-form-column,
+      #ewdc-tool .ewdc-toast,
+      #ewdc-tool .ewdc-content-article { display: none !important; }
+      #ewdc-tool .ewdc-grid-main { display: block !important; }
+      #ewdc-tool .ewdc-card { border: 1px solid #000 !important; box-shadow: none !important; }
+    }
+  </style>
+
+  <!-- 3. Header & Working Tool Interface -->
+  <header>
+    <h1 class="ewdc-h1">Ecommerce Shipping Dimensional Weight Calculator</h1>
+    <p class="ewdc-lead">
+      Calculate package dimensional weight (volumetric weight), compare actual scale weight against billable weight, test carrier DIM divisors, and audit multi-package shipping manifests.
+    </p>
+  </header>
+
+  <!-- Action Toolbar -->
+  <div class="ewdc-toolbar" role="region" aria-label="Controls">
+    <div class="ewdc-toolbar-group">
+      <button type="button" id="ewdc_btn_sample" class="ewdc-btn ewdc-btn-secondary ewdc-btn-sm">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        Load Sample Data
+      </button>
+      <button type="button" id="ewdc_btn_reset" class="ewdc-btn ewdc-btn-secondary ewdc-btn-sm">Reset</button>
+      <button type="button" id="ewdc_btn_copy" class="ewdc-btn ewdc-btn-secondary ewdc-btn-sm">Copy Summary</button>
+      <button type="button" id="ewdc_btn_csv" class="ewdc-btn ewdc-btn-secondary ewdc-btn-sm">Export CSV</button>
+      <button type="button" id="ewdc_btn_print" class="ewdc-btn ewdc-btn-secondary ewdc-btn-sm">Print</button>
+    </div>
+    <div class="ewdc-toolbar-group">
+      <span style="font-size:0.8rem; color:var(--ewdc-slate-500);">System Units:</span>
+      <select id="ewdc_unit_system" class="ewdc-select" style="width:auto; padding:5px 8px; font-size:0.8rem;">
+        <option value="metric" selected>Metric (cm / kg)</option>
+        <option value="imperial">Imperial (in / lb)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Main Calculator Grid -->
+  <div class="ewdc-grid-main">
+    
+    <!-- LEFT INPUT COLUMN -->
+    <div class="ewdc-form-column">
+      
+      <div class="ewdc-card">
+        <div class="ewdc-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+          1. Outer Carton Measurements
+        </div>
+        <span class="ewdc-hint">Enter the outer box dimensions including exterior tape and bulges.</span>
+        
+        <div class="ewdc-form-row ewdc-form-row-3">
+          <div class="ewdc-form-group" id="grp_dim_l">
+            <label class="ewdc-label" for="ewdc_dim_l">Length</label>
+            <input type="number" id="ewdc_dim_l" class="ewdc-input" min="0.01" step="any" placeholder="40">
+            <div class="ewdc-field-error">Must be &gt; 0</div>
+          </div>
+          <div class="ewdc-form-group" id="grp_dim_w">
+            <label class="ewdc-label" for="ewdc_dim_w">Width</label>
+            <input type="number" id="ewdc_dim_w" class="ewdc-input" min="0.01" step="any" placeholder="30">
+            <div class="ewdc-field-error">Must be &gt; 0</div>
+          </div>
+          <div class="ewdc-form-group" id="grp_dim_h">
+            <label class="ewdc-label" for="ewdc_dim_h">Height</label>
+            <input type="number" id="ewdc_dim_h" class="ewdc-input" min="0.01" step="any" placeholder="20">
+            <div class="ewdc-field-error">Must be &gt; 0</div>
+          </div>
+        </div>
+
+        <div class="ewdc-form-row ewdc-form-row-2">
+          <div class="ewdc-form-group">
+            <label class="ewdc-label" for="ewdc_dim_unit">Dimension Unit</label>
+            <select id="ewdc_dim_unit" class="ewdc-select">
+              <option value="cm" selected>Centimeters (cm)</option>
+              <option value="mm">Millimeters (mm)</option>
+              <option value="m">Meters (m)</option>
+              <option value="in">Inches (in)</option>
+              <option value="ft">Feet (ft)</option>
+            </select>
+          </div>
+          <div class="ewdc-form-group" id="grp_actual_wt">
+            <label class="ewdc-label" for="ewdc_actual_wt">Actual Scale Weight</label>
+            <div class="ewdc-input-group">
+              <input type="number" id="ewdc_actual_wt" class="ewdc-input" min="0.001" step="any" placeholder="3.0">
+              <select id="ewdc_wt_unit" class="ewdc-select">
+                <option value="kg" selected>kg</option>
+                <option value="g">g</option>
+                <option value="lb">lb</option>
+                <option value="oz">oz</option>
+              </select>
+            </div>
+            <div class="ewdc-field-error">Must be &gt; 0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ewdc-card">
+        <div class="ewdc-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          2. DIM Divisor &amp; Rounding Rules
+        </div>
+
+        <div class="ewdc-form-row ewdc-form-row-2">
+          <div class="ewdc-form-group">
+            <label class="ewdc-label" for="ewdc_divisor_preset">Divisor Preset</label>
+            <select id="ewdc_divisor_preset" class="ewdc-select">
+              <option value="5000" selected>5000 (Standard Metric cm³/kg)</option>
+              <option value="6000">6000 (IATA Metric cm³/kg)</option>
+              <option value="4000">4000 (Express / Courier cm³/kg)</option>
+              <option value="139">139 (US Domestic in³/lb)</option>
+              <option value="166">166 (US Retail / Postal in³/lb)</option>
+              <option value="custom">Custom Specified Divisor</option>
+            </select>
+          </div>
+          <div class="ewdc-form-group" id="grp_divisor_val">
+            <label class="ewdc-label" for="ewdc_divisor_val">Active Divisor Value</label>
+            <input type="number" id="ewdc_divisor_val" class="ewdc-input" min="1" step="any" value="5000">
+            <div class="ewdc-field-error">Must be &gt; 0</div>
+          </div>
+        </div>
+
+        <div class="ewdc-form-group">
+          <label class="ewdc-label" for="ewdc_round_rule">Carrier Billable Weight Rounding</label>
+          <select id="ewdc_round_rule" class="ewdc-select">
+            <option value="none">Exact Weight (No Rounding)</option>
+            <option value="0.1">Round Up to Next 0.1 Unit</option>
+            <option value="0.5" selected>Round Up to Next 0.5 Unit (Standard Express)</option>
+            <option value="1.0">Round Up to Next 1.0 Unit (Standard Postal)</option>
+          </select>
+          <span class="ewdc-hint">Carriers generally bill using the ceiling of the specified increment.</span>
+        </div>
+      </div>
+
+      <details class="ewdc-details">
+        <summary>
+          <span>3. Shipping Cost Tariff Estimator (Optional)</span>
+          <span style="font-size:0.75rem; color:var(--ewdc-primary);">Configure Rates &darr;</span>
+        </summary>
+        <div class="ewdc-details-body">
+          <div class="ewdc-form-row ewdc-form-row-2">
+            <div class="ewdc-form-group">
+              <label class="ewdc-label" for="ewdc_cost_currency">Currency</label>
+              <select id="ewdc_cost_currency" class="ewdc-select">
+                <option value="$" selected>USD ($)</option>
+                <option value="€">EUR (€)</option>
+                <option value="£">GBP (£)</option>
+                <option value="₹">INR (₹)</option>
+                <option value="C$">CAD (C$)</option>
+                <option value="A$">AUD (A$)</option>
+              </select>
+            </div>
+            <div class="ewdc-form-group">
+              <label class="ewdc-label" for="ewdc_cost_rate">Freight Rate (per unit)</label>
+              <input type="number" id="ewdc_cost_rate" class="ewdc-input" min="0" step="any" placeholder="4.50">
+            </div>
+          </div>
+
+          <div class="ewdc-form-row ewdc-form-row-2">
+            <div class="ewdc-form-group">
+              <label class="ewdc-label" for="ewdc_cost_base">Base Surcharge</label>
+              <input type="number" id="ewdc_cost_base" class="ewdc-input" min="0" step="any" placeholder="2.00">
+            </div>
+            <div class="ewdc-form-group">
+              <label class="ewdc-label" for="ewdc_cost_fuel">Fuel Surcharge (%)</label>
+              <input type="number" id="ewdc_cost_fuel" class="ewdc-input" min="0" step="any" placeholder="12.5">
+            </div>
+          </div>
+
+          <div class="ewdc-form-row ewdc-form-row-2">
+            <div class="ewdc-form-group">
+              <label class="ewdc-label" for="ewdc_cost_handling">Handling Fee</label>
+              <input type="number" id="ewdc_cost_handling" class="ewdc-input" min="0" step="any" placeholder="0.00">
+            </div>
+            <div class="ewdc-form-group">
+              <label class="ewdc-label" for="ewdc_cost_discount">Discount (%)</label>
+              <input type="number" id="ewdc_cost_discount" class="ewdc-input" min="0" max="100" step="any" placeholder="0">
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="ewdc-details">
+        <summary>
+          <span>4. Box Space Utilization (Void Estimator)</span>
+          <span style="font-size:0.75rem; color:var(--ewdc-primary);">Inspect Packing &darr;</span>
+        </summary>
+        <div class="ewdc-details-body">
+          <span class="ewdc-hint">Enter product dimensions to estimate empty carton void space.</span>
+          <div class="ewdc-form-row ewdc-form-row-3">
+            <div class="ewdc-form-group">
+              <label class="ewdc-label" for="ewdc_prod_l">Product L</label>
+              <input type="number" id="ewdc_prod_l" class="ewdc-input" min="0" step="any" placeholder="35">
+            </div>
+            <div class="ewdc-form-group">
+              <label class="ewdc-label" for="ewdc_prod_w">Product W</label>
+              <input type="number" id="ewdc_prod_w" class="ewdc-input" min="0" step="any" placeholder="25">
+            </div>
+            <div class="ewdc-form-group">
+              <label class="ewdc-label" for="ewdc_prod_h">Product H</label>
+              <input type="number" id="ewdc_prod_h" class="ewdc-input" min="0" step="any" placeholder="15">
+            </div>
+          </div>
+          <div id="ewdc_utilization_result" style="font-size:0.825rem; font-weight:600; color:var(--ewdc-slate-700); margin-top:6px;">
+            Estimated Utilization: -- %
+          </div>
+        </div>
+      </details>
+
+    </div>
+
+    <!-- RIGHT RESULTS COLUMN -->
+    <div class="ewdc-results-column">
+      
+      <div id="ewdc_status_banner" class="ewdc-status-banner status-equal" role="status" aria-live="polite">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        <span id="ewdc_status_text">Enter package dimensions and weight to calculate.</span>
+      </div>
+
+      <div class="ewdc-kpi-grid">
+        <div class="ewdc-kpi-card" id="card_kpi_chargeable">
+          <div class="ewdc-kpi-title">Chargeable Weight</div>
+          <div class="ewdc-kpi-value" id="kpi_chargeable_wt">0.00 <span style="font-size:0.9rem;" class="unit-wt">kg</span></div>
+          <div class="ewdc-kpi-sub">Unrounded Billing Base</div>
+        </div>
+
+        <div class="ewdc-kpi-card kpi-active" id="card_kpi_billable">
+          <div class="ewdc-kpi-title">Final Billable Weight</div>
+          <div class="ewdc-kpi-value" id="kpi_billable_wt">0.00 <span style="font-size:0.9rem;" class="unit-wt">kg</span></div>
+          <div class="ewdc-kpi-sub">With Selected Rounding</div>
+        </div>
+
+        <div class="ewdc-kpi-card" id="card_kpi_dim">
+          <div class="ewdc-kpi-title">Dimensional (DIM) Weight</div>
+          <div class="ewdc-kpi-value" id="kpi_dim_wt">0.00 <span style="font-size:0.9rem;" class="unit-wt">kg</span></div>
+          <div class="ewdc-kpi-sub">Volumetric Weight</div>
+        </div>
+
+        <div class="ewdc-kpi-card" id="card_kpi_actual">
+          <div class="ewdc-kpi-title">Actual Scale Weight</div>
+          <div class="ewdc-kpi-value" id="kpi_actual_wt">0.00 <span style="font-size:0.9rem;" class="unit-wt">kg</span></div>
+          <div class="ewdc-kpi-sub">Normalized Weight</div>
+        </div>
+
+        <div class="ewdc-kpi-card kpi-accent">
+          <div class="ewdc-kpi-title">Carton Cubic Volume</div>
+          <div class="ewdc-kpi-value" id="kpi_volume">0.00 <span style="font-size:0.85rem;" id="unit_volume">m³</span></div>
+          <div class="ewdc-kpi-sub" id="kpi_volume_sub">Spatial Footprint</div>
+        </div>
+
+        <div class="ewdc-kpi-card" id="card_kpi_cost">
+          <div class="ewdc-kpi-title">Estimated Freight Cost</div>
+          <div class="ewdc-kpi-value" id="kpi_est_cost">--</div>
+          <div class="ewdc-kpi-sub">Based on user tariff</div>
+        </div>
+      </div>
+
+      <div class="ewdc-viz-wrap">
+        <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;">
+          <span style="color:var(--ewdc-primary);">Actual Weight: <span id="viz_actual_txt">0.00</span></span>
+          <span style="color:#ea580c;">Dimensional Weight: <span id="viz_dim_txt">0.00</span></span>
+        </div>
+        <div class="ewdc-bar-track" aria-hidden="true">
+          <div class="ewdc-bar-actual" id="viz_bar_actual" style="width: 50%;"></div>
+          <div class="ewdc-bar-dim" id="viz_bar_dim" style="width: 50%;"></div>
+        </div>
+      </div>
+
+      <div class="ewdc-card">
+        <div class="ewdc-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          Audit Ledger &amp; Equation Steps
+        </div>
+        <div id="ewdc_audit_steps" style="font-size:0.85rem; color:var(--ewdc-slate-700); line-height:1.7;">
+          Enter dimensions to view equation ledger.
+        </div>
+      </div>
+
+      <div class="ewdc-card">
+        <div class="ewdc-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          Divisor Sensitivity Analysis
+        </div>
+        <div class="ewdc-table-wrap">
+          <table class="ewdc-table" id="ewdc_divisor_comp_table">
+            <thead>
+              <tr>
+                <th>Divisor</th>
+                <th>Common Service</th>
+                <th>DIM Weight</th>
+                <th>Billable Weight</th>
+                <th>Diff vs Active</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="5" style="text-align:center;">Enter package values to calculate.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MULTI-PACKAGE MANIFEST -->
+  <div class="ewdc-card" style="margin-bottom: 24px;">
+    <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px; border-bottom:1px solid var(--ewdc-slate-200); padding-bottom:10px;">
+      <div class="ewdc-card-title" style="border:0; margin:0; padding:0;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16.5 9.4 7.55 4.24a1.79 1.79 0 0 0-2.5 1.48v12.56a1.79 1.79 0 0 0 2.5 1.48l8.95-5.16a1.8 1.8 0 0 0 0-3.12z"></path></svg>
+        Multi-Package Shipping Manifest
+      </div>
+      <button type="button" id="ewdc_btn_add_pkg" class="ewdc-btn ewdc-btn-primary ewdc-btn-sm">+ Add Another Carton</button>
+    </div>
+
+    <div class="ewdc-table-wrap">
+      <table class="ewdc-table" id="ewdc_manifest_table">
+        <thead>
+          <tr>
+            <th>Carton Name</th>
+            <th>L &times; W &times; H</th>
+            <th>Qty</th>
+            <th>Unit Actual</th>
+            <th>Unit DIM</th>
+            <th>Unit Billable</th>
+            <th>Extended Billable</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="ewdc_manifest_tbody"></tbody>
+        <tfoot>
+          <tr style="background:var(--ewdc-slate-100); font-weight:700;">
+            <td colspan="2">Shipment Totals</td>
+            <td id="man_total_qty">0</td>
+            <td id="man_total_actual">0.00</td>
+            <td id="man_total_dim">0.00</td>
+            <td>--</td>
+            <td id="man_total_billable">0.00</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <div id="ewdc_toast" class="ewdc-toast" role="status" aria-live="polite">Notification</div>
+
+  <!-- 4. Long-form SEO Content & FAQs -->
+  <article class="ewdc-content-article">
+    <h2>Understanding Dimensional Weight in Modern Ecommerce Shipping</h2>
+    <p>
+      In ecommerce logistics, package freight charges are rarely determined solely by what a carton registers on a scale. Instead, major postal networks, air couriers, and freight forwarders evaluate packages through <strong>dimensional weight</strong> (also known as <em>volumetric weight</em> or <em>cube weight</em>).
+    </p>
+
+    <h2>Primary Features of This Calculator</h2>
+    <ul>
+      <li><strong>Dual-Unit System:</strong> Supports metric (cm, mm, m, kg, g) and imperial (in, ft, lb, oz) measurements.</li>
+      <li><strong>Flexible Divisors:</strong> Presets for 5000, 6000, 4000 cm³/kg and 139, 166 in³/lb, plus custom inputs.</li>
+      <li><strong>Multi-Package Manifest:</strong> Calculate multiple carton sizes, quantities, and export to CSV.</li>
+      <li><strong>Cost Estimator:</strong> Estimate freight rates with fuel surcharges, handling fees, and discounts.</li>
+    </ul>
+
+    <h2>Formulas &amp; Calculation Examples</h2>
+    <div class="ewdc-formula-box">
+      <strong>Metric Formula:</strong><br>
+      DIM Weight (kg) = [Length (cm) &times; Width (cm) &times; Height (cm)] / DIM Divisor (cm&sup3;/kg)
+    </div>
+    <div class="ewdc-formula-box">
+      <strong>Imperial Formula:</strong><br>
+      DIM Weight (lb) = [Length (in) &times; Width (in) &times; Height (in)] / DIM Divisor (in&sup3;/lb)
+    </div>
+    <div class="ewdc-formula-box">
+      <strong>Chargeable Weight:</strong><br>
+      Chargeable Weight = Max(Actual Weight, Dimensional Weight)
+    </div>
+
+    <h2>Frequently Asked Questions (FAQ)</h2>
+    <h3>What is dimensional weight in ecommerce shipping?</h3>
+    <p>Dimensional weight is a pricing technique used by commercial carriers to bill packages based on cubic volume rather than scale weight.</p>
+
+    <h3>What is a DIM divisor?</h3>
+    <p>A DIM divisor is a numerical constant set by carriers representing cubic volume allowed per unit of weight (e.g., 5000 cm³/kg or 139 in³/lb).</p>
+
+    <h3>Why is dimensional weight higher than actual weight?</h3>
+    <p>When items have low physical density (like apparel, pillows, or small items in large boxes), dimensional weight exceeds actual scale weight.</p>
+
+    <h2>Related Resources</h2>
+    <ul>
+      <li><a href="https://my-tool-app.pages.dev/" class="ewdc-link">Explore More Free Ecommerce Tools</a></li>
+      <li><a href="https://my-tool-app.pages.dev/print-on-demand-profit-calculator" class="ewdc-link">Print on Demand Profit Calculator</a></li>
+      <li><a href="https://www.ups.com/us/en/support/shipping-support/shipping-dimensions-weight" class="ewdc-link" target="_blank" rel="noopener noreferrer">UPS Dimensional Weight Guide</a></li>
+      <li><a href="https://www.fedex.com/en-us/shipping/packaging/what-is-dimensional-weight.html" class="ewdc-link" target="_blank" rel="noopener noreferrer">FedEx Dimensional Weight Information</a></li>
+    </ul>
+  </article>
+
+  <!-- 5. JavaScript Logic Engine -->
+  <script>
+  (function() {
+    'use strict';
+
+    const state = {
+      system: 'metric',
+      dimL: 40,
+      dimW: 30,
+      dimH: 20,
+      dimUnit: 'cm',
+      actualWt: 3.0,
+      wtUnit: 'kg',
+      divisor: 5000,
+      roundRule: '0.5',
+      costCurrency: '$',
+      costRate: 0,
+      costBase: 0,
+      costFuel: 0,
+      costHandling: 0,
+      costDiscount: 0,
+      prodL: 0,
+      prodW: 0,
+      prodH: 0,
+      manifest: [
+        { id: 1, name: 'Carton A (Main)', l: 40, w: 30, h: 20, dimUnit: 'cm', wt: 3.0, wtUnit: 'kg', qty: 1 }
+      ]
+    };
+
+    const root = document.getElementById('ewdc-tool');
+    if (!root) return;
+
+    function get(id) { return root.querySelector('#' + id); }
+
+    const TO_CM = { cm: 1, mm: 0.1, m: 100, in: 2.54, ft: 30.48 };
+    const TO_IN = { in: 1, cm: 1 / 2.54, mm: 1 / 25.4, m: 39.3700787, ft: 12 };
+    const TO_KG = { kg: 1, g: 0.001, lb: 0.45359237, oz: 0.028349523125 };
+    const TO_LB = { lb: 1, oz: 1 / 16, kg: 2.20462262185, g: 0.00220462262185 };
+
+    function showToast(msg) {
+      const toast = get('ewdc_toast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); }, 2600);
+    }
+
+    function applyCeiling(val, step) {
+      if (step === 'none' || !step) return val;
+      const s = parseFloat(step);
+      if (isNaN(s) || s <= 0) return val;
+      return Math.ceil((val - 1e-9) / s) * s;
+    }
+
+    function formatNum(n, decimals) {
+      if (isNaN(n) || n === null || !isFinite(n)) return '0.00';
+      return Number(n).toLocaleString('en-US', {
+        minimumFractionDigits: decimals !== undefined ? decimals : 2,
+        maximumFractionDigits: decimals !== undefined ? decimals : 2
+      });
+    }
+
+    function readInputs() {
+      state.system = get('ewdc_unit_system').value;
+      state.dimL = parseFloat(get('ewdc_dim_l').value) || 0;
+      state.dimW = parseFloat(get('ewdc_dim_w').value) || 0;
+      state.dimH = parseFloat(get('ewdc_dim_h').value) || 0;
+      state.dimUnit = get('ewdc_dim_unit').value;
+      state.actualWt = parseFloat(get('ewdc_actual_wt').value) || 0;
+      state.wtUnit = get('ewdc_wt_unit').value;
+      state.divisor = parseFloat(get('ewdc_divisor_val').value) || 5000;
+      state.roundRule = get('ewdc_round_rule').value;
+
+      state.costCurrency = get('ewdc_cost_currency').value;
+      state.costRate = parseFloat(get('ewdc_cost_rate').value) || 0;
+      state.costBase = parseFloat(get('ewdc_cost_base').value) || 0;
+      state.costFuel = parseFloat(get('ewdc_cost_fuel').value) || 0;
+      state.costHandling = parseFloat(get('ewdc_cost_handling').value) || 0;
+      state.costDiscount = parseFloat(get('ewdc_cost_discount').value) || 0;
+
+      state.prodL = parseFloat(get('ewdc_prod_l').value) || 0;
+      state.prodW = parseFloat(get('ewdc_prod_w').value) || 0;
+      state.prodH = parseFloat(get('ewdc_prod_h').value) || 0;
+    }
+
+    function validate() {
+      let valid = true;
+      const checkPositive = (val, grpId) => {
+        const grp = get(grpId);
+        if (!grp) return;
+        if (val <= 0 || isNaN(val)) {
+          grp.classList.add('has-error');
+          valid = false;
+        } else {
+          grp.classList.remove('has-error');
+        }
+      };
+
+      checkPositive(state.dimL, 'grp_dim_l');
+      checkPositive(state.dimW, 'grp_dim_w');
+      checkPositive(state.dimH, 'grp_dim_h');
+      checkPositive(state.actualWt, 'grp_actual_wt');
+      checkPositive(state.divisor, 'grp_divisor_val');
+
+      return valid;
+    }
+
+    function calculatePrimary() {
+      const isValid = validate();
+      const wtUnitDisplay = state.system === 'metric' ? 'kg' : 'lb';
+      root.querySelectorAll('.unit-wt').forEach(el => el.textContent = wtUnitDisplay);
+
+      if (!isValid) {
+        get('ewdc_status_banner').className = 'ewdc-status-banner status-equal';
+        get('ewdc_status_text').textContent = 'Please enter positive dimensions, actual weight, and a valid divisor.';
+        return null;
+      }
+
+      let volBase = 0;
+      let rawDimWt = 0;
+      let normActualWt = 0;
+
+      if (state.system === 'metric') {
+        const l_cm = state.dimL * TO_CM[state.dimUnit];
+        const w_cm = state.dimW * TO_CM[state.dimUnit];
+        const h_cm = state.dimH * TO_CM[state.dimUnit];
+        volBase = l_cm * w_cm * h_cm;
+        rawDimWt = volBase / state.divisor;
+        normActualWt = state.actualWt * TO_KG[state.wtUnit];
+
+        const volM3 = volBase / 1000000;
+        get('kpi_volume').innerHTML = `${formatNum(volM3, 3)} <span style="font-size:0.85rem;" id="unit_volume">m³</span>`;
+        get('kpi_volume_sub').textContent = `${formatNum(volBase, 0)} cm³`;
+      } else {
+        const l_in = state.dimL * TO_IN[state.dimUnit];
+        const w_in = state.dimW * TO_IN[state.dimUnit];
+        const h_in = state.dimH * TO_IN[state.dimUnit];
+        volBase = l_in * w_in * h_in;
+        rawDimWt = volBase / state.divisor;
+        normActualWt = state.actualWt * TO_LB[state.wtUnit];
+
+        const volFt3 = volBase / 1728;
+        get('kpi_volume').innerHTML = `${formatNum(volFt3, 2)} <span style="font-size:0.85rem;" id="unit_volume">ft³</span>`;
+        get('kpi_volume_sub').textContent = `${formatNum(volBase, 0)} in³`;
+      }
+
+      const chargeableWt = Math.max(normActualWt, rawDimWt);
+      const billableWt = applyCeiling(chargeableWt, state.roundRule);
+
+      const banner = get('ewdc_status_banner');
+      const bannerText = get('ewdc_status_text');
+
+      if (rawDimWt > normActualWt + 0.0001) {
+        banner.className = 'ewdc-status-banner status-dim';
+        bannerText.innerHTML = `<strong>Dimensional Weight Determines Billing.</strong> Penalty: +${formatNum(rawDimWt - normActualWt, 2)} ${wtUnitDisplay} over scale weight.`;
+      } else if (normActualWt > rawDimWt + 0.0001) {
+        banner.className = 'ewdc-status-banner status-actual';
+        bannerText.innerHTML = `<strong>Actual Weight Determines Billing.</strong> Package is dense; scale mass exceeds cubic volume.`;
+      } else {
+        banner.className = 'ewdc-status-banner status-equal';
+        bannerText.innerHTML = `<strong>Actual and Dimensional Weight Are Equal.</strong>`;
+      }
+
+      get('kpi_chargeable_wt').innerHTML = `${formatNum(chargeableWt, 2)} <span style="font-size:0.9rem;" class="unit-wt">${wtUnitDisplay}</span>`;
+      get('kpi_billable_wt').innerHTML = `${formatNum(billableWt, 2)} <span style="font-size:0.9rem;" class="unit-wt">${wtUnitDisplay}</span>`;
+      get('kpi_dim_wt').innerHTML = `${formatNum(rawDimWt, 2)} <span style="font-size:0.9rem;" class="unit-wt">${wtUnitDisplay}</span>`;
+      get('kpi_actual_wt').innerHTML = `${formatNum(normActualWt, 2)} <span style="font-size:0.9rem;" class="unit-wt">${wtUnitDisplay}</span>`;
+
+      const totalBar = normActualWt + rawDimWt;
+      let actualPct = totalBar > 0 ? (normActualWt / totalBar) * 100 : 50;
+      let dimPct = totalBar > 0 ? (rawDimWt / totalBar) * 100 : 50;
+      get('viz_actual_txt').textContent = `${formatNum(normActualWt, 2)} ${wtUnitDisplay} (${actualPct.toFixed(0)}%)`;
+      get('viz_dim_txt').textContent = `${formatNum(rawDimWt, 2)} ${wtUnitDisplay} (${dimPct.toFixed(0)}%)`;
+      get('viz_bar_actual').style.width = actualPct + '%';
+      get('viz_bar_dim').style.width = dimPct + '%';
+
+      if (state.costRate > 0) {
+        const baseWtCharge = billableWt * state.costRate;
+        const fuelCharge = baseWtCharge * (state.costFuel / 100);
+        let subtotal = baseWtCharge + state.costBase + state.costHandling + fuelCharge;
+        const discountAmt = subtotal * (state.costDiscount / 100);
+        const finalCost = Math.max(0, subtotal - discountAmt);
+        get('kpi_est_cost').textContent = `${state.costCurrency}${formatNum(finalCost, 2)}`;
+      } else {
+        get('kpi_est_cost').textContent = '--';
+      }
+
+      if (state.prodL > 0 && state.prodW > 0 && state.prodH > 0) {
+        const prodVol = state.prodL * state.prodW * state.prodH;
+        let pkgVol = state.dimL * state.dimW * state.dimH;
+        if (pkgVol > 0) {
+          const utilPct = Math.min(100, (prodVol / pkgVol) * 100);
+          const voidPct = Math.max(0, 100 - utilPct);
+          get('ewdc_utilization_result').textContent = `Product Utilization: ${utilPct.toFixed(1)}% | Void Fill Space: ${voidPct.toFixed(1)}%`;
+        }
+      } else {
+        get('ewdc_utilization_result').textContent = `Product Utilization: -- %`;
+      }
+
+      get('ewdc_audit_steps').innerHTML = `
+        &bull; <strong>Normalized Volume:</strong> ${formatNum(volBase, 2)} ${state.system === 'metric' ? 'cm³' : 'in³'}<br>
+        &bull; <strong>Dimensional Weight:</strong> ${formatNum(volBase, 2)} / ${state.divisor} = <strong>${formatNum(rawDimWt, 4)} ${wtUnitDisplay}</strong><br>
+        &bull; <strong>Actual Scaled Weight:</strong> <strong>${formatNum(normActualWt, 4)} ${wtUnitDisplay}</strong><br>
+        &bull; <strong>Chargeable Weight:</strong> Max(${formatNum(normActualWt, 2)}, ${formatNum(rawDimWt, 2)}) = <strong>${formatNum(chargeableWt, 2)} ${wtUnitDisplay}</strong><br>
+        &bull; <strong>Rounding Step Applied (${state.roundRule}):</strong> Final Billable = <strong>${formatNum(billableWt, 2)} ${wtUnitDisplay}</strong>
+      `;
+
+      updateSensitivityTable(volBase, normActualWt, wtUnitDisplay);
+
+      return { volBase, rawDimWt, normActualWt, chargeableWt, billableWt, wtUnitDisplay };
+    }
+
+    function updateSensitivityTable(volBase, normActualWt, unit) {
+      const tbody = root.querySelector('#ewdc_divisor_comp_table tbody');
+      if (!tbody) return;
+
+      const presets = state.system === 'metric' ? [
+        { d: 4000, desc: 'Express Courier' },
+        { d: 5000, desc: 'Standard Ground/Air' },
+        { d: 6000, desc: 'IATA Air Standard' }
+      ] : [
+        { d: 139, desc: 'US Domestic Express' },
+        { d: 166, desc: 'Retail Postal' }
+      ];
+
+      const activeDim = volBase / state.divisor;
+      let rows = '';
+
+      presets.forEach(p => {
+        const dimW = volBase / p.d;
+        const billW = applyCeiling(Math.max(normActualWt, dimW), state.roundRule);
+        const diff = dimW - activeDim;
+        const diffStr = diff > 0 ? `+${formatNum(diff, 2)}` : `${formatNum(diff, 2)}`;
+
+        rows += `
+          <tr>
+            <td><strong>${p.d}</strong></td>
+            <td>${p.desc}</td>
+            <td>${formatNum(dimW, 2)} ${unit}</td>
+            <td><strong>${formatNum(billW, 2)} ${unit}</strong></td>
+            <td style="color:${diff > 0 ? 'var(--ewdc-danger)' : 'var(--ewdc-success)'}; font-weight:600;">
+              ${diffStr} ${unit}
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = rows;
+    }
+
+    function renderManifest() {
+      const tbody = get('ewdc_manifest_tbody');
+      if (!tbody) return;
+
+      const wtUnitDisplay = state.system === 'metric' ? 'kg' : 'lb';
+      let totalQty = 0, totalActual = 0, totalDim = 0, totalBillable = 0;
+      let html = '';
+
+      state.manifest.forEach((pkg, index) => {
+        let vol = 0, pDim = 0, pActual = 0;
+
+        if (state.system === 'metric') {
+          vol = (pkg.l * TO_CM[pkg.dimUnit]) * (pkg.w * TO_CM[pkg.dimUnit]) * (pkg.h * TO_CM[pkg.dimUnit]);
+          pDim = vol / state.divisor;
+          pActual = pkg.wt * TO_KG[pkg.wtUnit];
+        } else {
+          vol = (pkg.l * TO_IN[pkg.dimUnit]) * (pkg.w * TO_IN[pkg.dimUnit]) * (pkg.h * TO_IN[pkg.dimUnit]);
+          pDim = vol / state.divisor;
+          pActual = pkg.wt * TO_LB[pkg.wtUnit];
+        }
+
+        const unitChargeable = Math.max(pActual, pDim);
+        const unitBillable = applyCeiling(unitChargeable, state.roundRule);
+        const extBillable = unitBillable * pkg.qty;
+
+        totalQty += pkg.qty;
+        totalActual += pActual * pkg.qty;
+        totalDim += pDim * pkg.qty;
+        totalBillable += extBillable;
+
+        html += `
+          <tr>
+            <td><strong>${pkg.name}</strong></td>
+            <td>${pkg.l} &times; ${pkg.w} &times; ${pkg.h} ${pkg.dimUnit}</td>
+            <td>${pkg.qty}</td>
+            <td>${formatNum(pActual, 2)} ${wtUnitDisplay}</td>
+            <td>${formatNum(pDim, 2)} ${wtUnitDisplay}</td>
+            <td>${formatNum(unitBillable, 2)} ${wtUnitDisplay}</td>
+            <td><strong>${formatNum(extBillable, 2)} ${wtUnitDisplay}</strong></td>
+            <td>
+              <button type="button" class="ewdc-btn ewdc-btn-secondary ewdc-btn-sm btn-dup-pkg" data-idx="${index}">Clone</button>
+              ${state.manifest.length > 1 ? `<button type="button" class="ewdc-btn ewdc-btn-secondary ewdc-btn-sm btn-del-pkg" data-idx="${index}" style="color:var(--ewdc-danger);">&times;</button>` : ''}
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+      get('man_total_qty').textContent = totalQty;
+      get('man_total_actual').textContent = `${formatNum(totalActual, 2)} ${wtUnitDisplay}`;
+      get('man_total_dim').textContent = `${formatNum(totalDim, 2)} ${wtUnitDisplay}`;
+      get('man_total_billable').textContent = `${formatNum(totalBillable, 2)} ${wtUnitDisplay}`;
+
+      tbody.querySelectorAll('.btn-dup-pkg').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt(e.target.getAttribute('data-idx'), 10);
+          state.manifest.push(Object.assign({}, state.manifest[idx], { id: Date.now(), name: `${state.manifest[idx].name} (Copy)` }));
+          renderManifest();
+          showToast('Carton duplicated.');
+        });
+      });
+
+      tbody.querySelectorAll('.btn-del-pkg').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt(e.target.getAttribute('data-idx'), 10);
+          if (state.manifest.length > 1) {
+            state.manifest.splice(idx, 1);
+            renderManifest();
+            showToast('Carton removed.');
+          }
+        });
+      });
+    }
+
+    function syncPrimaryToManifest() {
+      if (state.manifest.length > 0) {
+        state.manifest[0].l = state.dimL;
+        state.manifest[0].w = state.dimW;
+        state.manifest[0].h = state.dimH;
+        state.manifest[0].dimUnit = state.dimUnit;
+        state.manifest[0].wt = state.actualWt;
+        state.manifest[0].wtUnit = state.wtUnit;
+        renderManifest();
+      }
+    }
+
+    function loadSampleData() {
+      if (state.system === 'metric') {
+        get('ewdc_dim_l').value = 40;
+        get('ewdc_dim_w').value = 30;
+        get('ewdc_dim_h').value = 20;
+        get('ewdc_dim_unit').value = 'cm';
+        get('ewdc_actual_wt').value = 3.0;
+        get('ewdc_wt_unit').value = 'kg';
+        get('ewdc_divisor_preset').value = '5000';
+        get('ewdc_divisor_val').value = 5000;
+        get('ewdc_round_rule').value = '0.5';
+      } else {
+        get('ewdc_dim_l').value = 16;
+        get('ewdc_dim_w').value = 12;
+        get('ewdc_dim_h').value = 10;
+        get('ewdc_dim_unit').value = 'in';
+        get('ewdc_actual_wt').value = 7.0;
+        get('ewdc_wt_unit').value = 'lb';
+        get('ewdc_divisor_preset').value = '139';
+        get('ewdc_divisor_val').value = 139;
+        get('ewdc_round_rule').value = '1.0';
+      }
+      readInputs();
+      calculatePrimary();
+      syncPrimaryToManifest();
+      showToast('Sample carton loaded.');
+    }
+
+    function resetForm() {
+      if (confirm('Reset all values to default?')) {
+        get('ewdc_dim_l').value = '';
+        get('ewdc_dim_w').value = '';
+        get('ewdc_dim_h').value = '';
+        get('ewdc_actual_wt').value = '';
+        get('ewdc_cost_rate').value = '';
+        get('ewdc_prod_l').value = '';
+        get('ewdc_prod_w').value = '';
+        get('ewdc_prod_h').value = '';
+        state.manifest = [{ id: 1, name: 'Carton 1', l: 0, w: 0, h: 0, dimUnit: state.dimUnit, wt: 0, wtUnit: state.wtUnit, qty: 1 }];
+        readInputs();
+        calculatePrimary();
+        renderManifest();
+        showToast('Fields reset.');
+      }
+    }
+
+    function copySummary() {
+      const res = calculatePrimary();
+      if (!res) { showToast('Invalid values.'); return; }
+      const txt = [
+        `=== SHIPPING DIM WEIGHT SUMMARY ===`,
+        `Dimensions: ${state.dimL} x ${state.dimW} x ${state.dimH} ${state.dimUnit}`,
+        `Scale Weight: ${formatNum(res.normActualWt, 2)} ${res.wtUnitDisplay}`,
+        `DIM Weight: ${formatNum(res.rawDimWt, 2)} ${res.wtUnitDisplay}`,
+        `Chargeable Weight: ${formatNum(res.chargeableWt, 2)} ${res.wtUnitDisplay}`,
+        `Billable Weight: ${formatNum(res.billableWt, 2)} ${res.wtUnitDisplay}`,
+        `https://my-tool-app.pages.dev/ecommerce-shipping-dimensional-weight-calculator`
+      ].join('\n');
+
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(txt).then(() => showToast('Summary copied to clipboard.'));
+      }
+    }
+
+    function exportCSV() {
+      const wtUnitDisplay = state.system === 'metric' ? 'kg' : 'lb';
+      const rows = [['Carton Name', 'L', 'W', 'H', 'Unit', 'Qty', 'Actual Wt', 'DIM Wt', 'Billable Wt']];
+      state.manifest.forEach(pkg => {
+        rows.push([`"${pkg.name}"`, pkg.l, pkg.w, pkg.h, pkg.dimUnit, pkg.qty, pkg.wt, '--', '--']);
+      });
+      const uri = encodeURI('data:text/csv;charset=utf-8,' + rows.map(r => r.join(',')).join('\n'));
+      const a = document.createElement('a');
+      a.href = uri;
+      a.download = `shipping-manifest-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast('CSV Exported.');
+    }
+
+    function initEvents() {
+      const onInput = () => {
+        readInputs();
+        calculatePrimary();
+        syncPrimaryToManifest();
+      };
+
+      root.querySelectorAll('.ewdc-input').forEach(inp => inp.addEventListener('input', onInput));
+      root.querySelectorAll('.ewdc-select').forEach(sel => sel.addEventListener('change', onInput));
+
+      get('ewdc_unit_system').addEventListener('change', (e) => {
+        if (e.target.value === 'metric') {
+          get('ewdc_dim_unit').value = 'cm';
+          get('ewdc_wt_unit').value = 'kg';
+          get('ewdc_divisor_preset').value = '5000';
+          get('ewdc_divisor_val').value = 5000;
+          get('ewdc_round_rule').value = '0.5';
+        } else {
+          get('ewdc_dim_unit').value = 'in';
+          get('ewdc_wt_unit').value = 'lb';
+          get('ewdc_divisor_preset').value = '139';
+          get('ewdc_divisor_val').value = 139;
+          get('ewdc_round_rule').value = '1.0';
+        }
+        readInputs();
+        calculatePrimary();
+        renderManifest();
+      });
+
+      get('ewdc_divisor_preset').addEventListener('change', (e) => {
+        if (e.target.value !== 'custom') get('ewdc_divisor_val').value = e.target.value;
+        readInputs();
+        calculatePrimary();
+      });
+
+      get('ewdc_btn_add_pkg').addEventListener('click', () => {
+        state.manifest.push({
+          id: Date.now(),
+          name: `Carton ${state.manifest.length + 1}`,
+          l: state.dimL, w: state.dimW, h: state.dimH,
+          dimUnit: state.dimUnit, wt: state.actualWt, wtUnit: state.wtUnit,
+          qty: 1
+        });
+        renderManifest();
+        showToast('Carton added.');
+      });
+
+      get('ewdc_btn_sample').addEventListener('click', loadSampleData);
+      get('ewdc_btn_reset').addEventListener('click', resetForm);
+      get('ewdc_btn_copy').addEventListener('click', copySummary);
+      get('ewdc_btn_csv').addEventListener('click', exportCSV);
+      get('ewdc_btn_print').addEventListener('click', () => window.print());
+    }
+
+    function init() {
+      initEvents();
+      loadSampleData();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+  </script>
+</div>
