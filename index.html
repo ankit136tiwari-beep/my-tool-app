@@ -1,6 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- ============ 1) HOMEPAGE (index.html) ke <head> me paste karein ============ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://my-tool-app.pages.dev/#organization",
+      "name": "Toolbox",
+      "url": "https://my-tool-app.pages.dev/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://my-tool-app.pages.dev/logo.png",
+        "width": 512,
+        "height": 512
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "url": "https://my-tool-app.pages.dev/contact.html"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://my-tool-app.pages.dev/#website",
+      "url": "https://my-tool-app.pages.dev/",
+      "name": "Toolbox",
+      "description": "Free online browser tools, text utilities, and advanced financial or battery calculators. No sign-up or server uploads required.",
+      "inLanguage": "en",
+      "publisher": { "@id": "https://my-tool-app.pages.dev/#organization" }
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://my-tool-app.pages.dev/#webpage",
+      "url": "https://my-tool-app.pages.dev/",
+      "name": "Free Online Browser Utility Tools & Calculators | Toolbox",
+      "isPartOf": { "@id": "https://my-tool-app.pages.dev/#website" },
+      "about": { "@id": "https://my-tool-app.pages.dev/#tools" },
+      "breadcrumb": { "@id": "https://my-tool-app.pages.dev/#breadcrumb" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://my-tool-app.pages.dev/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://my-tool-app.pages.dev/" }
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://my-tool-app.pages.dev/#tools",
+      "name": "Toolbox online tools and calculators",
+      "itemListElement": [
+        {
+          "@type": "ListItem", "position": 1,
+          "url": "https://my-tool-app.pages.dev/solar-battery-runtime-calculator",
+          "name": "Solar Battery Runtime Calculator"
+        },
+        {
+          "@type": "ListItem", "position": 2,
+          "url": "https://my-tool-app.pages.dev/100ah-lithium-battery-runtime-calculator",
+          "name": "100Ah Lithium Battery Runtime Calculator"
+        },
+        {
+          "@type": "ListItem", "position": 3,
+          "url": "https://my-tool-app.pages.dev/credit-card-minimum-payment-payoff-calculator",
+          "name": "Credit Card Minimum Payment Payoff Calculator"
+        },
+        {
+          "@type": "ListItem", "position": 4,
+          "url": "https://my-tool-app.pages.dev/debt-snowball-vs-avalanche-payoff-calculator",
+          "name": "Debt Snowball vs Avalanche Payoff Calculator"
+        },
+        {
+          "@type": "ListItem", "position": 5,
+          "url": "https://my-tool-app.pages.dev/freelance-hourly-rate-after-tax-estimator",
+          "name": "Freelance Hourly Rate After Tax Estimator"
+        },
+        {
+          "@type": "ListItem", "position": 6,
+          "url": "https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator",
+          "name": "Amazon FBA Fee & Profit Estimator"
+        },
+        {
+          "@type": "ListItem", "position": 7,
+          "url": "https://my-tool-app.pages.dev/etsy-seller-profit-calculator",
+          "name": "Etsy Seller Profit Calculator"
+        },
+        {
+          "@type": "ListItem", "position": 8,
+          "url": "https://my-tool-app.pages.dev/customer-lifetime-value-to-cac-calculator",
+          "name": "Customer Lifetime Value to CAC Calculator"
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+
+<!-- ============ 2) HAR TOOL PAGE ke <head> me (template) ============
+     Har calculator ke alag URL par ye lagayein. Sirf neeche ke
+     3 jagah (name, url, description, category) badlein.            -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://my-tool-app.pages.dev/solar-battery-runtime-calculator#app",
+      "name": "Solar Battery Runtime Calculator",
+      "url": "https://my-tool-app.pages.dev/solar-battery-runtime-calculator",
+      "description": "Calculate how long your solar battery backup will last based on wattage and capacity.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (runs in a web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": { "@id": "https://my-tool-app.pages.dev/#organization" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://my-tool-app.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Calculators", "item": "https://my-tool-app.pages.dev/#/cat/calc" },
+        { "@type": "ListItem", "position": 3, "name": "Solar Battery Runtime Calculator" }
+      ]
+    }
+  ]
+}
+</script>
+
   <link rel="icon" type="image/png" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEioyp5kv7n6Sd3FRLSaINwwc78wzO0Y2Qpq7iaZH-SXmDffctyqfcKW-mBMSbnxg3dGJdgse5gx2fULmSt5Eigurk7QblHf8CE95a6ElyLVfhYOztzTIkqUBmIdMq9xxsXL96M8Z-2kBn3iEGl6Z1SvPeuQXZj9i2x8zygAOAj-CUpgb-XuzKaCRfQwwC1-/s1254/file_000000001fc48208baaaf798f229591e.png">
   <meta name="google-site-verification" content="3Ib5ZFJfj5D4Ji_crnJFA5Gr7c0V5dtdYsg-DRhwbvk" />
   <meta charset="utf-8">
