@@ -1,0 +1,249 @@
+<!-- Paste into Blogger: Post > HTML view. Set SEO title, description, permalink and labels in Post settings (see list at the end of this file). -->
+<div id="gadsbe-root">
+<style>
+#gadsbe-root{--c-ink:#14231f;--c-mut:#5b6b66;--c-bg:#f6f8f7;--c-card:#fff;--c-line:#d9e2de;--c-acc:#0b6b57;--c-good:#12794a;--c-bad:#b3261e;--c-warn:#a15c00;--r:10px;font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--c-ink);box-sizing:border-box;max-width:960px;margin:0 auto}
+#gadsbe-root *{box-sizing:border-box}
+#gadsbe-root h1{font-size:1.7rem;line-height:1.2;margin:0 0 .5rem}
+#gadsbe-root h2{font-size:1.25rem;margin:1.6rem 0 .5rem}
+#gadsbe-root h3{font-size:1.05rem;margin:1rem 0 .3rem}
+.gadsbe-panel{background:var(--c-bg);border:1px solid var(--c-line);border-radius:var(--r);padding:14px;margin:12px 0}
+.gadsbe-grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.gadsbe-f label{display:block;font-size:.85rem;font-weight:600;margin-bottom:3px}
+.gadsbe-f input,.gadsbe-f select,.gadsbe-sc input{width:100%;min-height:44px;padding:8px 10px;border:1px solid #9fb0aa;border-radius:8px;font:inherit;background:#fff;color:var(--c-ink)}
+.gadsbe-f small{display:block;color:var(--c-mut);font-size:.78rem}
+.gadsbe-err{color:var(--c-bad);font-size:.8rem;min-height:1em}
+#gadsbe-root :focus-visible{outline:3px solid #1a73e8;outline-offset:2px}
+.gadsbe-btns{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.gadsbe-btns button{min-height:44px;padding:8px 14px;border-radius:8px;border:1px solid var(--c-acc);background:#fff;color:var(--c-acc);font:inherit;font-weight:600;cursor:pointer}
+.gadsbe-btns button.gadsbe-p{background:var(--c-acc);color:#fff}
+.gadsbe-adv{display:none}
+#gadsbe-root.gadsbe-advanced .gadsbe-adv{display:block}
+#gadsbe-root.gadsbe-advanced .gadsbe-grid.gadsbe-adv{display:grid}
+.gadsbe-cards{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.gadsbe-card{background:#fff;border:1px solid var(--c-line);border-left:5px solid #8a9a95;border-radius:var(--r);padding:10px 12px}
+.gadsbe-card b{display:block;font-size:1.35rem}
+.gadsbe-card span{font-size:.8rem;color:var(--c-mut)}
+.gadsbe-card.good{border-left-color:var(--c-good)}.gadsbe-card.bad{border-left-color:var(--c-bad)}.gadsbe-card.warn{border-left-color:var(--c-warn)}
+.gadsbe-status{padding:12px;border-radius:var(--r);font-weight:600;margin:10px 0;background:#eef2f0}
+.gadsbe-status.good{background:#e3f4ea;color:#0d5c37}.gadsbe-status.bad{background:#fbe7e5;color:#8c1d17}.gadsbe-status.warn{background:#fff1d9;color:#7a4600}
+.gadsbe-bar{margin:8px 0}.gadsbe-bar div{height:16px;border-radius:4px;margin:2px 0;min-width:2px}
+.gadsbe-bar .a{background:var(--c-acc)}.gadsbe-bar .b{background:#8a9a95}
+.gadsbe-bar p{margin:0;font-size:.85rem}
+.gadsbe-tw{overflow-x:auto}
+#gadsbe-root table{border-collapse:collapse;width:100%;font-size:.88rem}
+#gadsbe-root th,#gadsbe-root td{border:1px solid var(--c-line);padding:6px 8px;text-align:left;vertical-align:middle}
+.gadsbe-sc input{min-width:90px;min-height:38px}
+.gadsbe-note{font-size:.85rem;color:var(--c-mut)}
+#gadsbe-root details{margin:6px 0}#gadsbe-root summary{cursor:pointer;font-weight:600}
+@media print{#gadsbe-root .gadsbe-btns,#gadsbe-root .gadsbe-inputs,#gadsbe-root .gadsbe-seo{display:none!important}}
+</style>
+
+<h1>Google Ads Break-Even Conversion Rate Calculator</h1>
+<p><a href="https://my-tool-app.pages.dev/">Home: My Tool App</a></p>
+
+<div class="gadsbe-inputs">
+<div class="gadsbe-btns" role="group" aria-label="Mode">
+<button type="button" class="gadsbe-p" id="gadsbe-mode" aria-pressed="false">Switch to Advanced Mode</button>
+<button type="button" id="gadsbe-sample">Load sample data</button>
+<button type="button" id="gadsbe-reset">Reset</button>
+</div>
+
+<div class="gadsbe-panel"><h2>Campaign input</h2>
+<div class="gadsbe-grid">
+<div class="gadsbe-f"><label for="gadsbe-cur">Currency</label><select id="gadsbe-cur"><option value="$">USD $</option><option value="€">EUR €</option><option value="£">GBP £</option><option value="₹">INR ₹</option><option value="C$">CAD C$</option><option value="A$">AUD A$</option><option value="NZ$">NZD NZ$</option><option value="S$">SGD S$</option><option value="AED ">AED</option><option value="SAR ">SAR</option><option value="¥">JPY ¥</option><option value="">Custom…</option></select><input id="gadsbe-cc" placeholder="Custom symbol/code" style="display:none;margin-top:4px" aria-label="Custom currency symbol"><small>No conversion is done.</small></div>
+<div class="gadsbe-f"><label for="gadsbe-spend">Total ad spend *</label><input id="gadsbe-spend" type="number" inputmode="decimal" min="0" step="any"><div class="gadsbe-err" id="gadsbe-spend-e"></div></div>
+<div class="gadsbe-f"><label for="gadsbe-clicks">Total clicks *</label><input id="gadsbe-clicks" type="number" inputmode="decimal" min="0" step="any"><div class="gadsbe-err" id="gadsbe-clicks-e"></div></div>
+<div class="gadsbe-f"><label for="gadsbe-conv">Total conversions *</label><input id="gadsbe-conv" type="number" inputmode="decimal" min="0" step="any"><div class="gadsbe-err" id="gadsbe-conv-e"></div></div>
+<div class="gadsbe-f"><label for="gadsbe-aov">Average order / conversion value *</label><input id="gadsbe-aov" type="number" inputmode="decimal" min="0" step="any"><div class="gadsbe-err" id="gadsbe-aov-e"></div></div>
+<div class="gadsbe-f"><label for="gadsbe-basis">Profit basis *</label><select id="gadsbe-basis"><option value="margin">Gross profit margin (%)</option><option value="cogs">Cost of goods sold (amount)</option></select></div>
+<div class="gadsbe-f" id="gadsbe-fm"><label for="gadsbe-margin">Gross profit margin % *</label><input id="gadsbe-margin" type="number" inputmode="decimal" step="any"><small>Already accounts for COGS.</small><div class="gadsbe-err" id="gadsbe-margin-e"></div></div>
+<div class="gadsbe-f" id="gadsbe-fc" style="display:none"><label for="gadsbe-cogs">COGS per conversion *</label><input id="gadsbe-cogs" type="number" inputmode="decimal" min="0" step="any"><div class="gadsbe-err" id="gadsbe-cogs-e"></div></div>
+</div></div>
+
+<div class="gadsbe-panel gadsbe-adv"><h2>Advanced: costs and targets</h2>
+<div class="gadsbe-grid gadsbe-adv">
+<div class="gadsbe-f"><label for="gadsbe-ship">Shipping &amp; fulfilment per conversion</label><input id="gadsbe-ship" type="number" min="0" step="any"></div>
+<div class="gadsbe-f"><label for="gadsbe-pay">Payment fees (% of value)</label><input id="gadsbe-pay" type="number" min="0" step="any"></div>
+<div class="gadsbe-f"><label for="gadsbe-mkt">Marketplace / transaction fees (% of value)</label><input id="gadsbe-mkt" type="number" min="0" step="any"></div>
+<div class="gadsbe-f"><label for="gadsbe-oth">Other variable cost per conversion</label><input id="gadsbe-oth" type="number" min="0" step="any"></div>
+<div class="gadsbe-f"><label for="gadsbe-ref">Refund / return allowance (% of value)</label><input id="gadsbe-ref" type="number" min="0" step="any"></div>
+<div class="gadsbe-f"><label for="gadsbe-dp">Desired profit per conversion</label><input id="gadsbe-dp" type="number" min="0" step="any"></div>
+<div class="gadsbe-f"><label for="gadsbe-tcr">Target conversion rate (%)</label><input id="gadsbe-tcr" type="number" min="0" step="any"></div>
+<div class="gadsbe-f"><label for="gadsbe-tcpa">Target CPA</label><input id="gadsbe-tcpa" type="number" min="0" step="any"></div>
+<div class="gadsbe-f"><label for="gadsbe-troas">Target ROAS (multiple, e.g. 4)</label><input id="gadsbe-troas" type="number" min="0" step="any"></div>
+<div class="gadsbe-f"><label for="gadsbe-bud">Monthly ad budget</label><input id="gadsbe-bud" type="number" min="0" step="any"></div>
+<div class="gadsbe-f"><label for="gadsbe-tol">Break-even tolerance (percentage points)</label><input id="gadsbe-tol" type="number" min="0" step="any" value="0.05"></div>
+</div></div>
+<div class="gadsbe-btns"><button type="button" class="gadsbe-p" id="gadsbe-calc">Calculate</button></div>
+</div>
+
+<div id="gadsbe-out" aria-live="polite" tabindex="-1"><p class="gadsbe-note">Enter the required (*) fields and press Calculate, or load sample data.</p></div>
+
+<div class="gadsbe-btns">
+<button type="button" id="gadsbe-copy">Copy results</button>
+<button type="button" id="gadsbe-csv">Download CSV</button>
+<button type="button" id="gadsbe-print">Print report</button>
+</div>
+<div id="gadsbe-msg" class="gadsbe-note" role="status"></div>
+<p class="gadsbe-note">Privacy: all calculations run in your browser. Nothing is sent to a server or stored.</p>
+
+<div class="gadsbe-seo">
+<h2>What this calculator does</h2>
+<p>The Google Ads Break-Even Conversion Rate Calculator shows the lowest conversion rate your campaign needs to cover its clicks, based on your real profit per sale. A break-even conversion rate tells you whether to scale, fix, or pause a campaign before you spend more. It also returns the break-even CPA, ROAS, maximum CPC and net profit from the same engine.</p>
+
+<h2>Features</h2>
+<ul>
+<li><b>Break-even conversion rate:</b> CPC divided by contribution profit per conversion.</li>
+<li><b>Break-even CPA calculator:</b> the most you can pay per conversion without a loss.</li>
+<li><b>Break-even ROAS calculator:</b> includes non-advertising variable costs, not only product cost.</li>
+<li><b>Conversion rate calculator:</b> actual rate, gap to target, conversions needed.</li>
+<li><b>Maximum CPC calculator:</b> break-even and target-profit CPC.</li>
+<li><b>Profit calculator:</b> revenue, contribution profit, ad spend, net profit and margin.</li>
+<li><b>Scenario comparison:</b> current, improved and target projections, plus CSV export and print.</li>
+</ul>
+
+<h2>How to use</h2>
+<ol>
+<li>Enter ad spend, clicks, conversions and average order value (required).</li>
+<li>Choose gross margin % or COGS as your profit basis, never both.</li>
+<li>Optional: switch to Advanced Mode for shipping, fees, refunds and targets.</li>
+<li>Press Calculate and read the status and result cards.</li>
+<li>Edit the scenario table to test a lower CPC or higher conversion rate.</li>
+</ol>
+
+<h2>Formulas and examples</h2>
+<ul>
+<li>Conversion rate % = conversions ÷ clicks × 100</li>
+<li>Contribution profit = value − COGS (or value × margin) − shipping − other − (fees + refund %) × value</li>
+<li>Break-even CPA = contribution profit</li>
+<li>Break-even conversion rate % = CPC ÷ contribution profit × 100</li>
+<li>Break-even ROAS = value ÷ contribution profit</li>
+<li>Maximum CPC = contribution profit × conversion rate</li>
+<li>Net profit = conversions × contribution profit − ad spend</li>
+</ul>
+<p>Example: spend 1,000, 500 clicks (CPC 2.00), 25 conversions at value 100 with a 40% margin. Contribution profit is 40, break-even rate is 2 ÷ 40 = 5%, actual rate is 5%, break-even ROAS is 2.5x, and net profit is 25 × 40 − 1,000 = 0.</p>
+
+<h2>Practical use cases</h2>
+<p>Search campaigns, ecommerce, lead generation, small business PPC, agency and freelance reporting, performance teams, and monthly budget planning.</p>
+
+<h2>Limitations and assumptions</h2>
+<p>The tool does not connect to Google Ads, so you enter the data and results depend on its accuracy. Conversion tracking quality, attribution, delayed conversions, refunds and customer lifetime value change real profitability. It does not predict auction outcomes. Tax and fixed overhead are excluded unless you add them as variable costs. Scenarios are projections, not guarantees.</p>
+
+<h2>Frequently asked questions</h2>
+<h3>What is a break-even conversion rate in Google Ads?</h3><p>The conversion rate at which your ad spend equals the profit from the sales it generates.</p>
+<h3>How do I calculate the break-even conversion rate?</h3><p>Divide your average CPC by the contribution profit per conversion, then multiply by 100.</p>
+<h3>What is a good break-even conversion rate?</h3><p>Lower is better, because it is easier to beat. It depends on your margin and CPC, so compare it with your actual rate.</p>
+<h3>How do I calculate break-even ROAS?</h3><p>Divide average conversion value by contribution profit per conversion. A 40% contribution margin gives 2.5x (250%).</p>
+<h3>Break-even CPA versus actual CPA?</h3><p>Break-even CPA is the most you can afford per conversion. Actual CPA is spend divided by conversions. Actual below break-even means profit.</p>
+<h3>How do I find the maximum CPC I can afford?</h3><p>Multiply contribution profit per conversion by your conversion rate. Subtract desired profit first to protect a margin.</p>
+<h3>Can I use it without connecting Google Ads?</h3><p>Yes. You type in your numbers and everything is calculated locally in your browser.</p>
+<h3>Does a high conversion rate always mean profit?</h3><p>No. If contribution profit per conversion is small or CPC is high, even a high rate can lose money.</p>
+
+<h2>Related tools and references</h2>
+<p><a href="https://my-tool-app.pages.dev/ecommerce-return-rate-profit-loss-calculator">Ecommerce Return Rate Profit Loss Calculator</a>: returns and refunds reduce contribution profit and so change advertising profitability.</p>
+<ul>
+<li><a href="https://support.google.com/google-ads/answer/1722022" target="_blank" rel="noopener noreferrer">Google Ads Help: About conversion tracking</a></li>
+<li><a href="https://support.google.com/google-ads/answer/6268637" target="_blank" rel="noopener noreferrer">Google Ads Help: About target ROAS bidding</a></li>
+<li><a href="https://support.google.com/google-ads/" target="_blank" rel="noopener noreferrer">Google Ads Help Center</a></li>
+</ul>
+</div>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","name":"Google Ads Break-Even Conversion Rate Calculator","description":"Calculate your Google Ads break-even conversion rate, CPA, ROAS and maximum CPC. Analyze campaign profitability with this free calculator.","applicationCategory":"BusinessApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Break-even conversion rate","Break-even CPA","Break-even ROAS","Maximum CPC","Profit and loss analysis","Scenario comparison","CSV export"],"url":"https://my-tool-app.pages.dev/google-ads-break-even-conversion-rate-calculator"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a break-even conversion rate in Google Ads?","acceptedAnswer":{"@type":"Answer","text":"The conversion rate at which your ad spend equals the profit from the sales it generates."}},{"@type":"Question","name":"How do I calculate the break-even conversion rate?","acceptedAnswer":{"@type":"Answer","text":"Divide your average CPC by the contribution profit per conversion, then multiply by 100."}},{"@type":"Question","name":"How do I calculate break-even ROAS?","acceptedAnswer":{"@type":"Answer","text":"Divide average conversion value by contribution profit per conversion. A 40% contribution margin gives 2.5x (250%)."}},{"@type":"Question","name":"Does a high conversion rate always mean profit?","acceptedAnswer":{"@type":"Answer","text":"No. If contribution profit per conversion is small or CPC is high, even a high rate can lose money."}}]}]}</script>
+
+<script>
+(function(){
+var R=document.getElementById('gadsbe-root'),$=function(i){return document.getElementById('gadsbe-'+i)},last=null;
+var req=['spend','clicks','conv','aov'];
+function num(id){var v=$(id).value.trim();if(v==='')return null;var n=Number(v);return isFinite(n)?n:NaN}
+function cur(){var s=$('cur').value;return s===''?($('cc').value||''):s}
+function m(x){if(x==null||!isFinite(x))return 'n/a';return cur()+x.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
+function p(x,d){return x==null||!isFinite(x)?'n/a':x.toLocaleString(undefined,{maximumFractionDigits:d==null?2:d})+'%'}
+function xr(x){return x==null||!isFinite(x)?'n/a':x.toLocaleString(undefined,{maximumFractionDigits:2})+'x ('+(x*100).toLocaleString(undefined,{maximumFractionDigits:0})+'%)'}
+function div(a,b){return b>0?a/b:null}
+function validate(){
+ var ok=true,basis=$('basis').value,ids=req.concat(basis==='margin'?['margin']:['cogs']);
+ req.concat(['margin','cogs']).forEach(function(i){$(i+'-e').textContent='';$(i).removeAttribute('aria-invalid')});
+ ids.forEach(function(i){var v=num(i),e=null;
+  if(v===null)e='Required.';else if(isNaN(v))e='Enter a valid number.';
+  else if(i==='margin'&&(v<0||v>100))e='Enter 0 to 100.';
+  else if(i!=='margin'&&v<0)e='Cannot be negative.';
+  else if(i==='aov'&&v===0)e='Must be above 0.';
+  if(e){ok=false;$(i+'-e').textContent=e;$(i).setAttribute('aria-invalid','true');$(i).setAttribute('aria-describedby','gadsbe-'+i+'-e')}});
+ ['ship','pay','mkt','oth','ref','dp','tcr','tcpa','troas','bud','tol'].forEach(function(i){var v=num(i);if(v!==null&&(isNaN(v)||v<0)){ok=false;$(i).setAttribute('aria-invalid','true')}else $(i).removeAttribute('aria-invalid')});
+ return ok}
+function inp(){var g=function(i){var v=num(i);return v==null?0:v};
+ return{spend:g('spend'),clicks:g('clicks'),conv:g('conv'),aov:g('aov'),basis:$('basis').value,margin:g('margin'),cogs:g('cogs'),ship:g('ship'),pay:g('pay')/100,mkt:g('mkt')/100,oth:g('oth'),ref:g('ref')/100,dp:g('dp'),tcr:num('tcr'),tcpa:num('tcpa'),troas:num('troas'),bud:num('bud'),tol:num('tol')==null?0.05:num('tol')}}
+function contrib(i,v){var base=i.basis==='margin'?v*i.margin/100:v-i.cogs;return base-i.ship-i.oth-(i.pay+i.mkt+i.ref)*v}
+function calc(i){var o={i:i};
+ o.cr=div(i.conv*100,i.clicks);o.cpc=div(i.spend,i.clicks);o.cpa=div(i.spend,i.conv);
+ o.cp=contrib(i,i.aov);o.rev=i.conv*i.aov;o.pos=o.cp>0;
+ o.becpa=o.cp;o.becr=o.pos&&o.cpc!=null?o.cpc/o.cp*100:null;
+ o.beroas=o.pos?i.aov/o.cp:null;o.roas=div(o.rev,i.spend);
+ o.maxcpc=o.pos&&o.cr!=null?o.cp*o.cr/100:null;
+ var net=o.cp-i.dp;o.tcpc=net>0&&i.tcr!=null?net*i.tcr/100:null;
+ o.tcrReq=net>0&&o.cpc!=null?o.cpc/net*100:null;
+ o.totc=i.conv*o.cp;o.net=o.totc-i.spend;o.nm=div(o.net*100,o.rev);
+ o.reqc=o.pos?i.spend/o.cp:null;o.gap=o.cr!=null&&o.becr!=null?o.cr-o.becr:null;
+ o.cogsT=i.conv*(i.basis==='margin'?i.aov*(1-i.margin/100):i.cogs);
+ o.othT=i.conv*(o.aov===0?0:i.aov-(i.basis==='margin'?i.aov*i.margin/100:i.aov-i.cogs)-o.cp+0)*0;
+ o.varT=i.conv*(i.aov-o.cp)-o.cogsT;
+ if(!o.pos)o.st=['bad','NO POSITIVE CONTRIBUTION: your offer earns nothing before ads at these inputs. Lower CPC alone cannot fix this.'];
+ else if(o.gap==null)o.st=['','Add clicks to classify.'];
+ else if(Math.abs(o.gap)<=i.tol)o.st=['warn','BREAK-EVEN: your conversion rate is within '+i.tol+' points of break-even.'];
+ else if(o.gap>0)o.st=['good','PROFITABLE: your conversion rate is above break-even. On these assumptions the campaign earns positive contribution profit after advertising.'];
+ else o.st=['bad','LOSING MONEY: below the break-even conversion rate. Improve conversion rate, reduce CPC, or raise contribution profit.'];
+ return o}
+function card(l,v,c,n){return '<div class="gadsbe-card '+(c||'')+'"><span>'+l+'</span><b>'+v+'</b>'+(n?'<span>'+n+'</span>':'')+'</div>'}
+function bar(l,a,b,f){var mx=Math.max(a||0,b||0)||1;return '<div class="gadsbe-bar" role="img" aria-label="'+l+': actual '+f(a)+', break-even '+f(b)+'"><p>'+l+'</p><div class="a" style="width:'+Math.max(2,(a||0)/mx*100)+'%"></div><p>Actual '+f(a)+'</p><div class="b" style="width:'+Math.max(2,(b||0)/mx*100)+'%"></div><p>Break-even '+f(b)+'</p></div>'}
+function render(o){var i=o.i,good=o.net>0?'good':o.net<0?'bad':'warn',h='';
+ h+='<div class="gadsbe-status '+o.st[0]+'" role="status">'+o.st[1]+'</div><div class="gadsbe-cards">';
+ h+=card('Break-even conversion rate',p(o.becr),'warn');
+ h+=card('Actual conversion rate',p(o.cr),o.gap==null?'':o.gap>0?'good':'bad','Safety margin: '+(o.gap==null?'n/a':o.gap.toFixed(2)+' points'));
+ h+=card('Break-even CPA',m(o.becpa),'');
+ h+=card('Actual CPA',m(o.cpa),o.cpa==null?'':o.cpa<=o.becpa?'good':'bad','CPA margin: '+(o.cpa==null?'n/a':m(o.becpa-o.cpa)));
+ h+=card('Break-even ROAS',xr(o.beroas),'');
+ h+=card('Actual ROAS',xr(o.roas),o.roas==null||o.beroas==null?'':o.roas>=o.beroas?'good':'bad','Revenue = conversions × average value (estimated)');
+ h+=card('Maximum break-even CPC',m(o.maxcpc),'','Actual CPC: '+m(o.cpc)+(o.maxcpc!=null&&o.cpc!=null?' | Headroom: '+m(o.maxcpc-o.cpc):''));
+ h+=card('Net profit / loss',m(o.net),good,'Net margin: '+p(o.nm));
+ h+='</div>';
+ h+='<h2>Visual comparison</h2>'+bar('Conversion rate',o.cr,o.becr,function(x){return p(x)})+bar('CPA',o.cpa,o.becpa,m)+bar('ROAS',o.roas,o.beroas,function(x){return x==null?'n/a':x.toFixed(2)+'x'});
+ h+='<details open><summary>Profit and loss breakdown</summary><div class="gadsbe-tw"><table><tbody>';
+ [['Revenue (estimated)',m(o.rev)],['Cost of goods sold',m(o.cogsT)],['Other variable costs, fees, refunds',m(o.varT)],['Contribution profit before advertising',m(o.totc)],['Advertising spend',m(i.spend)],['Net profit after advertising',m(o.net)],['Contribution profit per conversion',m(o.cp)],['Cost per conversion',m(o.cpa)],['Conversions needed to break even',o.reqc==null?'n/a':Math.ceil(o.reqc-1e-9)+' ('+o.reqc.toFixed(2)+' exact)']].forEach(function(r){h+='<tr><th scope="row">'+r[0]+'</th><td>'+r[1]+'</td></tr>'});
+ h+='</tbody></table></div><p class="gadsbe-note">Contribution profit is not net profit: net profit subtracts ad spend. Tax and fixed overhead are excluded.</p></details>';
+ h+='<details><summary>Targets</summary><div class="gadsbe-tw"><table><tbody>';
+ var tr=i.troas!=null?(o.roas!=null?(o.roas-i.troas).toFixed(2)+'x vs target':'n/a'):'not set';
+ [['Conversion rate needed for desired profit per conversion',o.tcrReq==null?(i.dp>=o.cp?'Desired profit is at or above contribution profit: not achievable':'n/a'):p(o.tcrReq)],['Target-profit max CPC (at target rate)',m(o.tcpc)],['Target CPA gap',i.tcpa!=null&&o.cpa!=null?m(i.tcpa-o.cpa)+' (target minus actual)':'not set'],['ROAS vs target',tr],['Required revenue for target ROAS',i.troas!=null?m(i.troas*i.spend):'not set'],['Conversions at target rate',i.tcr!=null?(i.clicks*i.tcr/100).toFixed(1)+(o.cr!=null?' ('+((i.clicks*i.tcr/100)-i.conv).toFixed(1)+' more than now)':''):'not set'],['Clicks bought by monthly budget',i.bud!=null&&o.cpc?Math.floor(i.bud/o.cpc).toLocaleString():'not set']].forEach(function(r){h+='<tr><th scope="row">'+r[0]+'</th><td>'+r[1]+'</td></tr>'});
+ h+='</tbody></table></div></details>';
+ h+='<h2>Scenario comparison (projections, not guarantees)</h2><div class="gadsbe-tw gadsbe-sc"><table><thead><tr><th>Input</th><th>Current</th><th>Improved</th><th>Target</th></tr></thead><tbody>';
+ var tcr=i.tcr!=null?i.tcr:(o.cr||0)*1.5,sd=[[ 'CPC',o.cpc||0,(o.cpc||0)*0.9,o.cpc||0],['Conversion rate %',o.cr||0,(o.cr||0)*1.2,tcr],['Average value',i.aov,i.aov,i.aov],['Margin / cost change (extra variable cost per conversion)',0,0,0],['Ad budget',i.bud!=null?i.bud:i.spend,i.bud!=null?i.bud:i.spend,i.bud!=null?i.bud:i.spend]];
+ sd.forEach(function(r,k){h+='<tr><th scope="row">'+r[0]+'</th>';for(var c=0;c<3;c++)h+='<td><input type="number" step="any" min="0" data-k="'+k+'" data-c="'+c+'" value="'+Number(r[c+1].toFixed(4))+'" aria-label="'+r[0]+' scenario '+['current','improved','target'][c]+'"></td>';h+='</tr>'});
+ h+='</tbody><tbody id="gadsbe-scout"></tbody></table></div><p class="gadsbe-note">Edit any cell to recalculate. Contribution profit uses your cost structure at the scenario value.</p>';
+ $('out').innerHTML=h;scen()}
+function scen(){var o=last;if(!o)return;var i=o.i,cols=[[],[],[]];
+ [].forEach.call($('out').querySelectorAll('.gadsbe-sc input'),function(e){cols[+e.dataset.c][+e.dataset.k]=Number(e.value)||0});
+ var rows=[['Estimated clicks'],['Estimated conversions'],['Estimated revenue'],['Advertising cost'],['Contribution profit'],['Net profit'],['ROAS'],['CPA'],['Conversion rate'],['Status']],cr0=o.becr;
+ cols.forEach(function(c,k){var cpc=c[0],cr=c[1],av=c[2],ex=c[3],bud=c[4],cl=cpc>0?bud/cpc:0,cv=cl*cr/100,rv=cv*av,cp=contrib(i,av)-ex,tot=cv*cp,net=tot-bud;
+  var st=cp<=0?'No contribution':net>0.005?'Profitable':net<-0.005?'Losing money':'Break-even';
+  [cl.toFixed(0),cv.toFixed(1),m(rv),m(bud),m(tot),m(net),bud>0?(rv/bud).toFixed(2)+'x':'n/a',cv>0?m(bud/cv):'n/a',p(cr),st].forEach(function(v,r){rows[r].push(v)})});
+ $('scout').innerHTML=rows.map(function(r){return '<tr><th scope="row">'+r[0]+'</th><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td></tr>'}).join('')}
+function lines(){var o=last,i=o.i;return[['Currency',cur().trim()||'(none)'],['Ad spend',i.spend],['Clicks',i.clicks],['Conversions',i.conv],['Average conversion value',i.aov],['Profit basis',i.basis==='margin'?'Gross margin '+i.margin+'%':'COGS '+i.cogs],['Actual conversion rate %',o.cr],['Break-even conversion rate %',o.becr],['Actual CPC',o.cpc],['Maximum break-even CPC',o.maxcpc],['Actual CPA',o.cpa],['Break-even CPA',o.becpa],['Actual ROAS (x)',o.roas],['Break-even ROAS (x)',o.beroas],['Contribution profit per conversion',o.cp],['Total contribution profit',o.totc],['Net profit after ads',o.net],['Net profit margin %',o.nm],['Status',o.st[1].split(':')[0]],['Assumptions','Revenue = conversions x average value; excludes tax and fixed overhead']].map(function(r){return[r[0],r[1]==null?'n/a':(typeof r[1]==='number'?+r[1].toFixed(4):r[1])]})}
+function say(t){$('msg').textContent=t}
+function run(){if(!validate()){last=null;$('out').innerHTML='<div class="gadsbe-status bad" role="alert">Fix the highlighted fields. Required inputs are marked *.</div>';say('');return}
+ last=calc(inp());render(last);say('Calculated.')}
+$('calc').onclick=run;
+$('mode').onclick=function(){var a=R.classList.toggle('gadsbe-advanced');this.textContent=a?'Switch to Simple Mode':'Switch to Advanced Mode';this.setAttribute('aria-pressed',a)};
+$('basis').onchange=function(){var mg=this.value==='margin';$('fm').style.display=mg?'':'none';$('fc').style.display=mg?'none':''};
+$('cur').onchange=function(){$('cc').style.display=this.value===''?'':'none';if(last)run()};
+$('cc').oninput=function(){if(last)run()};
+$('reset').onclick=function(){R.querySelectorAll('.gadsbe-inputs input').forEach(function(e){e.value=''});$('tol').value='0.05';$('basis').value='margin';$('basis').onchange();req.concat(['margin','cogs']).forEach(function(i){$(i+'-e').textContent=''});last=null;$('out').innerHTML='<p class="gadsbe-note">Inputs cleared.</p>';say('Reset.')};
+$('sample').onclick=function(){var d={spend:2400,clicks:1600,conv:48,aov:85,margin:55,ship:4,pay:2.9,ref:5,dp:5,tcr:4,bud:3000};for(var k in d)$(k).value=d[k];$('basis').value='margin';$('basis').onchange();run();say('Sample data loaded and calculated.')};
+R.addEventListener('input',function(e){if(last&&e.target.closest('.gadsbe-sc'))scen();else if(last&&e.target.closest('.gadsbe-inputs')&&validate()){last=calc(inp());render(last)}});
+$('copy').onclick=function(){if(!last)return say('Calculate first.');var t='Google Ads Break-Even Summary\n'+lines().map(function(r){return r[0]+': '+r[1]}).join('\n');
+ if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){say('Results copied.')},function(){say('Copy blocked by browser.')});else say('Copy not supported in this browser.')};
+$('csv').onclick=function(){if(!last)return say('Calculate first.');var c='Metric,Value\n'+lines().map(function(r){return '"'+String(r[0]).replace(/"/g,'""')+'","'+String(r[1]).replace(/"/g,'""')+'"'}).join('\n');
+ var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:'text/csv'}));a.download='google-ads-break-even.csv';document.body.appendChild(a);a.click();a.remove();say('CSV downloaded.')};
+$('print').onclick=function(){if(!last)return say('Calculate first.');window.print()};
+})();
+</script>
+</div>
+<!-- Blogger settings: Title "Google Ads Break-Even Conversion Rate Calculator"; Permalink google-ads-break-even-conversion-rate-calculator; Search description "Calculate your Google Ads break-even conversion rate, CPA, ROAS and maximum CPC. Analyze campaign profitability with this free calculator."; Labels: Google Ads Tools, PPC Calculator, Conversion Rate Calculator, Advertising Profitability, Digital Marketing Tools. Use Post (or Page) editor > HTML view, paste, then switch back to Compose only to publish. -->
