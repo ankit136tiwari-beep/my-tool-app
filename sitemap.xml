@@ -1,143 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://my-tool-app.pages.dev/</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/solar-battery-runtime-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/100ah-lithium-battery-runtime-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/credit-card-minimum-payment-payoff-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/debt-snowball-vs-avalanche-payoff-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/freelance-hourly-rate-after-tax-estimator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/invoice-late-payment-interest-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/rental-property-cash-on-cash-return-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/airbnb-occupancy-break-even-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/dividend-reinvestment-growth-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/emergency-fund-months-of-expenses-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/freelance-project-profit-margin-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/loan-origination-fee-apr-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/crypto-average-cost-basis-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/break-even-roas-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/target-roas-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/etsy-seller-profit-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/wholesale-retail-markup-vs-margin-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/shopify-discount-stacking-impact-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/ecommerce-return-rate-profit-loss-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/marketplace-commission-fee-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/print-on-demand-profit-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/wholesale-order-moq-break-even-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/subscription-churn-revenue-loss-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/ecommerce-shipping-dimensional-weight-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/customer-lifetime-value-to-cac-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://my-tool-app.pages.dev/google-ads-break-even-conversion-rate-calculator</loc>
-    <lastmod>2026-11-12</lastmod>
-    <priority>0.80</priority>
-  </url>
+<url><loc>https://my-tool-app.pages.dev/</loc></url>
+<url><loc>https://my-tool-app.pages.dev/solar-battery-runtime-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/100ah-lithium-battery-runtime-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/credit-card-minimum-payment-payoff-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/debt-snowball-vs-avalanche-payoff-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/freelance-hourly-rate-after-tax-estimator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/invoice-late-payment-interest-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/rental-property-cash-on-cash-return-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/airbnb-occupancy-break-even-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/dividend-reinvestment-growth-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/emergency-fund-months-of-expenses-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/freelance-project-profit-margin-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/loan-origination-fee-apr-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/crypto-average-cost-basis-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/break-even-roas-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/target-roas-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/amazon-fba-fee-profit-estimator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/etsy-seller-profit-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/wholesale-retail-markup-vs-margin-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/shopify-discount-stacking-impact-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/ecommerce-return-rate-profit-loss-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/marketplace-commission-fee-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/print-on-demand-profit-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/wholesale-order-moq-break-even-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/subscription-churn-revenue-loss-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/ecommerce-shipping-dimensional-weight-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/customer-lifetime-value-to-cac-calculator</loc></url>
+<url><loc>https://my-tool-app.pages.dev/google-ads-break-even-conversion-rate-calculator</loc></url>
 </urlset>
